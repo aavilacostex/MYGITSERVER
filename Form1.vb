@@ -17,4 +17,8 @@ Public Class Form1
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
         Form3.Show()
     End Sub
+
+    Private Sub SupplierClaimsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupplierClaimsToolStripMenuItem.Click
+        frmclaimsvendor.Show()
+    End Sub
 End Class

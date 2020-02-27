@@ -60,13 +60,13 @@ Partial Class Form1
         'SupplierClaimsToolStripMenuItem
         '
         Me.SupplierClaimsToolStripMenuItem.Name = "SupplierClaimsToolStripMenuItem"
-        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SupplierClaimsToolStripMenuItem.Text = "Supplier Claims"
         '
         'CustomerClaimsToolStripMenuItem
         '
         Me.CustomerClaimsToolStripMenuItem.Name = "CustomerClaimsToolStripMenuItem"
-        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CustomerClaimsToolStripMenuItem.Text = "Customer Claims"
         '
         'ProductsDevelopmentToolStripMenuItem

@@ -109,6 +109,12 @@
     <Compile Include="Form3.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmclaimsvendor.Designer.vb">
+      <DependentUpon>frmclaimsvendor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmclaimsvendor.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Gn1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -136,6 +142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmclaimsvendor.resx">
+      <DependentUpon>frmclaimsvendor.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

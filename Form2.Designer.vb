@@ -84,6 +84,17 @@ Partial Class Form2
         Me.ComboBox4 = New System.Windows.Forms.ComboBox()
         Me.TextBox8 = New System.Windows.Forms.TextBox()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Button19 = New System.Windows.Forms.Button()
+        Me.Button20 = New System.Windows.Forms.Button()
+        Me.Button21 = New System.Windows.Forms.Button()
+        Me.Button22 = New System.Windows.Forms.Button()
+        Me.Button23 = New System.Windows.Forms.Button()
+        Me.Button24 = New System.Windows.Forms.Button()
+        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Button18 = New System.Windows.Forms.Button()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
@@ -134,17 +145,6 @@ Partial Class Form2
         Me.TextBox24 = New System.Windows.Forms.TextBox()
         Me.TextBox25 = New System.Windows.Forms.TextBox()
         Me.ComboBox8 = New System.Windows.Forms.ComboBox()
-        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Button19 = New System.Windows.Forms.Button()
-        Me.Button20 = New System.Windows.Forms.Button()
-        Me.Button21 = New System.Windows.Forms.Button()
-        Me.Button22 = New System.Windows.Forms.Button()
-        Me.Button23 = New System.Windows.Forms.Button()
-        Me.Button24 = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Button18 = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
@@ -154,11 +154,11 @@ Partial Class Form2
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel3.SuspendLayout()
         Me.TabPage3.SuspendLayout()
+        Me.TableLayoutPanel6.SuspendLayout()
+        Me.TableLayoutPanel5.SuspendLayout()
+        Me.TableLayoutPanel7.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        Me.TableLayoutPanel5.SuspendLayout()
-        Me.TableLayoutPanel6.SuspendLayout()
-        Me.TableLayoutPanel7.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -335,7 +335,7 @@ Partial Class Form2
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 99.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 126.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 137.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 165.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 166.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox1, 1, 0)
@@ -386,21 +386,21 @@ Partial Class Form2
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(133, 3)
+        Me.TextBox1.Location = New System.Drawing.Point(132, 3)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(57, 20)
         Me.TextBox1.TabIndex = 2
         '
         'TextBox2
         '
-        Me.TextBox2.Location = New System.Drawing.Point(133, 42)
+        Me.TextBox2.Location = New System.Drawing.Point(132, 42)
         Me.TextBox2.Name = "TextBox2"
         Me.TextBox2.Size = New System.Drawing.Size(57, 20)
         Me.TextBox2.TabIndex = 3
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(196, 3)
+        Me.Button1.Location = New System.Drawing.Point(195, 3)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 4
@@ -409,7 +409,7 @@ Partial Class Form2
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(196, 42)
+        Me.Button2.Location = New System.Drawing.Point(195, 42)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(75, 23)
         Me.Button2.TabIndex = 5
@@ -419,7 +419,7 @@ Partial Class Form2
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(279, 5)
+        Me.Label3.Location = New System.Drawing.Point(278, 5)
         Me.Label3.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
@@ -429,7 +429,7 @@ Partial Class Form2
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(279, 44)
+        Me.Label4.Location = New System.Drawing.Point(278, 44)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(97, 13)
@@ -438,21 +438,21 @@ Partial Class Form2
         '
         'TextBox3
         '
-        Me.TextBox3.Location = New System.Drawing.Point(400, 3)
+        Me.TextBox3.Location = New System.Drawing.Point(399, 3)
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(59, 20)
         Me.TextBox3.TabIndex = 8
         '
         'TextBox4
         '
-        Me.TextBox4.Location = New System.Drawing.Point(400, 42)
+        Me.TextBox4.Location = New System.Drawing.Point(399, 42)
         Me.TextBox4.Name = "TextBox4"
         Me.TextBox4.Size = New System.Drawing.Size(59, 20)
         Me.TextBox4.TabIndex = 9
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(469, 3)
+        Me.Button3.Location = New System.Drawing.Point(468, 3)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 10
@@ -461,7 +461,7 @@ Partial Class Form2
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(469, 42)
+        Me.Button4.Location = New System.Drawing.Point(468, 42)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(75, 23)
         Me.Button4.TabIndex = 11
@@ -471,7 +471,7 @@ Partial Class Form2
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(558, 5)
+        Me.Label5.Location = New System.Drawing.Point(557, 5)
         Me.Label5.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(88, 13)
@@ -481,7 +481,7 @@ Partial Class Form2
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(558, 44)
+        Me.Label6.Location = New System.Drawing.Point(557, 44)
         Me.Label6.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(89, 13)
@@ -490,14 +490,14 @@ Partial Class Form2
         '
         'TextBox5
         '
-        Me.TextBox5.Location = New System.Drawing.Point(657, 42)
+        Me.TextBox5.Location = New System.Drawing.Point(656, 42)
         Me.TextBox5.Name = "TextBox5"
         Me.TextBox5.Size = New System.Drawing.Size(120, 20)
         Me.TextBox5.TabIndex = 15
         '
         'Button5
         '
-        Me.Button5.Location = New System.Drawing.Point(783, 42)
+        Me.Button5.Location = New System.Drawing.Point(782, 42)
         Me.Button5.Name = "Button5"
         Me.Button5.Size = New System.Drawing.Size(75, 23)
         Me.Button5.TabIndex = 17
@@ -506,7 +506,7 @@ Partial Class Form2
         '
         'Button6
         '
-        Me.Button6.Location = New System.Drawing.Point(920, 3)
+        Me.Button6.Location = New System.Drawing.Point(919, 3)
         Me.Button6.Name = "Button6"
         Me.Button6.Size = New System.Drawing.Size(75, 23)
         Me.Button6.TabIndex = 18
@@ -515,7 +515,7 @@ Partial Class Form2
         '
         'Button7
         '
-        Me.Button7.Location = New System.Drawing.Point(920, 42)
+        Me.Button7.Location = New System.Drawing.Point(919, 42)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(75, 23)
         Me.Button7.TabIndex = 19
@@ -526,7 +526,7 @@ Partial Class Form2
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.ComboBox1, 2)
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(657, 3)
+        Me.ComboBox1.Location = New System.Drawing.Point(656, 3)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox1.TabIndex = 20
@@ -603,7 +603,7 @@ Partial Class Form2
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
@@ -747,6 +747,132 @@ Partial Class Form2
         Me.TabPage3.Size = New System.Drawing.Size(1094, 565)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
+        '
+        'TableLayoutPanel6
+        '
+        Me.TableLayoutPanel6.ColumnCount = 2
+        Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel6.Controls.Add(Me.Button19, 0, 0)
+        Me.TableLayoutPanel6.Controls.Add(Me.Button20, 1, 0)
+        Me.TableLayoutPanel6.Controls.Add(Me.Button21, 0, 1)
+        Me.TableLayoutPanel6.Controls.Add(Me.Button22, 1, 1)
+        Me.TableLayoutPanel6.Controls.Add(Me.Button23, 0, 2)
+        Me.TableLayoutPanel6.Controls.Add(Me.Button24, 1, 2)
+        Me.TableLayoutPanel6.Location = New System.Drawing.Point(565, 430)
+        Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
+        Me.TableLayoutPanel6.RowCount = 3
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel6.Size = New System.Drawing.Size(303, 100)
+        Me.TableLayoutPanel6.TabIndex = 2
+        '
+        'Button19
+        '
+        Me.Button19.Location = New System.Drawing.Point(3, 5)
+        Me.Button19.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Button19.Name = "Button19"
+        Me.Button19.Size = New System.Drawing.Size(145, 23)
+        Me.Button19.TabIndex = 0
+        Me.Button19.Text = "See Files OEM"
+        Me.Button19.UseVisualStyleBackColor = True
+        '
+        'Button20
+        '
+        Me.Button20.Location = New System.Drawing.Point(154, 5)
+        Me.Button20.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Button20.Name = "Button20"
+        Me.Button20.Size = New System.Drawing.Size(145, 23)
+        Me.Button20.TabIndex = 1
+        Me.Button20.Text = "Add Files OEM"
+        Me.Button20.UseVisualStyleBackColor = True
+        '
+        'Button21
+        '
+        Me.Button21.Location = New System.Drawing.Point(3, 38)
+        Me.Button21.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Button21.Name = "Button21"
+        Me.Button21.Size = New System.Drawing.Size(145, 23)
+        Me.Button21.TabIndex = 2
+        Me.Button21.Text = "Add Files"
+        Me.Button21.UseVisualStyleBackColor = True
+        '
+        'Button22
+        '
+        Me.Button22.Location = New System.Drawing.Point(154, 38)
+        Me.Button22.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Button22.Name = "Button22"
+        Me.Button22.Size = New System.Drawing.Size(145, 23)
+        Me.Button22.TabIndex = 3
+        Me.Button22.Text = "Add Comments"
+        Me.Button22.UseVisualStyleBackColor = True
+        '
+        'Button23
+        '
+        Me.Button23.Location = New System.Drawing.Point(3, 71)
+        Me.Button23.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Button23.Name = "Button23"
+        Me.Button23.Size = New System.Drawing.Size(145, 23)
+        Me.Button23.TabIndex = 4
+        Me.Button23.Text = "See Files"
+        Me.Button23.UseVisualStyleBackColor = True
+        '
+        'Button24
+        '
+        Me.Button24.Location = New System.Drawing.Point(154, 71)
+        Me.Button24.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
+        Me.Button24.Name = "Button24"
+        Me.Button24.Size = New System.Drawing.Size(145, 23)
+        Me.Button24.TabIndex = 5
+        Me.Button24.Text = "See Comments"
+        Me.Button24.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanel5
+        '
+        Me.TableLayoutPanel5.ColumnCount = 1
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel5.Controls.Add(Me.Panel3, 0, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.TableLayoutPanel7, 0, 1)
+        Me.TableLayoutPanel5.Location = New System.Drawing.Point(562, 6)
+        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
+        Me.TableLayoutPanel5.RowCount = 2
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.55824!))
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.44177!))
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(306, 295)
+        Me.TableLayoutPanel5.TabIndex = 1
+        '
+        'Panel3
+        '
+        Me.Panel3.BackgroundImage = CType(resources.GetObject("Panel3.BackgroundImage"), System.Drawing.Image)
+        Me.Panel3.Location = New System.Drawing.Point(3, 3)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(300, 258)
+        Me.Panel3.TabIndex = 0
+        '
+        'TableLayoutPanel7
+        '
+        Me.TableLayoutPanel7.ColumnCount = 2
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel7.Controls.Add(Me.Button18, 1, 0)
+        Me.TableLayoutPanel7.Location = New System.Drawing.Point(3, 267)
+        Me.TableLayoutPanel7.Name = "TableLayoutPanel7"
+        Me.TableLayoutPanel7.RowCount = 1
+        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel7.Size = New System.Drawing.Size(299, 25)
+        Me.TableLayoutPanel7.TabIndex = 1
+        '
+        'Button18
+        '
+        Me.Button18.Location = New System.Drawing.Point(152, 3)
+        Me.Button18.Name = "Button18"
+        Me.Button18.Size = New System.Drawing.Size(144, 19)
+        Me.Button18.TabIndex = 0
+        Me.Button18.Text = "Delete Detail"
+        Me.Button18.UseVisualStyleBackColor = True
         '
         'TableLayoutPanel4
         '
@@ -1275,132 +1401,6 @@ Partial Class Form2
         Me.ComboBox8.Size = New System.Drawing.Size(258, 21)
         Me.ComboBox8.TabIndex = 46
         '
-        'TableLayoutPanel5
-        '
-        Me.TableLayoutPanel5.ColumnCount = 1
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel5.Controls.Add(Me.Panel3, 0, 0)
-        Me.TableLayoutPanel5.Controls.Add(Me.TableLayoutPanel7, 0, 1)
-        Me.TableLayoutPanel5.Location = New System.Drawing.Point(562, 6)
-        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
-        Me.TableLayoutPanel5.RowCount = 2
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.55824!))
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.44177!))
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(306, 295)
-        Me.TableLayoutPanel5.TabIndex = 1
-        '
-        'Panel3
-        '
-        Me.Panel3.BackgroundImage = CType(resources.GetObject("Panel3.BackgroundImage"), System.Drawing.Image)
-        Me.Panel3.Location = New System.Drawing.Point(3, 3)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(300, 258)
-        Me.Panel3.TabIndex = 0
-        '
-        'TableLayoutPanel6
-        '
-        Me.TableLayoutPanel6.ColumnCount = 2
-        Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel6.Controls.Add(Me.Button19, 0, 0)
-        Me.TableLayoutPanel6.Controls.Add(Me.Button20, 1, 0)
-        Me.TableLayoutPanel6.Controls.Add(Me.Button21, 0, 1)
-        Me.TableLayoutPanel6.Controls.Add(Me.Button22, 1, 1)
-        Me.TableLayoutPanel6.Controls.Add(Me.Button23, 0, 2)
-        Me.TableLayoutPanel6.Controls.Add(Me.Button24, 1, 2)
-        Me.TableLayoutPanel6.Location = New System.Drawing.Point(565, 430)
-        Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
-        Me.TableLayoutPanel6.RowCount = 3
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel6.Size = New System.Drawing.Size(303, 100)
-        Me.TableLayoutPanel6.TabIndex = 2
-        '
-        'Button19
-        '
-        Me.Button19.Location = New System.Drawing.Point(3, 5)
-        Me.Button19.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
-        Me.Button19.Name = "Button19"
-        Me.Button19.Size = New System.Drawing.Size(145, 23)
-        Me.Button19.TabIndex = 0
-        Me.Button19.Text = "See Files OEM"
-        Me.Button19.UseVisualStyleBackColor = True
-        '
-        'Button20
-        '
-        Me.Button20.Location = New System.Drawing.Point(154, 5)
-        Me.Button20.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
-        Me.Button20.Name = "Button20"
-        Me.Button20.Size = New System.Drawing.Size(145, 23)
-        Me.Button20.TabIndex = 1
-        Me.Button20.Text = "Add Files OEM"
-        Me.Button20.UseVisualStyleBackColor = True
-        '
-        'Button21
-        '
-        Me.Button21.Location = New System.Drawing.Point(3, 38)
-        Me.Button21.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
-        Me.Button21.Name = "Button21"
-        Me.Button21.Size = New System.Drawing.Size(145, 23)
-        Me.Button21.TabIndex = 2
-        Me.Button21.Text = "Add Files"
-        Me.Button21.UseVisualStyleBackColor = True
-        '
-        'Button22
-        '
-        Me.Button22.Location = New System.Drawing.Point(154, 38)
-        Me.Button22.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
-        Me.Button22.Name = "Button22"
-        Me.Button22.Size = New System.Drawing.Size(145, 23)
-        Me.Button22.TabIndex = 3
-        Me.Button22.Text = "Add Comments"
-        Me.Button22.UseVisualStyleBackColor = True
-        '
-        'Button23
-        '
-        Me.Button23.Location = New System.Drawing.Point(3, 71)
-        Me.Button23.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
-        Me.Button23.Name = "Button23"
-        Me.Button23.Size = New System.Drawing.Size(145, 23)
-        Me.Button23.TabIndex = 4
-        Me.Button23.Text = "See Files"
-        Me.Button23.UseVisualStyleBackColor = True
-        '
-        'Button24
-        '
-        Me.Button24.Location = New System.Drawing.Point(154, 71)
-        Me.Button24.Margin = New System.Windows.Forms.Padding(3, 5, 3, 3)
-        Me.Button24.Name = "Button24"
-        Me.Button24.Size = New System.Drawing.Size(145, 23)
-        Me.Button24.TabIndex = 5
-        Me.Button24.Text = "See Comments"
-        Me.Button24.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanel7
-        '
-        Me.TableLayoutPanel7.ColumnCount = 2
-        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel7.Controls.Add(Me.Button18, 1, 0)
-        Me.TableLayoutPanel7.Location = New System.Drawing.Point(3, 267)
-        Me.TableLayoutPanel7.Name = "TableLayoutPanel7"
-        Me.TableLayoutPanel7.RowCount = 1
-        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel7.Size = New System.Drawing.Size(299, 25)
-        Me.TableLayoutPanel7.TabIndex = 1
-        '
-        'Button18
-        '
-        Me.Button18.Location = New System.Drawing.Point(152, 3)
-        Me.Button18.Name = "Button18"
-        Me.Button18.Size = New System.Drawing.Size(144, 19)
-        Me.Button18.TabIndex = 0
-        Me.Button18.Text = "Delete Detail"
-        Me.Button18.UseVisualStyleBackColor = True
-        '
         'Form2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1421,13 +1421,13 @@ Partial Class Form2
         Me.TableLayoutPanel3.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
+        Me.TableLayoutPanel6.ResumeLayout(False)
+        Me.TableLayoutPanel5.ResumeLayout(False)
+        Me.TableLayoutPanel7.ResumeLayout(False)
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        Me.TableLayoutPanel5.ResumeLayout(False)
-        Me.TableLayoutPanel6.ResumeLayout(False)
-        Me.TableLayoutPanel7.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
