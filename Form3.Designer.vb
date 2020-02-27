@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Form3
+Partial Class frmLogin
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,7 +22,7 @@ Partial Class Form3
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form3))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmLogin))
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
@@ -33,8 +33,8 @@ Partial Class Form3
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TextBox4 = New System.Windows.Forms.TextBox()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.cmdok = New System.Windows.Forms.Button()
+        Me.cmdcancel = New System.Windows.Forms.Button()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel2.SuspendLayout()
@@ -73,8 +73,8 @@ Partial Class Form3
         Me.TableLayoutPanel2.Controls.Add(Me.txtUserName, 1, 2)
         Me.TableLayoutPanel2.Controls.Add(Me.txtPassword, 1, 3)
         Me.TableLayoutPanel2.Controls.Add(Me.Panel1, 0, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.Button1, 1, 4)
-        Me.TableLayoutPanel2.Controls.Add(Me.Button2, 2, 4)
+        Me.TableLayoutPanel2.Controls.Add(Me.cmdok, 1, 4)
+        Me.TableLayoutPanel2.Controls.Add(Me.cmdcancel, 2, 4)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(147, 13)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 5
@@ -160,25 +160,25 @@ Partial Class Form3
         Me.TextBox3.TabIndex = 0
         Me.TextBox3.Text = "CTP INFORMATION"
         '
-        'Button1
+        'cmdok
         '
-        Me.Button1.Location = New System.Drawing.Point(88, 139)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(63, 29)
-        Me.Button1.TabIndex = 5
-        Me.Button1.Text = "Enter"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.cmdok.Location = New System.Drawing.Point(88, 139)
+        Me.cmdok.Name = "cmdok"
+        Me.cmdok.Size = New System.Drawing.Size(63, 29)
+        Me.cmdok.TabIndex = 5
+        Me.cmdok.Text = "Enter"
+        Me.cmdok.UseVisualStyleBackColor = True
         '
-        'Button2
+        'cmdcancel
         '
-        Me.Button2.Location = New System.Drawing.Point(157, 139)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(61, 29)
-        Me.Button2.TabIndex = 6
-        Me.Button2.Text = "Cancel"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.cmdcancel.Location = New System.Drawing.Point(157, 139)
+        Me.cmdcancel.Name = "cmdcancel"
+        Me.cmdcancel.Size = New System.Drawing.Size(61, 29)
+        Me.cmdcancel.TabIndex = 6
+        Me.cmdcancel.Text = "Cancel"
+        Me.cmdcancel.UseVisualStyleBackColor = True
         '
-        'Form3
+        'frmLogin
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -187,7 +187,7 @@ Partial Class Form3
         Me.Controls.Add(Me.TableLayoutPanel2)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "Form3"
+        Me.Name = "frmLogin"
         Me.Text = "Form3"
         Me.TableLayoutPanel1.ResumeLayout(False)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -209,6 +209,6 @@ Partial Class Form3
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TextBox3 As TextBox
     Friend WithEvents TextBox4 As TextBox
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
+    Friend WithEvents cmdok As Button
+    Friend WithEvents cmdcancel As Button
 End Class

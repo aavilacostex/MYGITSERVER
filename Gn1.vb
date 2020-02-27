@@ -89,6 +89,9 @@ Public Class Gn1
     Public RightDigit As Integer
     Public instanceOfModel_ID As Integer
     Public test As String
+    Public Const VBObjectError As Integer = -2147221504
+    Public Versionctp As String
+
 
     Public Sub Valida_DirLog()
         On Error GoTo Valida_DirLog_Err
@@ -108,6 +111,113 @@ Valida_DirLog_Err:
     'On Error GoTo Generate_Log_Err
     'Dim LogFile As String
     '   LogFile = ""
+    '  LogFile = DirLog + "ErrLog_" + Trim(Str(DatePart("m", Date))) + ".log"
+    ' Open LogFile For Append As #2
+    'Write #2, Format(Of Date, "mm/dd/yyyy")() + " " + Trim(Str(Time())) + "|" + Message
+    'Close #2
+    'Exit Sub
+    'Generate_Log_Err:
+    '       Close #2
+    'End Sub
+
+    ' Returns an array with the local IP addresses (as strings).
+    ' Author: Christian d'Heureuse, www.source-code.biz
+
+    Public Sub gotoerror(Forms, Events, errnumber, errdescription, errsource)
+        'Dim error As String
+        Dim sql As String
+        Dim intrespond As Long
+        On Error GoTo errhandler
+
+        'Error = Forms + "-" + Events + "-" + Trim(Str(errnumber)) + "-" + errdescription + errsource + "-" + Version
+        'sql = "INSERT INTO ERRORCTP VALUES('" & Replace(Left(error, 500), "'", "") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "')"
+        Conn.Execute(sql)
+
+        intrespond = MsgBox("Error. See Log", vbInformation + vbOKOnly, "CTP System")
+
+        Exit Sub
+errhandler:
+        'Error = Forms + "-" + "gotoerror" + "-" + Trim(Str(Err.Number)) + "-" + Err.Description + Err.Source + "-" + "Err on gotoerror" + "-" + Version
+        'sql = "INSERT INTO ERRORCTP VALUES('" & Replace(Left(error, 500), "'", "") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "')"
+        Conn.Execute(sql)
+        intrespond = MsgBox("Error. See Log", vbInformation + vbOKOnly, "CTP System")
+    End Sub
+
+    Public Sub gotologuse(Progname, Area, Keydata)
+        Dim sql As String
+        Dim codloguse As Long
+        On Error GoTo errhandler
+
+        'codloguse = getmax("logusectp", "codloguse")
+        sql = "INSERT INTO LOGUSECTP VALUES(" & codloguse & ",'" & userid & "','" & ipaddresslocal & "','" & Version & "','" & Progname & "','" & Area & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','" & Keydata & "')"
+        Conn.Execute(sql)
+
+        Exit Sub
+errhandler:
+        Call gotoerror("general", "gotologuse", Err.Number, Err.Description, Err.Source)
+    End Sub
+
+    Public Function getmax(table, field)
+        'Dim error As String
+        'Dim intrespond As Long
+        'Dim sentence As Variant
+
+        'Set RsGeneral = Nothing
+        'sentence = "Select Max(" & field & ") as max from " & table
+        'Set RsGeneral = Conn.Execute(sentence)
+        'If IsNull(RsGeneral.Fields("max")) Then
+        'getmax = 1
+        'Else
+        'getmax = RsGeneral.Fields("max") + 1
+        'End If
+
+        Exit Function
+errhandler:
+        Call gotoerror("general", "getmax", Err.Number, Err.Description, Err.Source)
+    End Function
+
+    Public Function GetIpAddrTable()
+        Dim Buf(0 To 511) As Byte
+        Dim BufSize As Long : BufSize = UBound(Buf) + 1
+        Dim rc As Long
+        Dim ArrayOk As Array
+
+        rc = GetIpAddrTable_API(Buf(0), BufSize, 1)
+        'If rc <> 0 Then Err.Raise VBObjectError, , "GetIpAddrTable failed with return value " & rc
+        If rc <> 0 Then Err.Raise(VBObjectError, , "GetIpAddrTable failed with return value " & rc)
+        Dim NrOfEntries As Integer : NrOfEntries = Buf(1) * 256 + Buf(0)
+        If NrOfEntries = 0 Then GetIpAddrTable = ArrayOk : Exit Function
+        'ReDim IpAddrs(0 To NrOfEntries - 1) As String
+        Dim IpAddrs() As String
+        ReDim IpAddrs(0 To NrOfEntries - 1)
+        Dim i As Integer
+        For i = 0 To NrOfEntries - 1
+            Dim j As Integer, s As String : s = ""
+            For j = 0 To 3 : s = s & IIf(j > 0, ".", "") & Buf(4 + i * 24 + j) : Next
+            IpAddrs(i) = s
+        Next
+        GetIpAddrTable = IpAddrs
+    End Function
+
+    Public Function checkstring(StrInput)
+
+        If InStr(1, Trim(StrInput), "'") Or InStr(1, Trim(StrInput), "|") Or InStr(1, Trim(StrInput), "`") Or InStr(1, Trim(StrInput), "~") Or InStr(1, Trim(StrInput), "!") Or InStr(1, Trim(StrInput), "^") Or InStr(1, Trim(StrInput), "_") Or InStr(1, Trim(StrInput), "=") Or InStr(1, Trim(StrInput), "\") Or InStr(1, Trim(StrInput), "%") Or InStr(1, Trim(StrInput), "+") Or InStr(1, Trim(StrInput), "[") Or InStr(1, Trim(StrInput), "]") Or InStr(1, Trim(StrInput), "?") Or InStr(1, Trim(StrInput), "<") Or InStr(1, Trim(StrInput), ">") Then
+            checkstring = False
+        Else
+            checkstring = True
+        End If
+
+        Exit Function
+errhandler:
+        'Call gotoerror("general", "checkstring", Err.Number, Err.Description, Err.Source)
+    End Function
+
+
+
+    'Public Sub Generate_Log(Message As String)
+    'On Error GoTo Generate_Log_Err
+    'Dim LogFile As String
+    '   LogFile = ""
     '   LogFile = DirLog + "ErrLog_" + Trim(Str(DatePart("m", Date))) + ".log"
     '  Open LogFile For Append As #2
     'Write #2, Format(Of Date, "mm/dd/yyyy")() + " " + Trim(Str(Time())) + "|" + Message
@@ -116,6 +226,8 @@ Valida_DirLog_Err:
     'Generate_Log_Err:
     'Close #2
     'End Sub
+
+
 
 
 

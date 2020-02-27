@@ -1,7 +1,7 @@
 ﻿Imports System.Windows
 Imports System.Windows.Forms.DataFormats
 
-Public Class Form1
+Public Class MDIMain
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
@@ -15,7 +15,7 @@ Public Class Form1
     End Sub
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
-        Form3.Show()
+        frmLogin.Show()
     End Sub
 
     Private Sub SupplierClaimsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupplierClaimsToolStripMenuItem.Click

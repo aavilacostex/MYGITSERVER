@@ -115,6 +115,12 @@
     <Compile Include="frmclaimsvendor.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmpasschange.Designer.vb">
+      <DependentUpon>frmpasschange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmpasschange.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Gn1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -145,6 +151,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmclaimsvendor.resx">
       <DependentUpon>frmclaimsvendor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmpasschange.resx">
+      <DependentUpon>frmpasschange.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
