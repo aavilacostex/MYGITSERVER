@@ -26,16 +26,17 @@ Partial Class Form1
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.PurchasingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClaimsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ProductsDevelopmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SupplierClaimsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CustomerClaimsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ProductsDevelopmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ProductsDevelopmentToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LoginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PurchasingToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PurchasingToolStripMenuItem, Me.LoginToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(800, 24)
@@ -56,6 +57,18 @@ Partial Class Form1
         Me.ClaimsToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
         Me.ClaimsToolStripMenuItem.Text = "Claims"
         '
+        'SupplierClaimsToolStripMenuItem
+        '
+        Me.SupplierClaimsToolStripMenuItem.Name = "SupplierClaimsToolStripMenuItem"
+        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.SupplierClaimsToolStripMenuItem.Text = "Supplier Claims"
+        '
+        'CustomerClaimsToolStripMenuItem
+        '
+        Me.CustomerClaimsToolStripMenuItem.Name = "CustomerClaimsToolStripMenuItem"
+        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.CustomerClaimsToolStripMenuItem.Text = "Customer Claims"
+        '
         'ProductsDevelopmentToolStripMenuItem
         '
         Me.ProductsDevelopmentToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ProductsDevelopmentToolStripMenuItem1})
@@ -63,23 +76,17 @@ Partial Class Form1
         Me.ProductsDevelopmentToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
         Me.ProductsDevelopmentToolStripMenuItem.Text = "Products Development"
         '
-        'SupplierClaimsToolStripMenuItem
-        '
-        Me.SupplierClaimsToolStripMenuItem.Name = "SupplierClaimsToolStripMenuItem"
-        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.SupplierClaimsToolStripMenuItem.Text = "Supplier Claims"
-        '
-        'CustomerClaimsToolStripMenuItem
-        '
-        Me.CustomerClaimsToolStripMenuItem.Name = "CustomerClaimsToolStripMenuItem"
-        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.CustomerClaimsToolStripMenuItem.Text = "Customer Claims"
-        '
         'ProductsDevelopmentToolStripMenuItem1
         '
         Me.ProductsDevelopmentToolStripMenuItem1.Name = "ProductsDevelopmentToolStripMenuItem1"
         Me.ProductsDevelopmentToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
         Me.ProductsDevelopmentToolStripMenuItem1.Text = "Products Development"
+        '
+        'LoginToolStripMenuItem
+        '
+        Me.LoginToolStripMenuItem.Name = "LoginToolStripMenuItem"
+        Me.LoginToolStripMenuItem.Size = New System.Drawing.Size(49, 20)
+        Me.LoginToolStripMenuItem.Text = "Login"
         '
         'Form1
         '
@@ -105,4 +112,5 @@ Partial Class Form1
     Friend WithEvents CustomerClaimsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProductsDevelopmentToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProductsDevelopmentToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents LoginToolStripMenuItem As ToolStripMenuItem
 End Class

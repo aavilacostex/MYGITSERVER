@@ -2,7 +2,6 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.exe.config
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.exe
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.pdb
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.xml
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.Form1.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.Resources.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.GenerateResource.cache
@@ -11,3 +10,7 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.pdb
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.Form2.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.Form3.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.ADODB.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.ADOR.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.Scripting.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.ResolveComReference.cache

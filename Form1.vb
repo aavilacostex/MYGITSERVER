@@ -13,4 +13,8 @@ Public Class Form1
 
 
     End Sub
+
+    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
+        Form3.Show()
+    End Sub
 End Class

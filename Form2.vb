@@ -24,6 +24,7 @@
         Button7.FlatStyle = FlatStyle.Flat
 
         DataGridView1.RowHeadersVisible = False
+        DataGridView2.RowHeadersVisible = False
 
         Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
         Button12.ImageAlign = ContentAlignment.MiddleRight
@@ -82,5 +83,15 @@
 
     End Sub
 
+    Private Sub DataGridView2_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView2.CellContentClick
 
+    End Sub
+
+    Private Sub TableLayoutPanel4_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel4.Paint
+        'TableLayoutPanel4.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
+    End Sub
+
+    Private Sub Button15_Click(sender As Object, e As EventArgs) Handles Button15.Click
+
+    End Sub
 End Class
