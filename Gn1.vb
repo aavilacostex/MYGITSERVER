@@ -88,6 +88,7 @@ Public Class Gn1
     Private Declare Function GetIpAddrTable_API Lib "IpHlpApi" Alias "GetIpAddrTable" (pIPAddrTable As String, pdwSize As Long, ByVal bOrder As Long) As Long
     Public RightDigit As Integer
     Public instanceOfModel_ID As Integer
+    Public test As String
 
     Public Sub Valida_DirLog()
         On Error GoTo Valida_DirLog_Err

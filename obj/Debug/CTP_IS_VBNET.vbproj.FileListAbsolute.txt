@@ -14,3 +14,4 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.ADODB.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.ADOR.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.Scripting.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.ResolveComReference.cache
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache
