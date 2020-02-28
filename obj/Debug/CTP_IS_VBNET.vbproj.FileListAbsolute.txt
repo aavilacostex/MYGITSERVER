@@ -16,3 +16,7 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmclaimsvendor
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmLogin.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.MDIMain.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmpasschange.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\IBM.Data.DB2.iSeries.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\IBM.Data.DB2.iSeries.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.cwbx.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.CopyComplete

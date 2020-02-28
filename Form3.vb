@@ -1,6 +1,5 @@
 ﻿Public Class frmLogin
 
-
 #Region "Variables"
 
     Public intrespond As Long
@@ -9,7 +8,7 @@
     Public sql As String
 
     Dim frm As frmLogin
-    Dim gnr As Gn1
+    Dim gnr As Gn1 = New Gn1()
 
     Public Conn As New ADODB.Connection
     Public ConnSql As New ADODB.Connection
@@ -19,8 +18,6 @@
     Dim CurrentCTPVersion As Version = My.Application.Info.Version
     Dim userid As String '= gnr.userid
     Dim passcomm As String '= gnr.passcomm
-
-
 
 #End Region
 
@@ -58,23 +55,29 @@
 #Region "Control Events"
 
     Private Sub txtPassword_TextChanged(sender As Object, e As EventArgs) Handles txtPassword.TextChanged
-        txtPassword.SelectionStart = 0
-        txtPassword.SelectionLength = Len(txtPassword.Text)
+        'txtPassword.SelectionStart = 0
+        'txtPassword.SelectionLength = Len(txtPassword.Text)
     End Sub
 
     Private Sub cmdcancel_Click()
-        'sql = "CALL CTPINV.RECLAIM"
-        'Conn.Execute (sql)
-        sql = "delete from loginctp where codlogin = " & codloginctp
-        Conn.Execute(sql)
-        If Conn.State = 1 Then
-            Conn.Close()
-        End If
-        If ConnSql.State = 1 Then
-            ConnSql.Close()
-        End If
-        LoginSucceeded = False
-        frm.Close()
+        Try
+            'sql = "CALL CTPINV.RECLAIM"
+            'Conn.Execute (sql)
+            sql = "delete from loginctp where codlogin = " & codloginctp
+            Conn.Execute(sql)
+            If Conn.State = 1 Then
+                Conn.Close()
+            End If
+            If ConnSql.State = 1 Then
+                ConnSql.Close()
+            End If
+            LoginSucceeded = False
+            Me.Close()
+        Catch ex As Exception
+            LoginSucceeded = False
+            Me.Close()
+        End Try
+
     End Sub
 
     Private Sub cmdok_Click()
@@ -94,7 +97,7 @@
 
         'servername = Conn.DefaultDatabase
         Dim servername As String = ""
-        'check = checkusr(Trim(UCase(txtUserName.Text)), Trim(UCase(txtPassword.Text)))
+        'check = checkusr(Trim(UCase(txtUserName.Text)), Trim(UCase(txtPassword.Text)))    here
         If check = "U" Then
             MsgBox("Username not valid.", vbInformation + vbOKOnly, "CTP System")
             'txtUserName.SetFocus
@@ -269,5 +272,13 @@ errhandler:
 
     Private Sub amenu()
 
+    End Sub
+
+    Private Sub cmdok_Click(sender As Object, e As EventArgs) Handles cmdok.Click
+        cmdok_Click()
+    End Sub
+
+    Private Sub cmdcancel_Click(sender As Object, e As EventArgs) Handles cmdcancel.Click
+        cmdcancel_Click()
     End Sub
 End Class

@@ -212,7 +212,57 @@ errhandler:
         'Call gotoerror("general", "checkstring", Err.Number, Err.Description, Err.Source)
     End Function
 
+    Function checkusr(userid, pass)
+        'call routine for encrypting password
+        Dim as400 As New cwbx.AS400System
+        Dim prog As New cwbx.Program
+        Dim parms As New cwbx.ProgramParameters
+        Dim server As New cwbx.SystemNames
+        Dim stringCvtr As New cwbx.StringConverter
+        Dim wuser, wpass, wswvld
+        On Error GoTo errhandler
 
+        'Program Parameters
+        wuser = Left((Trim(UCase(userid)) & "          "), 10)
+        wpass = Left((Trim(UCase(pass)) & "          "), 10)
+        wswvld = "0"
+
+        'AS400 Connection Parameters
+        as400.Define(server.DefaultSystem)
+        as400.UserID = "INTRANET"
+        as400.Password = "CTP6100"
+        'as400.PromptMode = cwbcoPromptNever   here
+        as400.Signon()
+
+        'Program to call
+        prog.system = as400
+        prog.LibraryName = "CTPINV"
+        prog.ProgramName = "PSWVLDR"
+
+        parms.Clear()
+
+        'Parameters Definition
+        'parms.Append("USER", cwbrcInput, 10)    here
+        'parms.Append("PASS", cwbrcInput, 10)    here
+        parms.Append("SWVLD", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 1)
+
+        stringCvtr.CodePage = 37
+
+        'Assign Values to Parameters
+        'parms("USER") = stringCvtr.ToBytes(wuser)   here
+        'parms("PASS") = stringCvtr.ToBytes(wpass)   here
+        'parms("SWVLD") = stringCvtr.ToBytes(wswvld)  here
+
+        prog.Call(parms)
+
+        checkusr = stringCvtr.FromBytes(parms("SWVLD").Value)
+
+        ' as400.Disconnect(cwbcoServiceAll)  here
+
+        Exit Function
+errhandler:
+        Call gotoerror("general", "checkusr", Err.Number, Err.Description, Err.Source)
+    End Function
 
     'Public Sub Generate_Log(Message As String)
     'On Error GoTo Generate_Log_Err
