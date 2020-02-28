@@ -1,4 +1,6 @@
-﻿Imports System.Net.Mail
+﻿Imports System.Data.SqlClient
+Imports System.Globalization
+Imports System.Net.Mail
 
 Public Class Gn1
 
@@ -263,6 +265,34 @@ errhandler:
 errhandler:
         Call gotoerror("general", "checkusr", Err.Number, Err.Description, Err.Source)
     End Function
+
+    Public Function FillGrid(query As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Try
+            Dim ObjConn As New Odbc.OdbcConnection(strconnection)
+            Dim dataAdapter As New Odbc.OdbcDataAdapter()
+            Dim ds As New DataSet()
+            ds.Locale = CultureInfo.InvariantCulture
+
+            ObjConn.Open()
+            'Sql = "SELECT COUNT(*) TFIELDS FROM PRDVLH " & strwhere
+            Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+            dataAdapter = New Odbc.OdbcDataAdapter(cmd)
+            dataAdapter.Fill(ds)
+
+            If ds.Tables(0).Rows.Count > 0 Then
+                Return ds
+            Else
+                'message box warning
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+
 
     'Public Sub Generate_Log(Message As String)
     'On Error GoTo Generate_Log_Err
