@@ -91,38 +91,38 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.vb">
+    <Compile Include="Forms\MDIMain.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="Forms\MDIMain.Designer.vb">
+      <DependentUpon>MDIMain.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.vb">
-      <DependentUpon>Form2.vb</DependentUpon>
+    <Compile Include="Forms\frmProductsDevelopment.Designer.vb">
+      <DependentUpon>frmProductsDevelopment.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form2.vb">
+    <Compile Include="Forms\frmProductsDevelopment.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form3.Designer.vb">
-      <DependentUpon>Form3.vb</DependentUpon>
+    <Compile Include="Forms\frmLogin.Designer.vb">
+      <DependentUpon>frmLogin.vb</DependentUpon>
     </Compile>
-    <Compile Include="Form3.vb">
+    <Compile Include="Forms\frmLogin.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmclaimsvendor.Designer.vb">
+    <Compile Include="Forms\frmclaimsvendor.Designer.vb">
       <DependentUpon>frmclaimsvendor.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmclaimsvendor.vb">
+    <Compile Include="Forms\frmclaimsvendor.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmpasschange.Designer.vb">
+    <Compile Include="Forms\frmpasschange.Designer.vb">
       <DependentUpon>frmpasschange.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmpasschange.vb">
+    <Compile Include="Forms\frmpasschange.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Gn1.vb" />
+    <Compile Include="Class\Gn1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -138,22 +138,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="TestClass.vb" />
+    <Compile Include="Class\TestClass.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\MDIMain.resx">
+      <DependentUpon>MDIMain.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\frmProductsDevelopment.resx">
+      <DependentUpon>frmProductsDevelopment.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form3.resx">
-      <DependentUpon>Form3.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\frmLogin.resx">
+      <DependentUpon>frmLogin.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmclaimsvendor.resx">
+    <EmbeddedResource Include="Forms\frmclaimsvendor.resx">
       <DependentUpon>frmclaimsvendor.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmpasschange.resx">
+    <EmbeddedResource Include="Forms\frmpasschange.resx">
       <DependentUpon>frmpasschange.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">

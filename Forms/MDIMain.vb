@@ -8,7 +8,7 @@ Public Class MDIMain
 
     Private Sub ProductsDevelopmentToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ProductsDevelopmentToolStripMenuItem1.Click
 
-        Form2.Show()
+        frmProductsDevelopment.Show()
 
 
 

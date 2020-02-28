@@ -1,4 +1,4 @@
-﻿Public Class Form2
+﻿Public Class frmProductsDevelopment
 
     Public flagdeve As Long '1 is new
     'Public filepicture As New clsReadWrite
