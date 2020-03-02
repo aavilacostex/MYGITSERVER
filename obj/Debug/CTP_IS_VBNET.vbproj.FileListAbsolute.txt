@@ -20,3 +20,4 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\IBM.Data.DB2.iSeries.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.cwbx.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.CopyComplete
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmProductsDevelopment.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache

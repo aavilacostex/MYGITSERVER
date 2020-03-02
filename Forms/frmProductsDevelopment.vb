@@ -1,4 +1,5 @@
 ﻿Imports System.Globalization
+Imports System.Text.RegularExpressions
 Imports System.Web.UI.WebControls
 
 Public Class frmProductsDevelopment
@@ -16,11 +17,11 @@ Public Class frmProductsDevelopment
 
 
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        TabControl1.ItemSize = (New Size(TabControl1.Width / TabControl1.TabCount, 0))
-        TabControl1.Padding = New System.Drawing.Point(300, 10)
-        TabControl1.Appearance = TabAppearance.FlatButtons
+        SSTab1.ItemSize = (New Size(SSTab1.Width / SSTab1.TabCount, 0))
+        SSTab1.Padding = New System.Drawing.Point(300, 10)
+        SSTab1.Appearance = TabAppearance.FlatButtons
         'TabControl1.ItemSize = New Size(0, 1)
-        TabControl1.SizeMode = TabSizeMode.Fixed
+        SSTab1.SizeMode = TabSizeMode.Fixed
 
         Button1.FlatStyle = FlatStyle.Flat
         Button2.FlatStyle = FlatStyle.Flat
@@ -31,7 +32,7 @@ Public Class frmProductsDevelopment
         cmdall.FlatStyle = FlatStyle.Flat
 
         DataGridView1.RowHeadersVisible = False
-        DataGridView2.RowHeadersVisible = False
+        dgvProjectDetails.RowHeadersVisible = False
 
         'Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
         Button12.ImageAlign = ContentAlignment.MiddleRight
@@ -48,23 +49,48 @@ Public Class frmProductsDevelopment
         AddHandler DataGridView1.SelectionChanged, AddressOf dataGridView1_SelectionChanged
         'DataGridView1. SelectionChanged += New EventHandler(dataGridView1_SelectionChanged)
 
+        'Datepickers customization
+
+        DTPicker1.Format = DateTimePickerFormat.Custom
+        DTPicker1.CustomFormat = "MM/dd/yyyy"
+
+
+        'dropdownlist default fill section
+
+        FillDDlUser() 'Fill user cmb
+
+        cmbprstatus.Items.Add("-- Select Status --")
+        cmbprstatus.Items.Add("I - In Process")
+        cmbprstatus.Items.Add("F - Finished")
+        cmbprstatus.SelectedItem = "-- Select Status --"
+
 
     End Sub
 
-    Private Sub Label1_Click(sender As Object, e As EventArgs) Handles Label1.Click
+    Private Sub FillDDlUser()
+        Dim exMessage As String = " "
+        Try
+            Dim dsUser = gnr.FillDDLUser()
 
-    End Sub
+            dsUser.Tables(0).Columns.Add("FullValue", GetType(String))
 
-    Private Sub TableLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel1.Paint
+            For i As Integer = 0 To dsUser.Tables(0).Rows.Count - 1
+                If dsUser.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsUser.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsUser.Tables(0).Rows(i).Item(1).ToString()
+                    dsUser.Tables(0).Rows(i).Item(25) = fllValueName
+                    'do something
+                End If
+            Next
 
-    End Sub
+            cmbuser1.Items.Insert(0, "N/A")
+            cmbuser1.DataSource = dsUser.Tables(0)
+            cmbuser1.DisplayMember = "FullValue"
+            cmbuser1.ValueMember = "USUSER"
 
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
-    End Sub
-
-    Private Sub TabPage1_Click(sender As Object, e As EventArgs) Handles TabPage1.Click
-
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
     End Sub
 
     Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
@@ -93,7 +119,7 @@ Public Class frmProductsDevelopment
 
     End Sub
 
-    Private Sub DataGridView2_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView2.CellContentClick
+    Private Sub DataGridView2_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvProjectDetails.CellContentClick
 
     End Sub
 
@@ -167,6 +193,56 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Private Sub fillcell2(code As String)
+        Try
+            Dim ds As New DataSet()
+            ds.Locale = CultureInfo.InvariantCulture
+
+            sql = "SELECT * FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD =  " & code & " "  'DELETE BURNED REFERENCE
+            'get the query results
+            ds = gnr.FillGrid(sql)
+
+            dgvProjectDetails.AutoGenerateColumns = False
+            dgvProjectDetails.ColumnCount = 8
+
+            'Add Columns
+            dgvProjectDetails.Columns(0).Name = "Date"
+            dgvProjectDetails.Columns(0).HeaderText = "Date"
+            dgvProjectDetails.Columns(0).DataPropertyName = "PRDDAT"
+
+            dgvProjectDetails.Columns(1).Name = "PartNo"
+            dgvProjectDetails.Columns(1).HeaderText = "Part#"
+            dgvProjectDetails.Columns(1).DataPropertyName = "PRDPTN"
+
+            dgvProjectDetails.Columns(2).Name = "CTPNo"
+            dgvProjectDetails.Columns(2).HeaderText = "CTP#"
+            dgvProjectDetails.Columns(2).DataPropertyName = "PRDCTP"
+
+            dgvProjectDetails.Columns(3).Name = "MFRNo"
+            dgvProjectDetails.Columns(3).HeaderText = "MFR#"
+            dgvProjectDetails.Columns(3).DataPropertyName = "PRDMFR#"
+
+            dgvProjectDetails.Columns(4).Name = "Vendor"
+            dgvProjectDetails.Columns(4).HeaderText = "Vendor"
+            dgvProjectDetails.Columns(4).DataPropertyName = "VMVNUM"
+
+            dgvProjectDetails.Columns(5).Name = "VendorName"
+            dgvProjectDetails.Columns(5).HeaderText = "Vendor Name"
+            dgvProjectDetails.Columns(5).DataPropertyName = "VMNAME"
+
+            dgvProjectDetails.Columns(6).Name = "Status"
+            dgvProjectDetails.Columns(6).HeaderText = "Status"
+            dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
+
+            'FILL GRID
+            dgvProjectDetails.DataSource = ds.Tables(0)
+            Exit Sub
+        Catch ex As Exception
+            Dim example As String = ex.Message
+            Call gnr.gotoerror("frmproductsdevelopment", "fillcell2", Err.Number, Err.Description, Err.Source)
+        End Try
+    End Sub
+
     Private Sub DataGridView1_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
     Handles DataGridView1.CellFormatting
         Dim CurrentState As String = ""
@@ -184,6 +260,21 @@ Public Class frmProductsDevelopment
         End If
     End Sub
 
+
+    Private Sub dgvProjectDetails_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
+    Handles dgvProjectDetails.CellFormatting
+        Dim CurrentState As String = " "
+        Dim NewState As String = " "
+        If e.ColumnIndex = 6 Then
+            If e.Value IsNot Nothing Then
+                CurrentState = e.Value.ToString
+                NewState = gnr.GetProjectStatusDescription(CurrentState)
+                dgvProjectDetails.Rows(e.RowIndex).Cells("Status").Value = NewState
+
+            End If
+        End If
+    End Sub
+
     Private Sub cmdall_Click(sender As Object, e As EventArgs) Handles cmdall.Click
         cmdall_Click()
     End Sub
@@ -193,5 +284,63 @@ Public Class frmProductsDevelopment
             Dim value11 As String = row.Cells(0).Value.ToString()
         Next
     End Sub
+
+    Private Sub DataGridView1_DoubleClick(ByVal sender As Object, ByVal e As EventArgs) Handles DataGridView1.DoubleClick
+        Dim Index As Integer
+        Dim ds As New DataSet()
+        Dim RowDs As DataRow
+        ds.Locale = CultureInfo.InvariantCulture
+        Dim exMessage As String = " "
+
+        Try
+            For Each row As DataGridViewRow In DataGridView1.SelectedRows
+                Index = DataGridView1.CurrentCell.RowIndex
+                If DataGridView1.Rows(Index).Selected = True Then
+                    Dim code As String = row.Cells(0).Value.ToString()
+                    ds = gnr.GetDataByPRHCOD(code)
+                    If ds.Tables(0).Rows.Count = 1 Then
+
+                        SSTab1.SelectedTab = TabPage2
+                        For Each RowDs In ds.Tables(0).Rows
+                            txtCode.Text = Trim(RowDs.Item(0).ToString())
+                            txtname.Text = Trim(RowDs.Item(3).ToString()) ' format date
+
+                            Dim CleanDateString As String = Regex.Replace(RowDs.Item(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
+                            'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
+                            Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
+                            DTPicker1.Value = dtChange.ToShortDateString()
+
+                            If Trim(RowDs.Item(4).ToString()) = "I" Then
+                                cmbprstatus.SelectedIndex = 1
+                            ElseIf Trim(RowDs.Item(4).ToString()) = "F" Then
+                                cmbprstatus.SelectedIndex = 2
+                            Else
+                                cmbprstatus.SelectedIndex = 2
+                            End If
+                            'Dim Test1 = RowDs.Item(1).ToString() get the value begans with 0 pos
+                            'Dim test2 = ds.Tables(0).Columns.Item(1).ColumnName  get the grid header
+                        Next
+                    Else
+                        'message box warning
+                    End If
+
+                    'fill second grid process
+                    fillcell2(code)
+                Else
+                    'is is not selected
+                End If
+            Next
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+
+    End Sub
+
+    Protected Sub OnRowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
+        Dim index As Integer = Convert.ToInt32(e.CommandArgument)
+        Dim gvRow As DataGridViewRow = DataGridView1.Rows(index)
+    End Sub
+
 
 End Class

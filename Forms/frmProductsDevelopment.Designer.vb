@@ -23,7 +23,7 @@ Partial Class frmProductsDevelopment
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductsDevelopment))
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.SSTab1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.Button8 = New System.Windows.Forms.Button()
@@ -61,7 +61,7 @@ Partial Class frmProductsDevelopment
         Me.cmdall = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.DataGridView2 = New System.Windows.Forms.DataGridView()
+        Me.dgvProjectDetails = New System.Windows.Forms.DataGridView()
         Me.DateColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CTPNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -77,12 +77,12 @@ Partial Class frmProductsDevelopment
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
-        Me.TextBox6 = New System.Windows.Forms.TextBox()
-        Me.TextBox7 = New System.Windows.Forms.TextBox()
-        Me.ComboBox2 = New System.Windows.Forms.ComboBox()
-        Me.ComboBox3 = New System.Windows.Forms.ComboBox()
-        Me.ComboBox4 = New System.Windows.Forms.ComboBox()
-        Me.TextBox8 = New System.Windows.Forms.TextBox()
+        Me.txtCode = New System.Windows.Forms.TextBox()
+        Me.txtname = New System.Windows.Forms.TextBox()
+        Me.cmbprstatus = New System.Windows.Forms.ComboBox()
+        Me.cmbuser1 = New System.Windows.Forms.ComboBox()
+        Me.txtainfo = New System.Windows.Forms.TextBox()
+        Me.DTPicker1 = New System.Windows.Forms.DateTimePicker()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.Button19 = New System.Windows.Forms.Button()
@@ -145,13 +145,13 @@ Partial Class frmProductsDevelopment
         Me.TextBox24 = New System.Windows.Forms.TextBox()
         Me.TextBox25 = New System.Windows.Forms.TextBox()
         Me.ComboBox8 = New System.Windows.Forms.ComboBox()
-        Me.TabControl1.SuspendLayout()
+        Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
-        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvProjectDetails, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel3.SuspendLayout()
         Me.TabPage3.SuspendLayout()
         Me.TableLayoutPanel6.SuspendLayout()
@@ -161,20 +161,20 @@ Partial Class frmProductsDevelopment
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TabControl1
+        'SSTab1
         '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.SSTab1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Controls.Add(Me.TabPage3)
-        Me.TabControl1.Location = New System.Drawing.Point(3, 12)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1102, 591)
-        Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
-        Me.TabControl1.TabIndex = 0
+        Me.SSTab1.Controls.Add(Me.TabPage1)
+        Me.SSTab1.Controls.Add(Me.TabPage2)
+        Me.SSTab1.Controls.Add(Me.TabPage3)
+        Me.SSTab1.Location = New System.Drawing.Point(3, 12)
+        Me.SSTab1.Name = "SSTab1"
+        Me.SSTab1.SelectedIndex = 0
+        Me.SSTab1.Size = New System.Drawing.Size(1102, 591)
+        Me.SSTab1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
+        Me.SSTab1.TabIndex = 0
         '
         'TabPage1
         '
@@ -336,7 +336,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 99.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 126.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 137.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 169.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 172.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox1, 1, 0)
@@ -387,21 +387,21 @@ Partial Class frmProductsDevelopment
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(130, 3)
+        Me.TextBox1.Location = New System.Drawing.Point(128, 3)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(56, 20)
+        Me.TextBox1.Size = New System.Drawing.Size(55, 20)
         Me.TextBox1.TabIndex = 2
         '
         'TextBox2
         '
-        Me.TextBox2.Location = New System.Drawing.Point(130, 42)
+        Me.TextBox2.Location = New System.Drawing.Point(128, 42)
         Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(56, 20)
+        Me.TextBox2.Size = New System.Drawing.Size(55, 20)
         Me.TextBox2.TabIndex = 3
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(192, 3)
+        Me.Button1.Location = New System.Drawing.Point(189, 3)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 4
@@ -410,7 +410,7 @@ Partial Class frmProductsDevelopment
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(192, 42)
+        Me.Button2.Location = New System.Drawing.Point(189, 42)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(75, 23)
         Me.Button2.TabIndex = 5
@@ -420,7 +420,7 @@ Partial Class frmProductsDevelopment
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(275, 5)
+        Me.Label3.Location = New System.Drawing.Point(272, 5)
         Me.Label3.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
@@ -430,7 +430,7 @@ Partial Class frmProductsDevelopment
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(275, 44)
+        Me.Label4.Location = New System.Drawing.Point(272, 44)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(97, 13)
@@ -439,21 +439,21 @@ Partial Class frmProductsDevelopment
         '
         'TextBox3
         '
-        Me.TextBox3.Location = New System.Drawing.Point(396, 3)
+        Me.TextBox3.Location = New System.Drawing.Point(393, 3)
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(59, 20)
         Me.TextBox3.TabIndex = 8
         '
         'TextBox4
         '
-        Me.TextBox4.Location = New System.Drawing.Point(396, 42)
+        Me.TextBox4.Location = New System.Drawing.Point(393, 42)
         Me.TextBox4.Name = "TextBox4"
         Me.TextBox4.Size = New System.Drawing.Size(59, 20)
         Me.TextBox4.TabIndex = 9
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(465, 3)
+        Me.Button3.Location = New System.Drawing.Point(462, 3)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 10
@@ -462,7 +462,7 @@ Partial Class frmProductsDevelopment
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(465, 42)
+        Me.Button4.Location = New System.Drawing.Point(462, 42)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(75, 23)
         Me.Button4.TabIndex = 11
@@ -472,7 +472,7 @@ Partial Class frmProductsDevelopment
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(554, 5)
+        Me.Label5.Location = New System.Drawing.Point(551, 5)
         Me.Label5.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(88, 13)
@@ -482,7 +482,7 @@ Partial Class frmProductsDevelopment
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(554, 44)
+        Me.Label6.Location = New System.Drawing.Point(551, 44)
         Me.Label6.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(89, 13)
@@ -491,14 +491,14 @@ Partial Class frmProductsDevelopment
         '
         'TextBox5
         '
-        Me.TextBox5.Location = New System.Drawing.Point(653, 42)
+        Me.TextBox5.Location = New System.Drawing.Point(650, 42)
         Me.TextBox5.Name = "TextBox5"
         Me.TextBox5.Size = New System.Drawing.Size(120, 20)
         Me.TextBox5.TabIndex = 15
         '
         'Button5
         '
-        Me.Button5.Location = New System.Drawing.Point(779, 42)
+        Me.Button5.Location = New System.Drawing.Point(776, 42)
         Me.Button5.Name = "Button5"
         Me.Button5.Size = New System.Drawing.Size(75, 23)
         Me.Button5.TabIndex = 17
@@ -507,7 +507,7 @@ Partial Class frmProductsDevelopment
         '
         'Button6
         '
-        Me.Button6.Location = New System.Drawing.Point(916, 3)
+        Me.Button6.Location = New System.Drawing.Point(913, 3)
         Me.Button6.Name = "Button6"
         Me.Button6.Size = New System.Drawing.Size(75, 23)
         Me.Button6.TabIndex = 18
@@ -516,7 +516,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdall
         '
-        Me.cmdall.Location = New System.Drawing.Point(916, 42)
+        Me.cmdall.Location = New System.Drawing.Point(913, 42)
         Me.cmdall.Name = "cmdall"
         Me.cmdall.Size = New System.Drawing.Size(75, 23)
         Me.cmdall.TabIndex = 19
@@ -527,7 +527,7 @@ Partial Class frmProductsDevelopment
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.ComboBox1, 2)
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(653, 3)
+        Me.ComboBox1.Location = New System.Drawing.Point(650, 3)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox1.TabIndex = 20
@@ -535,7 +535,7 @@ Partial Class frmProductsDevelopment
         'TabPage2
         '
         Me.TabPage2.BackColor = System.Drawing.SystemColors.Menu
-        Me.TabPage2.Controls.Add(Me.DataGridView2)
+        Me.TabPage2.Controls.Add(Me.dgvProjectDetails)
         Me.TabPage2.Controls.Add(Me.TableLayoutPanel3)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
@@ -544,19 +544,20 @@ Partial Class frmProductsDevelopment
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         '
-        'DataGridView2
+        'dgvProjectDetails
         '
-        Me.DataGridView2.AllowUserToAddRows = False
-        Me.DataGridView2.AllowUserToDeleteRows = False
-        Me.DataGridView2.AllowUserToResizeColumns = False
-        Me.DataGridView2.AllowUserToResizeRows = False
-        Me.DataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DateColumn, Me.PartNo, Me.CTPNo, Me.MFRNo, Me.VendorColumn, Me.VendorNameColumn, Me.StatusColumn, Me.JiraTaskColumn})
-        Me.DataGridView2.Location = New System.Drawing.Point(15, 261)
-        Me.DataGridView2.Name = "DataGridView2"
-        Me.DataGridView2.Size = New System.Drawing.Size(1053, 250)
-        Me.DataGridView2.TabIndex = 2
+        Me.dgvProjectDetails.AllowUserToAddRows = False
+        Me.dgvProjectDetails.AllowUserToDeleteRows = False
+        Me.dgvProjectDetails.AllowUserToResizeColumns = False
+        Me.dgvProjectDetails.AllowUserToResizeRows = False
+        Me.dgvProjectDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgvProjectDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvProjectDetails.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DateColumn, Me.PartNo, Me.CTPNo, Me.MFRNo, Me.VendorColumn, Me.VendorNameColumn, Me.StatusColumn, Me.JiraTaskColumn})
+        Me.dgvProjectDetails.Location = New System.Drawing.Point(15, 261)
+        Me.dgvProjectDetails.Name = "dgvProjectDetails"
+        Me.dgvProjectDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvProjectDetails.Size = New System.Drawing.Size(1053, 250)
+        Me.dgvProjectDetails.TabIndex = 2
         '
         'DateColumn
         '
@@ -604,19 +605,19 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 27.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
         Me.TableLayoutPanel3.Controls.Add(Me.Label10, 0, 3)
         Me.TableLayoutPanel3.Controls.Add(Me.Label11, 0, 4)
         Me.TableLayoutPanel3.Controls.Add(Me.Label12, 0, 5)
-        Me.TableLayoutPanel3.Controls.Add(Me.TextBox6, 1, 0)
-        Me.TableLayoutPanel3.Controls.Add(Me.TextBox7, 1, 1)
-        Me.TableLayoutPanel3.Controls.Add(Me.ComboBox2, 1, 2)
-        Me.TableLayoutPanel3.Controls.Add(Me.ComboBox3, 1, 3)
-        Me.TableLayoutPanel3.Controls.Add(Me.ComboBox4, 1, 4)
-        Me.TableLayoutPanel3.Controls.Add(Me.TextBox8, 1, 5)
+        Me.TableLayoutPanel3.Controls.Add(Me.txtCode, 1, 0)
+        Me.TableLayoutPanel3.Controls.Add(Me.txtname, 1, 1)
+        Me.TableLayoutPanel3.Controls.Add(Me.cmbprstatus, 1, 3)
+        Me.TableLayoutPanel3.Controls.Add(Me.cmbuser1, 1, 4)
+        Me.TableLayoutPanel3.Controls.Add(Me.txtainfo, 1, 5)
+        Me.TableLayoutPanel3.Controls.Add(Me.DTPicker1, 1, 2)
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(15, 6)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
         Me.TableLayoutPanel3.RowCount = 6
@@ -689,52 +690,51 @@ Partial Class frmProductsDevelopment
         Me.Label12.TabIndex = 5
         Me.Label12.Text = "Comments"
         '
-        'TextBox6
+        'txtCode
         '
-        Me.TextBox6.Location = New System.Drawing.Point(112, 3)
-        Me.TextBox6.Name = "TextBox6"
-        Me.TextBox6.Size = New System.Drawing.Size(200, 20)
-        Me.TextBox6.TabIndex = 6
+        Me.txtCode.Location = New System.Drawing.Point(111, 3)
+        Me.txtCode.Name = "txtCode"
+        Me.txtCode.Size = New System.Drawing.Size(200, 20)
+        Me.txtCode.TabIndex = 6
         '
-        'TextBox7
+        'txtname
         '
-        Me.TextBox7.Location = New System.Drawing.Point(112, 38)
-        Me.TextBox7.Name = "TextBox7"
-        Me.TextBox7.Size = New System.Drawing.Size(200, 20)
-        Me.TextBox7.TabIndex = 7
+        Me.txtname.Location = New System.Drawing.Point(111, 38)
+        Me.txtname.Name = "txtname"
+        Me.txtname.Size = New System.Drawing.Size(200, 20)
+        Me.txtname.TabIndex = 7
         '
-        'ComboBox2
+        'cmbprstatus
         '
-        Me.ComboBox2.FormattingEnabled = True
-        Me.ComboBox2.Location = New System.Drawing.Point(112, 74)
-        Me.ComboBox2.Name = "ComboBox2"
-        Me.ComboBox2.Size = New System.Drawing.Size(200, 21)
-        Me.ComboBox2.TabIndex = 8
+        Me.cmbprstatus.FormattingEnabled = True
+        Me.cmbprstatus.Location = New System.Drawing.Point(111, 110)
+        Me.cmbprstatus.Name = "cmbprstatus"
+        Me.cmbprstatus.Size = New System.Drawing.Size(200, 21)
+        Me.cmbprstatus.TabIndex = 9
         '
-        'ComboBox3
+        'cmbuser1
         '
-        Me.ComboBox3.FormattingEnabled = True
-        Me.ComboBox3.Location = New System.Drawing.Point(112, 110)
-        Me.ComboBox3.Name = "ComboBox3"
-        Me.ComboBox3.Size = New System.Drawing.Size(200, 21)
-        Me.ComboBox3.TabIndex = 9
+        Me.cmbuser1.FormattingEnabled = True
+        Me.cmbuser1.Location = New System.Drawing.Point(111, 147)
+        Me.cmbuser1.Name = "cmbuser1"
+        Me.cmbuser1.Size = New System.Drawing.Size(200, 21)
+        Me.cmbuser1.TabIndex = 10
         '
-        'ComboBox4
+        'txtainfo
         '
-        Me.ComboBox4.FormattingEnabled = True
-        Me.ComboBox4.Location = New System.Drawing.Point(112, 147)
-        Me.ComboBox4.Name = "ComboBox4"
-        Me.ComboBox4.Size = New System.Drawing.Size(200, 21)
-        Me.ComboBox4.TabIndex = 10
+        Me.txtainfo.Location = New System.Drawing.Point(111, 183)
+        Me.txtainfo.Multiline = True
+        Me.txtainfo.Name = "txtainfo"
+        Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtainfo.Size = New System.Drawing.Size(200, 28)
+        Me.txtainfo.TabIndex = 11
         '
-        'TextBox8
+        'DTPicker1
         '
-        Me.TextBox8.Location = New System.Drawing.Point(112, 183)
-        Me.TextBox8.Multiline = True
-        Me.TextBox8.Name = "TextBox8"
-        Me.TextBox8.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TextBox8.Size = New System.Drawing.Size(200, 28)
-        Me.TextBox8.TabIndex = 11
+        Me.DTPicker1.Location = New System.Drawing.Point(111, 74)
+        Me.DTPicker1.Name = "DTPicker1"
+        Me.DTPicker1.Size = New System.Drawing.Size(200, 20)
+        Me.DTPicker1.TabIndex = 12
         '
         'TabPage3
         '
@@ -1407,17 +1407,17 @@ Partial Class frmProductsDevelopment
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1159, 607)
-        Me.Controls.Add(Me.TabControl1)
+        Me.Controls.Add(Me.SSTab1)
         Me.Name = "frmProductsDevelopment"
         Me.Text = "Form2"
-        Me.TabControl1.ResumeLayout(False)
+        Me.SSTab1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         Me.TabPage2.ResumeLayout(False)
-        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvProjectDetails, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel3.ResumeLayout(False)
         Me.TableLayoutPanel3.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
@@ -1433,7 +1433,7 @@ Partial Class frmProductsDevelopment
 
     End Sub
 
-    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents SSTab1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents TabPage3 As TabPage
@@ -1479,13 +1479,12 @@ Partial Class frmProductsDevelopment
     Friend WithEvents Label10 As Label
     Friend WithEvents Label11 As Label
     Friend WithEvents Label12 As Label
-    Friend WithEvents TextBox6 As TextBox
-    Friend WithEvents TextBox7 As TextBox
-    Friend WithEvents ComboBox2 As ComboBox
-    Friend WithEvents ComboBox3 As ComboBox
-    Friend WithEvents ComboBox4 As ComboBox
-    Friend WithEvents TextBox8 As TextBox
-    Friend WithEvents DataGridView2 As DataGridView
+    Friend WithEvents txtCode As TextBox
+    Friend WithEvents txtname As TextBox
+    Friend WithEvents cmbprstatus As ComboBox
+    Friend WithEvents cmbuser1 As ComboBox
+    Friend WithEvents txtainfo As TextBox
+    Friend WithEvents dgvProjectDetails As DataGridView
     Friend WithEvents DateColumn As DataGridViewTextBoxColumn
     Friend WithEvents PartNo As DataGridViewTextBoxColumn
     Friend WithEvents CTPNo As DataGridViewTextBoxColumn
@@ -1555,4 +1554,5 @@ Partial Class frmProductsDevelopment
     Friend WithEvents Panel3 As Panel
     Friend WithEvents TableLayoutPanel7 As TableLayoutPanel
     Friend WithEvents Button18 As Button
+    Friend WithEvents DTPicker1 As DateTimePicker
 End Class

@@ -93,6 +93,9 @@ Public Class Gn1
     Public test As String
     Public Const VBObjectError As Integer = -2147221504
     Public Versionctp As String
+    Public formats() As String = {"M/d/yyyy h:mm:ss tt", "M/d/yyyy h:mm tt", "MM/dd/yyyy hh:mm:ss", "M/d/yyyy h:mm:ss", "M/d/yyyy hh:mm tt",
+        "M/d/yyyy hh tt", "M/d/yyyy h:mm", "M/d/yyyy h:mm", "MM/dd/yyyy hh:mm", "M/dd/yyyy hh:mm", "MM/d/yyyy HH:mm:ss.ffffff"}
+
 
 
     Public Sub Valida_DirLog()
@@ -292,6 +295,126 @@ errhandler:
         End Try
     End Function
 
+    Public Function GetDataByPRHCOD(code As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLH WHERE PRHCOD = " & Trim(code)
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetJiraPath() As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim JiraPath As String = " "
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM cntrll where cnt01 = 'JIR' and trim(ucase(cnt03)) = 'PRO'"
+            ds = GetDataFromDatabase(Sql)
+            If ds.Tables(0).Rows.Count = 1 Then
+                JiraPath = ds.Tables(0).Rows(0).Item(3).ToString()
+            End If
+            Return JiraPath
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function FillDDLUser() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CSUSER WHERE USPTY8 = 'X' AND USPTY9 <> 'R' ORDER BY USNAME "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetProjectStatusDescription(code As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ProjectDescStatus As String = " "
+        Try
+            Dim CodeOk As String = Trim(UCase(code))
+            Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' and cnt03 = '" & CodeOk & "'"
+            ProjectDescStatus = GetSingleDataFromDatabase(Sql)
+            Return Trim(ProjectDescStatus)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function GetDataFromDatabase(query As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Try
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Dim dataAdapter As New Odbc.OdbcDataAdapter()
+                Dim ds As New DataSet()
+                ds.Locale = CultureInfo.InvariantCulture
+
+                ObjConn.Open()
+                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+                dataAdapter = New Odbc.OdbcDataAdapter(cmd)
+                dataAdapter.Fill(ds)
+
+                If ds.Tables(0).Rows.Count > 0 Then
+                    Return ds
+                Else
+                    'message box warning
+                    Return Nothing
+                End If
+            End Using
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function GetSingleDataFromDatabase(query As String) As String
+        Dim exMessage As String = " "
+        Dim DescriptionCode As String = " "
+        Try
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Dim dataAdapter As New Odbc.OdbcDataAdapter()
+                Dim ds As New DataSet()
+                ds.Locale = CultureInfo.InvariantCulture
+
+                ObjConn.Open()
+                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+                dataAdapter = New Odbc.OdbcDataAdapter(cmd)
+                dataAdapter.Fill(ds)
+
+                If ds.Tables(0).Rows.Count > 0 Then
+                    For Each RowDs In ds.Tables(0).Rows
+                        DescriptionCode = ds.Tables(0).Rows(0).Item(3).ToString()
+                        Exit For
+                    Next
+                    Return DescriptionCode
+                Else
+                    'message box warning
+                    Return Nothing
+                End If
+            End Using
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
 
     'Public Sub Generate_Log(Message As String)
