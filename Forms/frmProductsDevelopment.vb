@@ -47,7 +47,7 @@ Public Class frmProductsDevelopment
         Button14.TextAlign = ContentAlignment.MiddleLeft
 
         AddHandler DataGridView1.SelectionChanged, AddressOf dataGridView1_SelectionChanged
-        'DataGridView1. SelectionChanged += New EventHandler(dataGridView1_SelectionChanged)
+        'AddHandler dgvProjectDetails.DataBindingComplete, AddressOf dgvProjectDetails_DataBindingComplete
 
         'Datepickers customization
 
@@ -69,6 +69,7 @@ Public Class frmProductsDevelopment
 
     Private Sub FillDDlUser()
         Dim exMessage As String = " "
+        Dim CleanUser As String
         Try
             Dim dsUser = gnr.FillDDLUser()
 
@@ -77,12 +78,20 @@ Public Class frmProductsDevelopment
             For i As Integer = 0 To dsUser.Tables(0).Rows.Count - 1
                 If dsUser.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
                     Dim fllValueName = dsUser.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsUser.Tables(0).Rows(i).Item(1).ToString()
-                    dsUser.Tables(0).Rows(i).Item(25) = fllValueName
+                    CleanUser = Trim(dsUser.Tables(0).Rows(i).Item(0).ToString())
+                    dsUser.Tables(0).Rows(i).Item(2) = fllValueName
+                    dsUser.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                 End If
             Next
 
-            cmbuser1.Items.Insert(0, "N/A")
+
+            Dim newRow As DataRow = dsUser.Tables(0).NewRow
+            newRow("USUSER") = "N/A"
+            newRow("USUSER") = "NO NAME"
+            newRow("USUSER") = "N/A -- NO NAME"
+            dsUser.Tables(0).Rows.Add(newRow)
+
             cmbuser1.DataSource = dsUser.Tables(0)
             cmbuser1.DisplayMember = "FullValue"
             cmbuser1.ValueMember = "USUSER"
@@ -198,12 +207,12 @@ Public Class frmProductsDevelopment
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
 
-            sql = "SELECT * FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD =  " & code & " "  'DELETE BURNED REFERENCE
+            sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
             'get the query results
             ds = gnr.FillGrid(sql)
 
             dgvProjectDetails.AutoGenerateColumns = False
-            dgvProjectDetails.ColumnCount = 8
+            'dgvProjectDetails.ColumnCount = 8
 
             'Add Columns
             dgvProjectDetails.Columns(0).Name = "Date"
@@ -234,8 +243,12 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.Columns(6).HeaderText = "Status"
             dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
 
+
+
             'FILL GRID
             dgvProjectDetails.DataSource = ds.Tables(0)
+            'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
+
             Exit Sub
         Catch ex As Exception
             Dim example As String = ex.Message
@@ -261,19 +274,50 @@ Public Class frmProductsDevelopment
     End Sub
 
 
-    Private Sub dgvProjectDetails_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
-    Handles dgvProjectDetails.CellFormatting
+    'Private Sub dgvProjectDetails_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
+    'Handles dgvProjectDetails.CellFormatting
+    'Dim CurrentState As String = " "
+    'Dim NewState As String = " "
+
+    'For Each row As DataGridViewRow In dgvProjectDetails.Rows
+    '       CurrentState = row.Cells(6).Value.ToString()
+    'If CurrentState.Length <= 4 Then
+    '           NewState = gnr.GetProjectStatusDescription(CurrentState)
+    '          dgvProjectDetails.Rows(e.RowIndex).Cells("Status").Value = NewState
+    'Else
+    'Exit For
+    'End If
+    'Next
+    'If e.ColumnIndex = 6 Then
+    'If e.Value IsNot Nothing Then
+    'CurrentState = e.Value.ToString
+    'NewState = gnr.GetProjectStatusDescription(CurrentState)
+    'dgvProjectDetails.Rows(e.RowIndex).Cells("Status").Value = NewState
+
+    'End If
+    'End If
+    'End Sub
+
+    Private Sub dgvProjectDetails_DataBindingComplete(ByVal sender As Object, ByVal e As DataGridViewBindingCompleteEventArgs) _
+       Handles dgvProjectDetails.DataBindingComplete
+
         Dim CurrentState As String = " "
         Dim NewState As String = " "
-        If e.ColumnIndex = 6 Then
-            If e.Value IsNot Nothing Then
-                CurrentState = e.Value.ToString
-                NewState = gnr.GetProjectStatusDescription(CurrentState)
-                dgvProjectDetails.Rows(e.RowIndex).Cells("Status").Value = NewState
 
+        For Each row As DataGridViewRow In dgvProjectDetails.Rows
+            CurrentState = row.Cells(6).Value.ToString()
+            If CurrentState.Length <= 4 Then
+                NewState = gnr.GetProjectStatusDescription(CurrentState)
+                row.Cells(6).Value = NewState
+            Else
+                Exit For
             End If
-        End If
+        Next
+
+        dgvProjectDetails.AutoResizeColumns()
+
     End Sub
+
 
     Private Sub cmdall_Click(sender As Object, e As EventArgs) Handles cmdall.Click
         cmdall_Click()
@@ -304,11 +348,21 @@ Public Class frmProductsDevelopment
                         For Each RowDs In ds.Tables(0).Rows
                             txtCode.Text = Trim(RowDs.Item(0).ToString())
                             txtname.Text = Trim(RowDs.Item(3).ToString()) ' format date
+                            TabPage2.Text = "Project: " + txtname.Text
 
                             Dim CleanDateString As String = Regex.Replace(RowDs.Item(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
                             'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
                             Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
                             DTPicker1.Value = dtChange.ToShortDateString()
+
+                            If cmbuser1.FindStringExact(Trim(RowDs.Item(9).ToString())) Then
+                                cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(RowDs.Item(9).ToString()))
+                            End If
+
+                            If cmbuser1.SelectedIndex = -1 Then
+                                cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
+                            End If
+
 
                             If Trim(RowDs.Item(4).ToString()) = "I" Then
                                 cmbprstatus.SelectedIndex = 1

@@ -336,7 +336,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 99.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 126.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 137.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 172.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 173.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.TextBox1, 1, 0)
@@ -389,19 +389,19 @@ Partial Class frmProductsDevelopment
         '
         Me.TextBox1.Location = New System.Drawing.Point(128, 3)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(55, 20)
+        Me.TextBox1.Size = New System.Drawing.Size(54, 20)
         Me.TextBox1.TabIndex = 2
         '
         'TextBox2
         '
         Me.TextBox2.Location = New System.Drawing.Point(128, 42)
         Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(55, 20)
+        Me.TextBox2.Size = New System.Drawing.Size(54, 20)
         Me.TextBox2.TabIndex = 3
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(189, 3)
+        Me.Button1.Location = New System.Drawing.Point(188, 3)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 4
@@ -410,7 +410,7 @@ Partial Class frmProductsDevelopment
         '
         'Button2
         '
-        Me.Button2.Location = New System.Drawing.Point(189, 42)
+        Me.Button2.Location = New System.Drawing.Point(188, 42)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(75, 23)
         Me.Button2.TabIndex = 5
@@ -420,7 +420,7 @@ Partial Class frmProductsDevelopment
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(272, 5)
+        Me.Label3.Location = New System.Drawing.Point(271, 5)
         Me.Label3.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
@@ -430,7 +430,7 @@ Partial Class frmProductsDevelopment
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(272, 44)
+        Me.Label4.Location = New System.Drawing.Point(271, 44)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(97, 13)
@@ -439,21 +439,21 @@ Partial Class frmProductsDevelopment
         '
         'TextBox3
         '
-        Me.TextBox3.Location = New System.Drawing.Point(393, 3)
+        Me.TextBox3.Location = New System.Drawing.Point(392, 3)
         Me.TextBox3.Name = "TextBox3"
         Me.TextBox3.Size = New System.Drawing.Size(59, 20)
         Me.TextBox3.TabIndex = 8
         '
         'TextBox4
         '
-        Me.TextBox4.Location = New System.Drawing.Point(393, 42)
+        Me.TextBox4.Location = New System.Drawing.Point(392, 42)
         Me.TextBox4.Name = "TextBox4"
         Me.TextBox4.Size = New System.Drawing.Size(59, 20)
         Me.TextBox4.TabIndex = 9
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(462, 3)
+        Me.Button3.Location = New System.Drawing.Point(461, 3)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(75, 23)
         Me.Button3.TabIndex = 10
@@ -462,7 +462,7 @@ Partial Class frmProductsDevelopment
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(462, 42)
+        Me.Button4.Location = New System.Drawing.Point(461, 42)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(75, 23)
         Me.Button4.TabIndex = 11
@@ -472,7 +472,7 @@ Partial Class frmProductsDevelopment
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(551, 5)
+        Me.Label5.Location = New System.Drawing.Point(550, 5)
         Me.Label5.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(88, 13)
@@ -482,7 +482,7 @@ Partial Class frmProductsDevelopment
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(551, 44)
+        Me.Label6.Location = New System.Drawing.Point(550, 44)
         Me.Label6.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(89, 13)
@@ -491,14 +491,14 @@ Partial Class frmProductsDevelopment
         '
         'TextBox5
         '
-        Me.TextBox5.Location = New System.Drawing.Point(650, 42)
+        Me.TextBox5.Location = New System.Drawing.Point(649, 42)
         Me.TextBox5.Name = "TextBox5"
         Me.TextBox5.Size = New System.Drawing.Size(120, 20)
         Me.TextBox5.TabIndex = 15
         '
         'Button5
         '
-        Me.Button5.Location = New System.Drawing.Point(776, 42)
+        Me.Button5.Location = New System.Drawing.Point(775, 42)
         Me.Button5.Name = "Button5"
         Me.Button5.Size = New System.Drawing.Size(75, 23)
         Me.Button5.TabIndex = 17
@@ -507,7 +507,7 @@ Partial Class frmProductsDevelopment
         '
         'Button6
         '
-        Me.Button6.Location = New System.Drawing.Point(913, 3)
+        Me.Button6.Location = New System.Drawing.Point(912, 3)
         Me.Button6.Name = "Button6"
         Me.Button6.Size = New System.Drawing.Size(75, 23)
         Me.Button6.TabIndex = 18
@@ -516,7 +516,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdall
         '
-        Me.cmdall.Location = New System.Drawing.Point(913, 42)
+        Me.cmdall.Location = New System.Drawing.Point(912, 42)
         Me.cmdall.Name = "cmdall"
         Me.cmdall.Size = New System.Drawing.Size(75, 23)
         Me.cmdall.TabIndex = 19
@@ -527,7 +527,7 @@ Partial Class frmProductsDevelopment
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.ComboBox1, 2)
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(650, 3)
+        Me.ComboBox1.Location = New System.Drawing.Point(649, 3)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
         Me.ComboBox1.TabIndex = 20
@@ -550,7 +550,6 @@ Partial Class frmProductsDevelopment
         Me.dgvProjectDetails.AllowUserToDeleteRows = False
         Me.dgvProjectDetails.AllowUserToResizeColumns = False
         Me.dgvProjectDetails.AllowUserToResizeRows = False
-        Me.dgvProjectDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvProjectDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvProjectDetails.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DateColumn, Me.PartNo, Me.CTPNo, Me.MFRNo, Me.VendorColumn, Me.VendorNameColumn, Me.StatusColumn, Me.JiraTaskColumn})
         Me.dgvProjectDetails.Location = New System.Drawing.Point(15, 261)
@@ -563,41 +562,49 @@ Partial Class frmProductsDevelopment
         '
         Me.DateColumn.HeaderText = "Date"
         Me.DateColumn.Name = "DateColumn"
+        Me.DateColumn.Width = 126
         '
         'PartNo
         '
         Me.PartNo.HeaderText = "Part#"
         Me.PartNo.Name = "PartNo"
+        Me.PartNo.Width = 127
         '
         'CTPNo
         '
         Me.CTPNo.HeaderText = "CTP#"
         Me.CTPNo.Name = "CTPNo"
+        Me.CTPNo.Width = 126
         '
         'MFRNo
         '
         Me.MFRNo.HeaderText = "MFR#"
         Me.MFRNo.Name = "MFRNo"
+        Me.MFRNo.Width = 126
         '
         'VendorColumn
         '
         Me.VendorColumn.HeaderText = "Vendor"
         Me.VendorColumn.Name = "VendorColumn"
+        Me.VendorColumn.Width = 126
         '
         'VendorNameColumn
         '
         Me.VendorNameColumn.HeaderText = "Vendor Name"
         Me.VendorNameColumn.Name = "VendorNameColumn"
+        Me.VendorNameColumn.Width = 127
         '
         'StatusColumn
         '
         Me.StatusColumn.HeaderText = "Status"
         Me.StatusColumn.Name = "StatusColumn"
+        Me.StatusColumn.Width = 126
         '
         'JiraTaskColumn
         '
         Me.JiraTaskColumn.HeaderText = "Jira Task"
         Me.JiraTaskColumn.Name = "JiraTaskColumn"
+        Me.JiraTaskColumn.Width = 126
         '
         'TableLayoutPanel3
         '
@@ -605,7 +612,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 31.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
