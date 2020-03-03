@@ -310,6 +310,66 @@ errhandler:
         End Try
     End Function
 
+    Public Function GetDataByCodeAndPartNo(code As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & Trim(code) & " AND trim(ucase(PRDPTN)) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByPartNo2(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM DVINVA INNER JOIN VNMAS ON DVINVA.DVPRMG = digits(VNMAS.VMVNUM) WHERE DVPART = '" & Trim(UCase(partNo)) & "' and dvlocn = '01'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByPartMix() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1)"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByPartNo(partNo As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim strDescrption As String
+        Dim columnToChange = "IMDSC"
+        Try
+            Sql = "SELECT * FROM INMSTA INNER JOIN DVINVA ON INMSTA.IMPTN = DVINVA.DVPART WHERE UCASE(IMPTN) = '" & Trim(UCase(partNo)) & "'"
+            strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
+            Return strDescrption
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetJiraPath() As String
         Dim exMessage As String = " "
         Dim Sql As String
@@ -344,14 +404,30 @@ errhandler:
         End Try
     End Function
 
+    Public Function FillDDlMinorCode() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1) "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetProjectStatusDescription(code As String) As String
         Dim exMessage As String = " "
         Dim Sql As String
         Dim ProjectDescStatus As String = " "
+        Dim columnToChange = "CNTDE1"
         Try
             Dim CodeOk As String = Trim(UCase(code))
             Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' and cnt03 = '" & CodeOk & "'"
-            ProjectDescStatus = GetSingleDataFromDatabase(Sql)
+            ProjectDescStatus = GetSingleDataFromDatabase(Sql, columnToChange)
             Return Trim(ProjectDescStatus)
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -385,7 +461,7 @@ errhandler:
         End Try
     End Function
 
-    Private Function GetSingleDataFromDatabase(query As String) As String
+    Private Function GetSingleDataFromDatabase(query As String, columnToChange As String) As String
         Dim exMessage As String = " "
         Dim DescriptionCode As String = " "
         Try
@@ -399,9 +475,10 @@ errhandler:
                 dataAdapter = New Odbc.OdbcDataAdapter(cmd)
                 dataAdapter.Fill(ds)
 
+                Dim index = ds.Tables(0).Columns(columnToChange).Ordinal
                 If ds.Tables(0).Rows.Count > 0 Then
                     For Each RowDs In ds.Tables(0).Rows
-                        DescriptionCode = ds.Tables(0).Rows(0).Item(3).ToString()
+                        DescriptionCode = ds.Tables(0).Rows(0).Item(index).ToString()
                         Exit For
                     Next
                     Return DescriptionCode
@@ -415,7 +492,6 @@ errhandler:
             Return Nothing
         End Try
     End Function
-
 
     'Public Sub Generate_Log(Message As String)
     'On Error GoTo Generate_Log_Err

@@ -58,6 +58,7 @@ Public Class frmProductsDevelopment
         'dropdownlist default fill section
 
         FillDDlUser() 'Fill user cmb
+        FillDDlUser1()
 
         cmbprstatus.Items.Add("-- Select Status --")
         cmbprstatus.Items.Add("I - In Process")
@@ -95,6 +96,75 @@ Public Class frmProductsDevelopment
             cmbuser1.DataSource = dsUser.Tables(0)
             cmbuser1.DisplayMember = "FullValue"
             cmbuser1.ValueMember = "USUSER"
+
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub FillDDlUser1()
+        Dim exMessage As String = " "
+        Dim CleanUser As String
+        Try
+            Dim dsUser = gnr.FillDDLUser()
+
+            dsUser.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsUser.Tables(0).Rows.Count - 1
+                If dsUser.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsUser.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsUser.Tables(0).Rows(i).Item(1).ToString()
+                    CleanUser = Trim(dsUser.Tables(0).Rows(i).Item(0).ToString())
+                    dsUser.Tables(0).Rows(i).Item(2) = fllValueName
+                    dsUser.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+
+            Dim newRow As DataRow = dsUser.Tables(0).NewRow
+            newRow("USUSER") = "N/A"
+            newRow("USUSER") = "NO NAME"
+            newRow("USUSER") = "N/A -- NO NAME"
+            dsUser.Tables(0).Rows.Add(newRow)
+
+            cmbuser.DataSource = dsUser.Tables(0)
+            cmbuser.DisplayMember = "FullValue"
+            cmbuser.ValueMember = "USUSER"
+
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub FillDDlMinorCode()
+        Dim exMessage As String = " "
+        Try
+            Dim dsMinCodes = gnr.FillDDlMinorCode()
+
+            dsMinCodes.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsMinCodes.Tables(0).Rows.Count - 1
+                If dsMinCodes.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsMinCodes.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsMinCodes.Tables(0).Rows(i).Item(3).ToString()
+                    'dsMinCodes = Trim(dsMinCodes.Tables(0).Rows(i).Item(0).ToString())
+                    dsMinCodes.Tables(0).Rows(i).Item(5) = fllValueName
+                    'dsMinCodes.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+
+            'Dim newRow As DataRow = dsMinCodes.Tables(0).NewRow
+            'newRow("USUSER") = "N/A"
+            'newRow("USUSER") = "NO NAME"
+            'newRow("USUSER") = "N/A -- NO NAME"
+            'dsMinCodes.Tables(0).Rows.Add(newRow)
+
+            cmbuser1.DataSource = dsMinCodes.Tables(0)
+            cmbuser1.DisplayMember = "FullValue"
+            cmbuser1.ValueMember = "CNTDE1"
 
 
         Catch ex As Exception
@@ -141,6 +211,8 @@ Public Class frmProductsDevelopment
     End Sub
 
     'here class traduction begans---------------------------------------------------------
+
+    'the userid is burned. Need to fix!!!!!!!!!Importatnt!!!!!
 
     Private Sub cmdall_Click()
         Try
@@ -329,6 +401,74 @@ Public Class frmProductsDevelopment
         Next
     End Sub
 
+    Private Sub dgvProjectDetails_DoubleClick(ByVal sender As Object, ByVal e As EventArgs) Handles dgvProjectDetails.DoubleClick
+        Dim Index As Integer
+        Dim ds As New DataSet()
+        Dim ds1 As New DataSet()
+        Dim RowDs As DataRow
+        ds.Locale = CultureInfo.InvariantCulture
+        ds1.Locale = CultureInfo.InvariantCulture
+        Dim exMessage As String = " "
+        Dim code As String = txtCode.Text
+        Dim partDescription As String
+        Dim dtSecondTb As DataTable = New DataTable()
+        Dim columnToChange As String = "DVPRMG"
+        Dim columnToChange1 As String = "VMNAME"
+
+        Try
+            For Each row As DataGridViewRow In dgvProjectDetails.SelectedRows
+                Index = dgvProjectDetails.CurrentCell.RowIndex
+                If dgvProjectDetails.Rows(Index).Selected = True Then
+                    Dim part As String = row.Cells(1).Value.ToString()
+                    ds = gnr.GetDataByCodeAndPartNo(code, part)
+                    partDescription = gnr.GetDataByPartNo(part)
+                    ds1 = gnr.GetDataByPartNo2(part)
+                    If ds.Tables(0).Rows.Count > 0 Then
+                        SSTab1.SelectedTab = TabPage3
+                        For Each RowDs In ds.Tables(0).Rows
+
+                            Dim CleanDateString As String = Regex.Replace(RowDs.Item(2).ToString(), "/[^0-9a-zA-Z:]/g", "")
+                            Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
+                            DTPicker2.Value = dtChange.ToShortDateString()
+
+                            txtvendorno.Text = RowDs.Item(23).ToString()
+                            txtvendorname.Text = RowDs.Item(36).ToString()
+                            txtpartno.Text = RowDs.Item(1).ToString()
+                            txtctpno.Text = RowDs.Item(7).ToString()
+                            txtqty.Text = RowDs.Item(8).ToString()
+                            txtmfr.Text = RowDs.Item(9).ToString()
+                            txtmfrno.Text = RowDs.Item(10).ToString()
+
+                            If cmbuser.FindStringExact(Trim(RowDs.Item(18).ToString())) Then
+                                cmbuser.SelectedIndex = cmbuser.FindString(Trim(RowDs.Item(18).ToString()))
+                            End If
+
+                            txtpartdescription.Text = partDescription
+
+
+                        Next
+
+                        If cmbuser.SelectedIndex = -1 Then
+                            cmbuser.SelectedIndex = cmbuser1.Items.Count - 1
+                        End If
+
+                        Dim ctIndex = ds1.Tables(0).Columns(columnToChange).Ordinal
+                        Dim ctIndex1 = ds1.Tables(0).Columns(columnToChange1).Ordinal
+                        txtvendornoa.Text = ds1.Tables(0).Rows(0).ItemArray(ctIndex).ToString()
+                        txtvendornamea.Text = ds1.Tables(0).Rows(0).ItemArray(ctIndex1).ToString()
+
+
+
+                    End If
+
+
+                End If
+            Next
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     Private Sub DataGridView1_DoubleClick(ByVal sender As Object, ByVal e As EventArgs) Handles DataGridView1.DoubleClick
         Dim Index As Integer
         Dim ds As New DataSet()
@@ -396,5 +536,7 @@ Public Class frmProductsDevelopment
         Dim gvRow As DataGridViewRow = DataGridView1.Rows(index)
     End Sub
 
+    Private Sub ComboBox5_SelectedIndexChanged(sender As Object, e As EventArgs)
 
+    End Sub
 End Class
