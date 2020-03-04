@@ -355,6 +355,21 @@ errhandler:
         End Try
     End Function
 
+    Public Function GetDataByVendorAndPartNo(vendorNo As String, partNo As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim strDescrption As String
+        Dim columnToChange = "PQMIN"
+        Try
+            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
+            Return strDescrption
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetDataByPartNo(partNo As String) As String
         Dim exMessage As String = " "
         Dim Sql As String
@@ -411,6 +426,21 @@ errhandler:
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1) "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetAllStatuses() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' order by cnt02"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -492,6 +522,8 @@ errhandler:
             Return Nothing
         End Try
     End Function
+
+
 
     'Public Sub Generate_Log(Message As String)
     'On Error GoTo Generate_Log_Err

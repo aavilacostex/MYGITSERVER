@@ -15,58 +15,7 @@ Public Class frmProductsDevelopment
     Public puragent As Integer
     Dim sql As String
 
-
-    Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        SSTab1.ItemSize = (New Size(SSTab1.Width / SSTab1.TabCount, 0))
-        SSTab1.Padding = New System.Drawing.Point(300, 10)
-        SSTab1.Appearance = TabAppearance.FlatButtons
-        'TabControl1.ItemSize = New Size(0, 1)
-        SSTab1.SizeMode = TabSizeMode.Fixed
-
-        Button1.FlatStyle = FlatStyle.Flat
-        Button2.FlatStyle = FlatStyle.Flat
-        Button3.FlatStyle = FlatStyle.Flat
-        Button4.FlatStyle = FlatStyle.Flat
-        Button5.FlatStyle = FlatStyle.Flat
-        Button6.FlatStyle = FlatStyle.Flat
-        cmdall.FlatStyle = FlatStyle.Flat
-
-        DataGridView1.RowHeadersVisible = False
-        dgvProjectDetails.RowHeadersVisible = False
-
-        'Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
-        Button12.ImageAlign = ContentAlignment.MiddleRight
-        Button12.TextAlign = ContentAlignment.MiddleLeft
-
-        ' Button13.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\save.PNG")
-        Button13.ImageAlign = ContentAlignment.MiddleRight
-        Button13.TextAlign = ContentAlignment.MiddleLeft
-
-        'Button14.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\exit.PNG")
-        Button14.ImageAlign = ContentAlignment.MiddleRight
-        Button14.TextAlign = ContentAlignment.MiddleLeft
-
-        AddHandler DataGridView1.SelectionChanged, AddressOf dataGridView1_SelectionChanged
-        'AddHandler dgvProjectDetails.DataBindingComplete, AddressOf dgvProjectDetails_DataBindingComplete
-
-        'Datepickers customization
-
-        DTPicker1.Format = DateTimePickerFormat.Custom
-        DTPicker1.CustomFormat = "MM/dd/yyyy"
-
-
-        'dropdownlist default fill section
-
-        FillDDlUser() 'Fill user cmb
-        FillDDlUser1()
-
-        cmbprstatus.Items.Add("-- Select Status --")
-        cmbprstatus.Items.Add("I - In Process")
-        cmbprstatus.Items.Add("F - Finished")
-        cmbprstatus.SelectedItem = "-- Select Status --"
-
-
-    End Sub
+#Region "Combobox load Region"
 
     Private Sub FillDDlUser()
         Dim exMessage As String = " "
@@ -138,6 +87,43 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Private Sub FillDDLStatus()
+        Dim exMessage As String = " "
+        Dim CleanUser As String
+        Try
+            Dim dsStatuses = gnr.GetAllStatuses()
+
+            dsStatuses.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsStatuses.Tables(0).Rows.Count - 1
+                If dsStatuses.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(3).ToString()
+                    'CleanUser = Trim(dsStatuses.Tables(0).Rows(i).Item(0).ToString())
+                    dsStatuses.Tables(0).Rows(i).Item(5) = fllValueName
+                    'dsStatuses.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+
+            Dim newRow As DataRow = dsStatuses.Tables(0).NewRow
+            newRow("CNT01") = "N/A"
+            newRow("CNT02") = "N/A"
+            newRow("CNT03") = "N/A"
+            newRow("CNTDE1") = "N/A -- NO NAME"
+            newRow("CNTDE2") = "NO STATUS"
+            newRow("FullValue") = "N/A"
+            dsStatuses.Tables(0).Rows.Add(newRow)
+
+            cmbstatus.DataSource = dsStatuses.Tables(0)
+            cmbstatus.DisplayMember = "FullValue"
+            cmbstatus.ValueMember = "CNT03"
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     Private Sub FillDDlMinorCode()
         Dim exMessage As String = " "
         Try
@@ -155,58 +141,117 @@ Public Class frmProductsDevelopment
                 End If
             Next
 
-
-            'Dim newRow As DataRow = dsMinCodes.Tables(0).NewRow
-            'newRow("USUSER") = "N/A"
-            'newRow("USUSER") = "NO NAME"
-            'newRow("USUSER") = "N/A -- NO NAME"
-            'dsMinCodes.Tables(0).Rows.Add(newRow)
-
-            cmbuser1.DataSource = dsMinCodes.Tables(0)
-            cmbuser1.DisplayMember = "FullValue"
-            cmbuser1.ValueMember = "CNTDE1"
-
+            cmbminorcode.DataSource = dsMinCodes.Tables(0)
+            cmbminorcode.DisplayMember = "FullValue"
+            cmbminorcode.ValueMember = "CNT03"
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
-    Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles TextBox1.GotFocus
-        TextBox1.SelectionStart = 0
-        TextBox1.SelectionLength = Len(Trim(TextBox1.Text))
+#End Region
+
+    Private Sub changeControlAccess(value As Boolean)
+        txtvendorno.ReadOnly = value
+        txtvendorname.ReadOnly = value
+        txtpartno.ReadOnly = value
+        txtpartdescription.ReadOnly = value
+        txtvendornoa.ReadOnly = value
+        txtvendornamea.ReadOnly = value
+        txtminor.ReadOnly = value
+        txtCode.ReadOnly = value
     End Sub
 
-    Private Sub TextBox3_GotFocus(sender As Object, e As EventArgs) Handles TextBox3.GotFocus
-        TextBox3.SelectionStart = 0
-        TextBox3.SelectionLength = Len(Trim(TextBox1.Text))
+    Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        SSTab1.ItemSize = (New Size(SSTab1.Width / SSTab1.TabCount, 0))
+        SSTab1.Padding = New System.Drawing.Point(300, 10)
+        SSTab1.Appearance = TabAppearance.FlatButtons
+        'TabControl1.ItemSize = New Size(0, 1)
+        SSTab1.SizeMode = TabSizeMode.Fixed
+
+        cmdsearch.FlatStyle = FlatStyle.Flat
+        cmdsearchcode.FlatStyle = FlatStyle.Flat
+        cmdsearch1.FlatStyle = FlatStyle.Flat
+        cmdsearchpart.FlatStyle = FlatStyle.Flat
+        cmdsearchctp.FlatStyle = FlatStyle.Flat
+        cmdsearchstatus.FlatStyle = FlatStyle.Flat
+        cmdall.FlatStyle = FlatStyle.Flat
+
+        DataGridView1.RowHeadersVisible = False
+        dgvProjectDetails.RowHeadersVisible = False
+
+        'Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
+        Button12.ImageAlign = ContentAlignment.MiddleRight
+        Button12.TextAlign = ContentAlignment.MiddleLeft
+
+        ' Button13.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\save.PNG")
+        Button13.ImageAlign = ContentAlignment.MiddleRight
+        Button13.TextAlign = ContentAlignment.MiddleLeft
+
+        'Button14.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\exit.PNG")
+        Button14.ImageAlign = ContentAlignment.MiddleRight
+        Button14.TextAlign = ContentAlignment.MiddleLeft
+
+        'AddHandler DataGridView1.SelectionChanged, AddressOf dataGridView1_SelectionChanged
+        'AddHandler dgvProjectDetails.DataBindingComplete, AddressOf dgvProjectDetails_DataBindingComplete
+
+        'Datepickers customization
+
+        DTPicker1.Format = DateTimePickerFormat.Custom
+        DTPicker1.CustomFormat = "MM/dd/yyyy"
+
+        DTPicker2.Format = DateTimePickerFormat.Custom
+        DTPicker2.CustomFormat = "MM/dd/yyyy"
+
+        DTPicker3.Format = DateTimePickerFormat.Custom
+        DTPicker3.CustomFormat = "MM/dd/yyyy"
+
+        DTPicker4.Format = DateTimePickerFormat.Custom
+        DTPicker4.CustomFormat = "MM/dd/yyyy"
+
+
+        'dropdownlist default fill section
+
+        FillDDlUser() 'Fill user cmb
+        FillDDlUser1()
+        FillDDLStatus()
+        FillDDlMinorCode()
+
+        cmbprstatus.Items.Add("-- Select Status --")
+        cmbprstatus.Items.Add("I - In Process")
+        cmbprstatus.Items.Add("F - Finished")
+        cmbprstatus.SelectedItem = "-- Select Status --"
+
+        Panel4.Enabled = False
+        Panel1.Enabled = False
+
+
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub TextBox1_GotFocus(sender As Object, e As EventArgs) Handles txtsearch.GotFocus
+        txtsearch.SelectionStart = 0
+        txtsearch.SelectionLength = Len(Trim(txtsearch.Text))
+    End Sub
+
+    Private Sub TextBox3_GotFocus(sender As Object, e As EventArgs) Handles txtsearch1.GotFocus
+        txtsearch1.SelectionStart = 0
+        txtsearch1.SelectionLength = Len(Trim(txtsearch.Text))
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles cmdsearch.Click
         Try
-            If Trim(TextBox1.Text) <> "" Then
+            If Trim(txtsearch.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(TextBox1.Text)), "'", "") & "%'"
+                    strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(TextBox1.Text)), "'", "") & "%'"
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
                 End If
             End If
 
         Catch ex As Exception
 
         End Try
-
-    End Sub
-
-    Private Sub DataGridView2_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvProjectDetails.CellContentClick
-
-    End Sub
-
-    Private Sub TableLayoutPanel4_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel4.Paint
-        'TableLayoutPanel4.CellBorderStyle = TableLayoutPanelCellBorderStyle.Outset
-    End Sub
-
-    Private Sub Button15_Click(sender As Object, e As EventArgs) Handles Button15.Click
 
     End Sub
 
@@ -267,7 +312,9 @@ Public Class frmProductsDevelopment
 
             'FILL GRID
             DataGridView1.DataSource = ds.Tables(0)
-            Exit Sub
+
+            'changeControlAccess(True)
+            'Exit Sub
         Catch ex As Exception
             Dim example As String = ex.Message
             Call gnr.gotoerror("frmproductsdevelopment", "fillcell1", Err.Number, Err.Description, Err.Source)
@@ -345,31 +392,6 @@ Public Class frmProductsDevelopment
         End If
     End Sub
 
-
-    'Private Sub dgvProjectDetails_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
-    'Handles dgvProjectDetails.CellFormatting
-    'Dim CurrentState As String = " "
-    'Dim NewState As String = " "
-
-    'For Each row As DataGridViewRow In dgvProjectDetails.Rows
-    '       CurrentState = row.Cells(6).Value.ToString()
-    'If CurrentState.Length <= 4 Then
-    '           NewState = gnr.GetProjectStatusDescription(CurrentState)
-    '          dgvProjectDetails.Rows(e.RowIndex).Cells("Status").Value = NewState
-    'Else
-    'Exit For
-    'End If
-    'Next
-    'If e.ColumnIndex = 6 Then
-    'If e.Value IsNot Nothing Then
-    'CurrentState = e.Value.ToString
-    'NewState = gnr.GetProjectStatusDescription(CurrentState)
-    'dgvProjectDetails.Rows(e.RowIndex).Cells("Status").Value = NewState
-
-    'End If
-    'End If
-    'End Sub
-
     Private Sub dgvProjectDetails_DataBindingComplete(ByVal sender As Object, ByVal e As DataGridViewBindingCompleteEventArgs) _
        Handles dgvProjectDetails.DataBindingComplete
 
@@ -390,15 +412,8 @@ Public Class frmProductsDevelopment
 
     End Sub
 
-
     Private Sub cmdall_Click(sender As Object, e As EventArgs) Handles cmdall.Click
         cmdall_Click()
-    End Sub
-
-    Private Sub dataGridView1_SelectionChanged(ByVal sender As Object, ByVal e As EventArgs)
-        For Each row As DataGridViewRow In DataGridView1.SelectedRows
-            Dim value11 As String = row.Cells(0).Value.ToString()
-        Next
     End Sub
 
     Private Sub dgvProjectDetails_DoubleClick(ByVal sender As Object, ByVal e As EventArgs) Handles dgvProjectDetails.DoubleClick
@@ -431,20 +446,69 @@ Public Class frmProductsDevelopment
                             Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
                             DTPicker2.Value = dtChange.ToShortDateString()
 
-                            txtvendorno.Text = RowDs.Item(23).ToString()
-                            txtvendorname.Text = RowDs.Item(36).ToString()
-                            txtpartno.Text = RowDs.Item(1).ToString()
-                            txtctpno.Text = RowDs.Item(7).ToString()
-                            txtqty.Text = RowDs.Item(8).ToString()
-                            txtmfr.Text = RowDs.Item(9).ToString()
-                            txtmfrno.Text = RowDs.Item(10).ToString()
+                            txtvendorno.Text = RowDs.Item(ds.Tables(0).Columns("VMVNUM").Ordinal).ToString()
+                            txtvendorname.Text = RowDs.Item(ds.Tables(0).Columns("VMNAME").Ordinal).ToString()
+                            txtpartno.Text = RowDs.Item(ds.Tables(0).Columns("PRDPTN").Ordinal).ToString()
+                            txtctpno.Text = RowDs.Item(ds.Tables(0).Columns("PRDCTP").Ordinal).ToString()
+                            txtqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDQTY").Ordinal).ToString()
+                            txtmfr.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR").Ordinal).ToString()
+                            txtmfrno.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR#").Ordinal).ToString()
+                            txtsampleqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDSQTY").Ordinal).ToString()
+                            'txtminqty.Text = RowDs.Item(ds.Tables(0).Columns("PQMIN").Ordinal).ToString()
+                            txtunitcostnew.Text = RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()
+                            txtunitcost.Text = RowDs.Item(ds.Tables(0).Columns("PRDCOS").Ordinal).ToString()
+                            txtsample.Text = RowDs.Item(ds.Tables(0).Columns("PRDSCO").Ordinal).ToString()
+                            txttcost.Text = RowDs.Item(ds.Tables(0).Columns("PRDTTC").Ordinal).ToString()
+                            txttoocost.Text = RowDs.Item(ds.Tables(0).Columns("PRDTCO").Ordinal).ToString()
+                            txtpo.Text = RowDs.Item(ds.Tables(0).Columns("PRDPO#").Ordinal).ToString()
+                            txtBenefits.Text = RowDs.Item(ds.Tables(0).Columns("PRDBEN").Ordinal).ToString()
+
+                            txtminqty.Text = gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text)
 
                             If cmbuser.FindStringExact(Trim(RowDs.Item(18).ToString())) Then
                                 cmbuser.SelectedIndex = cmbuser.FindString(Trim(RowDs.Item(18).ToString()))
                             End If
 
+                            Dim posValue As Integer = 0
+                            For Each obj As DataRowView In cmbstatus.Items
+                                Dim VarQuery = Trim(RowDs.Item(ds.Tables(0).Columns("PRDSTS").Ordinal).ToString())
+                                Dim VarCombo = Trim(obj.Item(2).ToString())
+                                If VarQuery = VarCombo Then
+                                    cmbstatus.SelectedIndex = posValue
+                                    Exit For
+                                Else
+                                    posValue += 1
+                                End If
+                            Next
+
+                            Dim posValueMin As Integer = 0
+                            For Each obj As DataRowView In cmbminorcode.Items
+                                Dim VarQuery = Trim(RowDs.Item(ds.Tables(0).Columns("PRDMPC").Ordinal).ToString())
+                                Dim VarCombo = Trim(obj.Item(2).ToString())
+                                If VarQuery = VarCombo Then
+                                    cmbminorcode.SelectedIndex = posValueMin
+                                    Exit For
+                                Else
+                                    posValueMin += 1
+                                End If
+                            Next
+
                             txtpartdescription.Text = partDescription
 
+                            Dim rdValue = RowDs.Item(ds.Tables(0).Columns("PRDPTS").Ordinal).ToString()
+                            If rdValue = "1" Then
+                                optCTP.Checked = True
+                                optVENDOR.Checked = False
+                                optboth.Checked = False
+                            ElseIf rdValue = "2" Then
+                                optCTP.Checked = False
+                                optVENDOR.Checked = True
+                                optboth.Checked = False
+                            ElseIf rdValue = "" Then
+                                optCTP.Checked = False
+                                optVENDOR.Checked = False
+                                optboth.Checked = True
+                            End If
 
                         Next
 
@@ -456,14 +520,16 @@ Public Class frmProductsDevelopment
                         Dim ctIndex1 = ds1.Tables(0).Columns(columnToChange1).Ordinal
                         txtvendornoa.Text = ds1.Tables(0).Rows(0).ItemArray(ctIndex).ToString()
                         txtvendornamea.Text = ds1.Tables(0).Rows(0).ItemArray(ctIndex1).ToString()
-
-
-
                     End If
 
 
                 End If
             Next
+
+            changeControlAccess(True)
+
+            cmbminorcode.Enabled = False
+            txtminor.Enabled = False
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -481,6 +547,7 @@ Public Class frmProductsDevelopment
                 Index = DataGridView1.CurrentCell.RowIndex
                 If DataGridView1.Rows(Index).Selected = True Then
                     Dim code As String = row.Cells(0).Value.ToString()
+
                     ds = gnr.GetDataByPRHCOD(code)
                     If ds.Tables(0).Rows.Count = 1 Then
 
@@ -531,12 +598,45 @@ Public Class frmProductsDevelopment
 
     End Sub
 
-    Protected Sub OnRowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
-        Dim index As Integer = Convert.ToInt32(e.CommandArgument)
-        Dim gvRow As DataGridViewRow = DataGridView1.Rows(index)
+    Private Sub cmdnewT3_Click(sender As Object, e As EventArgs) Handles cmdnewT3.Click
+        Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
+
+        If result = DialogResult.No Then
+            MessageBox.Show("No pressed")
+        ElseIf result = DialogResult.Yes Then
+            MessageBox.Show("Yes pressed")
+        End If
     End Sub
 
-    Private Sub ComboBox5_SelectedIndexChanged(sender As Object, e As EventArgs)
-
+    Private Sub gotonew()
+        txtCode.Text = ""
+        'cmbprstatus.ListIndex = 0
+        txtname.Text = ""
+        txtainfo.Text = ""
+        'DTPicker1.Value = Format(Of Date, "mm/dd/yyyy")
+        dgvProjectDetails.DataSource = Nothing
+        txtpartno.Text = ""
+        optCTP.Checked = True
+        optVENDOR.Checked = False
+        optboth.Checked = False
+        txtvendornoa.Text = ""
+        txtvendornamea.Text = ""
+        'cmbminorcode.Clear
     End Sub
+
+
+
+    'Protected Sub OnRowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
+    'Dim index As Integer = Convert.ToInt32(e.CommandArgument)
+    'Dim gvRow As DataGridViewRow = DataGridView1.Rows(index)
+    'End Sub'
+
+    'Private Sub dataGridView1_SelectionChanged(ByVal sender As Object, ByVal e As EventArgs)
+    'For Each row As DataGridViewRow In DataGridView1.SelectedRows
+    'Dim value11 As String = row.Cells(0).Value.ToString()
+    'Next
+    'End Sub
+
+
+
 End Class
