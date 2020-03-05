@@ -163,22 +163,22 @@ errhandler:
     End Sub
 
     Public Function getmax(table, field)
-        'Dim error As String
-        'Dim intrespond As Long
-        'Dim sentence As Variant
-
-        'Set RsGeneral = Nothing
-        'sentence = "Select Max(" & field & ") as max from " & table
-        'Set RsGeneral = Conn.Execute(sentence)
-        'If IsNull(RsGeneral.Fields("max")) Then
-        'getmax = 1
-        'Else
-        'getmax = RsGeneral.Fields("max") + 1
-        'End If
-
-        Exit Function
-errhandler:
-        Call gotoerror("general", "getmax", Err.Number, Err.Description, Err.Source)
+        Dim exMessage As String = " "
+        Dim Sql As String = " "
+        Try
+            Sql = "SELECT " & field & " FROM " & table & " ORDER BY " & field & " DESC FETCH FIRST 1 ROW ONLY"
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Using ObjCmd As Odbc.OdbcCommand = New Odbc.OdbcCommand(Sql, ObjConn)
+                    ObjConn.Open()
+                    ObjCmd.CommandType = CommandType.Text
+                    Dim QueryResult = ObjCmd.ExecuteScalar()
+                    Return QueryResult
+                End Using
+            End Using
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
     End Function
 
     Public Function GetIpAddrTable()
@@ -465,6 +465,22 @@ errhandler:
         End Try
     End Function
 
+    Public Function InsertNewProject(projectno As String, userid As String, dtValue As DateTimePicker, strInfo As String, strName As String, ddlStatus As ComboBox, ddlUser As ComboBox)
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO PRDVLH(PRHCOD,CRUSER,CRDATE,PRDATE,PRINFO,PRNAME,PRSTAT,MOUSER,MODATE,PRPECH) VALUES 
+            (" & projectno & ",'" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "',
+            '" & Trim(strInfo) & "', '" & Trim(strName) & "','" & Left(ddlStatus.Text, 1) & "','" & userid & "',
+            '" & Format(Now, "yyyy-MM-dd") & "','" & Left(Trim(ddlUser.Text), 10) & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Function
+
     Private Function GetDataFromDatabase(query As String) As Data.DataSet
         Dim exMessage As String = " "
         Try
@@ -523,7 +539,40 @@ errhandler:
         End Try
     End Function
 
+    Private Function InsertDataInDatabase(query As String) As String
+        Dim exMessage As String = " "
+        'Dim result As Integer = " "
+        Try
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Dim dataAdapter As New Odbc.OdbcDataAdapter()
+                Dim ds As New DataSet()
+                ds.Locale = CultureInfo.InvariantCulture
 
+                ObjConn.Open()
+                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+                dataAdapter = New Odbc.OdbcDataAdapter(cmd)
+                dataAdapter.Fill(ds)
+            End Using
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetTestData() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM POQOTA fetch first 10 row only"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
     'Public Sub Generate_Log(Message As String)
     'On Error GoTo Generate_Log_Err

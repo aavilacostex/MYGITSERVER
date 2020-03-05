@@ -30,9 +30,9 @@ Partial Class frmProductsDevelopment
         Me.Button9 = New System.Windows.Forms.Button()
         Me.Button10 = New System.Windows.Forms.Button()
         Me.Button11 = New System.Windows.Forms.Button()
-        Me.Button12 = New System.Windows.Forms.Button()
-        Me.Button13 = New System.Windows.Forms.Button()
-        Me.Button14 = New System.Windows.Forms.Button()
+        Me.cmdnew1 = New System.Windows.Forms.Button()
+        Me.cmdSave1 = New System.Windows.Forms.Button()
+        Me.cmdexit1 = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.ProjectNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -66,9 +66,9 @@ Partial Class frmProductsDevelopment
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Button4 = New System.Windows.Forms.Button()
-        Me.Button5 = New System.Windows.Forms.Button()
-        Me.Button6 = New System.Windows.Forms.Button()
-        Me.Button7 = New System.Windows.Forms.Button()
+        Me.cmdnew2 = New System.Windows.Forms.Button()
+        Me.cmdSave2 = New System.Windows.Forms.Button()
+        Me.cmdexit2 = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.dgvProjectDetails = New System.Windows.Forms.DataGridView()
         Me.DateColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -98,9 +98,9 @@ Partial Class frmProductsDevelopment
         Me.Button16 = New System.Windows.Forms.Button()
         Me.Button17 = New System.Windows.Forms.Button()
         Me.Button18 = New System.Windows.Forms.Button()
-        Me.cmdnewT3 = New System.Windows.Forms.Button()
-        Me.Button20 = New System.Windows.Forms.Button()
-        Me.Button21 = New System.Windows.Forms.Button()
+        Me.cmdnew3 = New System.Windows.Forms.Button()
+        Me.cmdSave3 = New System.Windows.Forms.Button()
+        Me.cmdexit3 = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.cmdseeqcontrol = New System.Windows.Forms.Button()
@@ -243,9 +243,9 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel2.Controls.Add(Me.Button9, 1, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.Button10, 2, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.Button11, 3, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.Button12, 4, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.Button13, 5, 0)
-        Me.TableLayoutPanel2.Controls.Add(Me.Button14, 6, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.cmdnew1, 4, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.cmdSave1, 5, 0)
+        Me.TableLayoutPanel2.Controls.Add(Me.cmdexit1, 6, 0)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(352, 419)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 1
@@ -290,29 +290,32 @@ Partial Class frmProductsDevelopment
         Me.Button11.Text = "Change Status"
         Me.Button11.UseVisualStyleBackColor = True
         '
-        'Button12
+        'cmdnew1
         '
-        Me.Button12.Location = New System.Drawing.Point(578, 3)
-        Me.Button12.Name = "Button12"
-        Me.Button12.Size = New System.Drawing.Size(43, 28)
-        Me.Button12.TabIndex = 4
-        Me.Button12.UseVisualStyleBackColor = True
+        Me.cmdnew1.Image = CType(resources.GetObject("cmdnew1.Image"), System.Drawing.Image)
+        Me.cmdnew1.Location = New System.Drawing.Point(578, 3)
+        Me.cmdnew1.Name = "cmdnew1"
+        Me.cmdnew1.Size = New System.Drawing.Size(43, 28)
+        Me.cmdnew1.TabIndex = 4
+        Me.cmdnew1.UseVisualStyleBackColor = True
         '
-        'Button13
+        'cmdSave1
         '
-        Me.Button13.Location = New System.Drawing.Point(631, 3)
-        Me.Button13.Name = "Button13"
-        Me.Button13.Size = New System.Drawing.Size(43, 28)
-        Me.Button13.TabIndex = 5
-        Me.Button13.UseVisualStyleBackColor = True
+        Me.cmdSave1.Image = CType(resources.GetObject("cmdSave1.Image"), System.Drawing.Image)
+        Me.cmdSave1.Location = New System.Drawing.Point(631, 3)
+        Me.cmdSave1.Name = "cmdSave1"
+        Me.cmdSave1.Size = New System.Drawing.Size(43, 28)
+        Me.cmdSave1.TabIndex = 5
+        Me.cmdSave1.UseVisualStyleBackColor = True
         '
-        'Button14
+        'cmdexit1
         '
-        Me.Button14.Location = New System.Drawing.Point(683, 3)
-        Me.Button14.Name = "Button14"
-        Me.Button14.Size = New System.Drawing.Size(43, 28)
-        Me.Button14.TabIndex = 6
-        Me.Button14.UseVisualStyleBackColor = True
+        Me.cmdexit1.Image = CType(resources.GetObject("cmdexit1.Image"), System.Drawing.Image)
+        Me.cmdexit1.Location = New System.Drawing.Point(683, 3)
+        Me.cmdexit1.Name = "cmdexit1"
+        Me.cmdexit1.Size = New System.Drawing.Size(43, 28)
+        Me.cmdexit1.TabIndex = 6
+        Me.cmdexit1.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -374,7 +377,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 99.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 126.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 137.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 183.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.txtsearch, 1, 0)
@@ -425,21 +428,21 @@ Partial Class frmProductsDevelopment
         '
         'txtsearch
         '
-        Me.txtsearch.Location = New System.Drawing.Point(123, 3)
+        Me.txtsearch.Location = New System.Drawing.Point(121, 3)
         Me.txtsearch.Name = "txtsearch"
-        Me.txtsearch.Size = New System.Drawing.Size(52, 20)
+        Me.txtsearch.Size = New System.Drawing.Size(51, 20)
         Me.txtsearch.TabIndex = 2
         '
         'txtsearchcode
         '
-        Me.txtsearchcode.Location = New System.Drawing.Point(123, 42)
+        Me.txtsearchcode.Location = New System.Drawing.Point(121, 42)
         Me.txtsearchcode.Name = "txtsearchcode"
-        Me.txtsearchcode.Size = New System.Drawing.Size(52, 20)
+        Me.txtsearchcode.Size = New System.Drawing.Size(51, 20)
         Me.txtsearchcode.TabIndex = 3
         '
         'cmdsearch
         '
-        Me.cmdsearch.Location = New System.Drawing.Point(181, 3)
+        Me.cmdsearch.Location = New System.Drawing.Point(178, 3)
         Me.cmdsearch.Name = "cmdsearch"
         Me.cmdsearch.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearch.TabIndex = 4
@@ -448,7 +451,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchcode
         '
-        Me.cmdsearchcode.Location = New System.Drawing.Point(181, 42)
+        Me.cmdsearchcode.Location = New System.Drawing.Point(178, 42)
         Me.cmdsearchcode.Name = "cmdsearchcode"
         Me.cmdsearchcode.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchcode.TabIndex = 5
@@ -458,7 +461,7 @@ Partial Class frmProductsDevelopment
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(264, 5)
+        Me.Label3.Location = New System.Drawing.Point(261, 5)
         Me.Label3.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
@@ -468,7 +471,7 @@ Partial Class frmProductsDevelopment
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(264, 44)
+        Me.Label4.Location = New System.Drawing.Point(261, 44)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(97, 13)
@@ -477,21 +480,21 @@ Partial Class frmProductsDevelopment
         '
         'txtsearch1
         '
-        Me.txtsearch1.Location = New System.Drawing.Point(385, 3)
+        Me.txtsearch1.Location = New System.Drawing.Point(382, 3)
         Me.txtsearch1.Name = "txtsearch1"
         Me.txtsearch1.Size = New System.Drawing.Size(59, 20)
         Me.txtsearch1.TabIndex = 8
         '
         'txtsearchpart
         '
-        Me.txtsearchpart.Location = New System.Drawing.Point(385, 42)
+        Me.txtsearchpart.Location = New System.Drawing.Point(382, 42)
         Me.txtsearchpart.Name = "txtsearchpart"
         Me.txtsearchpart.Size = New System.Drawing.Size(59, 20)
         Me.txtsearchpart.TabIndex = 9
         '
         'cmdsearch1
         '
-        Me.cmdsearch1.Location = New System.Drawing.Point(454, 3)
+        Me.cmdsearch1.Location = New System.Drawing.Point(451, 3)
         Me.cmdsearch1.Name = "cmdsearch1"
         Me.cmdsearch1.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearch1.TabIndex = 10
@@ -500,7 +503,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchpart
         '
-        Me.cmdsearchpart.Location = New System.Drawing.Point(454, 42)
+        Me.cmdsearchpart.Location = New System.Drawing.Point(451, 42)
         Me.cmdsearchpart.Name = "cmdsearchpart"
         Me.cmdsearchpart.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchpart.TabIndex = 11
@@ -510,7 +513,7 @@ Partial Class frmProductsDevelopment
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(543, 5)
+        Me.Label5.Location = New System.Drawing.Point(540, 5)
         Me.Label5.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(88, 13)
@@ -520,7 +523,7 @@ Partial Class frmProductsDevelopment
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(543, 44)
+        Me.Label6.Location = New System.Drawing.Point(540, 44)
         Me.Label6.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(89, 13)
@@ -529,14 +532,14 @@ Partial Class frmProductsDevelopment
         '
         'txtsearchctp
         '
-        Me.txtsearchctp.Location = New System.Drawing.Point(642, 42)
+        Me.txtsearchctp.Location = New System.Drawing.Point(639, 42)
         Me.txtsearchctp.Name = "txtsearchctp"
         Me.txtsearchctp.Size = New System.Drawing.Size(120, 20)
         Me.txtsearchctp.TabIndex = 15
         '
         'cmdsearchctp
         '
-        Me.cmdsearchctp.Location = New System.Drawing.Point(768, 42)
+        Me.cmdsearchctp.Location = New System.Drawing.Point(765, 42)
         Me.cmdsearchctp.Name = "cmdsearchctp"
         Me.cmdsearchctp.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchctp.TabIndex = 17
@@ -545,7 +548,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchstatus
         '
-        Me.cmdsearchstatus.Location = New System.Drawing.Point(905, 3)
+        Me.cmdsearchstatus.Location = New System.Drawing.Point(902, 3)
         Me.cmdsearchstatus.Name = "cmdsearchstatus"
         Me.cmdsearchstatus.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchstatus.TabIndex = 18
@@ -554,7 +557,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdall
         '
-        Me.cmdall.Location = New System.Drawing.Point(905, 42)
+        Me.cmdall.Location = New System.Drawing.Point(902, 42)
         Me.cmdall.Name = "cmdall"
         Me.cmdall.Size = New System.Drawing.Size(75, 23)
         Me.cmdall.TabIndex = 19
@@ -565,7 +568,7 @@ Partial Class frmProductsDevelopment
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.cmbstatus1, 2)
         Me.cmbstatus1.FormattingEnabled = True
-        Me.cmbstatus1.Location = New System.Drawing.Point(642, 3)
+        Me.cmbstatus1.Location = New System.Drawing.Point(639, 3)
         Me.cmbstatus1.Name = "cmbstatus1"
         Me.cmbstatus1.Size = New System.Drawing.Size(121, 21)
         Me.cmbstatus1.TabIndex = 20
@@ -599,9 +602,9 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel12.Controls.Add(Me.Button2, 1, 0)
         Me.TableLayoutPanel12.Controls.Add(Me.Button3, 2, 0)
         Me.TableLayoutPanel12.Controls.Add(Me.Button4, 3, 0)
-        Me.TableLayoutPanel12.Controls.Add(Me.Button5, 4, 0)
-        Me.TableLayoutPanel12.Controls.Add(Me.Button6, 5, 0)
-        Me.TableLayoutPanel12.Controls.Add(Me.Button7, 6, 0)
+        Me.TableLayoutPanel12.Controls.Add(Me.cmdnew2, 4, 0)
+        Me.TableLayoutPanel12.Controls.Add(Me.cmdSave2, 5, 0)
+        Me.TableLayoutPanel12.Controls.Add(Me.cmdexit2, 6, 0)
         Me.TableLayoutPanel12.Location = New System.Drawing.Point(354, 519)
         Me.TableLayoutPanel12.Name = "TableLayoutPanel12"
         Me.TableLayoutPanel12.RowCount = 1
@@ -646,29 +649,32 @@ Partial Class frmProductsDevelopment
         Me.Button4.Text = "Change Status"
         Me.Button4.UseVisualStyleBackColor = True
         '
-        'Button5
+        'cmdnew2
         '
-        Me.Button5.Location = New System.Drawing.Point(578, 3)
-        Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(43, 28)
-        Me.Button5.TabIndex = 4
-        Me.Button5.UseVisualStyleBackColor = True
+        Me.cmdnew2.Image = CType(resources.GetObject("cmdnew2.Image"), System.Drawing.Image)
+        Me.cmdnew2.Location = New System.Drawing.Point(578, 3)
+        Me.cmdnew2.Name = "cmdnew2"
+        Me.cmdnew2.Size = New System.Drawing.Size(43, 28)
+        Me.cmdnew2.TabIndex = 4
+        Me.cmdnew2.UseVisualStyleBackColor = True
         '
-        'Button6
+        'cmdSave2
         '
-        Me.Button6.Location = New System.Drawing.Point(631, 3)
-        Me.Button6.Name = "Button6"
-        Me.Button6.Size = New System.Drawing.Size(43, 28)
-        Me.Button6.TabIndex = 5
-        Me.Button6.UseVisualStyleBackColor = True
+        Me.cmdSave2.Image = CType(resources.GetObject("cmdSave2.Image"), System.Drawing.Image)
+        Me.cmdSave2.Location = New System.Drawing.Point(631, 3)
+        Me.cmdSave2.Name = "cmdSave2"
+        Me.cmdSave2.Size = New System.Drawing.Size(43, 28)
+        Me.cmdSave2.TabIndex = 5
+        Me.cmdSave2.UseVisualStyleBackColor = True
         '
-        'Button7
+        'cmdexit2
         '
-        Me.Button7.Location = New System.Drawing.Point(683, 3)
-        Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(43, 28)
-        Me.Button7.TabIndex = 6
-        Me.Button7.UseVisualStyleBackColor = True
+        Me.cmdexit2.Image = CType(resources.GetObject("cmdexit2.Image"), System.Drawing.Image)
+        Me.cmdexit2.Location = New System.Drawing.Point(683, 3)
+        Me.cmdexit2.Name = "cmdexit2"
+        Me.cmdexit2.Size = New System.Drawing.Size(43, 28)
+        Me.cmdexit2.TabIndex = 6
+        Me.cmdexit2.UseVisualStyleBackColor = True
         '
         'Panel3
         '
@@ -746,7 +752,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 38.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 41.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
@@ -833,14 +839,14 @@ Partial Class frmProductsDevelopment
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(109, 3)
+        Me.txtCode.Location = New System.Drawing.Point(108, 3)
         Me.txtCode.Name = "txtCode"
         Me.txtCode.Size = New System.Drawing.Size(200, 20)
         Me.txtCode.TabIndex = 6
         '
         'txtname
         '
-        Me.txtname.Location = New System.Drawing.Point(109, 38)
+        Me.txtname.Location = New System.Drawing.Point(108, 38)
         Me.txtname.Name = "txtname"
         Me.txtname.Size = New System.Drawing.Size(200, 20)
         Me.txtname.TabIndex = 7
@@ -848,7 +854,7 @@ Partial Class frmProductsDevelopment
         'cmbprstatus
         '
         Me.cmbprstatus.FormattingEnabled = True
-        Me.cmbprstatus.Location = New System.Drawing.Point(109, 110)
+        Me.cmbprstatus.Location = New System.Drawing.Point(108, 110)
         Me.cmbprstatus.Name = "cmbprstatus"
         Me.cmbprstatus.Size = New System.Drawing.Size(200, 21)
         Me.cmbprstatus.TabIndex = 9
@@ -856,14 +862,14 @@ Partial Class frmProductsDevelopment
         'cmbuser1
         '
         Me.cmbuser1.FormattingEnabled = True
-        Me.cmbuser1.Location = New System.Drawing.Point(109, 147)
+        Me.cmbuser1.Location = New System.Drawing.Point(108, 147)
         Me.cmbuser1.Name = "cmbuser1"
         Me.cmbuser1.Size = New System.Drawing.Size(200, 21)
         Me.cmbuser1.TabIndex = 10
         '
         'txtainfo
         '
-        Me.txtainfo.Location = New System.Drawing.Point(109, 183)
+        Me.txtainfo.Location = New System.Drawing.Point(108, 183)
         Me.txtainfo.Multiline = True
         Me.txtainfo.Name = "txtainfo"
         Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -872,7 +878,7 @@ Partial Class frmProductsDevelopment
         '
         'DTPicker1
         '
-        Me.DTPicker1.Location = New System.Drawing.Point(109, 74)
+        Me.DTPicker1.Location = New System.Drawing.Point(108, 74)
         Me.DTPicker1.Name = "DTPicker1"
         Me.DTPicker1.Size = New System.Drawing.Size(200, 20)
         Me.DTPicker1.TabIndex = 12
@@ -907,9 +913,9 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel13.Controls.Add(Me.Button16, 1, 0)
         Me.TableLayoutPanel13.Controls.Add(Me.Button17, 2, 0)
         Me.TableLayoutPanel13.Controls.Add(Me.Button18, 3, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.cmdnewT3, 4, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.Button20, 5, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.Button21, 6, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.cmdnew3, 4, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.cmdSave3, 5, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.cmdexit3, 6, 0)
         Me.TableLayoutPanel13.Location = New System.Drawing.Point(355, 627)
         Me.TableLayoutPanel13.Name = "TableLayoutPanel13"
         Me.TableLayoutPanel13.RowCount = 1
@@ -954,32 +960,32 @@ Partial Class frmProductsDevelopment
         Me.Button18.Text = "Change Status"
         Me.Button18.UseVisualStyleBackColor = True
         '
-        'cmdnewT3
+        'cmdnew3
         '
-        Me.cmdnewT3.Image = CType(resources.GetObject("cmdnewT3.Image"), System.Drawing.Image)
-        Me.cmdnewT3.Location = New System.Drawing.Point(578, 3)
-        Me.cmdnewT3.Name = "cmdnewT3"
-        Me.cmdnewT3.Size = New System.Drawing.Size(43, 28)
-        Me.cmdnewT3.TabIndex = 4
-        Me.cmdnewT3.UseVisualStyleBackColor = True
+        Me.cmdnew3.Image = CType(resources.GetObject("cmdnew3.Image"), System.Drawing.Image)
+        Me.cmdnew3.Location = New System.Drawing.Point(578, 3)
+        Me.cmdnew3.Name = "cmdnew3"
+        Me.cmdnew3.Size = New System.Drawing.Size(43, 28)
+        Me.cmdnew3.TabIndex = 4
+        Me.cmdnew3.UseVisualStyleBackColor = True
         '
-        'Button20
+        'cmdSave3
         '
-        Me.Button20.Image = CType(resources.GetObject("Button20.Image"), System.Drawing.Image)
-        Me.Button20.Location = New System.Drawing.Point(631, 3)
-        Me.Button20.Name = "Button20"
-        Me.Button20.Size = New System.Drawing.Size(43, 28)
-        Me.Button20.TabIndex = 5
-        Me.Button20.UseVisualStyleBackColor = True
+        Me.cmdSave3.Image = CType(resources.GetObject("cmdSave3.Image"), System.Drawing.Image)
+        Me.cmdSave3.Location = New System.Drawing.Point(631, 3)
+        Me.cmdSave3.Name = "cmdSave3"
+        Me.cmdSave3.Size = New System.Drawing.Size(43, 28)
+        Me.cmdSave3.TabIndex = 5
+        Me.cmdSave3.UseVisualStyleBackColor = True
         '
-        'Button21
+        'cmdexit3
         '
-        Me.Button21.Image = CType(resources.GetObject("Button21.Image"), System.Drawing.Image)
-        Me.Button21.Location = New System.Drawing.Point(683, 3)
-        Me.Button21.Name = "Button21"
-        Me.Button21.Size = New System.Drawing.Size(43, 28)
-        Me.Button21.TabIndex = 6
-        Me.Button21.UseVisualStyleBackColor = True
+        Me.cmdexit3.Image = CType(resources.GetObject("cmdexit3.Image"), System.Drawing.Image)
+        Me.cmdexit3.Location = New System.Drawing.Point(683, 3)
+        Me.cmdexit3.Name = "cmdexit3"
+        Me.cmdexit3.Size = New System.Drawing.Size(43, 28)
+        Me.cmdexit3.TabIndex = 6
+        Me.cmdexit3.UseVisualStyleBackColor = True
         '
         'Panel4
         '
@@ -1869,9 +1875,9 @@ Partial Class frmProductsDevelopment
     Friend WithEvents Button9 As Button
     Friend WithEvents Button10 As Button
     Friend WithEvents Button11 As Button
-    Friend WithEvents Button12 As Button
-    Friend WithEvents Button13 As Button
-    Friend WithEvents Button14 As Button
+    Friend WithEvents cmdnew1 As Button
+    Friend WithEvents cmdSave1 As Button
+    Friend WithEvents cmdexit1 As Button
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
     Friend WithEvents Label7 As Label
@@ -1975,17 +1981,17 @@ Partial Class frmProductsDevelopment
     Friend WithEvents Button2 As Button
     Friend WithEvents Button3 As Button
     Friend WithEvents Button4 As Button
-    Friend WithEvents Button5 As Button
-    Friend WithEvents Button6 As Button
-    Friend WithEvents Button7 As Button
+    Friend WithEvents cmdnew2 As Button
+    Friend WithEvents cmdSave2 As Button
+    Friend WithEvents cmdexit2 As Button
     Friend WithEvents Panel3 As Panel
     Friend WithEvents TableLayoutPanel13 As TableLayoutPanel
     Friend WithEvents Button15 As Button
     Friend WithEvents Button16 As Button
     Friend WithEvents Button17 As Button
     Friend WithEvents Button18 As Button
-    Friend WithEvents cmdnewT3 As Button
-    Friend WithEvents Button20 As Button
-    Friend WithEvents Button21 As Button
+    Friend WithEvents cmdnew3 As Button
+    Friend WithEvents cmdSave3 As Button
+    Friend WithEvents cmdexit3 As Button
     Friend WithEvents Panel4 As Panel
 End Class
