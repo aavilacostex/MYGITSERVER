@@ -77,7 +77,19 @@ Public Class frmProductsDevelopment
         cmbprstatus.Items.Add("-- Select Status --")
         cmbprstatus.Items.Add("I - In Process")
         cmbprstatus.Items.Add("F - Finished")
-        cmbprstatus.SelectedItem = "-- Select Status --"
+        cmbprstatus.SelectedIndex = 1
+
+        Dim posValue As Integer = 0
+        For Each obj As DataRowView In cmbstatus.Items
+            Dim VarQuery = "E"
+            Dim VarCombo = Trim(obj.Item(2).ToString())
+            If VarQuery = VarCombo Then
+                cmbstatus.SelectedIndex = posValue
+                Exit For
+            Else
+                posValue += 1
+            End If
+        Next
 
         Panel4.Enabled = False
         Panel1.Enabled = False
@@ -198,6 +210,10 @@ Public Class frmProductsDevelopment
             cmbstatus.DisplayMember = "FullValue"
             cmbstatus.ValueMember = "CNT03"
 
+            cmbstatus1.DataSource = dsStatuses.Tables(0)
+            cmbstatus1.DisplayMember = "FullValue"
+            cmbstatus1.ValueMember = "CNT03"
+
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -239,6 +255,50 @@ Public Class frmProductsDevelopment
             ds.Locale = CultureInfo.InvariantCulture
 
             sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"   'DELETE BURNED REFERENCE
+            'get the query results
+            ds = gnr.FillGrid(sql)
+
+            DataGridView1.AutoGenerateColumns = False
+            DataGridView1.ColumnCount = 5
+
+            'Add Columns
+            DataGridView1.Columns(0).Name = "ProjectNo"
+            DataGridView1.Columns(0).HeaderText = "Project No."
+            DataGridView1.Columns(0).DataPropertyName = "PRHCOD"
+
+            DataGridView1.Columns(1).Name = "ProjectName"
+            DataGridView1.Columns(1).HeaderText = "Project Name"
+            DataGridView1.Columns(1).DataPropertyName = "PRNAME"
+
+            DataGridView1.Columns(2).Name = "DateEnt"
+            DataGridView1.Columns(2).HeaderText = "Date Entered"
+            DataGridView1.Columns(2).DataPropertyName = "PRDATE"
+
+            DataGridView1.Columns(3).Name = "PersonInCharge"
+            DataGridView1.Columns(3).HeaderText = "Person In Charge"
+            DataGridView1.Columns(3).DataPropertyName = "PRPECH"
+
+            DataGridView1.Columns(4).Name = "Status"
+            DataGridView1.Columns(4).HeaderText = "Status"
+            DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+
+            'FILL GRID
+            DataGridView1.DataSource = ds.Tables(0)
+
+            'changeControlAccess(True)
+            'Exit Sub
+        Catch ex As Exception
+            Dim example As String = ex.Message
+            Call gnr.gotoerror("frmproductsdevelopment", "fillcell1", Err.Number, Err.Description, Err.Source)
+        End Try
+    End Sub
+
+    Private Sub fillcell1LastOne(strwhere)
+        Try
+            Dim ds As New DataSet()
+            ds.Locale = CultureInfo.InvariantCulture
+
+            sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRHCOD DESC FETCH FIRST 1 ROW ONLY"   'DELETE BURNED REFERENCE
             'get the query results
             ds = gnr.FillGrid(sql)
 
@@ -588,14 +648,7 @@ Public Class frmProductsDevelopment
 
     Private Sub cmdall_Click()
         Try
-            If flagallow = 1 Then
-                strwhere = ""
-            Else
-                'TEST QUERY
-                strwhere = "WHERE PRPECH = 'LREDONDO' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = 'LREDONDO') "
-                'strwhere = "WHERE PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "') "
-                'strwhere = "WHERE PRPECH = '" & UserID & "'
-            End If
+            strwhere = CustomStrWhereResult()
             fillcell1(strwhere)
             Exit Sub
         Catch ex As Exception
@@ -666,24 +719,62 @@ Public Class frmProductsDevelopment
             Dim insertMonth = Date.Today.Month
             Dim insertDay = Date.Today.Day
             Dim partstoshow As String = displayPart()
+            Dim dtTime As DateTimePicker = New DateTimePicker()
+            Dim dtTime1 As DateTimePicker = New DateTimePicker()
+            Dim dtTime2 As DateTimePicker = New DateTimePicker()
+            Dim dtTime3 As DateTimePicker = New DateTimePicker()
+            Dim dtTime4 As DateTimePicker = New DateTimePicker()
+            Dim dtTime5 As DateTimePicker = New DateTimePicker()
+            dtTime5.Value = New DateTime(1900, 1, 1)
+            dtTime5.CustomFormat = "yyyy/MM/dd/"
 
             If flagdeve = 1 Then
                 Dim ProjectNo = gnr.getmax("PRDVLH", "PRHCOD") + 1
                 Dim queryResult = gnr.InsertNewProject(ProjectNo, "LREDONDO", DTPicker1, txtainfo.Text, txtname.Text, cmbprstatus, cmbuser1)
-                If queryResult <> 0 Then
+                If queryResult < 0 Then
                     'error message
                 Else
                     txtCode.Text = ProjectNo
                     flagdeve = 0
 
-                    If flagnewpart = 1 Then
-                        If Trim(txtpartno.Text) <> "" Then
-                            Dim Status2 As String = ""
+                    strwhere = CustomStrWhereResult()
+                    fillcell1LastOne(strwhere)
 
+                    If flagnewpart = 1 Then
+                        If Trim(txtpartno.Text) <> " " Then '?????
+                            Dim Status2 As String = ""
+                            'Status2 = If(gnr.GetProjectStatusDescription(cmbstatus.SelectedValue.ToString()) <> "", gnr.GetProjectStatusDescription(cmbstatus.SelectedValue.ToString()), "")
+                            Status2 = gnr.GetProjectStatusDescription(cmbstatus.SelectedValue.ToString())
+                            Dim dsProjectNoResult As DataSet = gnr.GetCodeAndNameByPartNo("1527554")
+                            Dim strProjectNo = If(String.IsNullOrEmpty(dsProjectNoResult.Tables(0).Rows(0).ItemArray(0).ToString()), 0, CInt(dsProjectNoResult.Tables(0).Rows(0).ItemArray(0).ToString()))
+                            Dim strProjectName = Trim(dsProjectNoResult.Tables(0).Rows(0).ItemArray(1).ToString())
+
+                            'test purpose
+                            strProjectNo = ProjectNo
+                            'test purpose
+
+                            If (ProjectNo = strProjectNo) Then
+                                Dim result As DialogResult = MessageBox.Show("This part no. already exists in this project. :" & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
+                                If result = DialogResult.No Then
+                                    MessageBox.Show("No pressed")
+                                ElseIf result = DialogResult.Yes Then
+                                    Dim QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
+                                                            txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus, txtBenefits.Text, txtcomm.Text,
+                                                            cmbuser, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode, txttoocost.Text, dtTime4,
+                                                            dtTime5.Value.ToShortDateString(), CInt(txtsampleqty.Text))
+
+                                    If QueryDetailResult < 0 Then
+                                        'error message
+                                    Else
+
+                                    End If
+
+                                End If
+                            End If
+                        End If
                         End If
                     End If
                 End If
-            End If
 
 
         Catch ex As Exception
@@ -793,6 +884,18 @@ Public Class frmProductsDevelopment
             result = ""
         End If
         Return result
+    End Function
+
+    Private Function CustomStrWhereResult() As String
+        'If flagallow = 1 Then
+        strwhere = ""
+        'Else
+        'TEST QUERY
+        'strwhere = "WHERE PRPECH = 'LREDONDO' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = 'LREDONDO') "
+        'strwhere = "WHERE PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "') "
+        'strwhere = "WHERE PRPECH = '" & UserID & "'
+        'End If
+        Return strwhere
     End Function
 
 #End Region

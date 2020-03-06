@@ -325,6 +325,21 @@ errhandler:
         End Try
     End Function
 
+    Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRDVLH.PRHCOD,PRDVLH.PRNAME FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetDataByPartNo2(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -465,7 +480,7 @@ errhandler:
         End Try
     End Function
 
-    Public Function InsertNewProject(projectno As String, userid As String, dtValue As DateTimePicker, strInfo As String, strName As String, ddlStatus As ComboBox, ddlUser As ComboBox)
+    Public Function InsertNewProject(projectno As String, userid As String, dtValue As DateTimePicker, strInfo As String, strName As String, ddlStatus As ComboBox, ddlUser As ComboBox) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
@@ -475,9 +490,32 @@ errhandler:
             '" & Trim(strInfo) & "', '" & Trim(strName) & "','" & Left(ddlStatus.Text, 1) & "','" & userid & "',
             '" & Format(Now, "yyyy-MM-dd") & "','" & Left(Trim(ddlUser.Text), 10) & "')"
             QueryResult = InsertDataInDatabase(Sql)
-
+            Return QueryResult
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertProductDetail(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
+                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As ComboBox, benefits As String,
+                                        comments As String, ddlUser As ComboBox, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
+                                        partsToShow As String, ddlMinorCode As ComboBox, toolingCost As String, dtValue5 As DateTimePicker, strDate As String, sampleQty As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRDSQTY) 
+                   VALUES (" & projectno & ",'" & Trim(UCase(partNo)) & "','" & Format(Now, "yyyy-MM-dd") & "','" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "','" & qty & "',
+            '" & Trim(mfr) & "','" & Trim(mfrNo) & "','" & (unitCost) & "','" & (unitCostNew) & "','" & Trim(poNo) & "','" & Format(Now, "yyyy-MM-dd") & "',
+            '" & Trim(Left(ddlStatus.Text, 2)) & "','" & Trim(benefits) & "','" & Trim(comments) & "','" & Left(Trim(ddlUser.Text), 10) & "','" & chkNew.Checked & "','" & Format(Now, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & ",'" & Trim(vendorNo) & "',
+            '" & partsToShow & "','" & Left(ddlMinorCode.Text, 2) & "'," & toolingCost & ",'" & Format(Now, "yyyy-MM-dd") & "', " & strDate & " ," & sampleQty & ")"
+
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
         End Try
     End Function
 
@@ -573,6 +611,7 @@ errhandler:
             Return Nothing
         End Try
     End Function
+
 
     'Public Sub Generate_Log(Message As String)
     'On Error GoTo Generate_Log_Err
