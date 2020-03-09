@@ -93,6 +93,7 @@ Public Class Gn1
     Public test As String
     Public Const VBObjectError As Integer = -2147221504
     Public Versionctp As String
+    Public strDate As String = "1900,01,01"
     Public formats() As String = {"M/d/yyyy h:mm:ss tt", "M/d/yyyy h:mm tt", "MM/dd/yyyy hh:mm:ss", "M/d/yyyy h:mm:ss", "M/d/yyyy hh:mm tt",
         "M/d/yyyy hh tt", "M/d/yyyy h:mm", "M/d/yyyy h:mm", "MM/dd/yyyy hh:mm", "M/dd/yyyy hh:mm", "MM/d/yyyy HH:mm:ss.ffffff"}
 
@@ -167,6 +168,25 @@ errhandler:
         Dim Sql As String = " "
         Try
             Sql = "SELECT " & field & " FROM " & table & " ORDER BY " & field & " DESC FETCH FIRST 1 ROW ONLY"
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Using ObjCmd As Odbc.OdbcCommand = New Odbc.OdbcCommand(Sql, ObjConn)
+                    ObjConn.Open()
+                    ObjCmd.CommandType = CommandType.Text
+                    Dim QueryResult = ObjCmd.ExecuteScalar()
+                    Return QueryResult
+                End Using
+            End Using
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getmaxComplex(table, field, strWhereAdd)
+        Dim exMessage As String = " "
+        Dim Sql As String = " "
+        Try
+            Sql = "SELECT " & field & " FROM " & table & " " & strWhereAdd & " ORDER BY " & field & " DESC FETCH FIRST 1 ROW ONLY"
             Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
                 Using ObjCmd As Odbc.OdbcCommand = New Odbc.OdbcCommand(Sql, ObjConn)
                     ObjConn.Open()
@@ -464,6 +484,28 @@ errhandler:
         End Try
     End Function
 
+    Public Function GetPOQotaData(vendorNo As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        'burned data
+        'vendorNo = "261747"
+        'partNo = "CABLE14B"
+        'vendorNo = "261138"
+        'partNo = "99983"
+        'end burned data
+
+        Try
+            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetProjectStatusDescription(code As String) As String
         Dim exMessage As String = " "
         Dim Sql As String
@@ -497,19 +539,57 @@ errhandler:
         End Try
     End Function
 
-    Public Function InsertProductDetail(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
-                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As ComboBox, benefits As String,
-                                        comments As String, ddlUser As ComboBox, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
-                                        partsToShow As String, ddlMinorCode As ComboBox, toolingCost As String, dtValue5 As DateTimePicker, strDate As String, sampleQty As String) As String
+    Public Function InsertNewPOQota(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
+                                    strStsQuote As String, strSpace As String, strUnitCostNew As String, strMinQty As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
+            Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE,PQPRC,PQMIN) VALUES 
+            ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
+            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "'," & strUnitCostNew & "," & strMinQty & ")"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdatePoQoraRow(mpnopo As String, minQty As String, unitCostNew As String, statusquote As String, insertYear As String, insertMonth As String, insertDay As String,
+                                    vendorNo As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQMIN  = " & minQty & ",PQPRC  = " & unitCostNew & ",PQCOMM = '" & statusquote & "',
+                PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
+                WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
+                " AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertProductDetail(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
+                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
+                                        comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
+                                        partsToShow As String, ddlMinorCode As String, toolingCost As String, dtValue5 As DateTimePicker, dtValue6 As DateTimePicker, sampleQty As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            'dtValue6.Value = New DateTime(strDate)
+            Dim chkSelection As Integer = If(chkNew.Checked = False, 0, 1)
+
             Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRDSQTY) 
-                   VALUES (" & projectno & ",'" & Trim(UCase(partNo)) & "','" & Format(Now, "yyyy-MM-dd") & "','" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "','" & qty & "',
-            '" & Trim(mfr) & "','" & Trim(mfrNo) & "','" & (unitCost) & "','" & (unitCostNew) & "','" & Trim(poNo) & "','" & Format(Now, "yyyy-MM-dd") & "',
-            '" & Trim(Left(ddlStatus.Text, 2)) & "','" & Trim(benefits) & "','" & Trim(comments) & "','" & Left(Trim(ddlUser.Text), 10) & "','" & chkNew.Checked & "','" & Format(Now, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & ",'" & Trim(vendorNo) & "',
-            '" & partsToShow & "','" & Left(ddlMinorCode.Text, 2) & "'," & toolingCost & ",'" & Format(Now, "yyyy-MM-dd") & "', " & strDate & " ," & sampleQty & ")"
+                   VALUES (" & projectno & ",'" & Trim(UCase(partNo)) & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue1.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue2.Value, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "'," & qty & ",
+            '" & Trim(mfr) & "','" & Trim(mfrNo) & "'," & (unitCost) & "," & (unitCostNew) & ",'" & Trim(poNo) & "','" & Format(dtValue3.Value, "yyyy-MM-dd") & "',
+            '" & Trim(ddlStatus) & "','" & Trim(benefits) & "','" & Trim(comments) & "','" & Trim(ddlUser) & "'," & chkSelection & ",'" & Format(dtValue4.Value, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & "," & Trim(vendorNo) & ",
+            '" & partsToShow & "','" & (ddlMinorCode) & "'," & toolingCost & ",'" & Format(dtValue5.Value, "yyyy-MM-dd") & "', '" & Format(dtValue6.Value, "yyyy-MM-dd") & "' ," & sampleQty & ")"
 
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
@@ -517,6 +597,102 @@ errhandler:
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
+    End Function
+
+    Public Function checkfieldsPoQote(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
+                                    strStsQuote As String, strSpace As String, strUnitCostNew As String, strMinQty As String) As String
+        Dim strError As String = String.Empty
+
+#Region "NumericFields"
+        If String.IsNullOrEmpty(vendorNo) Then
+            strError += "Vendor Number,"
+        End If
+        If String.IsNullOrEmpty(maxValue) Then
+            strError += "Sequencial,"
+        End If
+        If String.IsNullOrEmpty(strYear) Then
+            strError += "Year,"
+        End If
+        If String.IsNullOrEmpty(strMonth) Then
+            strError += "Month,"
+        End If
+        If String.IsNullOrEmpty(strDay) Then
+            strError += "Day,"
+        End If
+        If String.IsNullOrEmpty(strUnitCostNew) Then
+            strError += "Unit Cost New,"
+        End If
+        If String.IsNullOrEmpty(strMinQty) Then
+            strError += "Min Quantity,"
+        End If
+#End Region
+
+        If String.IsNullOrEmpty(strError) Then
+            Return ""
+        Else
+            Return strError
+        End If
+
+    End Function
+
+    Public Function checkFields(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
+                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
+                                        comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
+                                        partsToShow As String, ddlMinorCode As String, toolingCost As String, dtValue5 As DateTimePicker, strDate As String, sampleQty As String) As String
+        Dim strError As String = String.Empty
+
+#Region "TextBoxes"
+
+#End Region
+
+#Region "NumericFields"
+
+        If String.IsNullOrEmpty(projectno) Then
+            strError += "Project Number,"
+        End If
+        If String.IsNullOrEmpty(qty) Then
+            strError += "Quantity,"
+        End If
+        If String.IsNullOrEmpty(unitCost) Then
+            strError += "Unit Cost,"
+        End If
+        If String.IsNullOrEmpty(unitCostNew) Then
+            strError += "Unit Cost New,"
+        End If
+        If String.IsNullOrEmpty(sampleCost) Then
+            strError += "Sample Cost,"
+        End If
+        If String.IsNullOrEmpty(miscCost) Then
+            strError += "Misc. Cost,"
+        End If
+        If String.IsNullOrEmpty(vendorNo) Then
+            strError += "Vendor Number,"
+        End If
+        If String.IsNullOrEmpty(toolingCost) Then
+            strError += "Tooling Cost,"
+        End If
+        If String.IsNullOrEmpty(sampleQty) Then
+            strError += "Sample Quantity,"
+        End If
+
+
+#End Region
+
+#Region "ComboBoxes"
+
+#End Region
+
+#Region "SelectionFields"
+
+#End Region
+
+
+        If String.IsNullOrEmpty(strError) Then
+            Return ""
+        Else
+            Return strError
+        End If
+
     End Function
 
     Private Function GetDataFromDatabase(query As String) As Data.DataSet
@@ -577,7 +753,28 @@ errhandler:
         End Try
     End Function
 
-    Private Function InsertDataInDatabase(query As String) As String
+    Private Function InsertDataInDatabase(query As String) As Integer
+        Dim exMessage As String = " "
+        Dim result As Integer = -1
+        Try
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Dim dataAdapter As New Odbc.OdbcDataAdapter()
+                Dim ds As New DataSet()
+                ds.Locale = CultureInfo.InvariantCulture
+
+                ObjConn.Open()
+                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+                dataAdapter = New Odbc.OdbcDataAdapter(cmd)
+                result = dataAdapter.Fill(ds)
+                Return result
+            End Using
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function UpdateDataInDatabase(query As String) As String
         Dim exMessage As String = " "
         'Dim result As Integer = " "
         Try
