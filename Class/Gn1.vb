@@ -98,70 +98,493 @@ Public Class Gn1
         "M/d/yyyy hh tt", "M/d/yyyy h:mm", "M/d/yyyy h:mm", "MM/dd/yyyy hh:mm", "M/dd/yyyy hh:mm", "MM/d/yyyy HH:mm:ss.ffffff"}
 
 
+#Region "Selects"
 
-    Public Sub Valida_DirLog()
-        On Error GoTo Valida_DirLog_Err
-        ChDir(DirLog)
-        ChDir(DirTrabajo)
-        Exit Sub
-Valida_DirLog_Err:
-        Select Case Err()
-            'Case 76
-            'MkDir(DirTrabajo + "Log")
-        End Select
-        Err.Clear()
-        ChDir(DirTrabajo)
-    End Sub
+    Public Function GetDataByPRHCOD(code As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLH WHERE PRHCOD = " & Trim(code)
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-    'Public Sub Generate_Log(Message As String)
-    'On Error GoTo Generate_Log_Err
-    'Dim LogFile As String
-    '   LogFile = ""
-    '  LogFile = DirLog + "ErrLog_" + Trim(Str(DatePart("m", Date))) + ".log"
-    ' Open LogFile For Append As #2
-    'Write #2, Format(Of Date, "mm/dd/yyyy")() + " " + Trim(Str(Time())) + "|" + Message
-    'Close #2
-    'Exit Sub
-    'Generate_Log_Err:
-    '       Close #2
-    'End Sub
+    Public Function GetDataByCodeAndPartNo(code As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & Trim(code) & " AND trim(ucase(PRDPTN)) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-    ' Returns an array with the local IP addresses (as strings).
-    ' Author: Christian d'Heureuse, www.source-code.biz
+    Public Function GetProdDetByCodeAndExc(code As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select * from prdvld where prhcod = " & Trim(code) & " and prdsts <> 'CS' and prdsts <> 'CN' and prdsts <> 'CD' and prdsts <> 'CL'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-    Public Sub gotoerror(Forms, Events, errnumber, errdescription, errsource)
-        'Dim error As String
-        Dim sql As String
-        Dim intrespond As Long
-        On Error GoTo errhandler
+    Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRDVLH.PRHCOD,PRDVLH.PRNAME FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-        'Error = Forms + "-" + Events + "-" + Trim(Str(errnumber)) + "-" + errdescription + errsource + "-" + Version
-        'sql = "INSERT INTO ERRORCTP VALUES('" & Replace(Left(error, 500), "'", "") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "')"
-        Conn.Execute(sql)
+    Public Function GetDataByPartNo2(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM DVINVA INNER JOIN VNMAS ON DVINVA.DVPRMG = digits(VNMAS.VMVNUM) WHERE DVPART = '" & Trim(UCase(partNo)) & "' and dvlocn = '01'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-        intrespond = MsgBox("Error. See Log", vbInformation + vbOKOnly, "CTP System")
+    Public Function GetDataByPartMix() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1)"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-        Exit Sub
-errhandler:
-        'Error = Forms + "-" + "gotoerror" + "-" + Trim(Str(Err.Number)) + "-" + Err.Description + Err.Source + "-" + "Err on gotoerror" + "-" + Version
-        'sql = "INSERT INTO ERRORCTP VALUES('" & Replace(Left(error, 500), "'", "") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "')"
-        Conn.Execute(sql)
-        intrespond = MsgBox("Error. See Log", vbInformation + vbOKOnly, "CTP System")
-    End Sub
+    Public Function GetDataByVendorAndPartNo(vendorNo As String, partNo As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim strDescrption As String
+        Dim columnToChange = "PQMIN"
+        Try
+            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
+            Return strDescrption
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-    Public Sub gotologuse(Progname, Area, Keydata)
-        Dim sql As String
-        Dim codloguse As Long
-        On Error GoTo errhandler
+    Public Function GetDataByPartNo(partNo As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim strDescrption As String
+        Dim columnToChange = "IMDSC"
+        Try
+            Sql = "SELECT * FROM INMSTA INNER JOIN DVINVA ON INMSTA.IMPTN = DVINVA.DVPART WHERE UCASE(IMPTN) = '" & Trim(UCase(partNo)) & "'"
+            strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
+            Return strDescrption
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-        'codloguse = getmax("logusectp", "codloguse")
-        sql = "INSERT INTO LOGUSECTP VALUES(" & codloguse & ",'" & userid & "','" & ipaddresslocal & "','" & Version & "','" & Progname & "','" & Area & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','" & Keydata & "')"
-        Conn.Execute(sql)
+    Public Function GetJiraPath() As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim JiraPath As String = " "
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM cntrll where cnt01 = 'JIR' and trim(ucase(cnt03)) = 'PRO'"
+            ds = GetDataFromDatabase(Sql)
+            If ds.Tables(0).Rows.Count = 1 Then
+                JiraPath = ds.Tables(0).Rows(0).Item(3).ToString()
+            End If
+            Return JiraPath
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
-        Exit Sub
-errhandler:
-        Call gotoerror("general", "gotologuse", Err.Number, Err.Description, Err.Source)
-    End Sub
+    Public Function GetAllStatuses() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' order by cnt02"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPOQotaData(vendorNo As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        'burned data
+        'vendorNo = "261747"
+        'partNo = "CABLE14B"
+        'vendorNo = "261138"
+        'partNo = "99983"
+        'end burned data
+
+        Try
+            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetProjectStatusDescription(code As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ProjectDescStatus As String = " "
+        Dim columnToChange = "CNTDE1"
+        Try
+            Dim CodeOk As String = Trim(UCase(code))
+            Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' and cnt03 = '" & CodeOk & "'"
+            ProjectDescStatus = GetSingleDataFromDatabase(Sql, columnToChange)
+            Return Trim(ProjectDescStatus)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function FillDDLUser() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT USUSER,USNAME FROM CSUSER WHERE USPTY8 = 'X' AND USPTY9 <> 'R' ORDER BY USNAME "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function FillDDlMinorCode() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1) "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+
+#End Region
+
+#Region "Inserts"
+
+    Public Function InsertNewProject(projectno As String, userid As String, dtValue As DateTimePicker, strInfo As String, strName As String, ddlStatus As ComboBox, ddlUser As ComboBox) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO PRDVLH(PRHCOD,CRUSER,CRDATE,PRDATE,PRINFO,PRNAME,PRSTAT,MOUSER,MODATE,PRPECH) VALUES 
+            (" & projectno & ",'" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "',
+            '" & Trim(strInfo) & "', '" & Trim(strName) & "','" & Left(ddlStatus.Text, 1) & "','" & userid & "',
+            '" & Format(Now, "yyyy-MM-dd") & "','" & Left(Trim(ddlUser.Text), 10) & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertProductComment(code As String, partNo As String, comment As String, userId As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO PRDCMH(PRHCOD,PRDPTN,PRDCCO,PRDCDA,PRDCTI,PRDCSU,USUSER) 
+                    VALUES(" & Trim(code) & ",'" & Trim(partNo) & "'," & comment & ",'" & Format(DateTime.Now, "yyyy-mm-dd") & "','" & Format(DateTime.Now, "hh:mm:ss") & "',
+                            'Person in charge changed','" & userId & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertProductCommentDetail(code As String, partNo As String, comment As String, cod_detcomment As String, messcomm As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO PRDCMD(PRHCOD,PRDPTN,PRDCCO,PRDCDC,PRDCTX) 
+                    VALUES(" & Trim(code) & ",'" & Trim(partNo) & "'," & comment & "," & cod_detcomment & ",'" & messcomm & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertNewPOQota(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
+                                    strStsQuote As String, strSpace As String, strUnitCostNew As String, strMinQty As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE,PQPRC,PQMIN) VALUES 
+            ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
+            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "'," & strUnitCostNew & "," & strMinQty & ")"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertProductDetail(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
+                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
+                                        comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
+                                        partsToShow As String, ddlMinorCode As String, toolingCost As String, dtValue5 As DateTimePicker, dtValue6 As DateTimePicker, sampleQty As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            'dtValue6.Value = New DateTime(strDate)
+            Dim chkSelection As Integer = If(chkNew.Checked = False, 0, 1)
+
+            Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRDSQTY) 
+                   VALUES (" & projectno & ",'" & Trim(UCase(partNo)) & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue1.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue2.Value, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "'," & qty & ",
+            '" & Trim(mfr) & "','" & Trim(mfrNo) & "'," & (unitCost) & "," & (unitCostNew) & ",'" & Trim(poNo) & "','" & Format(dtValue3.Value, "yyyy-MM-dd") & "',
+            '" & Trim(ddlStatus) & "','" & Trim(benefits) & "','" & Trim(comments) & "','" & Trim(ddlUser) & "'," & chkSelection & ",'" & Format(dtValue4.Value, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & "," & Trim(vendorNo) & ",
+            '" & partsToShow & "','" & (ddlMinorCode) & "'," & toolingCost & ",'" & Format(dtValue5.Value, "yyyy-MM-dd") & "', '" & Format(dtValue6.Value, "yyyy-MM-dd") & "' ," & sampleQty & ")"
+
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+
+
+#End Region
+
+#Region "Updates"
+
+    Public Function UpdatePoQoraRow(mpnopo As String, minQty As String, unitCostNew As String, statusquote As String, insertYear As String, insertMonth As String, insertDay As String,
+                                    vendorNo As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQMIN  = " & minQty & ",PQPRC  = " & unitCostNew & ",PQCOMM = '" & statusquote & "',
+                PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
+                WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
+                " AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdateProductDetail(code As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLD SET PRDPDA = '" & Format(Now, "yyyy-MM-dd") & "' WHERE PRHCOD = " & Trim(code) & " AND PRDPTN = '" & Trim(UCase(partNo)) & "'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdateProdClosedParts(userid As String, dtvalue As Date, strUser As String, strInfo As String, strName As String, strStatus As String, code As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLH SET MOUSER = '" & userid & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "',PRDATE = '" & Format(dtvalue, "yyyy-MM-dd") & "',PRPECH = '" & strUser & "',
+                    PRINFO = '" & strInfo & "',PRNAME = '" & strName & "',PRSTAT = '" & strStatus & "' WHERE PRHCOD = " & code
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdateProdOpenParts(userid As String, dtvalue As Date, strUser As String, strInfo As String, strName As String, code As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLH SET MOUSER = '" & userid & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "',PRDATE = '" & Format(dtvalue, "yyyy-MM-dd") & "',PRPECH = '" & strUser & "',
+                    PRINFO = '" & strInfo & "',PRNAME = '" & strName & "' WHERE PRHCOD = " & code
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+
+#End Region
+
+#Region "Utils"
+
+    Public Function checkfieldsPoQote(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
+                                    strStsQuote As String, strSpace As String, strUnitCostNew As String, strMinQty As String) As String
+        Dim strError As String = String.Empty
+
+#Region "NumericFields"
+        If String.IsNullOrEmpty(vendorNo) Then
+            strError += "Vendor Number,"
+        End If
+        If String.IsNullOrEmpty(maxValue) Then
+            strError += "Sequencial,"
+        End If
+        If String.IsNullOrEmpty(strYear) Then
+            strError += "Year,"
+        End If
+        If String.IsNullOrEmpty(strMonth) Then
+            strError += "Month,"
+        End If
+        If String.IsNullOrEmpty(strDay) Then
+            strError += "Day,"
+        End If
+        If String.IsNullOrEmpty(strUnitCostNew) Then
+            strError += "Unit Cost New,"
+        End If
+        If String.IsNullOrEmpty(strMinQty) Then
+            strError += "Min Quantity,"
+        End If
+#End Region
+
+        If String.IsNullOrEmpty(strError) Then
+            Return ""
+        Else
+            Return strError
+        End If
+
+    End Function
+
+    Public Function checkFields(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
+                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
+                                        comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
+                                        partsToShow As String, ddlMinorCode As String, toolingCost As String, dtValue5 As DateTimePicker, strDate As String, sampleQty As String) As String
+        Dim strError As String = String.Empty
+
+#Region "TextBoxes"
+
+#End Region
+
+#Region "NumericFields"
+
+        If String.IsNullOrEmpty(projectno) Then
+            strError += "Project Number,"
+        End If
+        If String.IsNullOrEmpty(qty) Then
+            strError += "Quantity,"
+        End If
+        If String.IsNullOrEmpty(unitCost) Then
+            strError += "Unit Cost,"
+        End If
+        If String.IsNullOrEmpty(unitCostNew) Then
+            strError += "Unit Cost New,"
+        End If
+        If String.IsNullOrEmpty(sampleCost) Then
+            strError += "Sample Cost,"
+        End If
+        If String.IsNullOrEmpty(miscCost) Then
+            strError += "Misc. Cost,"
+        End If
+        If String.IsNullOrEmpty(vendorNo) Then
+            strError += "Vendor Number,"
+        End If
+        If String.IsNullOrEmpty(toolingCost) Then
+            strError += "Tooling Cost,"
+        End If
+        If String.IsNullOrEmpty(sampleQty) Then
+            strError += "Sample Quantity,"
+        End If
+
+
+#End Region
+
+#Region "ComboBoxes"
+
+#End Region
+
+#Region "SelectionFields"
+
+#End Region
+
+
+        If String.IsNullOrEmpty(strError) Then
+            Return ""
+        Else
+            Return strError
+        End If
+
+    End Function
 
     Public Function getmax(table, field)
         Dim exMessage As String = " "
@@ -315,385 +738,57 @@ errhandler:
         End Try
     End Function
 
-    Public Function GetDataByPRHCOD(code As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM PRDVLH WHERE PRHCOD = " & Trim(code)
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
+    Public Sub Valida_DirLog()
+        On Error GoTo Valida_DirLog_Err
+        ChDir(DirLog)
+        ChDir(DirTrabajo)
+        Exit Sub
+Valida_DirLog_Err:
+        Select Case Err()
+            'Case 76
+            'MkDir(DirTrabajo + "Log")
+        End Select
+        Err.Clear()
+        ChDir(DirTrabajo)
+    End Sub
 
-    Public Function GetDataByCodeAndPartNo(code As String, partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & Trim(code) & " AND trim(ucase(PRDPTN)) = '" & Trim(UCase(partNo)) & "'"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
+    Public Sub gotologuse(Progname, Area, Keydata)
+        Dim sql As String
+        Dim codloguse As Long
+        On Error GoTo errhandler
 
-    Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT PRDVLH.PRHCOD,PRDVLH.PRNAME FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
+        'codloguse = getmax("logusectp", "codloguse")
+        sql = "INSERT INTO LOGUSECTP VALUES(" & codloguse & ",'" & userid & "','" & ipaddresslocal & "','" & Version & "','" & Progname & "','" & Area & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','" & Keydata & "')"
+        Conn.Execute(sql)
 
-    Public Function GetDataByPartNo2(partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM DVINVA INNER JOIN VNMAS ON DVINVA.DVPRMG = digits(VNMAS.VMVNUM) WHERE DVPART = '" & Trim(UCase(partNo)) & "' and dvlocn = '01'"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
+        Exit Sub
+errhandler:
+        Call gotoerror("general", "gotologuse", Err.Number, Err.Description, Err.Source)
+    End Sub
 
-    Public Function GetDataByPartMix() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1)"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
+    Public Sub gotoerror(Forms, Events, errnumber, errdescription, errsource)
+        'Dim error As String
+        Dim sql As String
+        Dim intrespond As Long
+        On Error GoTo errhandler
 
-    Public Function GetDataByVendorAndPartNo(vendorNo As String, partNo As String) As String
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim strDescrption As String
-        Dim columnToChange = "PQMIN"
-        Try
-            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
-            strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
-            Return strDescrption
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
+        'Error = Forms + "-" + Events + "-" + Trim(Str(errnumber)) + "-" + errdescription + errsource + "-" + Version
+        'sql = "INSERT INTO ERRORCTP VALUES('" & Replace(Left(error, 500), "'", "") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "')"
+        Conn.Execute(sql)
 
-    Public Function GetDataByPartNo(partNo As String) As String
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim strDescrption As String
-        Dim columnToChange = "IMDSC"
-        Try
-            Sql = "SELECT * FROM INMSTA INNER JOIN DVINVA ON INMSTA.IMPTN = DVINVA.DVPART WHERE UCASE(IMPTN) = '" & Trim(UCase(partNo)) & "'"
-            strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
-            Return strDescrption
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
+        intrespond = MsgBox("Error. See Log", vbInformation + vbOKOnly, "CTP System")
 
-    Public Function GetJiraPath() As String
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim JiraPath As String = " "
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM cntrll where cnt01 = 'JIR' and trim(ucase(cnt03)) = 'PRO'"
-            ds = GetDataFromDatabase(Sql)
-            If ds.Tables(0).Rows.Count = 1 Then
-                JiraPath = ds.Tables(0).Rows(0).Item(3).ToString()
-            End If
-            Return JiraPath
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function FillDDLUser() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT USUSER,USNAME FROM CSUSER WHERE USPTY8 = 'X' AND USPTY9 <> 'R' ORDER BY USNAME "
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function FillDDlMinorCode() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1) "
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetAllStatuses() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' order by cnt02"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetPOQotaData(vendorNo As String, partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        'burned data
-        'vendorNo = "261747"
-        'partNo = "CABLE14B"
-        'vendorNo = "261138"
-        'partNo = "99983"
-        'end burned data
-
-        Try
-            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetProjectStatusDescription(code As String) As String
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ProjectDescStatus As String = " "
-        Dim columnToChange = "CNTDE1"
-        Try
-            Dim CodeOk As String = Trim(UCase(code))
-            Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' and cnt03 = '" & CodeOk & "'"
-            ProjectDescStatus = GetSingleDataFromDatabase(Sql, columnToChange)
-            Return Trim(ProjectDescStatus)
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function InsertNewProject(projectno As String, userid As String, dtValue As DateTimePicker, strInfo As String, strName As String, ddlStatus As ComboBox, ddlUser As ComboBox) As Integer
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim QueryResult As Integer = -1
-        Try
-            Sql = "INSERT INTO PRDVLH(PRHCOD,CRUSER,CRDATE,PRDATE,PRINFO,PRNAME,PRSTAT,MOUSER,MODATE,PRPECH) VALUES 
-            (" & projectno & ",'" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "',
-            '" & Trim(strInfo) & "', '" & Trim(strName) & "','" & Left(ddlStatus.Text, 1) & "','" & userid & "',
-            '" & Format(Now, "yyyy-MM-dd") & "','" & Left(Trim(ddlUser.Text), 10) & "')"
-            QueryResult = InsertDataInDatabase(Sql)
-            Return QueryResult
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return QueryResult
-        End Try
-    End Function
-
-    Public Function InsertNewPOQota(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
-                                    strStsQuote As String, strSpace As String, strUnitCostNew As String, strMinQty As String) As Integer
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim QueryResult As Integer = -1
-        Try
-            Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE,PQPRC,PQMIN) VALUES 
-            ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
-            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "'," & strUnitCostNew & "," & strMinQty & ")"
-            QueryResult = InsertDataInDatabase(Sql)
-            Return QueryResult
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return QueryResult
-        End Try
-    End Function
-
-    Public Function UpdatePoQoraRow(mpnopo As String, minQty As String, unitCostNew As String, statusquote As String, insertYear As String, insertMonth As String, insertDay As String,
-                                    vendorNo As String, partNo As String) As Integer
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim QueryResult As Integer = -1
-        Try
-            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQMIN  = " & minQty & ",PQPRC  = " & unitCostNew & ",PQCOMM = '" & statusquote & "',
-                PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
-                WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
-                " AND PQCOMM LIKE 'D%'"
-            QueryResult = UpdateDataInDatabase(Sql)
-            Return QueryResult
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return QueryResult
-        End Try
-    End Function
-
-    Public Function InsertProductDetail(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
-                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
-                                        comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
-                                        partsToShow As String, ddlMinorCode As String, toolingCost As String, dtValue5 As DateTimePicker, dtValue6 As DateTimePicker, sampleQty As String) As String
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim QueryResult As Integer = -1
-        Try
-            'dtValue6.Value = New DateTime(strDate)
-            Dim chkSelection As Integer = If(chkNew.Checked = False, 0, 1)
-
-            Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRDSQTY) 
-                   VALUES (" & projectno & ",'" & Trim(UCase(partNo)) & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue1.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue2.Value, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "'," & qty & ",
-            '" & Trim(mfr) & "','" & Trim(mfrNo) & "'," & (unitCost) & "," & (unitCostNew) & ",'" & Trim(poNo) & "','" & Format(dtValue3.Value, "yyyy-MM-dd") & "',
-            '" & Trim(ddlStatus) & "','" & Trim(benefits) & "','" & Trim(comments) & "','" & Trim(ddlUser) & "'," & chkSelection & ",'" & Format(dtValue4.Value, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & "," & Trim(vendorNo) & ",
-            '" & partsToShow & "','" & (ddlMinorCode) & "'," & toolingCost & ",'" & Format(dtValue5.Value, "yyyy-MM-dd") & "', '" & Format(dtValue6.Value, "yyyy-MM-dd") & "' ," & sampleQty & ")"
-
-            QueryResult = InsertDataInDatabase(Sql)
-            Return QueryResult
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return QueryResult
-        End Try
-    End Function
-
-    Public Function checkfieldsPoQote(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
-                                    strStsQuote As String, strSpace As String, strUnitCostNew As String, strMinQty As String) As String
-        Dim strError As String = String.Empty
-
-#Region "NumericFields"
-        If String.IsNullOrEmpty(vendorNo) Then
-            strError += "Vendor Number,"
-        End If
-        If String.IsNullOrEmpty(maxValue) Then
-            strError += "Sequencial,"
-        End If
-        If String.IsNullOrEmpty(strYear) Then
-            strError += "Year,"
-        End If
-        If String.IsNullOrEmpty(strMonth) Then
-            strError += "Month,"
-        End If
-        If String.IsNullOrEmpty(strDay) Then
-            strError += "Day,"
-        End If
-        If String.IsNullOrEmpty(strUnitCostNew) Then
-            strError += "Unit Cost New,"
-        End If
-        If String.IsNullOrEmpty(strMinQty) Then
-            strError += "Min Quantity,"
-        End If
-#End Region
-
-        If String.IsNullOrEmpty(strError) Then
-            Return ""
-        Else
-            Return strError
-        End If
-
-    End Function
-
-    Public Function checkFields(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
-                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
-                                        comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
-                                        partsToShow As String, ddlMinorCode As String, toolingCost As String, dtValue5 As DateTimePicker, strDate As String, sampleQty As String) As String
-        Dim strError As String = String.Empty
-
-#Region "TextBoxes"
+        Exit Sub
+errhandler:
+        'Error = Forms + "-" + "gotoerror" + "-" + Trim(Str(Err.Number)) + "-" + Err.Description + Err.Source + "-" + "Err on gotoerror" + "-" + Version
+        'sql = "INSERT INTO ERRORCTP VALUES('" & Replace(Left(error, 500), "'", "") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "')"
+        Conn.Execute(sql)
+        intrespond = MsgBox("Error. See Log", vbInformation + vbOKOnly, "CTP System")
+    End Sub
 
 #End Region
 
-#Region "NumericFields"
-
-        If String.IsNullOrEmpty(projectno) Then
-            strError += "Project Number,"
-        End If
-        If String.IsNullOrEmpty(qty) Then
-            strError += "Quantity,"
-        End If
-        If String.IsNullOrEmpty(unitCost) Then
-            strError += "Unit Cost,"
-        End If
-        If String.IsNullOrEmpty(unitCostNew) Then
-            strError += "Unit Cost New,"
-        End If
-        If String.IsNullOrEmpty(sampleCost) Then
-            strError += "Sample Cost,"
-        End If
-        If String.IsNullOrEmpty(miscCost) Then
-            strError += "Misc. Cost,"
-        End If
-        If String.IsNullOrEmpty(vendorNo) Then
-            strError += "Vendor Number,"
-        End If
-        If String.IsNullOrEmpty(toolingCost) Then
-            strError += "Tooling Cost,"
-        End If
-        If String.IsNullOrEmpty(sampleQty) Then
-            strError += "Sample Quantity,"
-        End If
-
-
-#End Region
-
-#Region "ComboBoxes"
-
-#End Region
-
-#Region "SelectionFields"
-
-#End Region
-
-
-        If String.IsNullOrEmpty(strError) Then
-            Return ""
-        Else
-            Return strError
-        End If
-
-    End Function
+#Region "Generic Methods"
 
     Private Function GetDataFromDatabase(query As String) As Data.DataSet
         Dim exMessage As String = " "
@@ -794,6 +889,9 @@ errhandler:
         End Try
     End Function
 
+#End Region
+
+
     Public Function GetTestData() As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -822,6 +920,22 @@ errhandler:
     'Generate_Log_Err:
     'Close #2
     'End Sub
+
+    'Public Sub Generate_Log(Message As String)
+    'On Error GoTo Generate_Log_Err
+    'Dim LogFile As String
+    '   LogFile = ""
+    '  LogFile = DirLog + "ErrLog_" + Trim(Str(DatePart("m", Date))) + ".log"
+    ' Open LogFile For Append As #2
+    'Write #2, Format(Of Date, "mm/dd/yyyy")() + " " + Trim(Str(Time())) + "|" + Message
+    'Close #2
+    'Exit Sub
+    'Generate_Log_Err:
+    '       Close #2
+    'End Sub
+
+    ' Returns an array with the local IP addresses (as strings).
+    ' Author: Christian d'Heureuse, www.source-code.biz
 
 
 
