@@ -160,6 +160,36 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function GetDataByVendorAndPartNoProdDesc(vendorNo As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select * from prdvld where TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' and vmvnum = " & Trim(vendorNo)
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByCodAndPartProdAndComm(code As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDCMH INNER JOIN PRDCMD ON PRDCMH.PRDCCO = PRDCMD.PRDCCO WHERE PRDCMH.PRHCOD = " & code & " AND prdcmh.PRDPTN = '" & Trim(UCase(partNo)) & "' and trim(ucase(prdctx)) like '%QUOTING%'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -229,6 +259,21 @@ Public Class Gn1
             Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
             strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
             Return strDescrption
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByVendorAndPartNoDst(vendorNo As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
@@ -352,6 +397,113 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function GetVendorByVendorNo(vendorNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM VNMAS WHERE VMVNUM = " & Trim(UCase(vendorNo))
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetVendorQuey(variable As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM VNMAS WHERE DIGITS(VMVNUM) = " & variable
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetCTPPartRef(partNo As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim TcpPartNo As String = " "
+        Dim columnToChange = "CRCTPR"
+        Try
+            Sql = "SELECT * FROM CTPREFS WHERE TRIM(UCASE(CRPTNO)) = '" & Trim(UCase(partNo)) & "'"
+            TcpPartNo = GetSingleDataFromDatabase(Sql, columnToChange)
+            Return Trim(TcpPartNo)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataFromProdHeaderAndDetail(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataFromDualInventory(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM INMSTA INNER JOIN DVINVA ON INMSTA.IMPTN = DVINVA.DVPART WHERE DVLOCN = '01' AND UCASE(IMPTN) = '" & UCase(partNo) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPartInWishList(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select * from prdwl where TRIM(UCASE(WHLPARTN)) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetAssignedVendor(vendorAssigned As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorAssigned) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' and pqqdty < 50 
+                    ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
+
     Public Function FillDDLUser() As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -467,6 +619,23 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function InsertNewPOQotaLess(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
+                                    strStsQuote As String, strSpace As String, strUnitCostNew As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE,PQPRC) VALUES 
+            ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
+            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "'," & strUnitCostNew & ")"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
     Public Function InsertProductDetail(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
                                         mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
                                         comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
@@ -478,11 +647,41 @@ Public Class Gn1
             'dtValue6.Value = New DateTime(strDate)
             Dim chkSelection As Integer = If(chkNew.Checked = False, 0, 1)
 
-            Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRDSQTY) 
-                   VALUES (" & projectno & ",'" & Trim(UCase(partNo)) & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue1.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue2.Value, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "'," & qty & ",
-            '" & Trim(mfr) & "','" & Trim(mfrNo) & "'," & (unitCost) & "," & (unitCostNew) & ",'" & Trim(poNo) & "','" & Format(dtValue3.Value, "yyyy-MM-dd") & "',
-            '" & Trim(ddlStatus) & "','" & Trim(benefits) & "','" & Trim(comments) & "','" & Trim(ddlUser) & "'," & chkSelection & ",'" & Format(dtValue4.Value, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & "," & Trim(vendorNo) & ",
-            '" & partsToShow & "','" & (ddlMinorCode) & "'," & toolingCost & ",'" & Format(dtValue5.Value, "yyyy-MM-dd") & "', '" & Format(dtValue6.Value, "yyyy-MM-dd") & "' ," & sampleQty & ")"
+            Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,
+                                        PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRDSQTY) 
+                   VALUES (" & projectno & ",'" & Trim(UCase(partNo)) & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "','" & userid & "','" & Format(dtValue1.Value, "yyyy-MM-dd") & "',
+                    '" & userid & "','" & Format(dtValue2.Value, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "'," & qty & ",
+            '" & Trim(mfr) & "','" & Trim(mfrNo) & "'," & (unitCost) & ",
+                    " & (unitCostNew) & ",'" & Trim(poNo) & "','" & Format(dtValue3.Value, "yyyy-MM-dd") & "',
+            '" & Trim(ddlStatus) & "','" & Trim(benefits) & "','" & Trim(comments) & "',
+                    '" & Trim(ddlUser) & "'," & chkSelection & ",'" & Format(dtValue4.Value, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & "," & Trim(vendorNo) & ",
+            '" & partsToShow & "',
+                    '" & (ddlMinorCode) & "'," & toolingCost & ",'" & Format(dtValue5.Value, "yyyy-MM-dd") & "', '" & Format(dtValue6.Value, "yyyy-MM-dd") & "' ," & sampleQty & ")"
+
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertProductDetailv2(projectno As String, partNo As String, dtValue As DateTimePicker, userid As String, dtValue1 As DateTimePicker, userid1 As String, dtValue2 As DateTimePicker, ctpNo As String, qty As String,
+                                        mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, dtValue3 As DateTimePicker, ddlStatus As String, benefits As String,
+                                        comments As String, ddlUser As String, chkNew As CheckBox, dtValue4 As DateTimePicker, sampleCost As String, miscCost As String, vendorNo As String,
+                                        partsToShow As String, ddlMinorCode As String, toolingCost As String, dtValue5 As DateTimePicker, dtValue6 As DateTimePicker, dtValue7 As DateTimePicker, newValue2 As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            'dtValue6.Value = New DateTime(strDate)
+            Dim chkSelection As Integer = If(chkNew.Checked = False, 0, 1)
+
+            Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,
+                                        PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRWLDA,PRWLFL) 
+                    VALUES(" & Trim(projectno) & ",'" & Trim(UCase(partNo)) & "','" & Format(Now, "yyyy-mm-dd") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "','" & userid1 & "',
+                    '" & Format(Now, "yyyy-mm-dd") & "','" & Trim(ctpNo) & "',0,'',''," & unitCost & ",0,'','1900-01-01','E','','','" & userid & "',0,'1900-01-01',0,0," & Trim(vendorNo) & ",'',
+                    '" & ddlMinorCode & "',0,'1900-01-01','1900-01-01','" & Format(dtValue7.Value, "yyyy-mm-dd") & "',1)"
 
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
@@ -525,6 +724,21 @@ Public Class Gn1
                 PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
                 WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
                 " AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdatePoQotaByVendorAndPart(vendorNo As String, oldVendorNo As String, partNo As String, pqSeq As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQVND = " & vendorNo & ", PQPRC = 0 WHERE PQVND = " & oldVendorNo & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND 
+                    PQSEQ = " & pqSeq & " AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%'"
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -637,6 +851,19 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function UpdateProdDetailVendor(partstoshow As String, vendorno As String, code As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',VMVNUM = " & vendorno & ", PRDCON = 0 WHERE PRHCOD = " & Trim(code) & " AND PRDPTN = '" & Trim(UCase(partNo)) & "'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
 
 #End Region
 

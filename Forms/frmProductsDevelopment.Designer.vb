@@ -377,7 +377,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 99.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 126.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 137.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 186.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 187.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.txtsearch, 1, 0)
@@ -428,21 +428,21 @@ Partial Class frmProductsDevelopment
         '
         'txtsearch
         '
-        Me.txtsearch.Location = New System.Drawing.Point(119, 3)
+        Me.txtsearch.Location = New System.Drawing.Point(118, 3)
         Me.txtsearch.Name = "txtsearch"
         Me.txtsearch.Size = New System.Drawing.Size(50, 20)
         Me.txtsearch.TabIndex = 2
         '
         'txtsearchcode
         '
-        Me.txtsearchcode.Location = New System.Drawing.Point(119, 42)
+        Me.txtsearchcode.Location = New System.Drawing.Point(118, 42)
         Me.txtsearchcode.Name = "txtsearchcode"
         Me.txtsearchcode.Size = New System.Drawing.Size(50, 20)
         Me.txtsearchcode.TabIndex = 3
         '
         'cmdsearch
         '
-        Me.cmdsearch.Location = New System.Drawing.Point(175, 3)
+        Me.cmdsearch.Location = New System.Drawing.Point(174, 3)
         Me.cmdsearch.Name = "cmdsearch"
         Me.cmdsearch.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearch.TabIndex = 4
@@ -451,7 +451,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchcode
         '
-        Me.cmdsearchcode.Location = New System.Drawing.Point(175, 42)
+        Me.cmdsearchcode.Location = New System.Drawing.Point(174, 42)
         Me.cmdsearchcode.Name = "cmdsearchcode"
         Me.cmdsearchcode.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchcode.TabIndex = 5
@@ -461,7 +461,7 @@ Partial Class frmProductsDevelopment
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(258, 5)
+        Me.Label3.Location = New System.Drawing.Point(257, 5)
         Me.Label3.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
@@ -471,7 +471,7 @@ Partial Class frmProductsDevelopment
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(258, 44)
+        Me.Label4.Location = New System.Drawing.Point(257, 44)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(97, 13)
@@ -480,21 +480,21 @@ Partial Class frmProductsDevelopment
         '
         'txtsearch1
         '
-        Me.txtsearch1.Location = New System.Drawing.Point(379, 3)
+        Me.txtsearch1.Location = New System.Drawing.Point(378, 3)
         Me.txtsearch1.Name = "txtsearch1"
         Me.txtsearch1.Size = New System.Drawing.Size(59, 20)
         Me.txtsearch1.TabIndex = 8
         '
         'txtsearchpart
         '
-        Me.txtsearchpart.Location = New System.Drawing.Point(379, 42)
+        Me.txtsearchpart.Location = New System.Drawing.Point(378, 42)
         Me.txtsearchpart.Name = "txtsearchpart"
         Me.txtsearchpart.Size = New System.Drawing.Size(59, 20)
         Me.txtsearchpart.TabIndex = 9
         '
         'cmdsearch1
         '
-        Me.cmdsearch1.Location = New System.Drawing.Point(448, 3)
+        Me.cmdsearch1.Location = New System.Drawing.Point(447, 3)
         Me.cmdsearch1.Name = "cmdsearch1"
         Me.cmdsearch1.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearch1.TabIndex = 10
@@ -503,7 +503,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchpart
         '
-        Me.cmdsearchpart.Location = New System.Drawing.Point(448, 42)
+        Me.cmdsearchpart.Location = New System.Drawing.Point(447, 42)
         Me.cmdsearchpart.Name = "cmdsearchpart"
         Me.cmdsearchpart.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchpart.TabIndex = 11
@@ -513,7 +513,7 @@ Partial Class frmProductsDevelopment
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(537, 5)
+        Me.Label5.Location = New System.Drawing.Point(536, 5)
         Me.Label5.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(88, 13)
@@ -523,7 +523,7 @@ Partial Class frmProductsDevelopment
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(537, 44)
+        Me.Label6.Location = New System.Drawing.Point(536, 44)
         Me.Label6.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(89, 13)
@@ -532,14 +532,14 @@ Partial Class frmProductsDevelopment
         '
         'txtsearchctp
         '
-        Me.txtsearchctp.Location = New System.Drawing.Point(636, 42)
+        Me.txtsearchctp.Location = New System.Drawing.Point(635, 42)
         Me.txtsearchctp.Name = "txtsearchctp"
         Me.txtsearchctp.Size = New System.Drawing.Size(120, 20)
         Me.txtsearchctp.TabIndex = 15
         '
         'cmdsearchctp
         '
-        Me.cmdsearchctp.Location = New System.Drawing.Point(762, 42)
+        Me.cmdsearchctp.Location = New System.Drawing.Point(761, 42)
         Me.cmdsearchctp.Name = "cmdsearchctp"
         Me.cmdsearchctp.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchctp.TabIndex = 17
@@ -548,7 +548,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchstatus
         '
-        Me.cmdsearchstatus.Location = New System.Drawing.Point(899, 3)
+        Me.cmdsearchstatus.Location = New System.Drawing.Point(898, 3)
         Me.cmdsearchstatus.Name = "cmdsearchstatus"
         Me.cmdsearchstatus.Size = New System.Drawing.Size(75, 23)
         Me.cmdsearchstatus.TabIndex = 18
@@ -557,7 +557,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdall
         '
-        Me.cmdall.Location = New System.Drawing.Point(899, 42)
+        Me.cmdall.Location = New System.Drawing.Point(898, 42)
         Me.cmdall.Name = "cmdall"
         Me.cmdall.Size = New System.Drawing.Size(75, 23)
         Me.cmdall.TabIndex = 19
@@ -568,7 +568,7 @@ Partial Class frmProductsDevelopment
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.cmbstatus1, 2)
         Me.cmbstatus1.FormattingEnabled = True
-        Me.cmbstatus1.Location = New System.Drawing.Point(636, 3)
+        Me.cmbstatus1.Location = New System.Drawing.Point(635, 3)
         Me.cmbstatus1.Name = "cmbstatus1"
         Me.cmbstatus1.Size = New System.Drawing.Size(121, 21)
         Me.cmbstatus1.TabIndex = 20
@@ -752,7 +752,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 45.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
