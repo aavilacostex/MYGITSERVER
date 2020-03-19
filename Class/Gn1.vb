@@ -503,6 +503,21 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function CallForCtpNumber(partno As String, ctppartno As String, flagctp As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "CALL CTPINV.CATCTPR ('" & partno & "','" & ctppartno & "','" & flagctp & "')"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
 
     Public Function FillDDLUser() As Data.DataSet
         Dim exMessage As String = " "
@@ -619,6 +634,23 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function InsertNewPOQota1(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
+                                    strStsQuote As String, strSpace As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE) VALUES 
+            ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
+            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
     Public Function InsertNewPOQotaLess(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
                                     strStsQuote As String, strSpace As String, strUnitCostNew As String) As Integer
         Dim exMessage As String = " "
@@ -679,9 +711,9 @@ Public Class Gn1
 
             Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,
                                         PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRWLDA,PRWLFL) 
-                    VALUES(" & Trim(projectno) & ",'" & Trim(UCase(partNo)) & "','" & Format(Now, "yyyy-mm-dd") & "','" & userid & "','" & Format(Now, "yyyy-mm-dd") & "','" & userid1 & "',
-                    '" & Format(Now, "yyyy-mm-dd") & "','" & Trim(ctpNo) & "',0,'',''," & unitCost & ",0,'','1900-01-01','E','','','" & userid & "',0,'1900-01-01',0,0," & Trim(vendorNo) & ",'',
-                    '" & ddlMinorCode & "',0,'1900-01-01','1900-01-01','" & Format(dtValue7.Value, "yyyy-mm-dd") & "',1)"
+                    VALUES(" & Trim(projectno) & ",'" & Trim(UCase(partNo)) & "','" & Format(Now, "yyyy-MM-dd") & "','" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & userid1 & "',
+                    '" & Format(Now, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "',0,'',''," & unitCost & ",0,'','1900-01-01','E','','','" & userid & "',0,'1900-01-01',0,0," & Trim(vendorNo) & ",'',
+                    '" & ddlMinorCode & "',0,'1900-01-01','1900-01-01','" & Format(dtValue7.Value, "yyyy-MM-dd") & "',1)"
 
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
@@ -721,6 +753,24 @@ Public Class Gn1
         Dim QueryResult As Integer = -1
         Try
             Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQMIN  = " & minQty & ",PQPRC  = " & unitCostNew & ",PQCOMM = '" & statusquote & "',
+                PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
+                WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
+                " AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdatePoQoraRow1(mpnopo As String, statusquote As String, insertYear As String, insertMonth As String, insertDay As String,
+                                    vendorNo As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQCOMM = '" & statusquote + "NEW" & "',
                 PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
                 WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
                 " AND PQCOMM LIKE 'D%'"
@@ -893,7 +943,7 @@ Public Class Gn1
             strError += "Unit Cost New,"
         End If
         If String.IsNullOrEmpty(strMinQty) Then
-            strError += "Min Quantity,"
+            strError += "Min Qty,"
         End If
 #End Region
 
@@ -1244,7 +1294,7 @@ errhandler:
             End Using
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
+            Return result
         End Try
     End Function
 
@@ -1268,8 +1318,51 @@ errhandler:
         End Try
     End Function
 
+    Private Function DeleteRecordFromDatabase(query As String) As Integer
+        Dim exMessage As String = " "
+        Try
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Dim dataAdapter As New Odbc.OdbcDataAdapter()
+                Dim ds As New DataSet()
+                ds.Locale = CultureInfo.InvariantCulture
+                Dim rows As Integer
+
+                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+                ObjConn.Open()
+                rows = cmd.ExecuteNonQuery()
+                Return rows
+            End Using
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
 #End Region
 
+#Region "Delete"
+
+    Public Function DeleteDataByWSCod(code As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Sql = "DELETE FROM PRDWL WHERE WHLCODE = " & Trim(code)
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm = 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+#End Region
 
     Public Function GetTestData(partNo As String) As Data.DataSet
         Dim exMessage As String = " "

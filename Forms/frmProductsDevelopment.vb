@@ -70,6 +70,9 @@ Public Class frmProductsDevelopment
         'Dim dss = gnr.GetTestData("1527554")
         'Dim dss = gnr.GetPOQotaData()
         'dropdownlist default fill section
+        'Dim varvar = 1439
+        'Dim dstest = gnr.DeleteDataByProjectNo(varvar)
+
 
         FillDDlUser() 'Fill user cmb
         FillDDlUser1()
@@ -93,8 +96,18 @@ Public Class frmProductsDevelopment
             End If
         Next
 
+        'extra method
         Panel4.Enabled = False
         Panel1.Enabled = False
+        txtCode.Enabled = False
+        txtvendorno.ReadOnly = True
+        txtvendorname.ReadOnly = True
+        txtvendornamea.ReadOnly = True
+        txtvendornoa.ReadOnly = True
+        txtminor.ReadOnly = True
+        txtpartno.ReadOnly = True
+        txtpartdescription.ReadOnly = True
+        cmbminorcode.Enabled = False
 
         optCTP.Checked = True
         optVENDOR.Checked = False
@@ -252,11 +265,19 @@ Public Class frmProductsDevelopment
 
         If SSTab1.SelectedTab.Name = "TabPage1" Then
             cmdSave1.Enabled = False
+        ElseIf SSTab1.SelectedTab.Name = "TabPage3" Then
+            Dim rsValue As Integer = -1
+            rsValue = mandatoryFields("new", "TabPage2")
+            If rsValue = 0 Then
+                flagdeve = 0
+                flagnewpart = 1
+            Else
+                Dim rsMessage As DialogResult = MessageBox.Show("All the fields in the Project Tab must be filled before add parts!", "CTP System", MessageBoxButtons.OK)
+                If rsMessage = DialogResult.OK Then
+                    SSTab1.SelectedIndex = 1
+                End If
+            End If
         End If
-
-        'If sender Is TabControl Then
-
-        'End If
     End Sub
 
 
@@ -360,46 +381,45 @@ Public Class frmProductsDevelopment
             sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
             'get the query results
             ds = gnr.FillGrid(sql)
+            If Not ds Is Nothing Then
+                dgvProjectDetails.AutoGenerateColumns = False
+                'dgvProjectDetails.ColumnCount = 8
 
-            dgvProjectDetails.AutoGenerateColumns = False
-            'dgvProjectDetails.ColumnCount = 8
+                'Add Columns
+                dgvProjectDetails.Columns(0).Name = "Date"
+                dgvProjectDetails.Columns(0).HeaderText = "Date"
+                dgvProjectDetails.Columns(0).DataPropertyName = "PRDDAT"
 
-            'Add Columns
-            dgvProjectDetails.Columns(0).Name = "Date"
-            dgvProjectDetails.Columns(0).HeaderText = "Date"
-            dgvProjectDetails.Columns(0).DataPropertyName = "PRDDAT"
+                dgvProjectDetails.Columns(1).Name = "PartNo"
+                dgvProjectDetails.Columns(1).HeaderText = "Part#"
+                dgvProjectDetails.Columns(1).DataPropertyName = "PRDPTN"
 
-            dgvProjectDetails.Columns(1).Name = "PartNo"
-            dgvProjectDetails.Columns(1).HeaderText = "Part#"
-            dgvProjectDetails.Columns(1).DataPropertyName = "PRDPTN"
+                dgvProjectDetails.Columns(2).Name = "CTPNo"
+                dgvProjectDetails.Columns(2).HeaderText = "CTP#"
+                dgvProjectDetails.Columns(2).DataPropertyName = "PRDCTP"
 
-            dgvProjectDetails.Columns(2).Name = "CTPNo"
-            dgvProjectDetails.Columns(2).HeaderText = "CTP#"
-            dgvProjectDetails.Columns(2).DataPropertyName = "PRDCTP"
+                dgvProjectDetails.Columns(3).Name = "MFRNo"
+                dgvProjectDetails.Columns(3).HeaderText = "MFR#"
+                dgvProjectDetails.Columns(3).DataPropertyName = "PRDMFR#"
 
-            dgvProjectDetails.Columns(3).Name = "MFRNo"
-            dgvProjectDetails.Columns(3).HeaderText = "MFR#"
-            dgvProjectDetails.Columns(3).DataPropertyName = "PRDMFR#"
+                dgvProjectDetails.Columns(4).Name = "Vendor"
+                dgvProjectDetails.Columns(4).HeaderText = "Vendor"
+                dgvProjectDetails.Columns(4).DataPropertyName = "VMVNUM"
 
-            dgvProjectDetails.Columns(4).Name = "Vendor"
-            dgvProjectDetails.Columns(4).HeaderText = "Vendor"
-            dgvProjectDetails.Columns(4).DataPropertyName = "VMVNUM"
+                dgvProjectDetails.Columns(5).Name = "VendorName"
+                dgvProjectDetails.Columns(5).HeaderText = "Vendor Name"
+                dgvProjectDetails.Columns(5).DataPropertyName = "VMNAME"
 
-            dgvProjectDetails.Columns(5).Name = "VendorName"
-            dgvProjectDetails.Columns(5).HeaderText = "Vendor Name"
-            dgvProjectDetails.Columns(5).DataPropertyName = "VMNAME"
+                dgvProjectDetails.Columns(6).Name = "Status"
+                dgvProjectDetails.Columns(6).HeaderText = "Status"
+                dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
 
-            dgvProjectDetails.Columns(6).Name = "Status"
-            dgvProjectDetails.Columns(6).HeaderText = "Status"
-            dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
-
-
-
-            'FILL GRID
-            dgvProjectDetails.DataSource = ds.Tables(0)
-            'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
-
-            Exit Sub
+                'FILL GRID
+                dgvProjectDetails.DataSource = ds.Tables(0)
+                'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
+            Else
+                Exit Sub
+            End If
         Catch ex As Exception
             Dim example As String = ex.Message
             Call gnr.gotoerror("frmproductsdevelopment", "fillcell2", Err.Number, Err.Description, Err.Source)
@@ -615,6 +635,9 @@ Public Class frmProductsDevelopment
                     End If
 
                     'fill second grid process
+                    'clean all other fields
+                    flagdeve = 0
+                    flagnewpart = 1
                     fillcell2(code)
                 Else
                     'is is not selected
@@ -685,11 +708,13 @@ Public Class frmProductsDevelopment
                 'MessageBox.Show("No pressed")
             ElseIf result = DialogResult.Yes Then
                 'MessageBox.Show("Yes pressed")
+                cleanFormValues(SSTab1.SelectedTab.Name)
                 gotonew()
             End If
         Else
             Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
             If resultNew = DialogResult.Yes Then
+                cleanFormValues(SSTab1.SelectedTab.Name)
                 gotonew()
             End If
         End If
@@ -705,11 +730,13 @@ Public Class frmProductsDevelopment
                 'MessageBox.Show("No pressed")
             ElseIf result = DialogResult.Yes Then
                 'MessageBox.Show("Yes pressed")
+                cleanFormValues(SSTab1.SelectedTab.Name)
                 gotonew()
             End If
         Else
             Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
             If resultNew = DialogResult.Yes Then
+                cleanFormValues(SSTab1.SelectedTab.Name)
                 gotonew()
             End If
         End If
@@ -725,13 +752,13 @@ Public Class frmProductsDevelopment
                 'MessageBox.Show("No pressed")
             ElseIf result = DialogResult.Yes Then
                 'MessageBox.Show("Yes pressed")
-                'cleanFormValues(SSTab1.SelectedTab.Name)
+                cleanFormValues(SSTab1.SelectedTab.Name)
                 gotonew()
             End If
         Else
             Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
             If resultNew = DialogResult.Yes Then
-                'cleanFormValues(SSTab1.SelectedTab.Name)
+                cleanFormValues(SSTab1.SelectedTab.Name)
                 gotonew()
             End If
         End If
@@ -755,6 +782,201 @@ Public Class frmProductsDevelopment
         'cleanValues()
     End Sub
 
+    Private Sub PoQotaFunction()
+        Dim exMessage As String = " "
+        Dim statusquote As String
+        Dim Status2 As String = ""
+        Try
+            statusquote = "D-" & Status2
+            Dim mpnopo As String = String.Empty
+            Dim spacepoqota As String = String.Empty
+            Dim strQueryAdd As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
+            Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text)
+
+            If dsPoQota IsNot Nothing Then
+                If dsPoQota.Tables(0).Rows.Count > 0 Then
+                    mpnopo = Trim(UCase(txtmfrno.Text))
+                    Dim maxValue = 0
+                    Dim dsUpdatedData As Integer
+
+                    Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
+                                                        DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
+                    If String.IsNullOrEmpty(strCheckPoQoteIns) Then
+                        dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                                            txtvendorno.Text, txtpartno.Text)
+                        If dsUpdatedData <> 0 Then
+                            'show message error
+                        End If
+                    Else
+                        Dim arrayCheck As New List(Of String)
+                        arrayCheck = strCheckPoQoteIns.Split(",").ToList()
+                        For Each item As String In arrayCheck
+                            If item = "Sequencial" Then
+                                'show error message
+                                Exit For
+                            ElseIf item = "Vendor Number" Then
+                                txtvendorno.Text = "0" 'ask for vendor??
+                            ElseIf item = "Unit Cost New" Then
+                                txtunitcostnew.Text = "0"
+                            ElseIf item = "Min Quantity" Then
+                                txtminqty.Text = "0"
+                            End If
+                        Next
+                        dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                                            txtvendorno.Text, txtpartno.Text)
+
+                        If dsUpdatedData <> 0 Then
+                            'show message error
+                        End If
+                    End If
+                Else
+                    'warning message
+                End If
+            Else
+                Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
+                If Not String.IsNullOrEmpty(maxValue) Then
+                    maxValue += 1
+                Else
+                    maxValue = 1 'preguntar duda
+                End If
+                spacepoqota = "                               DEV"
+                mpnopo = Trim(UCase(txtmfrno.Text))
+                Dim ResultQuery As String = String.Empty
+
+                Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
+                                                        DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
+                If String.IsNullOrEmpty(strCheckPoQoteIns) Then
+                    ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
+                                                       DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
+                    If ResultQuery <> 0 Then
+                        'show message error
+                    End If
+                Else
+                    Dim arrayCheck As New List(Of String)
+                    arrayCheck = strCheckPoQoteIns.Split(",").ToList()
+                    For Each item As String In arrayCheck
+                        If item = "Sequencial" Then
+                            'show error message
+                            Exit For
+                        ElseIf item = "Vendor Number" Then
+                            txtvendorno.Text = "0"
+                        ElseIf item = "Unit Cost New" Then
+                            txtunitcostnew.Text = "0"
+                        ElseIf item = "Min Quantity" Then
+                            txtminqty.Text = "0"
+                        End If
+                    Next
+
+                    ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
+                                                       DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
+                    If ResultQuery <> 0 Then
+                        'show message error
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub InsertProductDetails(projectNo As String, partstoshow As String)
+        Dim dtTime As DateTimePicker = New DateTimePicker()
+        Dim dtTime1 As DateTimePicker = New DateTimePicker()
+        Dim dtTime2 As DateTimePicker = New DateTimePicker()
+        Dim dtTime3 As DateTimePicker = New DateTimePicker()
+        Dim dtTime4 As DateTimePicker = New DateTimePicker()
+        Dim dtTime5 As DateTimePicker = New DateTimePicker()
+        Dim QueryDetailResult As Integer = -1
+        Dim exMessage As String = " "
+        Try
+            dtTime5.Value = New DateTime(1900, 1, 1)
+            dtTime5.CustomFormat = "yyyy/MM/dd/"
+
+            Dim strCheck = gnr.checkFields(projectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
+                                                                txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                                                cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
+                                                                dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
+            If String.IsNullOrEmpty(strCheck) Then
+                QueryDetailResult = gnr.InsertProductDetail(projectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
+                                    txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                    cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
+                                    dtTime5, CInt(txtsampleqty.Text))
+                If QueryDetailResult <> 0 Then
+                    'show message error
+                End If
+            Else
+                Dim arrayCheck As New List(Of String)
+                arrayCheck = strCheck.Split(",").ToList()
+                For Each item As String In arrayCheck
+                    If item = "Project Number" Then
+                        'show error message must have data
+                        Exit For
+                    ElseIf item = "Quantity" Then
+                        txtqty.Text = "0"
+                    ElseIf item = "Unit Cost" Then
+                        txtunitcost.Text = "0"
+                    ElseIf item = "Unit Cost New" Then
+                        txtunitcostnew.Text = "0"
+                    ElseIf item = "Sample Cost" Then
+                        txtsample.Text = "0"
+                    ElseIf item = "Misc. Cost" Then
+                        txttcost.Text = "0"
+                    ElseIf item = "Vendor Number" Then
+                        Exit For
+                        'txtvendorno.Text = "0"  must have data
+                    ElseIf item = "Tooling Cost" Then
+                        txttoocost.Text = "0"
+                    ElseIf item = "Sample Quantity" Then
+                        txtsampleqty.Text = "0"
+                    End If
+                Next
+
+                If txtvendorno.Text <> "" And projectNo <> 0 Then
+                    QueryDetailResult = gnr.InsertProductDetail(projectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, CInt(txtqty.Text),
+                                    txtmfr.Text, txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                    cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
+                                    dtTime5, CInt(txtsampleqty.Text))
+                Else
+                    'message answering for a vendor
+                    QueryDetailResult = -1
+                End If
+
+                If QueryDetailResult < 0 Then
+                    'error message
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub ProdDetailAndAllCommentHelper(strUser As String, flag As Integer)
+        Dim exMessage As String = " "
+        Try
+            If flag = 0 Then
+                Dim queryProdDetail = gnr.UpdateProductDetail(txtCode.Text, txtpartno.Text)
+                If queryProdDetail <> 0 Then
+                    'error message
+                End If
+            End If
+
+            Dim codComment = gnr.getmax("PRDCMH", "PRDCCO")
+            Dim queryProdComments = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, codComment, userid)
+            If queryProdComments <> 0 Then
+                'ERROR MESSAGE  
+            End If
+            Dim codDetComment = 1
+            'Dim messcomm = "Person in charge changed assigned " & Trim(cmbuser.SelectedValue)
+            Dim messcomm = strUser
+            Dim queryProdCommentsDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, codComment, codDetComment, messcomm)
+            If queryProdCommentsDet <> 0 Then
+                'error message
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     Private Sub save()
         Dim exMessage As String = " "
         Try
@@ -767,14 +989,14 @@ Public Class frmProductsDevelopment
             Dim insertDay = Date.Today.Day
             Dim flagustatus As Integer
             Dim partstoshow As String = displayPart()
-            Dim dtTime As DateTimePicker = New DateTimePicker()
-            Dim dtTime1 As DateTimePicker = New DateTimePicker()
-            Dim dtTime2 As DateTimePicker = New DateTimePicker()
-            Dim dtTime3 As DateTimePicker = New DateTimePicker()
-            Dim dtTime4 As DateTimePicker = New DateTimePicker()
-            Dim dtTime5 As DateTimePicker = New DateTimePicker()
-            dtTime5.Value = New DateTime(1900, 1, 1)
-            dtTime5.CustomFormat = "yyyy/MM/dd/"
+            'Dim dtTime As DateTimePicker = New DateTimePicker()
+            'Dim dtTime1 As DateTimePicker = New DateTimePicker()
+            'Dim dtTime2 As DateTimePicker = New DateTimePicker()
+            'Dim dtTime3 As DateTimePicker = New DateTimePicker()
+            'Dim dtTime4 As DateTimePicker = New DateTimePicker()
+            'Dim dtTime5 As DateTimePicker = New DateTimePicker()
+            'dtTime5.Value = New DateTime(1900, 1, 1)
+            'dtTime5.CustomFormat = "yyyy/MM/dd/"
             Dim QueryDetailResult As Integer = -1
             Dim statusquote As String
 
@@ -801,6 +1023,7 @@ Public Class frmProductsDevelopment
                             'test purpose
                             'strProjectNo = ProjectNo
                             'test purpose
+
                             If dsProjectNoResult.Tables(0).Rows.Count > 0 Then
                                 If (ProjectNo = strProjectNo) Then
                                     Dim resultAlert As DialogResult = MessageBox.Show("This part no. already exists in this project. :" & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.OK)
@@ -809,71 +1032,11 @@ Public Class frmProductsDevelopment
                                     If result = DialogResult.No Then
                                         MessageBox.Show("No pressed")
                                     ElseIf result = DialogResult.Yes Then
-                                        Dim strCheck = gnr.checkFields(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                                txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                                cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                                dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
-                                        If String.IsNullOrEmpty(strCheck) Then
-                                            QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                                txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                                cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                                dtTime5, CInt(txtsampleqty.Text))
-                                            If QueryDetailResult <> 0 Then
-                                                'show message error
-                                            End If
-                                        Else
-                                            Dim arrayCheck As New List(Of String)
-                                            arrayCheck = strCheck.Split(",").ToList()
-                                            For Each item As String In arrayCheck
-                                                If item = "Project Number" Then
-                                                    'show error message must have data
-                                                    Exit For
-                                                ElseIf item = "Quantity" Then
-                                                    txtqty.Text = "0"
-                                                ElseIf item = "Unit Cost" Then
-                                                    txtunitcost.Text = "0"
-                                                ElseIf item = "Unit Cost New" Then
-                                                    txtunitcostnew.Text = "0"
-                                                ElseIf item = "Sample Cost" Then
-                                                    txtsample.Text = "0"
-                                                ElseIf item = "Misc. Cost" Then
-                                                    txttcost.Text = "0"
-                                                ElseIf item = "Vendor Number" Then
-                                                    Exit For
-                                                    'txtvendorno.Text = "0"  must have data
-                                                ElseIf item = "Tooling Cost" Then
-                                                    txttoocost.Text = "0"
-                                                ElseIf item = "Sample Quantity" Then
-                                                    txtsampleqty.Text = "0"
-                                                End If
-                                            Next
-
-                                            If txtvendorno.Text <> "" And ProjectNo <> 0 Then
-                                                QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, CInt(txtqty.Text),
-                                                                txtmfr.Text, txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                                cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
-                                                                dtTime5, CInt(txtsampleqty.Text))
-                                            Else
-                                                'message answering for a vendor
-                                                QueryDetailResult = -1
-                                            End If
-
-                                            If QueryDetailResult < 0 Then
-                                                'error message
-                                            End If
-                                        End If
+                                        InsertProductDetails(ProjectNo, partstoshow)
 
                                         If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                             'send email
                                         End If
-
-                                        statusquote = "D-" & Status2
-                                        Dim mpnopo As String = String.Empty
-                                        Dim spacepoqota As String = String.Empty
-                                        Dim strQueryAdd As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
-                                        Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text)
-
-                                        'separate here in other methods--------------------------------
 
                                         'burned data test
                                         'txtvendorno.Text = "261747" 'has results
@@ -884,106 +1047,10 @@ Public Class frmProductsDevelopment
 
                                         'end burned data test
 
-                                        If dsPoQota IsNot Nothing Then
-                                            If dsPoQota.Tables(0).Rows.Count > 0 Then
-                                                mpnopo = Trim(UCase(txtmfrno.Text))
-                                                Dim maxValue = 0
-                                                Dim dsUpdatedData As Integer
-
-                                                Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                                    DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                                If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                                    dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                        txtvendorno.Text, txtpartno.Text)
-                                                    If dsUpdatedData <> 0 Then
-                                                        'show message error
-                                                    End If
-                                                Else
-                                                    Dim arrayCheck As New List(Of String)
-                                                    arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                                    For Each item As String In arrayCheck
-                                                        If item = "Sequencial" Then
-                                                            'show error message
-                                                            Exit For
-                                                        ElseIf item = "Vendor Number" Then
-                                                            txtvendorno.Text = "0" 'ask for vendor??
-                                                        ElseIf item = "Unit Cost New" Then
-                                                            txtunitcostnew.Text = "0"
-                                                        ElseIf item = "Min Quantity" Then
-                                                            txtminqty.Text = "0"
-                                                        End If
-                                                    Next
-                                                    dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                        txtvendorno.Text, txtpartno.Text)
-
-                                                    If dsUpdatedData <> 0 Then
-                                                        'show message error
-                                                    End If
-                                                End If
-                                            Else
-                                                'warning message
-                                            End If
-                                        Else
-                                            Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
-                                            If Not String.IsNullOrEmpty(maxValue) Then
-                                                maxValue += 1
-                                            Else
-                                                maxValue = 1 'preguntar duda
-                                            End If
-                                            spacepoqota = "                               DEV"
-                                            mpnopo = Trim(UCase(txtmfrno.Text))
-                                            Dim ResultQuery As String = String.Empty
-
-                                            Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                                    DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                            If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                                ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                                   DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                                If ResultQuery <> 0 Then
-                                                    'show message error
-                                                End If
-                                            Else
-                                                Dim arrayCheck As New List(Of String)
-                                                arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                                For Each item As String In arrayCheck
-                                                    If item = "Sequencial" Then
-                                                        'show error message
-                                                        Exit For
-                                                    ElseIf item = "Vendor Number" Then
-                                                        txtvendorno.Text = "0"
-                                                    ElseIf item = "Unit Cost New" Then
-                                                        txtunitcostnew.Text = "0"
-                                                    ElseIf item = "Min Quantity" Then
-                                                        txtminqty.Text = "0"
-                                                    End If
-                                                Next
-
-                                                ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                                   DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                                If ResultQuery <> 0 Then
-                                                    'show message error
-                                                End If
-                                            End If
-                                        End If
-
-                                        'separate here in other methods--------------------------------
+                                        PoQotaFunction()
 
                                         If cmbuser.SelectedValue <> "N/A " Then
-                                            Dim queryProdDetail = gnr.UpdateProductDetail(txtCode.Text, txtpartno.Text)
-                                            If queryProdDetail <> 0 Then
-                                                'error message
-                                            End If
-                                            Dim codComment = gnr.getmax("PRDCMH", "PRDCCO")
-                                            Dim queryProdComments = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, codComment, userid)
-                                            If queryProdComments <> 0 Then
-                                                'ERROR MESSAGE  
-                                            End If
-                                            Dim codDetComment = 1
-                                            Dim messcomm = "Person in charge changed assigned " & Trim(cmbuser.SelectedValue)
-                                            Dim queryProdCommentsDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, codComment, codDetComment, messcomm)
-                                            If queryProdCommentsDet <> 0 Then
-                                                'error message
-                                            End If
+                                            ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                                         End If
 
                                         Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
@@ -993,71 +1060,10 @@ Public Class frmProductsDevelopment
                                     End If
                                 End If
                             Else
-                                Dim strCheck = gnr.checkFields(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                                txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                                cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                                dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
-                                If String.IsNullOrEmpty(strCheck) Then
-                                    QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                        txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                        cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                        dtTime5, CInt(txtsampleqty.Text))
-                                    If QueryDetailResult <> 0 Then
-                                        'show message error
-                                    End If
-                                Else
-                                    Dim arrayCheck As New List(Of String)
-                                    arrayCheck = strCheck.Split(",").ToList()
-                                    For Each item As String In arrayCheck
-                                        If item = "Project Number" Then
-                                            'show error message must have data
-                                            Exit For
-                                        ElseIf item = "Quantity" Then
-                                            txtqty.Text = "0"
-                                        ElseIf item = "Unit Cost" Then
-                                            txtunitcost.Text = "0"
-                                        ElseIf item = "Unit Cost New" Then
-                                            txtunitcostnew.Text = "0"
-                                        ElseIf item = "Sample Cost" Then
-                                            txtsample.Text = "0"
-                                        ElseIf item = "Misc. Cost" Then
-                                            txttcost.Text = "0"
-                                        ElseIf item = "Vendor Number" Then
-                                            Exit For
-                                            'txtvendorno.Text = "0"  must have data
-                                        ElseIf item = "Tooling Cost" Then
-                                            txttoocost.Text = "0"
-                                        ElseIf item = "Sample Quantity" Then
-                                            txtsampleqty.Text = "0"
-                                        End If
-                                    Next
-
-                                    If txtvendorno.Text <> "" And ProjectNo <> 0 Then
-                                        QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, CInt(txtqty.Text),
-                                                                txtmfr.Text, txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                                cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
-                                                                dtTime5, CInt(txtsampleqty.Text))
-
-                                        If QueryDetailResult < 0 Then
-                                            'error message
-                                        End If
-                                    Else
-                                        'message answering for a vendor
-                                        QueryDetailResult = -1
-                                    End If
-                                End If
-
+                                InsertProductDetails(ProjectNo, partstoshow)
                                 If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                     'send email
                                 End If
-
-                                statusquote = "D-" & Status2
-                                Dim mpnopo As String = String.Empty
-                                Dim spacepoqota As String = String.Empty
-                                Dim strQueryAdd As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
-                                Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text)
-
-                                'separate here in other methods--------------------------------
 
                                 'burned data test
                                 'txtvendorno.Text = "261747" 'has results
@@ -1068,106 +1074,10 @@ Public Class frmProductsDevelopment
 
                                 'end burned data test
 
-                                If dsPoQota IsNot Nothing Then
-                                    If dsPoQota.Tables(0).Rows.Count > 0 Then
-                                        mpnopo = Trim(UCase(txtmfrno.Text))
-                                        Dim maxValue = 0
-                                        Dim dsUpdatedData As Integer
-
-                                        Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                            DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                        If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                            dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                txtvendorno.Text, txtpartno.Text)
-                                            If dsUpdatedData <> 0 Then
-                                                'show message error
-                                            End If
-                                        Else
-                                            Dim arrayCheck As New List(Of String)
-                                            arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                            For Each item As String In arrayCheck
-                                                If item = "Sequencial" Then
-                                                    'show error message
-                                                    Exit For
-                                                ElseIf item = "Vendor Number" Then
-                                                    txtvendorno.Text = "0" 'ask for vendor??
-                                                ElseIf item = "Unit Cost New" Then
-                                                    txtunitcostnew.Text = "0"
-                                                ElseIf item = "Min Quantity" Then
-                                                    txtminqty.Text = "0"
-                                                End If
-                                            Next
-                                            dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                txtvendorno.Text, txtpartno.Text)
-
-                                            If dsUpdatedData <> 0 Then
-                                                'show message error
-                                            End If
-                                        End If
-                                    Else
-                                        'warning message
-                                    End If
-                                Else
-                                    Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
-                                    If Not String.IsNullOrEmpty(maxValue) Then
-                                        maxValue += 1
-                                    Else
-                                        maxValue = 1 'preguntar duda
-                                    End If
-                                    spacepoqota = "                               DEV"
-                                    mpnopo = Trim(UCase(txtmfrno.Text))
-                                    Dim ResultQuery As String = String.Empty
-
-                                    Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                            DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                    If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                        ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                           DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                        If ResultQuery <> 0 Then
-                                            'show message error
-                                        End If
-                                    Else
-                                        Dim arrayCheck As New List(Of String)
-                                        arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                        For Each item As String In arrayCheck
-                                            If item = "Sequencial" Then
-                                                'show error message
-                                                Exit For
-                                            ElseIf item = "Vendor Number" Then
-                                                txtvendorno.Text = "0"
-                                            ElseIf item = "Unit Cost New" Then
-                                                txtunitcostnew.Text = "0"
-                                            ElseIf item = "Min Quantity" Then
-                                                txtminqty.Text = "0"
-                                            End If
-                                        Next
-
-                                        ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                           DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                        If ResultQuery <> 0 Then
-                                            'show message error
-                                        End If
-                                    End If
-                                End If
-
-                                'separate here in other methods--------------------------------
+                                PoQotaFunction()
 
                                 If cmbuser.SelectedValue <> "N/A" Then
-                                    Dim queryProdDetail = gnr.UpdateProductDetail(txtCode.Text, txtpartno.Text)
-                                    If queryProdDetail <> 0 Then
-                                        'error message
-                                    End If
-                                    Dim codComment = gnr.getmax("PRDCMH", "PRDCCO")
-                                    Dim queryProdComments = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, codComment, userid)
-                                    If queryProdComments <> 0 Then
-                                        'ERROR MESSAGE  
-                                    End If
-                                    Dim codDetComment = 1
-                                    Dim messcomm = "Person in charge changed assigned " & Trim(cmbuser.SelectedValue)
-                                    Dim queryProdCommentsDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, codComment, codDetComment, messcomm)
-                                    If queryProdCommentsDet <> 0 Then
-                                        'error message
-                                    End If
+                                    ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                                 End If
 
                                 Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
@@ -1181,7 +1091,7 @@ Public Class frmProductsDevelopment
                     'SSTab1.tex = "Project No." & Trim(txtCode.Text)
                     txtsearchcode.Text = Trim(txtCode.Text)
                     cmdsearchcode_Click()
-                    Dim resultDone As DialogResult = MessageBox.Show("Record created", "CTP System", MessageBoxButtons.OK)
+                    Dim resultDone As DialogResult = MessageBox.Show("project created successfully", "CTP System", MessageBoxButtons.OK)
                     flagdeve = 0
                     flagnewpart = 0
                 End If
@@ -1235,73 +1145,13 @@ Public Class frmProductsDevelopment
                             Else
                                 Dim result As DialogResult = MessageBox.Show("This part no. already exists in project no. : " & ProjectNo & " - " & strProjectName & ". Do you want to create it?.", "CTP System", MessageBoxButtons.YesNo)
                                 If result = DialogResult.No Then
-                                    MessageBox.Show("No pressed")
+                                    Exit Sub
                                 ElseIf result = DialogResult.Yes Then
-                                    Dim strCheck = gnr.checkFields(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                            txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                            cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                            dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
-                                    If String.IsNullOrEmpty(strCheck) Then
-                                        QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                            txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                            cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                            dtTime5, CInt(txtsampleqty.Text))
-                                        If QueryDetailResult <> 0 Then
-                                            'show message error
-                                        End If
-                                    Else
-                                        Dim arrayCheck As New List(Of String)
-                                        arrayCheck = strCheck.Split(",").ToList()
-                                        For Each item As String In arrayCheck
-                                            If item = "Project Number" Then
-                                                'show error message must have data
-                                                Exit For
-                                            ElseIf item = "Quantity" Then
-                                                txtqty.Text = "0"
-                                            ElseIf item = "Unit Cost" Then
-                                                txtunitcost.Text = "0"
-                                            ElseIf item = "Unit Cost New" Then
-                                                txtunitcostnew.Text = "0"
-                                            ElseIf item = "Sample Cost" Then
-                                                txtsample.Text = "0"
-                                            ElseIf item = "Misc. Cost" Then
-                                                txttcost.Text = "0"
-                                            ElseIf item = "Vendor Number" Then
-                                                Exit For
-                                                'txtvendorno.Text = "0"  must have data
-                                            ElseIf item = "Tooling Cost" Then
-                                                txttoocost.Text = "0"
-                                            ElseIf item = "Sample Quantity" Then
-                                                txtsampleqty.Text = "0"
-                                            End If
-                                        Next
 
-                                        If txtvendorno.Text <> "" And ProjectNo <> 0 Then
-                                            QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, CInt(txtqty.Text),
-                                                            txtmfr.Text, txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                            cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
-                                                            dtTime5, CInt(txtsampleqty.Text))
-                                        Else
-                                            'message answering for a vendor
-                                            QueryDetailResult = -1
-                                        End If
-
-                                        If QueryDetailResult < 0 Then
-                                            'error message
-                                        End If
-                                    End If
-
+                                    InsertProductDetails(ProjectNo, partstoshow)
                                     If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                         'send email
                                     End If
-
-                                    statusquote = "D-" & Status2
-                                    Dim mpnopo As String = String.Empty
-                                    Dim spacepoqota As String = String.Empty
-                                    Dim strQueryAdd As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
-                                    Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text)
-
-                                    'separate here in other methods--------------------------------
 
                                     'burned data test
                                     'txtvendorno.Text = "261747" 'has results
@@ -1312,106 +1162,11 @@ Public Class frmProductsDevelopment
 
                                     'end burned data test
 
-                                    If dsPoQota IsNot Nothing Then
-                                        If dsPoQota.Tables(0).Rows.Count > 0 Then
-                                            mpnopo = Trim(UCase(txtmfrno.Text))
-                                            Dim maxValue = 0
-                                            Dim dsUpdatedData As Integer
+                                    PoQotaFunction()
 
-                                            Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                                DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                            If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                                dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                    txtvendorno.Text, txtpartno.Text)
-                                                If dsUpdatedData <> 0 Then
-                                                    'show message error
-                                                End If
-                                            Else
-                                                Dim arrayCheck As New List(Of String)
-                                                arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                                For Each item As String In arrayCheck
-                                                    If item = "Sequencial" Then
-                                                        'show error message
-                                                        Exit For
-                                                    ElseIf item = "Vendor Number" Then
-                                                        txtvendorno.Text = "0" 'ask for vendor??
-                                                    ElseIf item = "Unit Cost New" Then
-                                                        txtunitcostnew.Text = "0"
-                                                    ElseIf item = "Min Quantity" Then
-                                                        txtminqty.Text = "0"
-                                                    End If
-                                                Next
-                                                dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                    txtvendorno.Text, txtpartno.Text)
-
-                                                If dsUpdatedData <> 0 Then
-                                                    'show message error
-                                                End If
-                                            End If
-                                        Else
-                                            'warning message
-                                        End If
-                                    Else
-                                        Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
-                                        If Not String.IsNullOrEmpty(maxValue) Then
-                                            maxValue += 1
-                                        Else
-                                            maxValue = 1 'preguntar duda
-                                        End If
-                                        spacepoqota = "                               DEV"
-                                        mpnopo = Trim(UCase(txtmfrno.Text))
-                                        Dim ResultQuery As String = String.Empty
-
-                                        Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                                DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                        If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                            ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                               DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                            If ResultQuery <> 0 Then
-                                                'show message error
-                                            End If
-                                        Else
-                                            Dim arrayCheck As New List(Of String)
-                                            arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                            For Each item As String In arrayCheck
-                                                If item = "Sequencial" Then
-                                                    'show error message
-                                                    Exit For
-                                                ElseIf item = "Vendor Number" Then
-                                                    txtvendorno.Text = "0"
-                                                ElseIf item = "Unit Cost New" Then
-                                                    txtunitcostnew.Text = "0"
-                                                ElseIf item = "Min Quantity" Then
-                                                    txtminqty.Text = "0"
-                                                End If
-                                            Next
-
-                                            ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                               DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                            If ResultQuery <> 0 Then
-                                                'show message error
-                                            End If
-                                        End If
-                                    End If
-
-                                    'separate here in other methods--------------------------------
 
                                     If cmbuser.SelectedValue <> "N/A " Then
-                                        Dim queryProdDetail = gnr.UpdateProductDetail(txtCode.Text, txtpartno.Text)
-                                        If queryProdDetail <> 0 Then
-                                            'error message
-                                        End If
-                                        Dim codComment = gnr.getmax("PRDCMH", "PRDCCO")
-                                        Dim queryProdComments = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, codComment, userid)
-                                        If queryProdComments <> 0 Then
-                                            'ERROR MESSAGE  
-                                        End If
-                                        Dim codDetComment = 1
-                                        Dim messcomm = "Person in charge changed assigned " & Trim(cmbuser.SelectedValue)
-                                        Dim queryProdCommentsDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, codComment, codDetComment, messcomm)
-                                        If queryProdCommentsDet <> 0 Then
-                                            'error message
-                                        End If
+                                        ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                                     End If
 
                                     Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
@@ -1421,71 +1176,12 @@ Public Class frmProductsDevelopment
                                 End If
                             End If
                         Else
-                            Dim strCheck = gnr.checkFields(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                            txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                            cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                            dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
-                            If String.IsNullOrEmpty(strCheck) Then
-                                QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, txtqty.Text,
-                                                    txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                    cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
-                                                    dtTime5, CInt(txtsampleqty.Text))
-                                If QueryDetailResult <> 0 Then
-                                    'show message error
-                                End If
-                            Else
-                                Dim arrayCheck As New List(Of String)
-                                arrayCheck = strCheck.Split(",").ToList()
-                                For Each item As String In arrayCheck
-                                    If item = "Project Number" Then
-                                        'show error message must have data
-                                        Exit For
-                                    ElseIf item = "Quantity" Then
-                                        txtqty.Text = "0"
-                                    ElseIf item = "Unit Cost" Then
-                                        txtunitcost.Text = "0"
-                                    ElseIf item = "Unit Cost New" Then
-                                        txtunitcostnew.Text = "0"
-                                    ElseIf item = "Sample Cost" Then
-                                        txtsample.Text = "0"
-                                    ElseIf item = "Misc. Cost" Then
-                                        txttcost.Text = "0"
-                                    ElseIf item = "Vendor Number" Then
-                                        Exit For
-                                        'txtvendorno.Text = "0"  must have data
-                                    ElseIf item = "Tooling Cost" Then
-                                        txttoocost.Text = "0"
-                                    ElseIf item = "Sample Quantity" Then
-                                        txtsampleqty.Text = "0"
-                                    End If
-                                Next
 
-                                If txtvendorno.Text <> "" And ProjectNo <> 0 Then
-                                    QueryDetailResult = gnr.InsertProductDetail(ProjectNo, txtpartno.Text, DTPicker2, "LREDONDO", dtTime, "LREDONDO", dtTime1, txtctpno.Text, CInt(txtqty.Text),
-                                                            txtmfr.Text, txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                            cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
-                                                            dtTime5, CInt(txtsampleqty.Text))
-
-                                    If QueryDetailResult < 0 Then
-                                        'error message
-                                    End If
-                                Else
-                                    'message answering for a vendor
-                                    QueryDetailResult = -1
-                                End If
-                            End If
+                            InsertProductDetails(ProjectNo, partstoshow)
 
                             If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                 'send email
                             End If
-
-                            statusquote = "D-" & Status2
-                            Dim mpnopo As String = String.Empty
-                            Dim spacepoqota As String = String.Empty
-                            Dim strQueryAdd As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
-                            Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text)
-
-                            'separate here in other methods--------------------------------
 
                             'burned data test
                             'txtvendorno.Text = "261747" 'has results
@@ -1496,106 +1192,10 @@ Public Class frmProductsDevelopment
 
                             'end burned data test
 
-                            If dsPoQota IsNot Nothing Then
-                                If dsPoQota.Tables(0).Rows.Count > 0 Then
-                                    mpnopo = Trim(UCase(txtmfrno.Text))
-                                    Dim maxValue = 0
-                                    Dim dsUpdatedData As Integer
-
-                                    Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                        DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                    If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                        dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                            txtvendorno.Text, txtpartno.Text)
-                                        If dsUpdatedData <> 0 Then
-                                            'show message error
-                                        End If
-                                    Else
-                                        Dim arrayCheck As New List(Of String)
-                                        arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                        For Each item As String In arrayCheck
-                                            If item = "Sequencial" Then
-                                                'show error message
-                                                Exit For
-                                            ElseIf item = "Vendor Number" Then
-                                                txtvendorno.Text = "0" 'ask for vendor??
-                                            ElseIf item = "Unit Cost New" Then
-                                                txtunitcostnew.Text = "0"
-                                            ElseIf item = "Min Quantity" Then
-                                                txtminqty.Text = "0"
-                                            End If
-                                        Next
-                                        dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                            txtvendorno.Text, txtpartno.Text)
-
-                                        If dsUpdatedData <> 0 Then
-                                            'show message error
-                                        End If
-                                    End If
-                                Else
-                                    'warning message
-                                End If
-                            Else
-                                Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
-                                If Not String.IsNullOrEmpty(maxValue) Then
-                                    maxValue += 1
-                                Else
-                                    maxValue = 1 'preguntar duda
-                                End If
-                                spacepoqota = "                               DEV"
-                                mpnopo = Trim(UCase(txtmfrno.Text))
-                                Dim ResultQuery As String = String.Empty
-
-                                Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                        DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                                    ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                       DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                    If ResultQuery <> 0 Then
-                                        'show message error
-                                    End If
-                                Else
-                                    Dim arrayCheck As New List(Of String)
-                                    arrayCheck = strCheckPoQoteIns.Split(",").ToList()
-                                    For Each item As String In arrayCheck
-                                        If item = "Sequencial" Then
-                                            'show error message
-                                            Exit For
-                                        ElseIf item = "Vendor Number" Then
-                                            txtvendorno.Text = "0"
-                                        ElseIf item = "Unit Cost New" Then
-                                            txtunitcostnew.Text = "0"
-                                        ElseIf item = "Min Quantity" Then
-                                            txtminqty.Text = "0"
-                                        End If
-                                    Next
-
-                                    ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
-                                                                       DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
-                                    If ResultQuery <> 0 Then
-                                        'show message error
-                                    End If
-                                End If
-                            End If
-
-                            'separate here in other methods--------------------------------
+                            PoQotaFunction()
 
                             If cmbuser.SelectedValue <> "N/A" Then
-                                Dim queryProdDetail = gnr.UpdateProductDetail(txtCode.Text, txtpartno.Text)
-                                If queryProdDetail <> 0 Then
-                                    'error message
-                                End If
-                                Dim codComment = gnr.getmax("PRDCMH", "PRDCCO")
-                                Dim queryProdComments = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, codComment, userid)
-                                If queryProdComments <> 0 Then
-                                    'ERROR MESSAGE  
-                                End If
-                                Dim codDetComment = 1
-                                Dim messcomm = "Person in charge changed assigned " & Trim(cmbuser.SelectedValue)
-                                Dim queryProdCommentsDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, codComment, codDetComment, messcomm)
-                                If queryProdCommentsDet <> 0 Then
-                                    'error message
-                                End If
+                                ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                             End If
 
                             Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
@@ -1609,21 +1209,8 @@ Public Class frmProductsDevelopment
                         Dim dsGetProdDesc = gnr.GetDataByCodeAndPartNoProdDesc(txtCode.Text, txtpartno.Text)
                         If dsGetProdDesc.Tables(0).Rows.Count > 0 Then
                             If Trim(cmbuser.SelectedValue) <> Trim(dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDUSR").Ordinal)) Then
-                                Dim rsUpdateProdDet = gnr.UpdateProductDetail(txtCode.Text, txtpartno.Text)
-                                If rsUpdateProdDet < 0 Then
-                                    'error message
-                                End If
-                                Dim cod_comment = gnr.getmax("PRDCMH", "PRDCCO")
-                                Dim rsInsertProdComm = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, cod_comment, userid)
-                                If rsInsertProdComm < 0 Then
-                                    'error message
-                                End If
-                                Dim cod_detcomment = 1
                                 Dim messcomm = "Person in charge changed from " & Trim(dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDUSR").Ordinal)) & " to " & Trim(cmbuser.SelectedValue)
-                                Dim rsInsertProdCommDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, cod_comment, cod_detcomment, messcomm)
-                                If rsInsertProdCommDet < 0 Then
-                                    'error message
-                                End If
+                                ProdDetailAndAllCommentHelper(messcomm, 0)
                             End If
                             If cmbstatus.SelectedValue = "CS" Or cmbstatus.SelectedValue = "CN" Then
                                 Dim rsAddPart As DialogResult = MessageBox.Show("Do you want to add this part to the Wish List?", "CTP System", MessageBoxButtons.YesNo)
@@ -1644,7 +1231,7 @@ Public Class frmProductsDevelopment
                             status1 = gnr.GetProjectStatusDescription(dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDUSR").Ordinal))
                             Status2 = gnr.GetProjectStatusDescription(cmbstatus.SelectedValue.ToString())
 
-                            If Trim(cmbstatus.SelectedValue) <> dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDUSR").Ordinal) Then
+                            If Trim(cmbstatus.SelectedValue) <> dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) Then
                                 If (Trim(Status2) = "Closed without Negotiation") Or (Trim(Status2) = "Closed (Demand/cost/material)") Then
                                     Dim rsEnterComm As DialogResult = MessageBox.Show("Enter Comment.", "CTP System", MessageBoxButtons.OK)
                                     Dim seeaddprocomments = 5
@@ -1689,26 +1276,8 @@ Public Class frmProductsDevelopment
                                     flagustatus = 1
                                 End If
                                 If flagustatus = 1 Then
-                                    Dim cod_comment = gnr.getmax("PRDCMH", "PRDCCO")
-                                    Dim rsInsProdComm = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, cod_comment, userid)
-                                    If rsInsProdComm <> 0 Then
-                                        'error message
-                                    End If
-                                    Dim cod_detcomment = 1
                                     Dim messcomm = "Status changed from " & status1 & " to " & Status2
-
-                                    Dim rsInsProdCommDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, cod_comment, cod_detcomment, messcomm)
-                                    If rsInsProdCommDet <> 0 Then
-                                        'error message
-                                    End If
-
-                                    statusquote = "D-" & Status2
-                                    Dim mpnopo1 As String
-                                    Dim spacepoqota1 As String = String.Empty
-                                    Dim strQueryAdd1 As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
-                                    Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text)
-
-                                    'separate here in other methods--------------------------------
+                                    ProdDetailAndAllCommentHelper(messcomm, flagustatus)
 
                                     'burned data test
                                     'txtvendorno.Text = "261747" 'has results
@@ -1719,91 +1288,10 @@ Public Class frmProductsDevelopment
 
                                     'end burned data test
 
-                                    If dsPoQota IsNot Nothing Then
-                                        If dsPoQota.Tables(0).Rows.Count > 0 Then
-                                            mpnopo1 = Trim(UCase(txtmfrno.Text))
-                                            Dim maxValue1 = 0
-                                            Dim dsUpdatedData1 As Integer
+                                    PoQotaFunction()
 
-                                            Dim strCheckPoQoteIns1 = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
-                                                                                DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
-                                            If String.IsNullOrEmpty(strCheckPoQoteIns1) Then
-                                                dsUpdatedData1 = gnr.UpdatePoQoraRow(mpnopo1, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                    txtvendorno.Text, txtpartno.Text)
-                                                If dsUpdatedData1 <> 0 Then
-                                                    'show message error
-                                                End If
-                                            Else
-                                                Dim arrayCheck As New List(Of String)
-                                                arrayCheck = strCheckPoQoteIns1.Split(",").ToList()
-                                                For Each item As String In arrayCheck
-                                                    If item = "Sequencial" Then
-                                                        'show error message
-                                                        Exit For
-                                                    ElseIf item = "Vendor Number" Then
-                                                        txtvendorno.Text = "0" 'ask for vendor??
-                                                    ElseIf item = "Unit Cost New" Then
-                                                        txtunitcostnew.Text = "0"
-                                                    ElseIf item = "Min Quantity" Then
-                                                        txtminqty.Text = "0"
-                                                    End If
-                                                Next
-                                                dsUpdatedData1 = gnr.UpdatePoQoraRow(mpnopo1, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
-                                                                    txtvendorno.Text, txtpartno.Text)
-
-                                                If dsUpdatedData1 <> 0 Then
-                                                    'show message error
-                                                End If
-                                            End If
-                                        Else
-                                            'warning message
-                                        End If
-                                    Else
-                                        Dim maxValue1 = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd1)
-                                        If Not String.IsNullOrEmpty(maxValue1) Then
-                                            maxValue1 += 1
-                                        Else
-                                            maxValue1 = 1 'preguntar duda
-                                        End If
-                                        spacepoqota1 = "                               DEV"
-                                        mpnopo1 = Trim(UCase(txtmfrno.Text))
-                                        Dim ResultQuery As String = String.Empty
-
-                                        Dim strCheckPoQoteIns1 = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
-                                                                                DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
-                                        If String.IsNullOrEmpty(strCheckPoQoteIns1) Then
-                                            ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
-                                                                               DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
-                                            If ResultQuery <> 0 Then
-                                                'show message error
-                                            End If
-                                        Else
-                                            Dim arrayCheck As New List(Of String)
-                                            arrayCheck = strCheckPoQoteIns1.Split(",").ToList()
-                                            For Each item As String In arrayCheck
-                                                If item = "Sequencial" Then
-                                                    'show error message
-                                                    Exit For
-                                                ElseIf item = "Vendor Number" Then
-                                                    txtvendorno.Text = "0"
-                                                ElseIf item = "Unit Cost New" Then
-                                                    txtunitcostnew.Text = "0"
-                                                ElseIf item = "Min Quantity" Then
-                                                    txtminqty.Text = "0"
-                                                End If
-                                            Next
-
-                                            ResultQuery = gnr.InsertNewPOQota(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
-                                                                               DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
-                                            If ResultQuery <> 0 Then
-                                                'show message error
-                                            End If
-                                        End If
-                                    End If
                                 End If
                             End If
-
-
                         End If
 
                         If flagustatus = 1 Then
@@ -1882,21 +1370,17 @@ Public Class frmProductsDevelopment
                 Dim dspUpdMess As DialogResult = MessageBox.Show("Record updated", "CTP System", MessageBoxButtons.OK)
             End If
 
-
             If SSTab1.SelectedIndex = 2 Then
                 If Trim(txtpartno.Text) <> "" Then
 
                 End If
-
             End If
+            fillcell1LastOne("")
             fillcell2(txtCode.Text)
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
-
-
-
     End Sub
 
     Private Sub cmdsearchcode_Click()
@@ -1921,19 +1405,19 @@ Public Class frmProductsDevelopment
 
         Dim validationResult = mandatoryFields("save", SSTab1.SelectedTab.Name)
         If validationResult.Equals(0) Then
-            Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
-            If result = DialogResult.No Then
-                'MessageBox.Show("No pressed")
-            ElseIf result = DialogResult.Yes Then
-                'MessageBox.Show("Yes pressed")
-                'save()
-                If SSTab1.SelectedIndex = 1 Then
-                    Dim result1 As DialogResult = MessageBox.Show("Please proceed to add the mandatory data to finish te project creation proccess?", "CTP System", MessageBoxButtons.OK)
-                    If result1 = DialogResult.OK Then
-                        SSTab1.SelectedTab = TabPage3
-                    End If
+            'Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
+            'If result = DialogResult.No Then
+            'MessageBox.Show("No pressed")
+            'ElseIf result = DialogResult.Yes Then
+            'MessageBox.Show("Yes pressed")
+            save()
+            If SSTab1.SelectedIndex = 1 Then
+                Dim result1 As DialogResult = MessageBox.Show("Please proceed to the project tab to add parts?", "CTP System", MessageBoxButtons.OK)
+                If result1 = DialogResult.OK Then
+                    SSTab1.SelectedTab = TabPage3
                 End If
             End If
+            'End If
         Else
             Dim resultSave As DialogResult = MessageBox.Show("Error in Data Validation. Mandatory fields must be filled!!", "CTP System", MessageBoxButtons.OK)
         End If
@@ -1942,9 +1426,16 @@ Public Class frmProductsDevelopment
 
     Private Sub cmdSave3_Click(sender As Object, e As EventArgs) Handles cmdSave3.Click
 
+        Dim DtUseTime = New DateTimePicker()
+        DtUseTime.Value = DateTime.Now
+        Dim rsValidation = gnr.checkFields(txtCode.Text, txtpartno.Text, DTPicker2, "LREDONDO", DtUseTime, "LREDONDO", DtUseTime, txtctpno.Text, txtqty.Text,
+                                                                txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, DtUseTime, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                                                cmbuser.SelectedValue, chknew, DtUseTime, txtsample.Text, txttcost.Text, txtvendorno.Text, 0, cmbminorcode.SelectedValue, txttoocost.Text, DtUseTime,
+                                                                DateTime.Now.ToShortDateString(), txtsampleqty.Text)
+
         Dim validationResult = mandatoryFields("save", SSTab1.SelectedTab.Name)
         If validationResult.Equals(0) Then
-            Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
+            Dim result As DialogResult = MessageBox.Show("Ff click yes the part will be added to the project. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
             If result = DialogResult.No Then
                 'MessageBox.Show("No pressed")
             ElseIf result = DialogResult.Yes Then
@@ -1994,13 +1485,12 @@ Public Class frmProductsDevelopment
                             'cmbminorcode.Clear
                             'pending the minor code understanding
 
-
                             If Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()) <> "" Then
                                 Dim dsGetVendorQuey = gnr.GetVendorQuey(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString())
                                 If Not dsGetVendorQuey Is Nothing Then
                                     If dsGetVendorQuey.Tables(0).Rows.Count > 0 Then
                                         txtvendornoa.Text = dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()
-                                        txtvendornamea.Text = Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("VMNAME").Ordinal).ToString())
+                                        txtvendornamea.Text = Trim(dsGetVendorQuey.Tables(0).Rows(0).ItemArray(dsGetVendorQuey.Tables(0).Columns("VMNAME").Ordinal).ToString())
                                     Else
                                         txtvendornoa.Text = ""
                                         txtvendornamea.Text = ""
@@ -2066,15 +1556,25 @@ Public Class frmProductsDevelopment
                             End If
                         End If
 
-                        Dim dsGetPartInWishList = gnr.GetPartInWishList(partno)
+                        'test purpose
+                        Dim testPartNo = "5257106"
+                        'Dim dsGetPartInWishList = gnr.GetPartInWishList(partno)
+                        Dim dsGetPartInWishList = gnr.GetPartInWishList(testPartNo)
                         If Not dsGetPartInWishList Is Nothing Then
                             If dsGetPartInWishList.Tables(0).Rows.Count > 0 Then
                                 Dim wlcode = dsGetPartInWishList.Tables(0).Rows(0).ItemArray(dsGetPartInWishList.Tables(0).Columns("WHLCODE").Ordinal).ToString()
-                                Dim dsGetDataByVendorAndPartNoProdDesc = gnr.GetDataByVendorAndPartNoProdDesc(txtvendorno.Text, partno)
+
+                                'test purpose
+                                Dim tetsVendorNo = "120138"
+                                'Dim dsGetDataByVendorAndPartNoProdDesc = gnr.GetDataByVendorAndPartNoProdDesc(txtvendorno.Text, partno)
+                                Dim dsGetDataByVendorAndPartNoProdDesc = gnr.GetDataByVendorAndPartNoProdDesc(tetsVendorNo, testPartNo)
                                 If Not dsGetDataByVendorAndPartNoProdDesc Is Nothing Then
                                     If dsGetDataByVendorAndPartNoProdDesc.Tables(0).Rows.Count > 0 Then
+                                        'Dim dsGetDataByCodAndPartProdAndComm =
+                                        'gnr.GetDataByCodAndPartProdAndComm(dsGetDataByVendorAndPartNoProdDesc.Tables(0).Rows(0).ItemArray(dsGetDataByVendorAndPartNoProdDesc.Tables(0).Columns("PRHCOD").Ordinal).ToString(), partno)
+                                        'test purposes
                                         Dim dsGetDataByCodAndPartProdAndComm =
-                                            gnr.GetDataByCodAndPartProdAndComm(dsGetPartInWishList.Tables(0).Rows(0).ItemArray(dsGetPartInWishList.Tables(0).Columns("PRHCOD").Ordinal).ToString(), partno)
+                                            gnr.GetDataByCodAndPartProdAndComm(dsGetDataByVendorAndPartNoProdDesc.Tables(0).Rows(0).ItemArray(dsGetDataByVendorAndPartNoProdDesc.Tables(0).Columns("PRHCOD").Ordinal).ToString(), testPartNo)
                                         If Not dsGetDataByCodAndPartProdAndComm Is Nothing Then
                                             If dsGetDataByCodAndPartProdAndComm.Tables(0).Rows.Count > 0 Then
                                                 Dim result4 As DialogResult = MessageBox.Show("This part# : " & Trim(UCase(partno)) & " has been quoted with this vendor# : " & Trim(txtvendorno.Text) & " before. Do you want to continue?", "CTP System", MessageBoxButtons.YesNo)
@@ -2087,6 +1587,15 @@ Public Class frmProductsDevelopment
                                 End If
 
                                 Dim dsGetDataFromProdHeaderAndDetail = gnr.GetDataFromProdHeaderAndDetail(partno)
+                                Dim dtpDate = New DateTimePicker()
+                                Dim dtpDate1 = New DateTimePicker()
+                                Dim dt = DateTime.Now
+
+                                Dim iDate As String = "1900-01-01"
+                                Dim oDate As DateTime = DateTime.Parse(iDate)
+                                dtpDate.Value = dt
+                                dtpDate1.Value = oDate
+
                                 If Not dsGetDataFromProdHeaderAndDetail Is Nothing Then
                                     If dsGetDataFromProdHeaderAndDetail.Tables(0).Rows.Count > 0 Then
                                         If Trim(txtCode.Text) = dsGetDataFromProdHeaderAndDetail.Tables(0).Rows(0).ItemArray(dsGetDataFromProdHeaderAndDetail.Tables(0).Columns("PRHCOD").Ordinal).ToString() Then
@@ -2098,28 +1607,239 @@ Public Class frmProductsDevelopment
                                             Dim name = dsGetDataFromProdHeaderAndDetail.Tables(0).Rows(0).ItemArray(dsGetDataFromProdHeaderAndDetail.Tables(0).Columns("PRNAME").Ordinal).ToString()
                                             Dim result6 As DialogResult = MessageBox.Show("This part no. already exists in project no. : " & code & "-" & name & ". Do you want to create it?.", "CTP System", MessageBoxButtons.YesNo)
                                             If result6 = DialogResult.Yes Then
-                                                Dim dtpDate = New DateTimePicker()
-                                                Dim dtpDate1 = New DateTimePicker()
-                                                Dim dt = DateTime.Now
-                                                Dim dt1 = New DateTime("1900-01-01")
-                                                dtpDate.Value = dt
-                                                dtpDate1.Value = dt1
                                                 Dim rsInsertProductDetailv2 = gnr.InsertProductDetailv2(txtCode.Text, txtpartno.Text, dtpDate, userid, dtpDate, userid, dtpDate, txtctpno.Text,
                                                                                                         0, "", "", txtunitcost.Text, 0, "", dtpDate1, "E", "", "", userid, chknew, dtpDate1, 0, 0, txtvendorno.Text,
                                                                                                         "", cmbminorcode.SelectedValue, 0, dtpDate1, dtpDate1, DTPicker2, 1)
+                                                If rsInsertProductDetailv2 <> 0 Then
+                                                    'error message
+                                                End If
 
+                                                Dim statusquote = "D-Entered"
+                                                Dim mpnopo1 As String
+                                                Dim spacepoqota1 As String = String.Empty
+                                                Dim strQueryAdd1 As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
+                                                Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text) 'aqui llegue full
+
+                                                'separate here in other methods--------------------------------
+
+                                                'burned data test
+                                                'txtvendorno.Text = "261747" 'has results
+                                                'txtpartno.Text = "CABLE14B"
+
+                                                'txtvendorno.Text = "261138"
+                                                'txtpartno.Text = "99983"
+
+                                                'end burned data test
+
+                                                If dsPoQota IsNot Nothing Then
+                                                    If dsPoQota.Tables(0).Rows.Count > 0 Then
+                                                        mpnopo1 = Trim(UCase(txtmfrno.Text))
+                                                        Dim maxValue1 = 0
+                                                        Dim dsUpdatedData1 As Integer
+
+                                                        Dim strCheckPoQoteIns1 = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                            DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
+                                                        If String.IsNullOrEmpty(strCheckPoQoteIns1) Then
+                                                            dsUpdatedData1 = gnr.UpdatePoQoraRow1(mpnopo1, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                                                                                txtvendorno.Text, txtpartno.Text)
+                                                            If dsUpdatedData1 <> 0 Then
+                                                                'show message error
+                                                            End If
+                                                        Else
+                                                            Dim arrayCheck As New List(Of String)
+                                                            arrayCheck = strCheckPoQoteIns1.Split(",").ToList()
+                                                            For Each item As String In arrayCheck
+                                                                If item = "Sequencial" Then
+                                                                    'show error message
+                                                                    Exit For
+                                                                ElseIf item = "Vendor Number" Then
+                                                                    txtvendorno.Text = "0" 'ask for vendor??
+                                                                ElseIf item = "Unit Cost New" Then
+                                                                    txtunitcostnew.Text = "0"
+                                                                End If
+                                                            Next
+                                                            dsUpdatedData1 = gnr.UpdatePoQoraRow1(mpnopo1, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                                                                                txtvendorno.Text, txtpartno.Text)
+
+                                                            If dsUpdatedData1 <> 0 Then
+                                                                'show message error
+                                                            End If
+                                                        End If
+                                                    Else
+                                                        'warning message
+                                                    End If
+                                                Else
+                                                    Dim maxValue1 = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd1)
+                                                    If Not String.IsNullOrEmpty(maxValue1) Then
+                                                        maxValue1 += 1
+                                                    Else
+                                                        maxValue1 = 1 'preguntar duda
+                                                    End If
+                                                    spacepoqota1 = "                               DEV"
+                                                    mpnopo1 = Trim(UCase(txtmfrno.Text))
+                                                    Dim ResultQuery As String = String.Empty
+
+                                                    Dim strCheckPoQoteIns1 = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                            DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
+                                                    If String.IsNullOrEmpty(strCheckPoQoteIns1) Then
+                                                        ResultQuery = gnr.InsertNewPOQota1(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                           DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+                                                        If ResultQuery <> 0 Then
+                                                            'show message error
+                                                        End If
+                                                    Else
+                                                        Dim arrayCheck As New List(Of String)
+                                                        arrayCheck = strCheckPoQoteIns1.Split(",").ToList()
+                                                        For Each item As String In arrayCheck
+                                                            If item = "Sequencial" Then
+                                                                'show error message
+                                                                Exit For
+                                                            ElseIf item = "Vendor Number" Then
+                                                                txtvendorno.Text = "0"
+                                                            End If
+                                                        Next
+
+                                                        ResultQuery = gnr.InsertNewPOQota1(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                           DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+                                                        If ResultQuery <> 0 Then
+                                                            'show message error
+                                                        End If
+                                                    End If
+
+                                                    Dim rsDeletion = gnr.DeleteDataByWSCod(txtCode.Text)
+                                                    If rsDeletion = 1 Then
+                                                        'deletion ok
+                                                    End If
+
+                                                    'Call gotonew()
+                                                    'Call cmdall_Click()
+                                                    Dim result7 As DialogResult = MessageBox.Show("Part # added to Project : " & Trim(txtCode.Text), "CTP System", MessageBoxButtons.OK)
+
+                                                End If
 
                                                 'aqui continuo
                                             End If
                                         End If
+                                    Else
+                                        Dim rsInsertProductDetailv2 = gnr.InsertProductDetailv2(txtCode.Text, txtpartno.Text, dtpDate, userid, dtpDate, userid, dtpDate, txtctpno.Text,
+                                                                                                        0, "", "", txtunitcost.Text, 0, "", dtpDate1, "E", "", "", userid, chknew, dtpDate1, 0, 0, txtvendorno.Text,
+                                                                                                        "", cmbminorcode.SelectedValue, 0, dtpDate1, dtpDate1, DTPicker2, 1)
+                                        If rsInsertProductDetailv2 <> 0 Then
+                                            'error message
+                                        End If
+
+                                        Dim statusquote = "D-Entered"
+                                        Dim mpnopo1 As String
+                                        Dim spacepoqota1 As String = String.Empty
+                                        Dim strQueryAdd1 As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
+                                        Dim dsPoQota = gnr.GetPOQotaData(txtvendorno.Text, txtpartno.Text)
+
+                                        'separate here in other methods--------------------------------
+
+                                        'burned data test
+                                        'txtvendorno.Text = "261747" 'has results
+                                        'txtpartno.Text = "CABLE14B"
+
+                                        'txtvendorno.Text = "261138"
+                                        'txtpartno.Text = "99983"
+
+                                        'end burned data test
+
+                                        If dsPoQota IsNot Nothing Then
+                                            If dsPoQota.Tables(0).Rows.Count > 0 Then
+                                                mpnopo1 = Trim(UCase(txtmfrno.Text))
+                                                Dim maxValue1 = 0
+                                                Dim dsUpdatedData1 As Integer
+
+                                                Dim strCheckPoQoteIns1 = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                    DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
+                                                If String.IsNullOrEmpty(strCheckPoQoteIns1) Then
+                                                    dsUpdatedData1 = gnr.UpdatePoQoraRow1(mpnopo1, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                                                                        txtvendorno.Text, txtpartno.Text)
+                                                    If dsUpdatedData1 <> 0 Then
+                                                        'show message error
+                                                    End If
+                                                Else
+                                                    Dim arrayCheck As New List(Of String)
+                                                    arrayCheck = strCheckPoQoteIns1.Split(",").ToList()
+                                                    For Each item As String In arrayCheck
+                                                        If item = "Sequencial" Then
+                                                            'show error message
+                                                            Exit For
+                                                        ElseIf item = "Vendor Number" Then
+                                                            txtvendorno.Text = "0" 'ask for vendor??
+                                                        End If
+                                                    Next
+                                                    dsUpdatedData1 = gnr.UpdatePoQoraRow1(mpnopo1, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                                                                        txtvendorno.Text, txtpartno.Text)
+
+                                                    If dsUpdatedData1 <> 0 Then
+                                                        'show message error
+                                                    End If
+                                                End If
+                                            Else
+                                                'warning message
+                                            End If
+                                        Else
+                                            Dim maxValue1 = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd1)
+                                            If Not String.IsNullOrEmpty(maxValue1) Then
+                                                maxValue1 += 1
+                                            Else
+                                                maxValue1 = 1 'preguntar duda
+                                            End If
+                                            spacepoqota1 = "                               DEV"
+                                            mpnopo1 = Trim(UCase(txtmfrno.Text))
+                                            Dim ResultQuery As String = String.Empty
+
+                                            Dim strCheckPoQoteIns1 = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                    DateTime.Now.Day.ToString(), statusquote, spacepoqota1, txtunitcostnew.Text, txtminqty.Text)
+                                            If String.IsNullOrEmpty(strCheckPoQoteIns1) Then
+                                                ResultQuery = gnr.InsertNewPOQota1(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                   DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+                                                If ResultQuery <> 0 Then
+                                                    'show message error
+                                                End If
+                                            Else
+                                                Dim arrayCheck As New List(Of String)
+                                                arrayCheck = strCheckPoQoteIns1.Split(",").ToList()
+                                                For Each item As String In arrayCheck
+                                                    If item = "Sequencial" Then
+                                                        'show error message
+                                                        Exit For
+                                                    ElseIf item = "Vendor Number" Then
+                                                        txtvendorno.Text = "0"
+                                                    End If
+                                                Next
+
+                                                ResultQuery = gnr.InsertNewPOQota1(txtpartno.Text, txtvendorno.Text, maxValue1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo1,
+                                                                                   DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+                                                If ResultQuery <> 0 Then
+                                                    'show message error
+                                                End If
+                                            End If
+                                            Dim rsDeletion = gnr.DeleteDataByWSCod(txtCode.Text)
+                                            If rsDeletion = 1 Then
+                                                'deletion ok
+                                            End If
+                                            'Call gotonew()
+                                            'Call cmdall_Click()
+                                            Dim result7 As DialogResult = MessageBox.Show("Part # added to Project : " & Trim(txtCode.Text), "CTP System", MessageBoxButtons.OK)
+                                        End If
+
                                     End If
                                 End If
                             End If
                         End If
-
+                        txtsample.Text = "0"
+                        txttcost.Text = "0"
+                        txttoocost.Text = "0"
+                        txtmfr.Text = " "
+                        txtsampleqty.Text = "0"
+                        txtBenefits.Text = " "
+                        txtainfo.Text = " "
+                        txtqty.Text = "0"
 
                     End If
-
                 Else
                     Dim result As DialogResult = MessageBox.Show("Enter Vendor.", "CTP System", MessageBoxButtons.OK)
                 End If
@@ -2189,12 +1909,45 @@ Public Class frmProductsDevelopment
                     Else
                         Dim result3 As DialogResult = MessageBox.Show("Vendor not found.", "CTP System", MessageBoxButtons.OK)
                     End If
+                Else
+                    Dim result4 As DialogResult = MessageBox.Show("Vendor not found.", "CTP System", MessageBoxButtons.OK)
                 End If
             End If
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
+    End Sub
+
+    Private Sub cmdgenerate_Click(sender As Object, e As EventArgs) Handles cmdgenerate.Click
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtpartno.Text) <> "" Then
+                If Trim(txtctpno.Text) Then
+                    Dim result As DialogResult = MessageBox.Show("CTP # has been already generated.", "CTP System", MessageBoxButtons.OK)
+                Else
+                    Dim PartNo = Trim(UCase(txtpartno.Text)).Substring(0, 19) & "                   "
+                    'PartNo = Left(PartNo, 19)
+                    Dim ctppartno = "                   "
+                    Dim flagctp = "9"
+                    Dim dsctpValue = gnr.CallForCtpNumber(PartNo, ctppartno, flagctp)
+                    If Not dsctpValue Is Nothing Then
+                        If dsctpValue.Tables(0).Rows.Count > 0 Then
+                            txtctpno.Text = Trim(UCase(dsctpValue.Tables(0).Rows(0).ItemArray(0).ToString()))
+                            txtmfrno.Text = Trim(UCase(dsctpValue.Tables(0).Rows(0).ItemArray(0).ToString()))
+                        Else
+                            txtctpno.Text = ""
+                            txtmfrno.Text = ""
+                        End If
+                    End If
+                End If
+            Else
+                Dim result1 As DialogResult = MessageBox.Show("Select Part No.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
     End Sub
 
 #End Region
@@ -2240,15 +1993,33 @@ Public Class frmProductsDevelopment
                 End If
             Next
 
-            If TextboxQty > TextboxQtyEmpty Then
-                methodResult = 1
+            If TextboxQtyEmpty <> 0 Then
+                If TextboxQty > TextboxQtyEmpty Then
+                    methodResult = 1
+                End If
+            Else
+                methodResult = 0
             End If
+
         Else
-            Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0)
-            If empty.Any Then
-                methodResult = 1
-                'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
+
+            If tab = "TabPage2" Then
+                txtCode.Text = " "
+
+                Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0)
+                If empty.Any Then
+                    methodResult = 1
+                    'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
+                End If
             End If
+
+            'Dim empties As Integer
+            ''let optional empty values
+            'For Each Val As Windows.Forms.TextBox In myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)
+            '    If String.IsNullOrEmpty(Val.Text) Then
+            '        empties += 1
+            '    End If
+            'Next
         End If
 
         Return methodResult
@@ -2256,20 +2027,31 @@ Public Class frmProductsDevelopment
     End Function
 
     Private Sub cleanFormValues(tab As String)
-        Dim myTableLayout As TableLayoutPanel
+        Dim exMessage As String = " "
+        Try
+            Dim myTableLayout As TableLayoutPanel
 
-        If tab = "TabPage1" Then
-            myTableLayout = Me.TableLayoutPanel1
-        ElseIf tab = "TabPage2" Then
-            myTableLayout = Me.TableLayoutPanel3
-        Else
-            myTableLayout = Me.TableLayoutPanel4
-        End If
+            If tab = "TabPage1" Then
+                myTableLayout = Me.TableLayoutPanel1
+            ElseIf tab = "TabPage2" Then
+                myTableLayout = Me.TableLayoutPanel3
+            Else
+                myTableLayout = Me.TableLayoutPanel4
+            End If
 
-        myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Select(Function(ctx) ctx.Text = "")
-
-        Dim pepe = txtsearch.Text
-        Dim aa = ""
+            For Each tt In myTableLayout.Controls
+                If TypeOf tt Is Windows.Forms.TextBox Then
+                    tt.Text = ""
+                ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
+                    tt.selectedIndex = 0
+                ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
+                    tt.Value = DateTime.Now
+                End If
+            Next
+            'myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Select(Function(ctx) ctx.Text = "")
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
 
     End Sub
 
@@ -2358,6 +2140,12 @@ Public Class frmProductsDevelopment
         'End If
         Return strwhere
     End Function
+
+    Private Sub txtpartno_TextChanged(sender As Object, e As EventArgs) Handles txtpartno.TextChanged
+        If Not String.IsNullOrEmpty(txtpartno.Text) Then
+            TabPage3.Name = "Part No. " & txtpartno.Text
+        End If
+    End Sub
 
 #End Region
 
