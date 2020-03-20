@@ -286,94 +286,116 @@ Public Class frmProductsDevelopment
 #Region "Grid Events"
 
     Private Sub fillcell1(strwhere)
+        Dim exMessage As String = " "
         Try
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
 
             sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"   'DELETE BURNED REFERENCE
             'get the query results
+
             ds = gnr.FillGrid(sql)
+            If ds IsNot Nothing Then
 
-            DataGridView1.AutoGenerateColumns = False
-            DataGridView1.ColumnCount = 5
+                If ds.Tables(0).Rows.Count > 0 Then
 
-            'Add Columns
-            DataGridView1.Columns(0).Name = "ProjectNo"
-            DataGridView1.Columns(0).HeaderText = "Project No."
-            DataGridView1.Columns(0).DataPropertyName = "PRHCOD"
+                    DataGridView1.DataSource = Nothing
+                    DataGridView1.Refresh()
+                    DataGridView1.AutoGenerateColumns = False
+                    DataGridView1.ColumnCount = 5
 
-            DataGridView1.Columns(1).Name = "ProjectName"
-            DataGridView1.Columns(1).HeaderText = "Project Name"
-            DataGridView1.Columns(1).DataPropertyName = "PRNAME"
+                    'Add Columns
+                    DataGridView1.Columns(0).Name = "ProjectNo"
+                    DataGridView1.Columns(0).HeaderText = "Project No."
+                    DataGridView1.Columns(0).DataPropertyName = "PRHCOD"
 
-            DataGridView1.Columns(2).Name = "DateEnt"
-            DataGridView1.Columns(2).HeaderText = "Date Entered"
-            DataGridView1.Columns(2).DataPropertyName = "PRDATE"
+                    DataGridView1.Columns(1).Name = "ProjectName"
+                    DataGridView1.Columns(1).HeaderText = "Project Name"
+                    DataGridView1.Columns(1).DataPropertyName = "PRNAME"
 
-            DataGridView1.Columns(3).Name = "PersonInCharge"
-            DataGridView1.Columns(3).HeaderText = "Person In Charge"
-            DataGridView1.Columns(3).DataPropertyName = "PRPECH"
+                    DataGridView1.Columns(2).Name = "DateEnt"
+                    DataGridView1.Columns(2).HeaderText = "Date Entered"
+                    DataGridView1.Columns(2).DataPropertyName = "PRDATE"
 
-            DataGridView1.Columns(4).Name = "Status"
-            DataGridView1.Columns(4).HeaderText = "Status"
-            DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+                    DataGridView1.Columns(3).Name = "PersonInCharge"
+                    DataGridView1.Columns(3).HeaderText = "Person In Charge"
+                    DataGridView1.Columns(3).DataPropertyName = "PRPECH"
 
-            'FILL GRID
-            DataGridView1.DataSource = ds.Tables(0)
+                    DataGridView1.Columns(4).Name = "Status"
+                    DataGridView1.Columns(4).HeaderText = "Status"
+                    DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
 
-            'changeControlAccess(True)
-            'Exit Sub
+                    'FILL GRID
+                    DataGridView1.DataSource = ds.Tables(0)
+                Else
+                    Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+            Else
+                Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                Exit Sub
+            End If
         Catch ex As Exception
-            Dim example As String = ex.Message
-            Call gnr.gotoerror("frmproductsdevelopment", "fillcell1", Err.Number, Err.Description, Err.Source)
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
     Private Sub fillcell1LastOne(strwhere)
+        Dim exMessage As String = " "
         Try
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
 
             sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRHCOD DESC FETCH FIRST 1 ROW ONLY"   'DELETE BURNED REFERENCE
             'get the query results
+
             ds = gnr.FillGrid(sql)
+            If ds IsNot Nothing Then
 
-            DataGridView1.AutoGenerateColumns = False
-            DataGridView1.ColumnCount = 5
+                If ds.Tables(0).Rows.Count > 0 Then
+                    DataGridView1.DataSource = Nothing
+                    DataGridView1.Refresh()
+                    DataGridView1.AutoGenerateColumns = False
+                    DataGridView1.ColumnCount = 5
 
-            'Add Columns
-            DataGridView1.Columns(0).Name = "ProjectNo"
-            DataGridView1.Columns(0).HeaderText = "Project No."
-            DataGridView1.Columns(0).DataPropertyName = "PRHCOD"
+                    'Add Columns
+                    DataGridView1.Columns(0).Name = "ProjectNo"
+                    DataGridView1.Columns(0).HeaderText = "Project No."
+                    DataGridView1.Columns(0).DataPropertyName = "PRHCOD"
 
-            DataGridView1.Columns(1).Name = "ProjectName"
-            DataGridView1.Columns(1).HeaderText = "Project Name"
-            DataGridView1.Columns(1).DataPropertyName = "PRNAME"
+                    DataGridView1.Columns(1).Name = "ProjectName"
+                    DataGridView1.Columns(1).HeaderText = "Project Name"
+                    DataGridView1.Columns(1).DataPropertyName = "PRNAME"
 
-            DataGridView1.Columns(2).Name = "DateEnt"
-            DataGridView1.Columns(2).HeaderText = "Date Entered"
-            DataGridView1.Columns(2).DataPropertyName = "PRDATE"
+                    DataGridView1.Columns(2).Name = "DateEnt"
+                    DataGridView1.Columns(2).HeaderText = "Date Entered"
+                    DataGridView1.Columns(2).DataPropertyName = "PRDATE"
 
-            DataGridView1.Columns(3).Name = "PersonInCharge"
-            DataGridView1.Columns(3).HeaderText = "Person In Charge"
-            DataGridView1.Columns(3).DataPropertyName = "PRPECH"
+                    DataGridView1.Columns(3).Name = "PersonInCharge"
+                    DataGridView1.Columns(3).HeaderText = "Person In Charge"
+                    DataGridView1.Columns(3).DataPropertyName = "PRPECH"
 
-            DataGridView1.Columns(4).Name = "Status"
-            DataGridView1.Columns(4).HeaderText = "Status"
-            DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+                    DataGridView1.Columns(4).Name = "Status"
+                    DataGridView1.Columns(4).HeaderText = "Status"
+                    DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
 
-            'FILL GRID
-            DataGridView1.DataSource = ds.Tables(0)
-
-            'changeControlAccess(True)
-            'Exit Sub
+                    'FILL GRID
+                    DataGridView1.DataSource = ds.Tables(0)
+                Else
+                    Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+            Else
+                Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                Exit Sub
+            End If
         Catch ex As Exception
-            Dim example As String = ex.Message
-            Call gnr.gotoerror("frmproductsdevelopment", "fillcell1", Err.Number, Err.Description, Err.Source)
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
     Private Sub fillcell2(code As String)
+        Dim exMessage As String = " "
         Try
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
@@ -381,49 +403,114 @@ Public Class frmProductsDevelopment
             sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
             'get the query results
             ds = gnr.FillGrid(sql)
+
             If Not ds Is Nothing Then
-                dgvProjectDetails.AutoGenerateColumns = False
-                'dgvProjectDetails.ColumnCount = 8
 
-                'Add Columns
-                dgvProjectDetails.Columns(0).Name = "Date"
-                dgvProjectDetails.Columns(0).HeaderText = "Date"
-                dgvProjectDetails.Columns(0).DataPropertyName = "PRDDAT"
+                If ds.Tables(0).Rows.Count > 0 Then
+                    DataGridView1.DataSource = Nothing
+                    DataGridView1.Refresh()
+                    dgvProjectDetails.AutoGenerateColumns = False
+                    'dgvProjectDetails.ColumnCount = 8
 
-                dgvProjectDetails.Columns(1).Name = "PartNo"
-                dgvProjectDetails.Columns(1).HeaderText = "Part#"
-                dgvProjectDetails.Columns(1).DataPropertyName = "PRDPTN"
+                    'Add Columns
+                    dgvProjectDetails.Columns(0).Name = "Date"
+                    dgvProjectDetails.Columns(0).HeaderText = "Date"
+                    dgvProjectDetails.Columns(0).DataPropertyName = "PRDDAT"
 
-                dgvProjectDetails.Columns(2).Name = "CTPNo"
-                dgvProjectDetails.Columns(2).HeaderText = "CTP#"
-                dgvProjectDetails.Columns(2).DataPropertyName = "PRDCTP"
+                    dgvProjectDetails.Columns(1).Name = "PartNo"
+                    dgvProjectDetails.Columns(1).HeaderText = "Part#"
+                    dgvProjectDetails.Columns(1).DataPropertyName = "PRDPTN"
 
-                dgvProjectDetails.Columns(3).Name = "MFRNo"
-                dgvProjectDetails.Columns(3).HeaderText = "MFR#"
-                dgvProjectDetails.Columns(3).DataPropertyName = "PRDMFR#"
+                    dgvProjectDetails.Columns(2).Name = "CTPNo"
+                    dgvProjectDetails.Columns(2).HeaderText = "CTP#"
+                    dgvProjectDetails.Columns(2).DataPropertyName = "PRDCTP"
 
-                dgvProjectDetails.Columns(4).Name = "Vendor"
-                dgvProjectDetails.Columns(4).HeaderText = "Vendor"
-                dgvProjectDetails.Columns(4).DataPropertyName = "VMVNUM"
+                    dgvProjectDetails.Columns(3).Name = "MFRNo"
+                    dgvProjectDetails.Columns(3).HeaderText = "MFR#"
+                    dgvProjectDetails.Columns(3).DataPropertyName = "PRDMFR#"
 
-                dgvProjectDetails.Columns(5).Name = "VendorName"
-                dgvProjectDetails.Columns(5).HeaderText = "Vendor Name"
-                dgvProjectDetails.Columns(5).DataPropertyName = "VMNAME"
+                    dgvProjectDetails.Columns(4).Name = "Vendor"
+                    dgvProjectDetails.Columns(4).HeaderText = "Vendor"
+                    dgvProjectDetails.Columns(4).DataPropertyName = "VMVNUM"
 
-                dgvProjectDetails.Columns(6).Name = "Status"
-                dgvProjectDetails.Columns(6).HeaderText = "Status"
-                dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
+                    dgvProjectDetails.Columns(5).Name = "VendorName"
+                    dgvProjectDetails.Columns(5).HeaderText = "Vendor Name"
+                    dgvProjectDetails.Columns(5).DataPropertyName = "VMNAME"
 
-                'FILL GRID
-                dgvProjectDetails.DataSource = ds.Tables(0)
-                'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
+                    dgvProjectDetails.Columns(6).Name = "Status"
+                    dgvProjectDetails.Columns(6).HeaderText = "Status"
+                    dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
+
+                    'FILL GRID
+                    dgvProjectDetails.DataSource = ds.Tables(0)
+                    'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
+                Else
+                    Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
             Else
+                Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                 Exit Sub
             End If
         Catch ex As Exception
-            Dim example As String = ex.Message
-            Call gnr.gotoerror("frmproductsdevelopment", "fillcell2", Err.Number, Err.Description, Err.Source)
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
+    End Sub
+
+    Private Sub fillcelldetail(strwhere)
+        Dim exMessage As String = " "
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+
+        Try
+            sql = "SELECT distinct(prdvlh.prhcod),prname,prdate,prpech,prstat FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD " & strwhere & " ORDER BY PRDATE DESC"
+
+            ds = gnr.FillGrid(sql)
+
+            If ds IsNot Nothing Then
+
+                If ds.Tables(0).Rows.Count > 0 Then
+
+                    DataGridView1.DataSource = Nothing
+                    DataGridView1.Refresh()
+                    DataGridView1.AutoGenerateColumns = False
+                    DataGridView1.ColumnCount = 5
+
+                    'Add Columns
+                    DataGridView1.Columns(0).Name = "ProjectNo"
+                    DataGridView1.Columns(0).HeaderText = "Project No."
+                    DataGridView1.Columns(0).DataPropertyName = "PRHCOD"
+
+                    DataGridView1.Columns(1).Name = "ProjectName"
+                    DataGridView1.Columns(1).HeaderText = "Project Name"
+                    DataGridView1.Columns(1).DataPropertyName = "PRNAME"
+
+                    DataGridView1.Columns(2).Name = "DateEnt"
+                    DataGridView1.Columns(2).HeaderText = "Date Entered"
+                    DataGridView1.Columns(2).DataPropertyName = "PRDATE"
+
+                    DataGridView1.Columns(3).Name = "PersonInCharge"
+                    DataGridView1.Columns(3).HeaderText = "Person In Charge"
+                    DataGridView1.Columns(3).DataPropertyName = "PRPECH"
+
+                    DataGridView1.Columns(4).Name = "Status"
+                    DataGridView1.Columns(4).HeaderText = "Status"
+                    DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+
+                    'FILL GRID
+                    DataGridView1.DataSource = ds.Tables(0)
+                Else
+                    Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+            Else
+                Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                Exit Sub
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+        Exit Sub
     End Sub
 
     Private Sub DataGridView1_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
@@ -667,22 +754,6 @@ Public Class frmProductsDevelopment
 #End Region
 
 #Region "Button Events"
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles cmdsearch.Click
-        Try
-            If Trim(txtsearch.Text) <> "" Then
-                If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
-                Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
-                End If
-            End If
-
-        Catch ex As Exception
-
-        End Try
-
-    End Sub
 
     Private Sub cmdall_Click()
         Try
@@ -989,14 +1060,6 @@ Public Class frmProductsDevelopment
             Dim insertDay = Date.Today.Day
             Dim flagustatus As Integer
             Dim partstoshow As String = displayPart()
-            'Dim dtTime As DateTimePicker = New DateTimePicker()
-            'Dim dtTime1 As DateTimePicker = New DateTimePicker()
-            'Dim dtTime2 As DateTimePicker = New DateTimePicker()
-            'Dim dtTime3 As DateTimePicker = New DateTimePicker()
-            'Dim dtTime4 As DateTimePicker = New DateTimePicker()
-            'Dim dtTime5 As DateTimePicker = New DateTimePicker()
-            'dtTime5.Value = New DateTime(1900, 1, 1)
-            'dtTime5.CustomFormat = "yyyy/MM/dd/"
             Dim QueryDetailResult As Integer = -1
             Dim statusquote As String
 
@@ -1383,24 +1446,6 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdsearchcode_Click()
-        Dim exMessage As String = " "
-        Try
-            If Trim(txtsearchcode.Text) <> "" Then
-                If flagallow = 1 Then
-                    strwhere = "WHERE PRHCOD = " & Trim(txtsearchcode.Text)
-                Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRHCOD = " & Trim(txtsearchcode.Text)
-                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRHCOD = " & Trim(txtsearchcode.Text)
-                End If
-                                Call fillcell1(strwhere)
-            End If
-            Exit Sub
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
     Private Sub cmdSave2_Click(sender As Object, e As EventArgs) Handles cmdSave2.Click
 
         Dim validationResult = mandatoryFields("save", SSTab1.SelectedTab.Name)
@@ -1482,8 +1527,10 @@ Public Class frmProductsDevelopment
                         If Not dsGetDataFromDualInv Is Nothing Then
                             txtpartno.Text = partno
                             txtpartdescription.Text = Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMDSC").Ordinal).ToString())
-                            'cmbminorcode.Clear
-                            'pending the minor code understanding
+
+                            If cmbminorcode.FindStringExact(Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC2").Ordinal).ToString())) Then
+                                cmbminorcode.SelectedIndex = cmbminorcode.FindString(Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC2").Ordinal).ToString()))
+                            End If
 
                             If Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()) <> "" Then
                                 Dim dsGetVendorQuey = gnr.GetVendorQuey(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString())
@@ -1534,8 +1581,10 @@ Public Class frmProductsDevelopment
                                 If dsGetDataFromDualInventory1.Tables(0).Rows.Count > 0 Then
                                     txtpartno.Text = partno
                                     txtpartdescription.Text = Trim(dsGetDataFromDualInventory1.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInventory1.Tables(0).Columns("IMDSC").Ordinal).ToString())
-                                    'cmbminorcode.Clear
-                                    'add minorcode code
+
+                                    If cmbminorcode.FindStringExact(Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC2").Ordinal).ToString())) Then
+                                        cmbminorcode.SelectedIndex = cmbminorcode.FindString(Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC2").Ordinal).ToString()))
+                                    End If
 
                                     txtvendornoa.Text = ""
                                     txtvendornamea.Text = ""
@@ -1950,6 +1999,148 @@ Public Class frmProductsDevelopment
 
     End Sub
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles cmdsearch.Click
+        cmdSearch_Click()
+    End Sub
+
+    Private Sub cmdSearch_Click()
+        Dim exMessage As String = " "
+        userid = "LREDONDO"
+        Try
+            If Trim(txtsearch.Text) <> "" Then
+                If flagallow = 1 Then
+                    strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
+                Else
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
+                End If
+                fillcell1(strwhere)
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+        'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
+    End Sub
+
+    Private Sub cmdsearch1_Click(sender As Object, e As EventArgs) Handles cmdsearch1.Click
+        cmdsearch1_Click()
+    End Sub
+
+    Private Sub cmdsearch1_Click()
+        Dim exMessage As String = " "
+        userid = "LREDONDO"
+        Try
+            If Trim(txtsearch1.Text) <> "" Then
+                If flagallow = 1 Then
+                    strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
+                Else
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
+                End If
+                fillcelldetail(strwhere)
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdsearchpart_Click(sender As Object, e As EventArgs) Handles cmdsearchpart.Click
+        cmdSearchPart_Click()
+    End Sub
+
+    Private Sub cmdSearchPart_Click()
+        Dim exMessage As String = " "
+        userid = "LREDONDO"
+        Try
+            If Trim(txtsearchpart.Text) <> "" Then
+                If flagallow = 1 Then
+                    strwhere = "WHERE TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
+                Else
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
+                End If
+                fillcelldetail(strwhere)
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdsearchctp_Click(sender As Object, e As EventArgs) Handles cmdsearchctp.Click
+        cmdsearchctp_Click()
+    End Sub
+
+    Private Sub cmdsearchctp_Click()
+        Dim exMessage As String = " "
+        userid = "LREDONDO"
+        Try
+            If Trim(txtsearchctp.Text) <> "" Then
+                If flagallow = 1 Then
+                    strwhere = "WHERE TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
+                Else
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
+                End If
+                fillcelldetail(strwhere)
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdsearchcode_Click(sender As Object, e As EventArgs) Handles cmdsearchcode.Click
+        cmdsearchcode_Click()
+    End Sub
+
+    Private Sub cmdsearchcode_Click()
+        Dim exMessage As String = " "
+        userid = "LREDONDO"
+        Try
+            If Trim(txtsearchcode.Text) <> "" Then
+                If flagallow = 1 Then
+                    strwhere = "WHERE PRHCOD = " & Trim(txtsearchcode.Text)
+                Else
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRHCOD = " & Trim(txtsearchcode.Text)
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRHCOD = " & Trim(txtsearchcode.Text)
+                End If
+                fillcell1(strwhere)
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdsearchstatus_Click(sender As Object, e As EventArgs) Handles cmdsearchstatus.Click
+        cmdsearchstatus_Click()
+    End Sub
+
+    Private Sub cmdsearchstatus_Click()
+        Dim exMessage As String = " "
+        userid = "LREDONDO"
+        Try
+            If Trim(cmbstatus1.Text) <> "" Then
+                If flagallow = 1 Then
+                    strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(cmbstatus1.SelectedValue) & "' "
+                Else
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(cmbstatus1.SelectedValue) & "' "
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+                End If
+                fillcelldetail(strwhere)
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+
+    End Sub
+
+
 #End Region
 
 #Region "Utils"
@@ -2146,6 +2337,20 @@ Public Class frmProductsDevelopment
             TabPage3.Name = "Part No. " & txtpartno.Text
         End If
     End Sub
+
+    Private Sub txtsearchcode_TextChanged(sender As Object, e As EventArgs) Handles txtsearchcode.TextChanged
+
+    End Sub
+
+
+
+
+
+
+
+
+
+
 
 #End Region
 

@@ -1097,49 +1097,58 @@ errhandler:
         Dim server As New cwbx.SystemNames
         Dim stringCvtr As New cwbx.StringConverter
         Dim wuser, wpass, wswvld
-        On Error GoTo errhandler
+        Dim exMessage As String = " "
+        Try
+            'AS400 Connection Parameters
+            as400.Define(server.DefaultSystem)
+            as400.UserID = "INTRANET"
+            as400.Password = "CTP6100"
+            'as400.PromptMode = cwbcoPromptNever   here
+            'as400.Signon()
+            as400.Connect(cwbx.cwbcoServiceEnum.cwbcoServiceODBC)
 
-        'Program Parameters
-        wuser = Left((Trim(UCase(userid)) & "          "), 10)
-        wpass = Left((Trim(UCase(pass)) & "          "), 10)
-        wswvld = "0"
+            If as400.IsConnected(cwbx.cwbcoServiceEnum.cwbcoServiceODBC) = 1 Then
 
-        'AS400 Connection Parameters
-        as400.Define(server.DefaultSystem)
-        as400.UserID = "INTRANET"
-        as400.Password = "CTP6100"
-        'as400.PromptMode = cwbcoPromptNever   here
-        as400.Signon()
+                'Program to call
+                prog.system = as400
+                prog.LibraryName = "CTPINV"
+                prog.ProgramName = "PSWVLDR"
+                as400.Signon()
 
-        'Program to call
-        prog.system = as400
-        prog.LibraryName = "CTPINV"
-        prog.ProgramName = "PSWVLDR"
+                'Program Parameters
+                wuser = Left((Trim(UCase(userid)) & "          "), 10)
+                wpass = Left((Trim(UCase(pass)) & "          "), 10)
+                wswvld = "0"
 
-        parms.Clear()
+                'Assign Values to Parameters
+                parms.Clear()
 
-        'Parameters Definition
-        'parms.Append("USER", cwbrcInput, 10)    here
-        'parms.Append("PASS", cwbrcInput, 10)    here
-        parms.Append("SWVLD", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 1)
+                parms.Append("user", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
+                parms.Append("pass", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
+                parms.Append("swvld", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 1)
+                parms.Append("out", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
 
-        stringCvtr.CodePage = 37
+                stringCvtr.CodePage = 37
 
-        'Assign Values to Parameters
-        'parms("USER") = stringCvtr.ToBytes(wuser)   here
-        'parms("PASS") = stringCvtr.ToBytes(wpass)   here
-        'parms("SWVLD") = stringCvtr.ToBytes(wswvld)  here
+                parms("user").Value = stringCvtr.ToBytes(wuser)
+                parms("pass").Value = stringCvtr.ToBytes(wpass)
+                parms("swvld").Value = stringCvtr.ToBytes(wswvld)
 
-        prog.Call(parms)
+                prog.Call(parms)
 
-        checkusr = stringCvtr.FromBytes(parms("SWVLD").Value)
+                checkusr = stringCvtr.FromBytes(parms("out").Value)
 
-        ' as400.Disconnect(cwbcoServiceAll)  here
+                as400.Disconnect(cwbx.cwbcoServiceEnum.cwbcoServiceAll)
 
-        Exit Function
-errhandler:
-        Call gotoerror("general", "checkusr", Err.Number, Err.Description, Err.Source)
+            End If
+            Exit Function
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+
+        End Try
+
     End Function
+
 
     Public Function FillGrid(query As String) As Data.DataSet
         Dim exMessage As String = " "

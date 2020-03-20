@@ -97,7 +97,7 @@
 
         'servername = Conn.DefaultDatabase
         Dim servername As String = ""
-        'check = checkusr(Trim(UCase(txtUserName.Text)), Trim(UCase(txtPassword.Text)))    here
+        check = gnr.checkusr(Trim(UCase(txtUserName.Text)), Trim(UCase(txtPassword.Text)))
         If check = "U" Then
             MsgBox("Username not valid.", vbInformation + vbOKOnly, "CTP System")
             'txtUserName.SetFocus
@@ -281,4 +281,5 @@ errhandler:
     Private Sub cmdcancel_Click(sender As Object, e As EventArgs) Handles cmdcancel.Click
         cmdcancel_Click()
     End Sub
+
 End Class
