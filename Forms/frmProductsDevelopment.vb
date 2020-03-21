@@ -14,6 +14,7 @@ Public Class frmProductsDevelopment
     Public flagallow As Integer
     Public puragent As Integer
     Dim sql As String
+    Dim requireValidation As Integer = 0
 
     'the userid is burned. Need to fix!!!!!!!!!Importatnt!!!!!
 
@@ -25,6 +26,15 @@ Public Class frmProductsDevelopment
         SSTab1.SizeMode = TabSizeMode.Fixed
 
         cmdSave1.Enabled = False
+
+        Button8.Enabled = False
+        Button9.Enabled = False
+        Button10.Enabled = False
+        Button11.Enabled = False
+        Button15.Enabled = False
+        Button16.Enabled = False
+        Button17.Enabled = False
+        Button18.Enabled = False
 
         cmdsearch.FlatStyle = FlatStyle.Flat
         cmdsearchcode.FlatStyle = FlatStyle.Flat
@@ -328,14 +338,20 @@ Public Class frmProductsDevelopment
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
                 Else
+                    DataGridView1.DataSource = Nothing
+                    DataGridView1.Refresh()
                     Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
                 End If
             Else
+                DataGridView1.DataSource = Nothing
+                DataGridView1.Refresh()
                 Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                 Exit Sub
             End If
         Catch ex As Exception
+            DataGridView1.DataSource = Nothing
+            DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
@@ -382,14 +398,20 @@ Public Class frmProductsDevelopment
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
                 Else
+                    DataGridView1.DataSource = Nothing
+                    DataGridView1.Refresh()
                     Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
                 End If
             Else
+                DataGridView1.DataSource = Nothing
+                DataGridView1.Refresh()
                 Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                 Exit Sub
             End If
         Catch ex As Exception
+            DataGridView1.DataSource = Nothing
+            DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
@@ -407,8 +429,8 @@ Public Class frmProductsDevelopment
             If Not ds Is Nothing Then
 
                 If ds.Tables(0).Rows.Count > 0 Then
-                    DataGridView1.DataSource = Nothing
-                    DataGridView1.Refresh()
+                    dgvProjectDetails.DataSource = Nothing
+                    dgvProjectDetails.Refresh()
                     dgvProjectDetails.AutoGenerateColumns = False
                     'dgvProjectDetails.ColumnCount = 8
 
@@ -445,14 +467,20 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.DataSource = ds.Tables(0)
                     'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
                 Else
+                    dgvProjectDetails.DataSource = Nothing
+                    dgvProjectDetails.Refresh()
                     Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
                 End If
             Else
+                dgvProjectDetails.DataSource = Nothing
+                dgvProjectDetails.Refresh()
                 Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                 Exit Sub
             End If
         Catch ex As Exception
+            dgvProjectDetails.DataSource = Nothing
+            dgvProjectDetails.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
@@ -500,14 +528,20 @@ Public Class frmProductsDevelopment
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
                 Else
+                    DataGridView1.DataSource = Nothing
+                    DataGridView1.Refresh()
                     Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
                 End If
             Else
+                DataGridView1.DataSource = Nothing
+                DataGridView1.Refresh()
                 Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
                 Exit Sub
             End If
         Catch ex As Exception
+            DataGridView1.DataSource = Nothing
+            DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
         Exit Sub
@@ -850,6 +884,7 @@ Public Class frmProductsDevelopment
 
     Private Sub gotonew()
         SSTab1.SelectedTab = TabPage2
+        requireValidation = 1
         'cleanValues()
     End Sub
 
@@ -1157,6 +1192,7 @@ Public Class frmProductsDevelopment
                     Dim resultDone As DialogResult = MessageBox.Show("project created successfully", "CTP System", MessageBoxButtons.OK)
                     flagdeve = 0
                     flagnewpart = 0
+                    requireValidation = 0
                 End If
             Else 'update
                 Dim Status2 As String = ""
@@ -1431,6 +1467,7 @@ Public Class frmProductsDevelopment
                 End If
 
                 Dim dspUpdMess As DialogResult = MessageBox.Show("Record updated", "CTP System", MessageBoxButtons.OK)
+                requireValidation = 0
             End If
 
             If SSTab1.SelectedIndex = 2 Then
@@ -2006,15 +2043,19 @@ Public Class frmProductsDevelopment
     Private Sub cmdSearch_Click()
         Dim exMessage As String = " "
         userid = "LREDONDO"
+        Dim tt As Windows.Forms.TextBox
+        tt = txtsearch
         Try
-            If Trim(txtsearch.Text) <> "" Then
+            If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
+                    strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
                 End If
                 fillcell1(strwhere)
+
+                cleanSearchTextBoxes(tt.Name)
             End If
             Exit Sub
         Catch ex As Exception
@@ -2030,15 +2071,19 @@ Public Class frmProductsDevelopment
     Private Sub cmdsearch1_Click()
         Dim exMessage As String = " "
         userid = "LREDONDO"
+        Dim tt As Windows.Forms.TextBox
+        tt = txtsearch1
         Try
-            If Trim(txtsearch1.Text) <> "" Then
+            If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
+                    strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(tt.Text)
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(tt.Text)
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
                 End If
                 fillcelldetail(strwhere)
+
+                cleanSearchTextBoxes(tt.Name)
             End If
             Exit Sub
         Catch ex As Exception
@@ -2053,8 +2098,11 @@ Public Class frmProductsDevelopment
     Private Sub cmdSearchPart_Click()
         Dim exMessage As String = " "
         userid = "LREDONDO"
+        Dim tt As Windows.Forms.TextBox
+        tt = txtsearchpart
+        'Dim valueSelection As String = txtsearchpart.Text
         Try
-            If Trim(txtsearchpart.Text) <> "" Then
+            If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
                 Else
@@ -2062,6 +2110,8 @@ Public Class frmProductsDevelopment
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
                 End If
                 fillcelldetail(strwhere)
+
+                cleanSearchTextBoxes(tt.Name)
             End If
             Exit Sub
         Catch ex As Exception
@@ -2076,15 +2126,19 @@ Public Class frmProductsDevelopment
     Private Sub cmdsearchctp_Click()
         Dim exMessage As String = " "
         userid = "LREDONDO"
+        Dim tt As Windows.Forms.TextBox
+        tt = txtsearchctp
         Try
-            If Trim(txtsearchctp.Text) <> "" Then
+            If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
+                    strwhere = "WHERE TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
                 End If
                 fillcelldetail(strwhere)
+
+                cleanSearchTextBoxes(tt.Name)
             End If
             Exit Sub
         Catch ex As Exception
@@ -2099,15 +2153,19 @@ Public Class frmProductsDevelopment
     Private Sub cmdsearchcode_Click()
         Dim exMessage As String = " "
         userid = "LREDONDO"
+        Dim tt As Windows.Forms.TextBox
+        tt = txtsearchcode
         Try
-            If Trim(txtsearchcode.Text) <> "" Then
+            If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE PRHCOD = " & Trim(txtsearchcode.Text)
+                    strwhere = "WHERE PRHCOD = " & Trim(tt.Text)
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRHCOD = " & Trim(txtsearchcode.Text)
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRHCOD = " & Trim(tt.Text)
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRHCOD = " & Trim(txtsearchcode.Text)
                 End If
                 fillcell1(strwhere)
+
+                cleanSearchTextBoxes(tt.Name)
             End If
             Exit Sub
         Catch ex As Exception
@@ -2116,21 +2174,26 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub cmdsearchstatus_Click(sender As Object, e As EventArgs) Handles cmdsearchstatus.Click
+        Dim b As System.Windows.Forms.Button = DirectCast(sender, System.Windows.Forms.Button)
         cmdsearchstatus_Click()
     End Sub
 
     Private Sub cmdsearchstatus_Click()
         Dim exMessage As String = " "
         userid = "LREDONDO"
+        Dim tt As Windows.Forms.ComboBox
+        tt = cmbstatus1
         Try
-            If Trim(cmbstatus1.Text) <> "" Then
+            If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(cmbstatus1.SelectedValue) & "' "
+                    strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(tt.SelectedValue) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(cmbstatus1.SelectedValue) & "' "
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(tt.SelectedValue) & "' "
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
                 End If
                 fillcelldetail(strwhere)
+
+                cleanSearchTextBoxes(tt.Name)
             End If
             Exit Sub
         Catch ex As Exception
@@ -2161,60 +2224,68 @@ Public Class frmProductsDevelopment
         Dim methodResult As Integer = 0
         Dim myTableLayout As TableLayoutPanel
 
-        If tab = "TabPage1" Then
-            myTableLayout = Me.TableLayoutPanel1
-        ElseIf tab = "TabPage2" Then
-            myTableLayout = Me.TableLayoutPanel3
-        Else
-            myTableLayout = Me.TableLayoutPanel4
-        End If
+        If requireValidation = 1 Then
 
-        If flag = "new" Then
-            Dim TextboxQty As Integer
-            Dim TextboxQtyEmpty As Integer
-            For Each tt In myTableLayout.Controls
-                If TypeOf tt Is Windows.Forms.TextBox Then
-                    TextboxQty += 1
-                    If tt.Text = "" Then
-                        TextboxQtyEmpty += 1
-                        'MsgBox("Complete Entry!")
-                        'Exit Sub
-                        'Exit For
+            If tab = "TabPage1" Then
+                myTableLayout = Me.TableLayoutPanel1
+            ElseIf tab = "TabPage2" Then
+                myTableLayout = Me.TableLayoutPanel3
+            Else
+                myTableLayout = Me.TableLayoutPanel4
+            End If
+
+            If flag = "new" Then
+                Dim TextboxQty As Integer
+                Dim TextboxQtyEmpty As Integer
+                For Each tt In myTableLayout.Controls
+                    If TypeOf tt Is Windows.Forms.TextBox Then
+                        TextboxQty += 1
+                        If tt.Text = "" Then
+                            If tt.Name <> "txtainfo" Then
+                                TextboxQtyEmpty += 1
+                            End If
+                        End If
+                    ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
+                        If tt.Name = "cmbuser1" Then
+                            TextboxQty += 1
+                            If tt.Text = "N/A" Then
+                                TextboxQtyEmpty += 1
+                            End If
+                        End If
+                    End If
+                Next
+
+                If TextboxQtyEmpty <> 0 And TextboxQty > 0 Then
+                    methodResult = 1
+                Else
+                    methodResult = 0
+                End If
+
+            Else
+
+                If tab = "TabPage2" Then
+                    txtCode.Text = " "
+
+                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0)
+                    If empty.Any Then
+                        methodResult = 1
+                        'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
                     End If
                 End If
-            Next
 
-            If TextboxQtyEmpty <> 0 Then
-                If TextboxQty > TextboxQtyEmpty Then
-                    methodResult = 1
-                End If
-            Else
-                methodResult = 0
+                'Dim empties As Integer
+                ''let optional empty values
+                'For Each Val As Windows.Forms.TextBox In myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)
+                '    If String.IsNullOrEmpty(Val.Text) Then
+                '        empties += 1
+                '    End If
+                'Next
             End If
 
+            Return methodResult
         Else
-
-            If tab = "TabPage2" Then
-                txtCode.Text = " "
-
-                Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0)
-                If empty.Any Then
-                    methodResult = 1
-                    'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
-                End If
-            End If
-
-            'Dim empties As Integer
-            ''let optional empty values
-            'For Each Val As Windows.Forms.TextBox In myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)
-            '    If String.IsNullOrEmpty(Val.Text) Then
-            '        empties += 1
-            '    End If
-            'Next
+            Return Nothing
         End If
-
-        Return methodResult
-
     End Function
 
     Private Sub cleanFormValues(tab As String)
@@ -2342,15 +2413,23 @@ Public Class frmProductsDevelopment
 
     End Sub
 
+    Private Sub cleanSearchTextBoxes(valueSelectd As String)
+        Dim exMessage As String = " "
+        Try
+            Dim myTableLayout As TableLayoutPanel
+            myTableLayout = Me.TableLayoutPanel1
 
-
-
-
-
-
-
-
-
+            For Each tt In myTableLayout.Controls
+                If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
+                    If tt.Name <> valueSelectd Then
+                        tt.Text = ""
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
 
 #End Region
 
