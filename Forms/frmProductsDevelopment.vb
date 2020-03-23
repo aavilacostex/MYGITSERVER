@@ -2431,6 +2431,10 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Private Sub cmdcomments_Click(sender As Object, e As EventArgs) Handles cmdcomments.Click
+        frmproductsdevelopmentcomments.Show()
+    End Sub
+
 #End Region
 
     'Protected Sub OnRowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)

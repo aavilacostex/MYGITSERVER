@@ -131,50 +131,63 @@
             If check = "0" Then
                 userid = Trim(UCase(txtUserName.Text))
                 'pass = Trim(UCase(txtpassword.Text)))
-                sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(txtUserName.Text)) & "'"
-                rs = Conn.Execute(sql)
-                If Not rs.EOF Then
-                    initialwindow = "Main Menu"
-                    LoginSucceeded = True
-                    Me.Hide()
-                    MDIMain.Show
-                    'MDIMain.toolbar1.Visible = True
-                    If rs.Fields("DECODE").ToString = 14.ToString Then 'Or userid = "JDMERCADO" Then
-                        sql = "SELECT * FROM MACALE WHERE MACADY > 0 AND MACABD >= '" & Format(Now, "yyyy-mm-dd") & "'"
-                        rs = Conn.Execute(sql)
-                        Do While Not rs.EOF
-                            'totaldays = CDate(rs.Fields("MACABD").ToString) - CDate(Date.Now)
-                            If totaldays <= rs.Fields("MACADY").ToString Then
-                                'mensaje
-                                intrespond = MsgBox(" " & Trim(rs.Fields("MACANA").ToString) & " Date : " & Format(rs.Fields("MACABD"), "mm/dd/yyyy"), vbOKCancel + vbInformation, "CTP System")
-                                If intrespond = 2 Then 'cancel
-                                    sql = "UPDATE MACALE SET MACADY = 0 WHERE MACACO = " & rs.Fields("MACACO").ToString
 
-                                    Conn.Execute(sql)
+                Dim dsUsrData = gnr.getUserDataByUsername(userid)
+                If Not dsUsrData Is Nothing Then
+                    If dsUsrData.Tables(0).Rows.Count > 0 Then
+                        initialwindow = "Main Menu"
+                        LoginSucceeded = True
+                        Me.Hide()
+                        MDIMain.Show()
+                        'MDIMain.toolbar1.Visible = True
+                        If dsUsrData.Tables(0).Rows(0).ItemArray(dsUsrData.Tables(0).Columns("DECODE").Ordinal) = 14 Then 'Or userid = "JDMERCADO" Then
+                            Dim dsMarktData = gnr.getMarketingDataByDate()
+                            If Not dsMarktData Is Nothing Then
+                                If dsMarktData.Tables(0).Rows.Count > 0 Then
+                                    Dim dbDate = CDate(dsMarktData.Tables(0).Rows(0).ItemArray(dsMarktData.Tables(0).Columns("MACABD").Ordinal))
+                                    Dim todayDate = CDate(Now.ToShortDateString())
+                                    totaldays = (dbDate - todayDate).TotalDays
+                                    Dim macana = dsMarktData.Tables(0).Rows(0).ItemArray(dsMarktData.Tables(0).Columns("MACANA").Ordinal)
+                                    Dim macabd = dsMarktData.Tables(0).Rows(0).ItemArray(dsMarktData.Tables(0).Columns("MACABD").Ordinal)
+                                    Dim macaco = dsMarktData.Tables(0).Rows(0).ItemArray(dsMarktData.Tables(0).Columns("MACACO").Ordinal)
+
+                                    If totaldays <= dsUsrData.Tables(0).Rows(0).ItemArray(dsUsrData.Tables(0).Columns("MACADY").Ordinal) Then
+                                        Dim rsMessage As DialogResult = MessageBox.Show(" " & Trim(macana) & " Date : " & Format(macabd, "mm/dd/yyyy"), "CTP System", MessageBoxButtons.OKCancel)
+                                        If rsMessage = DialogResult.Cancel Then
+                                            Dim qryResult = gnr.UpdateMarktCampaignData(macaco)
+                                            If qryResult <> 0 Then
+                                                'error actualizacion mensaje
+                                            End If
+                                        End If
+                                    End If
                                 End If
                             End If
-                            rs.MoveNext()
-                        Loop
-                    End If
+                        End If
 
-                    sql = "delete from loginctp where codlogin = " & codloginctp
-                    Conn.Execute(sql)
-                    'Versionctp = CurrentCTPVersion.Build & " - " & Strings.Right(ipaddresslocal, 5)
-                    codloginctp = gnr.getmax("loginctp", "codlogin")
-                    sql = "INSERT INTO LOGINCTP VALUES(" & codloginctp & ",'" & userid & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','" & Versionctp & "')"
-                    Conn.Execute(sql)
-                    Call amenu
+                        sql = "delete from loginctp where codlogin = " & codloginctp
+                        Conn.Execute(sql)
+                        'Versionctp = CurrentCTPVersion.Build & " - " & Strings.Right(ipaddresslocal, 5)
+                        codloginctp = gnr.getmax("loginctp", "codlogin")
+                        sql = "INSERT INTO LOGINCTP VALUES(" & codloginctp & ",'" & userid & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','" & Versionctp & "')"
+                        Conn.Execute(sql)
+                        Call amenu()
 
-                    If userid = "CARLOS" Or userid = "JDMERCADO" Or userid = "MVELEZ" Or userid = "KRODRIGUEZ" Or userid = "JDMIRA" Or userid = "HOLIVEROS" Or userid = "LARIAS" Then
-                        ConnSql.ConnectionString = gnr.strconnSQL
-                        ConnSql.Open()
+                        If userid = "CARLOS" Or userid = "JDMERCADO" Or userid = "MVELEZ" Or userid = "KRODRIGUEZ" Or userid = "JDMIRA" Or userid = "HOLIVEROS" Or userid = "LARIAS" Then
+                            ConnSql.ConnectionString = gnr.strconnSQL
+                            ConnSql.Open()
 
-                        gnr.ConnSqlNOVA.ConnectionString = gnr.strconnSQLNOVA
-                        gnr.ConnSqlNOVA.Open()
+                            gnr.ConnSqlNOVA.ConnectionString = gnr.strconnSQLNOVA
+                            gnr.ConnSqlNOVA.Open()
+                        End If
                     End If
                 End If
+
+
+
+
+
             Else
-                MsgBox("Invalid Password, try again!", vbOKOnly + vbInformation, "CTP System")
+                        MsgBox("Invalid Password, try again!", vbOKOnly + vbInformation, "CTP System")
                 'txtPassword.SetFocus
                 SendKeys.Send("{Home}+{End}")
             End If
@@ -215,55 +228,61 @@ errhandler:
         Dim find3 As Long
         Dim find4 As String
         Dim printpath As String
+        Dim exMessage As String = " "
 
         'On Error GoTo errhandler
+        Try
+            Conn.ConnectionString = Gn1.strconnection
+            Conn.Open()
 
-        Conn.ConnectionString = Gn1.strconnection
-        Conn.Open()
+            Dim dsControlData = gnr.GetDataByPartMix()
+            If Not dsControlData Is Nothing Then
+                If dsControlData.Tables(0).Rows.Count > 0 Then
+                    If dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "SVR" Then
+                        gnr.primaryservername = Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
+                            Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
+                    End If
+                    If dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "PIC" Then
+                        gnr.pathpicture = Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
+                            Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
+                    End If
+                    If dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "GEN" Then
+                        gnr.pathgeneral = Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
+                            Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
+                    End If
+                    If dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "EMA" Then
+                        gnr.emailspath = Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
+                            Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
+                    End If
+                    If dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "REP" Then
+                        gnr.printpath = Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
+                            Trim(dsControlData.Tables(0).Rows(0).ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
+                    End If
+                End If
+            End If
+            'Public Const pathpicture = "\\Dellserver\CTP_System\images\Employee ID Pictures\"
+            'Public Const pathgeneral = "\\Dellserver\Inetpub_D\"
+            'Public Const emailspath = "\\Dellserver\Inetpub_D\CTP_System\Emails"
 
-        rs = Nothing
-        sql = "select * from cntrll where cnt01 = '102'"
-        rs = Conn.Execute(sql)
-        Do While Not rs.EOF
-            If Trim(rs.Fields("cnt03")) = "SVR" Then
-                gnr.primaryservername = Trim(rs.Fields("cntde1")) & Trim(rs.Fields("cntde2"))
+            IpAddrs = gnr.GetIpAddrTable
+            gnr.ipaddresslocal = IpAddrs(1)
+            Versionctp = CurrentCTPVersion.Build & " - " & Strings.Right(IpAddrs(1), 5)
+            'Versionctp = Version & " - " & Right(IpAddrs(1), 5)
+            find1 = InStr(1, Trim(IpAddrs(1)), ".")
+            find2 = InStr(find1 + 1, Trim(IpAddrs(1)), ".")
+            find3 = InStr(find2 + 1, Trim(IpAddrs(1)), ".")
+            find4 = Mid(Trim(IpAddrs(1)), find2 + 1, find3 - find2 - 1)
+            If find4 = 12 Then
+                printpath = "\\Dalsvr\CTP_System\Reports"
             End If
-            If Trim(rs.Fields("cnt03")) = "PIC" Then
-                gnr.pathpicture = Trim(rs.Fields("cntde1")) & Trim(rs.Fields("cntde2"))
-            End If
-            If Trim(rs.Fields("cnt03")) = "GEN" Then
-                gnr.pathgeneral = Trim(rs.Fields("cntde1")) & Trim(rs.Fields("cntde2"))
-            End If
-            If Trim(gnr.rs.Fields("cnt03")) = "EMA" Then
-                gnr.emailspath = Trim(rs.Fields("cntde1")) & Trim(rs.Fields("cntde2"))
-            End If
-            If Trim(rs.Fields("cnt03")) = "REP" Then
-                gnr.printpath = Trim(rs.Fields("cntde1")) & Trim(rs.Fields("cntde2"))
-            End If
-            rs.MoveNext()
-        Loop
-        'Public Const pathpicture = "\\Dellserver\CTP_System\images\Employee ID Pictures\"
-        'Public Const pathgeneral = "\\Dellserver\Inetpub_D\"
-        'Public Const emailspath = "\\Dellserver\Inetpub_D\CTP_System\Emails"
 
-        IpAddrs = gnr.GetIpAddrTable
-        gnr.ipaddresslocal = IpAddrs(1)
-        Versionctp = CurrentCTPVersion.Build & " - " & Strings.Right(IpAddrs(1), 5)
-        'Versionctp = Version & " - " & Right(IpAddrs(1), 5)
-        find1 = InStr(1, Trim(IpAddrs(1)), ".")
-        find2 = InStr(find1 + 1, Trim(IpAddrs(1)), ".")
-        find3 = InStr(find2 + 1, Trim(IpAddrs(1)), ".")
-        find4 = Mid(Trim(IpAddrs(1)), find2 + 1, find3 - find2 - 1)
-        If find4 = 12 Then
-            printpath = "\\Dalsvr\CTP_System\Reports"
-        End If
-
-        codloginctp = gnr.getmax("loginctp", "codlogin")
-        sql = "INSERT INTO LOGINCTP VALUES(" & codloginctp & ",'" & userid & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','" & Versionctp & "')"
-        Conn.Execute(sql)
-        Exit Sub
-errhandler:
-        'Call gotoerror("frmlogin", "Form_load", Err.Number, Err.Description, Err.Source)
+            codloginctp = gnr.getmax("loginctp", "codlogin")
+            sql = "INSERT INTO LOGINCTP VALUES(" & codloginctp & ",'" & userid & "','" & Format(Now, "yyyy-mm-dd") & "','" & Format(Now, "hh:mm:ss") & "','" & Versionctp & "')"
+            Conn.Execute(sql)
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
     End Sub
 
     Private Sub frmLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load

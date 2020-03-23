@@ -503,6 +503,37 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function getUserDataByUsername(userName As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(userName)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getMarketingDataByDate() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM MACALE WHERE MACADY > 0 AND MACABD >= '" & Format(Now, "yyyy-mm-dd") & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+
     Public Function CallForCtpNumber(partno As String, ctppartno As String, flagctp As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -901,6 +932,20 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function UpdateMarktCampaignData(code As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE MACALE SET MACADY = 0 WHERE MACACO = " & code
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
     Public Function UpdateProdDetailVendor(partstoshow As String, vendorno As String, code As String, partNo As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
@@ -1096,15 +1141,26 @@ errhandler:
         Dim parms As New cwbx.ProgramParameters
         Dim server As New cwbx.SystemNames
         Dim stringCvtr As New cwbx.StringConverter
+        Dim cwbcoPromptNever As New cwbx.cwbcoPromptModeEnum
+
+
         Dim wuser, wpass, wswvld
         Dim exMessage As String = " "
         Try
+
+            'Program Parameters
+            wuser = Left((Trim(UCase(userid)) & "          "), 10)
+            wpass = Left((Trim(UCase(pass)) & "          "), 10)
+            wswvld = "0"
+
             'AS400 Connection Parameters
             as400.Define(server.DefaultSystem)
             as400.UserID = "INTRANET"
             as400.Password = "CTP6100"
-            'as400.PromptMode = cwbcoPromptNever   here
-            'as400.Signon()
+            as400.IPAddress = "172.0.0.21"
+            as400.PromptMode = cwbcoPromptNever
+            as400.Signon()
+
             as400.Connect(cwbx.cwbcoServiceEnum.cwbcoServiceODBC)
 
             If as400.IsConnected(cwbx.cwbcoServiceEnum.cwbcoServiceODBC) = 1 Then
@@ -1113,20 +1169,16 @@ errhandler:
                 prog.system = as400
                 prog.LibraryName = "CTPINV"
                 prog.ProgramName = "PSWVLDR"
-                as400.Signon()
 
-                'Program Parameters
-                wuser = Left((Trim(UCase(userid)) & "          "), 10)
-                wpass = Left((Trim(UCase(pass)) & "          "), 10)
-                wswvld = "0"
+
 
                 'Assign Values to Parameters
                 parms.Clear()
 
                 parms.Append("user", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
-                parms.Append("pass", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
+                parms.Append("pass", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 20)
                 parms.Append("swvld", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 1)
-                parms.Append("out", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
+                'parms.Append("out", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
 
                 stringCvtr.CodePage = 37
 
@@ -1136,7 +1188,7 @@ errhandler:
 
                 prog.Call(parms)
 
-                checkusr = stringCvtr.FromBytes(parms("out").Value)
+                checkusr = stringCvtr.FromBytes(parms("swvld").Value)
 
                 as400.Disconnect(cwbx.cwbcoServiceEnum.cwbcoServiceAll)
 

@@ -92,6 +92,18 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\frmPDevelopmentseecomments.Designer.vb">
+      <DependentUpon>frmPDevelopmentseecomments.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmPDevelopmentseecomments.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentcomments.Designer.vb">
+      <DependentUpon>frmproductsdevelopmentcomments.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentcomments.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\MDIMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -142,6 +154,12 @@
     <Compile Include="Class\TestClass.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\frmPDevelopmentseecomments.resx">
+      <DependentUpon>frmPDevelopmentseecomments.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmproductsdevelopmentcomments.resx">
+      <DependentUpon>frmproductsdevelopmentcomments.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MDIMain.resx">
       <DependentUpon>MDIMain.vb</DependentUpon>
     </EmbeddedResource>
