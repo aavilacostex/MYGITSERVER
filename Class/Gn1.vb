@@ -1,6 +1,10 @@
-﻿Imports System.Data.SqlClient
+﻿Imports System.ComponentModel
+Imports System.Data.SqlClient
 Imports System.Globalization
+Imports System.Net
 Imports System.Net.Mail
+Imports System.Net.NetworkInformation
+Imports System.Runtime.InteropServices
 
 Public Class Gn1
 
@@ -87,7 +91,42 @@ Public Class Gn1
     Public Chunk As String
     Public Digits As Integer
     Public LeftDigit As Integer
-    Private Declare Function GetIpAddrTable_API Lib "IpHlpApi" Alias "GetIpAddrTable" (pIPAddrTable As String, pdwSize As Long, ByVal bOrder As Long) As Long
+
+    <DllImport("IpHlpApi.dll")>
+    Private Shared Function GetIpAddrTable_API(pIPAddrTable As String, pdwSize As Long, ByVal bOrder As Long) As Long
+    End Function
+
+    <DllImport("IpHlpApi.dll")>
+    Private Shared Function GetIpNetTable(pIpNetTable As IntPtr, <MarshalAs(UnmanagedType.U4)> ByRef pdwSize As Integer, bOrder As Boolean) As <MarshalAs(UnmanagedType.U4)> Integer
+    End Function
+    Public Const ERROR_SUCCESS As Integer = 0
+    Public Const ERROR_INSUFFICIENT_BUFFER As Integer = 122
+
+    Public Structure MIB_IPNETROW
+        <MarshalAs(UnmanagedType.U4)>
+        Public dwIndex As UInteger
+        <MarshalAs(UnmanagedType.U4)>
+        Public dwPhysAddrLen As UInteger
+        <MarshalAs(UnmanagedType.ByValArray, SizeConst:=6)>
+        Public bPhysAddr() As Byte
+        <MarshalAs(UnmanagedType.U4)>
+        Public dwAddr As UInteger
+        <MarshalAs(UnmanagedType.U4)>
+        Public dwType As DWTYPES
+    End Structure
+
+    Public Enum DWTYPES As UInteger
+
+        <MarshalAs(UnmanagedType.U4)>
+        Other = 1
+        <MarshalAs(UnmanagedType.U4)>
+        Invalid = 2
+        <MarshalAs(UnmanagedType.U4)>
+        Dynamic = 3
+        <MarshalAs(UnmanagedType.U4)>
+        [Static] = 4
+    End Enum
+
     Public RightDigit As Integer
     Public instanceOfModel_ID As Integer
     Public test As String
@@ -242,6 +281,21 @@ Public Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1)"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByPartMix1() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select * from cntrll where cnt01 = '102'"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -533,6 +587,22 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function GetMenuByUser(userid As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select AMENUCTP.*,DETMENUCTP.dmdimain from MENUCTP inner join DETMENUCTP 
+                    on MENUCTP.CODMENU = DETMENUCTP.CODMENU inner join AMENUCTP on AMENUCTP.CODMENU = MENUCTP.CODMENU 
+                    where userid = '" & userid & "' and DETMENUCTP.CODDETMENU = AMENUCTP.CODDETMENU order by AMENUCTP.CODMENU"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
     Public Function CallForCtpNumber(partno As String, ctppartno As String, flagctp As String) As Data.DataSet
         Dim exMessage As String = " "
@@ -771,6 +841,20 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function InsertIntoLoginTcp(codloginctp As String, userid As String, Versionctp As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO LOGINCTP VALUES(" & codloginctp & ",'" & userid & "','" & Format(Now, "yyyy-MM-dd") &
+                        "','" & Format(Now, "hh:MM:ss") & "','" & Versionctp & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
 
 
 #End Region
@@ -1099,26 +1183,163 @@ Public Class Gn1
     End Function
 
     Public Function GetIpAddrTable()
+        Dim exMessage As String = " "
+        Try
+            Dim Buf(0 To 511) As Byte
+            Dim BufSize As Long : BufSize = UBound(Buf) + 1
+            Dim rc As Long
+            Dim ArrayOk As Array
+
+            rc = GetIpAddrTable_API(Buf(0), BufSize, 1)
+            'If rc <> 0 Then Err.Raise VBObjectError, , "GetIpAddrTable failed with return value " & rc
+            If rc <> 0 Then Err.Raise(VBObjectError, , "GetIpAddrTable failed with return value " & rc)
+            Dim NrOfEntries As Integer : NrOfEntries = Buf(1) * 256 + Buf(0)
+            If NrOfEntries = 0 Then GetIpAddrTable = ArrayOk : Exit Function
+            'ReDim IpAddrs(0 To NrOfEntries - 1) As String
+            Dim IpAddrs() As String
+            ReDim IpAddrs(0 To NrOfEntries - 1)
+            Dim i As Integer
+            For i = 0 To NrOfEntries - 1
+                Dim j As Integer, s As String : s = ""
+                For j = 0 To 3 : s = s & IIf(j > 0, ".", "") & Buf(4 + i * 24 + j) : Next
+                IpAddrs(i) = s
+            Next
+            GetIpAddrTable = IpAddrs
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Function
+
+    Public Function LocalIPAddress(Optional ByVal bPreferred As Boolean = False) As String
+        'Returns Local/Private IP address from all mapped/bind addresses
+        'See the RFC 1918 for IP v4     -> address ranges for private networks
+        'https://tools.ietf.org/html/rfc1918
+        'and
+        'RFC 4193 for IP v6             -> Local IPv6 Unicast Addresses / Unique Local Addresses (ULA)
+        'https://tools.ietf.org/html/rfc4193
+        Dim i As Long
+        Dim IPAddrTable
+        Dim C_ClassAddr As String
         Dim Buf(0 To 511) As Byte
         Dim BufSize As Long : BufSize = UBound(Buf) + 1
-        Dim rc As Long
-        Dim ArrayOk As Array
 
-        rc = GetIpAddrTable_API(Buf(0), BufSize, 1)
-        'If rc <> 0 Then Err.Raise VBObjectError, , "GetIpAddrTable failed with return value " & rc
-        If rc <> 0 Then Err.Raise(VBObjectError, , "GetIpAddrTable failed with return value " & rc)
-        Dim NrOfEntries As Integer : NrOfEntries = Buf(1) * 256 + Buf(0)
-        If NrOfEntries = 0 Then GetIpAddrTable = ArrayOk : Exit Function
-        'ReDim IpAddrs(0 To NrOfEntries - 1) As String
-        Dim IpAddrs() As String
-        ReDim IpAddrs(0 To NrOfEntries - 1)
-        Dim i As Integer
-        For i = 0 To NrOfEntries - 1
-            Dim j As Integer, s As String : s = ""
-            For j = 0 To 3 : s = s & IIf(j > 0, ".", "") & Buf(4 + i * 24 + j) : Next
-            IpAddrs(i) = s
-        Next
-        GetIpAddrTable = IpAddrs
+        IPAddrTable = GetIpAddrTable_API(Buf(0), BufSize, 1)
+
+        For i = LBound(IPAddrTable) To UBound(IPAddrTable)
+            If Len(IPAddrTable(i)) Then
+                Select Case Left$(IPAddrTable(i), 3)
+                    Case "192" '192.168. range
+                        C_ClassAddr = Mid$(IPAddrTable(i), 5, 3)
+                        Select Case CInt(C_ClassAddr)
+                            Case 168
+                                LocalIPAddress = IPAddrTable(i)
+                                Exit For
+                        End Select
+                    Case "172" '172.16. - 172.31. range
+                        C_ClassAddr = Mid$(IPAddrTable(i), 5, 2)
+                        Select Case CInt(C_ClassAddr)
+                            Case 16 To 31
+                                LocalIPAddress = IPAddrTable(i)
+                                Exit For
+                        End Select
+                    Case "10." '10.0. - 10.255. range
+                        If bPreferred = True Then 'default False, a class 10. addresses not counted as local IP.
+                            C_ClassAddr = Mid$(IPAddrTable(i), 4, 3)
+                            C_ClassAddr = Replace(C_ClassAddr, ".", "")
+                            Select Case CInt(C_ClassAddr)
+                                Case 0 To 255
+                                    LocalIPAddress = IPAddrTable(i)
+                                    Exit For
+                            End Select
+                        End If
+                End Select
+            End If
+        Next i
+    End Function
+
+    Public Shared Function GetARPTablr() As String
+        ' The number of bytes needed.
+        Dim bytesNeeded As Integer = 0
+        ' The result from the API call.
+        Dim result As Integer = GetIpNetTable(IntPtr.Zero, bytesNeeded, False)
+        ' Call the function, expecting an insufficient buffer.
+        If result <> ERROR_INSUFFICIENT_BUFFER Then
+            ' Throw an exception.
+            Throw New Win32Exception(result)
+        End If
+        ' Allocate the memory, do it in a try/finally block, to ensure
+        ' that it is released.
+        Dim buffer As IntPtr = IntPtr.Zero
+
+        ' Try/finally.
+        Try
+            ' Allocate the memory.
+            buffer = Marshal.AllocCoTaskMem(bytesNeeded)
+            ' Make the call again. If it did not succeed, then
+            ' raise an error.
+            result = GetIpNetTable(buffer, bytesNeeded, False)
+            ' If the result is not 0 (no error), then throw an exception.
+            If result <> ERROR_SUCCESS Then
+                ' Throw an exception.
+                Throw New Win32Exception(result)
+            End If
+            ' Now we have the buffer, we have to marshal it. We can read
+            ' the first 4 bytes to get the length of the buffer.
+            Dim entries As Integer = Marshal.ReadInt32(buffer)
+            ' Increment the memory pointer by the size of the int.
+            Dim currentBuffer As New IntPtr(buffer.ToInt64() + Marshal.SizeOf(GetType(Integer)))
+
+            ' Allocate an array of entries.
+            Dim table As MIB_IPNETROW() = New MIB_IPNETROW(entries - 1) {}
+            ' Cycle through the entries.
+            For index As Integer = 0 To entries - 1
+                ' Call PtrToStructure, getting the structure information.
+                table(index) = DirectCast(Marshal.PtrToStructure(New IntPtr(currentBuffer.ToInt64() + (index * Marshal.SizeOf(GetType(MIB_IPNETROW)))), GetType(MIB_IPNETROW)), MIB_IPNETROW)
+            Next
+            For index As Integer = 0 To entries - 1
+                If table(index).dwType <> DWTYPES.Invalid And table(index).dwType <> DWTYPES.Other Then
+                    Dim ip As New IPAddress(table(index).dwAddr)
+                    Dim mac As New PhysicalAddress(table(index).bPhysAddr)
+
+                    Dim pepe = table(index).dwType.ToString & vbTab & vbTab & "IP:" + ip.ToString() & vbTab & vbTab & "MAC: " & MACtoString(mac)
+                    Return pepe
+
+                    'Console.WriteLine(table(index).dwType.ToString & vbTab & vbTab & "IP:" + ip.ToString() & vbTab & vbTab & "MAC: " & MACtoString(mac))
+                End If
+            Next
+        Finally
+            ' Release the memory.
+            Marshal.FreeCoTaskMem(buffer)
+            '  Marshal.FreeHGlobal(rowptr)
+        End Try
+    End Function
+
+    Public Function GetIPv4Address() As String
+        GetIPv4Address = String.Empty
+        Dim exMessage As String = " "
+        Try
+            Dim strHostName As String = System.Net.Dns.GetHostName()
+            Dim iphe As System.Net.IPHostEntry = System.Net.Dns.GetHostEntry(strHostName)
+
+            For Each ipheal As System.Net.IPAddress In iphe.AddressList
+                If ipheal.AddressFamily = System.Net.Sockets.AddressFamily.InterNetwork Then
+                    GetIPv4Address = ipheal.ToString()
+                    Return GetIPv4Address
+                End If
+            Next
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Function
+
+    Public Shared Function MACtoString(mac As PhysicalAddress, Optional Capital As Boolean = True) As String
+        If Capital Then ' In capital Letters
+            Return String.Join(":", (From z As Byte In mac.GetAddressBytes Select z.ToString("X2")).ToArray())
+        Else
+            Return String.Join(":", (From z As Byte In mac.GetAddressBytes Select z.ToString("x2")).ToArray())
+        End If
     End Function
 
     Public Function checkstring(StrInput)
@@ -1423,6 +1644,32 @@ errhandler:
         End Try
     End Function
 
+    Public Function DeleteRecorFromLoginTcp(code As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Sql = "delete from loginctp where codlogin = " & code
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm = 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+#End Region
+
+#Region "External Library"
+
+
+
 #End Region
 
     Public Function GetTestData(partNo As String) As Data.DataSet
@@ -1439,7 +1686,6 @@ errhandler:
             Return Nothing
         End Try
     End Function
-
 
     'Public Sub Generate_Log(Message As String)
     'On Error GoTo Generate_Log_Err
@@ -1469,10 +1715,5 @@ errhandler:
 
     ' Returns an array with the local IP addresses (as strings).
     ' Author: Christian d'Heureuse, www.source-code.biz
-
-
-
-
-
 
 End Class

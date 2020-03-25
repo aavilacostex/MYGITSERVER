@@ -30,13 +30,15 @@ Partial Class MDIMain
         Me.CustomerClaimsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ProductsDevelopmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ProductsDevelopmentToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LoginToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Test1ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Test2ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Test3ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PurchasingToolStripMenuItem, Me.LoginToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PurchasingToolStripMenuItem, Me.Test1ToolStripMenuItem, Me.Test2ToolStripMenuItem, Me.Test3ToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(800, 24)
@@ -82,11 +84,23 @@ Partial Class MDIMain
         Me.ProductsDevelopmentToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
         Me.ProductsDevelopmentToolStripMenuItem1.Text = "Products Development"
         '
-        'LoginToolStripMenuItem
+        'Test1ToolStripMenuItem
         '
-        Me.LoginToolStripMenuItem.Name = "LoginToolStripMenuItem"
-        Me.LoginToolStripMenuItem.Size = New System.Drawing.Size(49, 20)
-        Me.LoginToolStripMenuItem.Text = "Login"
+        Me.Test1ToolStripMenuItem.Name = "Test1ToolStripMenuItem"
+        Me.Test1ToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
+        Me.Test1ToolStripMenuItem.Text = "Test1"
+        '
+        'Test2ToolStripMenuItem
+        '
+        Me.Test2ToolStripMenuItem.Name = "Test2ToolStripMenuItem"
+        Me.Test2ToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
+        Me.Test2ToolStripMenuItem.Text = "Test2"
+        '
+        'Test3ToolStripMenuItem
+        '
+        Me.Test3ToolStripMenuItem.Name = "Test3ToolStripMenuItem"
+        Me.Test3ToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
+        Me.Test3ToolStripMenuItem.Text = "Test3"
         '
         'MDIMain
         '
@@ -112,5 +126,7 @@ Partial Class MDIMain
     Friend WithEvents CustomerClaimsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProductsDevelopmentToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProductsDevelopmentToolStripMenuItem1 As ToolStripMenuItem
-    Friend WithEvents LoginToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Test1ToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Test2ToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Test3ToolStripMenuItem As ToolStripMenuItem
 End Class

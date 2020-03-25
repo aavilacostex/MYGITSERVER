@@ -14,7 +14,7 @@ Public Class MDIMain
 
     End Sub
 
-    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoginToolStripMenuItem.Click
+    Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs) 
         frmLogin.Show()
     End Sub
 
