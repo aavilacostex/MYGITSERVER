@@ -22,3 +22,9 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.CopyComp
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmProductsDevelopment.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmproductsdevelopmentcomments.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmPDevelopmentseecomments.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmproductsdevelopmentmanu.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmproductsdevelopmentstatus.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmproductsdevelopmentunitcost.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmproductsdevelopmentvendor.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\System.Data.SqlClient.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\System.Data.SqlClient.xml

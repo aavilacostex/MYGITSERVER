@@ -21,4 +21,8 @@ Public Class MDIMain
     Private Sub SupplierClaimsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupplierClaimsToolStripMenuItem.Click
         frmclaimsvendor.Show()
     End Sub
+
+    Private Sub Test1ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Test1ToolStripMenuItem.Click
+        frmproductsdevelopmentcomments.Show()
+    End Sub
 End Class

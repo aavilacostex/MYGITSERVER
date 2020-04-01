@@ -110,8 +110,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IBM.Data.DB2.iSeries, Version=12.0.0.0, Culture=neutral, PublicKeyToken=9cdb2ebfb1f93a26, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlClient, Version=4.6.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.SqlClient.4.8.1\lib\net461\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -148,6 +154,30 @@
       <DependentUpon>frmproductsdevelopmentcomments.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmproductsdevelopmentcomments.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentmanu.Designer.vb">
+      <DependentUpon>frmproductsdevelopmentmanu.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentmanu.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentstatus.Designer.vb">
+      <DependentUpon>frmproductsdevelopmentstatus.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentstatus.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentunitcost.Designer.vb">
+      <DependentUpon>frmproductsdevelopmentunitcost.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentunitcost.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentvendor.Designer.vb">
+      <DependentUpon>frmproductsdevelopmentvendor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmproductsdevelopmentvendor.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\MDIMain.vb">
@@ -197,7 +227,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Class\TestClass.vb" />
+    <Compile Include="Class\DataContainer.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\frmPDevelopmentseecomments.resx">
@@ -205,6 +235,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmproductsdevelopmentcomments.resx">
       <DependentUpon>frmproductsdevelopmentcomments.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmproductsdevelopmentmanu.resx">
+      <DependentUpon>frmproductsdevelopmentmanu.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmproductsdevelopmentstatus.resx">
+      <DependentUpon>frmproductsdevelopmentstatus.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmproductsdevelopmentunitcost.resx">
+      <DependentUpon>frmproductsdevelopmentunitcost.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmproductsdevelopmentvendor.resx">
+      <DependentUpon>frmproductsdevelopmentvendor.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MDIMain.resx">
       <DependentUpon>MDIMain.vb</DependentUpon>
@@ -239,6 +281,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="ADODB">

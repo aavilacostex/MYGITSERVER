@@ -2,11 +2,11 @@
 Imports System.Data.SqlClient
 Imports System.Globalization
 Imports System.Net
-Imports System.Net.Mail
 Imports System.Net.NetworkInformation
 Imports System.Runtime.InteropServices
+Imports Microsoft.Office.Interop
 
-Public Class Gn1
+NotInheritable Class Gn1
 
     Public Const Version = "V.02/20/20"
     Public Const strCompany = "COSTEX"
@@ -15,7 +15,8 @@ Public Class Gn1
     Public pathgeneral As String
     Public Const strconnection = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100"
     Public Const strcrystalconn = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100;"
-    Public Const strconnSQL = "DSN=CTPSystem;UID=sa;PWD=ctp6100;"
+    Public Const strconnSQL = "Data Source=CTPSystem;Initial Catalog=dbCTPSystem;User Id=sa;Password=ctp6100;"
+    'Public Const strconnSQL = "DSN=CTPSystem;UID=sa;PWD=ctp6100;"
     Public Const strcrystalconnSQL = "DSN=CTPSystem;UID=sa;PWD=ctp6100;"
     Public Const strmailhostctp = "mail.costex.com"
     'Public Const strmailhostctp = "mail.costex.com"
@@ -229,13 +230,28 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function GetDataByCodAndPartProdAndComm1(code As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDCMH WHERE PRDCMH.PRHCOD = " & code & " AND prdcmh.PRDPTN = '" & Trim(UCase(partNo)) & "' ORDER BY  PRDCDA DESC,PRDCTI DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT PRDVLH.PRHCOD,PRDVLH.PRNAME FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
+            Sql = "SELECT PRDVLH.PRHCOD,PRDVLH.PRNAME,PRDVLD.VMVNUM FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -604,6 +620,26 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function GetEmailData(flag As Integer) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            If flag = 1 Then
+                Sql = "select cntde1 from cntrll where cnt01 = 'SLS' and cnt03 = 'MGR'"
+            Else
+                Sql = "select cntde1 from cntrll where cnt01 = 'MKT' "
+            End If
+
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function CallForCtpNumber(partno As String, ctppartno As String, flagctp As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -619,6 +655,20 @@ Public Class Gn1
         End Try
     End Function
 
+    Public Function GetInvProdDetailByProject(code As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLD INNER JOIN INMSTA ON TRIM(PRDVLD.PRDPTN) = TRIM(INMSTA.IMPTN) WHERE PRHCOD = " & code & " ORDER BY PRDPTN"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
     Public Function FillDDLUser() As Data.DataSet
         Dim exMessage As String = " "
@@ -655,7 +705,7 @@ Public Class Gn1
 
 #Region "Inserts"
 
-    Public Function InsertNewProject(projectno As String, userid As String, dtValue As DateTimePicker, strInfo As String, strName As String, ddlStatus As ComboBox, ddlUser As ComboBox) As Integer
+    Public Function InsertNewProject(projectno As String, userid As String, dtValue As DateTimePicker, strInfo As String, strName As String, ddlStatus As ComboBox, strUser As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
@@ -663,7 +713,7 @@ Public Class Gn1
             Sql = "INSERT INTO PRDVLH(PRHCOD,CRUSER,CRDATE,PRDATE,PRINFO,PRNAME,PRSTAT,MOUSER,MODATE,PRPECH) VALUES 
             (" & projectno & ",'" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "',
             '" & Trim(strInfo) & "', '" & Trim(strName) & "','" & Left(ddlStatus.Text, 1) & "','" & userid & "',
-            '" & Format(Now, "yyyy-MM-dd") & "','" & Left(Trim(ddlUser.Text), 10) & "')"
+            '" & Format(Now, "yyyy-MM-dd") & "','" & Left(Trim(strUser), 10) & "')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -1048,6 +1098,53 @@ Public Class Gn1
 
 #Region "Utils"
 
+    Public Function sendEmail(toemails As String, Optional ByVal partNo As String = Nothing) As Integer
+        Dim exMessage As String = " "
+        Dim AppOutlook As New Outlook.Application
+        Dim OutlookMessage As Object
+        Dim rsResult As Integer = 0
+        Try
+            OutlookMessage = AppOutlook.CreateItem(Outlook.OlItemType.olMailItem)
+            Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
+
+            Dim listEmail As New List(Of String)
+            Dim strArr() As String
+            strArr = toemails.Split(";")
+            For Each tt As String In strArr
+                If Not String.IsNullOrEmpty(tt) Then
+                    listEmail.Add(tt)
+                End If
+            Next
+
+            For Each ttt As String In listEmail
+                Recipents.Add(ttt)
+                Recipents.ResolveAll()
+            Next
+
+            'test purpose
+            Dim lenghtRec = Recipents.Count
+            For index As Integer = 1 To lenghtRec
+                Recipents.Remove(index)
+            Next
+            Recipents.Add("alexei.ansberto85@gmail.com")
+            Recipents.Add("ansberto.avila85@gmail.com")
+            'test purpose
+
+            OutlookMessage.Subject = "Newly Developed Part(s)"
+            OutlookMessage.Body = "Part No. " & Trim(partNo)
+            OutlookMessage.BodyFormat = Outlook.OlBodyFormat.olFormatHTML
+            'OutlookMessage.Send() 'must be uncommented to send emails
+            Return rsResult = 1
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show("Mail could Not be sent") 'if you dont want this message, simply delete this line 
+            Return rsResult = -1
+        Finally
+            OutlookMessage = Nothing
+            AppOutlook = Nothing
+        End Try
+    End Function
+
     Public Function checkfieldsPoQote(partNo As String, vendorNo As String, maxValue As String, strYear As String, strMonth As String, mpnPo As String, strDay As String,
                                     strStsQuote As String, strSpace As String, strUnitCostNew As String, strMinQty As String) As String
         Dim strError As String = String.Empty
@@ -1124,6 +1221,13 @@ Public Class Gn1
             strError += "Sample Quantity,"
         End If
 
+        If String.IsNullOrEmpty(strError) Then
+            Return ""
+        Else
+            Return strError
+        End If
+
+    End Function
 
 #End Region
 
@@ -1135,20 +1239,11 @@ Public Class Gn1
 
 #End Region
 
-
-        If String.IsNullOrEmpty(strError) Then
-            Return ""
-        Else
-            Return strError
-        End If
-
-    End Function
-
     Public Function getmax(table, field)
         Dim exMessage As String = " "
         Dim Sql As String = " "
         Try
-            Sql = "SELECT " & field & " FROM " & table & " ORDER BY " & field & " DESC FETCH FIRST 1 ROW ONLY"
+            Sql = "Select " & field & " FROM " & table & " ORDER BY " & field & " DESC FETCH FIRST 1 ROW ONLY"
             Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
                 Using ObjCmd As Odbc.OdbcCommand = New Odbc.OdbcCommand(Sql, ObjConn)
                     ObjConn.Open()
@@ -1167,7 +1262,7 @@ Public Class Gn1
         Dim exMessage As String = " "
         Dim Sql As String = " "
         Try
-            Sql = "SELECT " & field & " FROM " & table & " " & strWhereAdd & " ORDER BY " & field & " DESC FETCH FIRST 1 ROW ONLY"
+            Sql = "Select " & field & " FROM " & table & " " & strWhereAdd & " ORDER BY " & field & " DESC FETCH FIRST 1 ROW ONLY"
             Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
                 Using ObjCmd As Odbc.OdbcCommand = New Odbc.OdbcCommand(Sql, ObjConn)
                     ObjConn.Open()
@@ -1191,8 +1286,8 @@ Public Class Gn1
             Dim ArrayOk As Array
 
             rc = GetIpAddrTable_API(Buf(0), BufSize, 1)
-            'If rc <> 0 Then Err.Raise VBObjectError, , "GetIpAddrTable failed with return value " & rc
-            If rc <> 0 Then Err.Raise(VBObjectError, , "GetIpAddrTable failed with return value " & rc)
+            'If rc <> 0 Then Err.Raise VBObjectError, , "GetIpAddrTable failed With Return value " & rc
+            If rc <> 0 Then Err.Raise(VBObjectError, , "GetIpAddrTable failed With Return value " & rc)
             Dim NrOfEntries As Integer : NrOfEntries = Buf(1) * 256 + Buf(0)
             If NrOfEntries = 0 Then GetIpAddrTable = ArrayOk : Exit Function
             'ReDim IpAddrs(0 To NrOfEntries - 1) As String
@@ -1422,7 +1517,6 @@ errhandler:
 
     End Function
 
-
     Public Function FillGrid(query As String) As Data.DataSet
         Dim exMessage As String = " "
         Try
@@ -1500,6 +1594,8 @@ errhandler:
 #End Region
 
 #Region "Generic Methods"
+
+    'create single class for as400 connection
 
     Private Function GetDataFromDatabase(query As String) As Data.DataSet
         Dim exMessage As String = " "
@@ -1620,6 +1716,7 @@ errhandler:
         End Try
     End Function
 
+
 #End Region
 
 #Region "Delete"
@@ -1666,9 +1763,173 @@ errhandler:
 
 #End Region
 
-#Region "External Library"
+#Region "SQL Server Methods"
+
+    'create a single class for sql server connection
 
 
+    Public Function getmaxSQL(table, field) As Object
+
+        '        Dim intrespond As Long
+        '        Dim sentence As Variant
+
+
+
+        '        Set RsGeneral = Nothing
+        '        Set CMD = Nothing
+        '        If ConnSql.State = 1 Then
+        '        Else
+        '            ConnSql.ConnectionString = strconnSQL
+        '            ConnSql.Open()
+        '        End If
+        '        CMD.ActiveConnection = ConnSql
+        '        CMD.CommandText = "spgetmax"
+        '        CMD.CommandType = adCmdStoredProc
+        '        sentence = "Select Max(" & field & ") As max from " & table
+        '        Set RsGeneral = CMD.Execute(, Array(sentence))
+
+        '        If IsNull(RsGeneral.Fields(0)) Then
+        '            getmaxSQL = 1
+        '        Else
+        '            getmaxSQL = RsGeneral.Fields(0) + 1
+        '        End If
+
+        '        Exit Function
+        'errhandler:
+        '        Call gotoerror("general", "getmaxSQL", Err.Number, Err.Description, Err.Source)
+    End Function
+
+    Public Function GetMaxCodeDetSql(table As String, field As String) As Data.DataSet
+        Try
+            Dim sqlQuery As String = "select MAX({1}) from {0}"
+            Dim sqlFormattedQuery As String = String.Format(sqlQuery, table, field)
+            Dim dsResult = ExecuteQueryCommand(sqlFormattedQuery, strconnSQL)
+            Return dsResult
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
+    'get data from sql
+    Public Function GetDataSqlByUser(table As String, userid As String) As Data.DataSet
+        Try
+            Dim sqlQuery As String = "SELECT * FROM {0} WHERE USERID = '{1}'"
+            Dim sqlFormattedQuery As String = String.Format(sqlQuery, table, userid)
+            Dim dsResult = ExecuteQueryCommand(sqlFormattedQuery, strconnSQL)
+            Return dsResult
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
+    'delete data from sql
+    Public Function DeleteDataSqlByUser(table As String, userid As String) As Integer
+        Try
+            Dim sqlQuery As String = "DELETE FROM {0} WHERE USERID = '{1}'"
+            Dim sqlFormattedQuery As String = String.Format(sqlQuery, table, userid)
+            Dim rsResult = ExecuteNotQueryCommand(sqlFormattedQuery, strconnSQL)
+            Return rsResult
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
+    'insert data from sql
+    Public Function InsertDataSqlByUser(table As String, userid As String, listData As List(Of String)) As Integer
+        Dim codComment As Integer
+        Dim comment As String
+
+        Try
+
+            codComment = listData(0)
+            comment = listData(1)
+
+            Dim sqlQuery As String = "INSERT INTO {0} (cod_comment, userid, comment) VALUES ({1}, '{2}', '{3}')"
+            Dim sqlFormattedQuery As String = String.Format(sqlQuery, table, codComment, userid, comment)
+            Dim rsResult = ExecuteNotQueryCommand(sqlFormattedQuery, strconnSQL)
+            Return rsResult
+
+        Catch ex As Exception
+            Return Nothing
+        End Try
+
+    End Function
+
+    'query sin devolver resultados
+    Private Function ExecuteNotQueryCommand(queryString As String, connectionString As String) As Integer
+
+        Dim exMessage As String = " "
+        Dim rsResult As Integer = -1
+        Try
+            Using connection As New SqlConnection(connectionString)
+                Dim command As New SqlCommand(queryString, connection)
+                command.CommandType = CommandType.Text
+
+                command.Connection.Open()
+                rsResult = command.ExecuteNonQuery()
+            End Using
+            Return rsResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return rsResult
+        Finally
+
+        End Try
+
+    End Function
+
+    'query devolviendo resultados
+    Private Function ExecuteQueryCommand(queryString As String, connectionString As String) As Data.DataSet
+
+        Dim exMessage As String = " "
+        Dim rsResult As Integer = -1
+        Dim dsResult As DataSet = New DataSet()
+        Try
+            Using connection As New SqlConnection(connectionString)
+                Dim command As New SqlCommand(queryString, connection)
+                command.Connection.Open()
+                Dim tblResult As New DataTable
+                tblResult.Load(command.ExecuteReader())
+                dsResult.Tables.Add(tblResult)
+                Return dsResult
+            End Using
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return dsResult
+        Finally
+
+        End Try
+
+    End Function
+
+    Public Function FillGridSql(query As String) As Data.DataSet
+        Dim exMessage As String = " "
+        'Dim rsResult As Integer
+        Dim dsResult As DataSet
+        Try
+            dsResult = ExecuteQueryCommand(query, strconnSQL)
+
+            Dim ds As New DataSet()
+            ds.Locale = CultureInfo.InvariantCulture
+
+            'ObjConn.Open()
+            ''Sql = "SELECT COUNT(*) TFIELDS FROM PRDVLH " & strwhere
+            'Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+            'dataAdapter = New Odbc.OdbcDataAdapter(cmd)
+            'dataAdapter.Fill(ds)
+
+            'If ds.Tables(0).Rows.Count > 0 Then
+            '    Return ds
+            'Else
+            '    'message box warning
+            '    Return Nothing
+            'End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
 #End Region
 

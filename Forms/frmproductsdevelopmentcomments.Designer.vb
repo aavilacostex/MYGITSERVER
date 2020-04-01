@@ -27,18 +27,19 @@ Partial Class frmproductsdevelopmentcomments
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.txtCode = New System.Windows.Forms.TextBox()
+        Me.DTPicker1 = New System.Windows.Forms.DateTimePicker()
+        Me.txtpartno = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
-        Me.DateTimePicker2 = New System.Windows.Forms.DateTimePicker()
-        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.DTPicker2 = New System.Windows.Forms.DateTimePicker()
+        Me.txtsubject = New System.Windows.Forms.TextBox()
         Me.dgvAddComments = New System.Windows.Forms.DataGridView()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button3 = New System.Windows.Forms.Button()
+        Me.cmdExit = New System.Windows.Forms.Button()
+        Me.cmdSave = New System.Windows.Forms.Button()
+        Me.cmdnew = New System.Windows.Forms.Button()
         Me.clComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.lblNotVisible = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.dgvAddComments, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -51,16 +52,16 @@ Partial Class frmproductsdevelopmentcomments
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 2.850877!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.17544!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 151.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 166.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Label3, 0, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox1, 1, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.DateTimePicker1, 1, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox2, 4, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtCode, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.DTPicker1, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtpartno, 4, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label4, 3, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.DateTimePicker2, 3, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.TextBox3, 1, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.DTPicker2, 3, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.txtsubject, 1, 2)
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(27, 29)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 3
@@ -100,111 +101,124 @@ Partial Class frmproductsdevelopmentcomments
         Me.Label3.TabIndex = 2
         Me.Label3.Text = "Subject"
         '
-        'TextBox1
+        'txtCode
         '
-        Me.TextBox1.Location = New System.Drawing.Point(126, 7)
-        Me.TextBox1.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(219, 20)
-        Me.TextBox1.TabIndex = 3
+        Me.txtCode.Location = New System.Drawing.Point(122, 7)
+        Me.txtCode.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
+        Me.txtCode.Name = "txtCode"
+        Me.txtCode.Size = New System.Drawing.Size(215, 20)
+        Me.txtCode.TabIndex = 3
+        '
+        'DTPicker1
+        '
+        Me.TableLayoutPanel1.SetColumnSpan(Me.DTPicker1, 2)
+        Me.DTPicker1.Location = New System.Drawing.Point(122, 40)
+        Me.DTPicker1.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
+        Me.DTPicker1.Name = "DTPicker1"
+        Me.DTPicker1.Size = New System.Drawing.Size(219, 20)
+        Me.DTPicker1.TabIndex = 7
+        '
+        'txtpartno
+        '
+        Me.txtpartno.Location = New System.Drawing.Point(444, 7)
+        Me.txtpartno.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
+        Me.txtpartno.Name = "txtpartno"
+        Me.txtpartno.Size = New System.Drawing.Size(144, 20)
+        Me.txtpartno.TabIndex = 6
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(384, 10)
+        Me.Label4.Location = New System.Drawing.Point(372, 10)
         Me.Label4.Margin = New System.Windows.Forms.Padding(20, 10, 3, 3)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(46, 13)
         Me.Label4.TabIndex = 5
         Me.Label4.Text = "Part No."
         '
-        'TextBox2
+        'DTPicker2
         '
-        Me.TextBox2.Location = New System.Drawing.Point(459, 7)
-        Me.TextBox2.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(144, 20)
-        Me.TextBox2.TabIndex = 6
+        Me.TableLayoutPanel1.SetColumnSpan(Me.DTPicker2, 2)
+        Me.DTPicker2.Location = New System.Drawing.Point(372, 40)
+        Me.DTPicker2.Margin = New System.Windows.Forms.Padding(20, 7, 3, 3)
+        Me.DTPicker2.Name = "DTPicker2"
+        Me.DTPicker2.Size = New System.Drawing.Size(219, 20)
+        Me.DTPicker2.TabIndex = 8
         '
-        'DateTimePicker1
+        'txtsubject
         '
-        Me.TableLayoutPanel1.SetColumnSpan(Me.DateTimePicker1, 2)
-        Me.DateTimePicker1.Location = New System.Drawing.Point(126, 40)
-        Me.DateTimePicker1.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
-        Me.DateTimePicker1.Name = "DateTimePicker1"
-        Me.DateTimePicker1.Size = New System.Drawing.Size(219, 20)
-        Me.DateTimePicker1.TabIndex = 7
-        '
-        'DateTimePicker2
-        '
-        Me.TableLayoutPanel1.SetColumnSpan(Me.DateTimePicker2, 2)
-        Me.DateTimePicker2.Location = New System.Drawing.Point(384, 40)
-        Me.DateTimePicker2.Margin = New System.Windows.Forms.Padding(20, 7, 3, 3)
-        Me.DateTimePicker2.Name = "DateTimePicker2"
-        Me.DateTimePicker2.Size = New System.Drawing.Size(219, 20)
-        Me.DateTimePicker2.TabIndex = 8
-        '
-        'TextBox3
-        '
-        Me.TableLayoutPanel1.SetColumnSpan(Me.TextBox3, 4)
-        Me.TextBox3.Location = New System.Drawing.Point(126, 73)
-        Me.TextBox3.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
-        Me.TextBox3.Name = "TextBox3"
-        Me.TextBox3.Size = New System.Drawing.Size(477, 20)
-        Me.TextBox3.TabIndex = 9
+        Me.TableLayoutPanel1.SetColumnSpan(Me.txtsubject, 4)
+        Me.txtsubject.Location = New System.Drawing.Point(122, 73)
+        Me.txtsubject.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
+        Me.txtsubject.Name = "txtsubject"
+        Me.txtsubject.Size = New System.Drawing.Size(477, 20)
+        Me.txtsubject.TabIndex = 9
         '
         'dgvAddComments
         '
         Me.dgvAddComments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvAddComments.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clComments})
+        Me.dgvAddComments.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.dgvAddComments.Location = New System.Drawing.Point(27, 145)
         Me.dgvAddComments.Name = "dgvAddComments"
+        Me.dgvAddComments.RowHeadersVisible = False
         Me.dgvAddComments.Size = New System.Drawing.Size(609, 233)
         Me.dgvAddComments.TabIndex = 1
         '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.SystemColors.GrayText
-        Me.Panel1.Controls.Add(Me.Button3)
-        Me.Panel1.Controls.Add(Me.Button2)
-        Me.Panel1.Controls.Add(Me.Button1)
+        Me.Panel1.Controls.Add(Me.lblNotVisible)
+        Me.Panel1.Controls.Add(Me.cmdExit)
+        Me.Panel1.Controls.Add(Me.cmdSave)
+        Me.Panel1.Controls.Add(Me.cmdnew)
         Me.Panel1.Location = New System.Drawing.Point(27, 397)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(609, 34)
         Me.Panel1.TabIndex = 2
         '
-        'Button1
+        'cmdExit
         '
-        Me.Button1.Image = CType(resources.GetObject("Button1.Image"), System.Drawing.Image)
-        Me.Button1.Location = New System.Drawing.Point(462, 3)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(43, 28)
-        Me.Button1.TabIndex = 0
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.cmdExit.Image = CType(resources.GetObject("cmdExit.Image"), System.Drawing.Image)
+        Me.cmdExit.Location = New System.Drawing.Point(560, 3)
+        Me.cmdExit.Name = "cmdExit"
+        Me.cmdExit.Size = New System.Drawing.Size(43, 28)
+        Me.cmdExit.TabIndex = 2
+        Me.cmdExit.UseVisualStyleBackColor = True
         '
-        'Button2
+        'cmdSave
         '
-        Me.Button2.Image = CType(resources.GetObject("Button2.Image"), System.Drawing.Image)
-        Me.Button2.Location = New System.Drawing.Point(511, 3)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(43, 28)
-        Me.Button2.TabIndex = 1
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.cmdSave.Image = CType(resources.GetObject("cmdSave.Image"), System.Drawing.Image)
+        Me.cmdSave.Location = New System.Drawing.Point(511, 3)
+        Me.cmdSave.Name = "cmdSave"
+        Me.cmdSave.Size = New System.Drawing.Size(43, 28)
+        Me.cmdSave.TabIndex = 1
+        Me.cmdSave.UseVisualStyleBackColor = True
         '
-        'Button3
+        'cmdnew
         '
-        Me.Button3.Image = CType(resources.GetObject("Button3.Image"), System.Drawing.Image)
-        Me.Button3.Location = New System.Drawing.Point(560, 3)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(43, 28)
-        Me.Button3.TabIndex = 2
-        Me.Button3.UseVisualStyleBackColor = True
+        Me.cmdnew.Image = CType(resources.GetObject("cmdnew.Image"), System.Drawing.Image)
+        Me.cmdnew.Location = New System.Drawing.Point(462, 3)
+        Me.cmdnew.Name = "cmdnew"
+        Me.cmdnew.Size = New System.Drawing.Size(43, 28)
+        Me.cmdnew.TabIndex = 0
+        Me.cmdnew.UseVisualStyleBackColor = True
         '
         'clComments
         '
         Me.clComments.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.clComments.HeaderText = "Comments"
+        Me.clComments.MaxInputLength = 100
         Me.clComments.Name = "clComments"
+        '
+        'lblNotVisible
+        '
+        Me.lblNotVisible.AutoSize = True
+        Me.lblNotVisible.Location = New System.Drawing.Point(337, 17)
+        Me.lblNotVisible.Name = "lblNotVisible"
+        Me.lblNotVisible.Size = New System.Drawing.Size(0, 13)
+        Me.lblNotVisible.TabIndex = 3
+        Me.lblNotVisible.Visible = False
         '
         'frmproductsdevelopmentcomments
         '
@@ -220,6 +234,7 @@ Partial Class frmproductsdevelopmentcomments
         Me.TableLayoutPanel1.PerformLayout()
         CType(Me.dgvAddComments, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -228,16 +243,17 @@ Partial Class frmproductsdevelopmentcomments
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
-    Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents DateTimePicker1 As DateTimePicker
-    Friend WithEvents TextBox2 As TextBox
+    Friend WithEvents txtCode As TextBox
+    Friend WithEvents DTPicker1 As DateTimePicker
+    Friend WithEvents txtpartno As TextBox
     Friend WithEvents Label4 As Label
-    Friend WithEvents DateTimePicker2 As DateTimePicker
-    Friend WithEvents TextBox3 As TextBox
+    Friend WithEvents DTPicker2 As DateTimePicker
+    Friend WithEvents txtsubject As TextBox
     Friend WithEvents dgvAddComments As DataGridView
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents Button3 As Button
-    Friend WithEvents Button2 As Button
-    Friend WithEvents Button1 As Button
+    Friend WithEvents cmdExit As Button
+    Friend WithEvents cmdSave As Button
+    Friend WithEvents cmdnew As Button
     Friend WithEvents clComments As DataGridViewTextBoxColumn
+    Friend WithEvents lblNotVisible As Label
 End Class
