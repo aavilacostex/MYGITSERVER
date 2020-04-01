@@ -24,16 +24,13 @@ Partial Class frmPDevelopmentseecomments
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPDevelopmentseecomments))
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lblNotVisible = New System.Windows.Forms.Label()
         Me.cmdExit = New System.Windows.Forms.Button()
         Me.cmdprint = New System.Windows.Forms.Button()
         Me.cmddelete = New System.Windows.Forms.Button()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.SSTab1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.dgvProjectMessages = New System.Windows.Forms.DataGridView()
-        Me.clSubject = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clDateEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clTimeEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clUser = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtCode = New System.Windows.Forms.TextBox()
@@ -41,11 +38,16 @@ Partial Class frmPDevelopmentseecomments
         Me.txtpartno = New System.Windows.Forms.TextBox()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.dgvProjectMessage2 = New System.Windows.Forms.DataGridView()
-        Me.clSelection = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.clSubject = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clDateEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clTimeEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clUser = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clTableCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblNotVisible = New System.Windows.Forms.Label()
+        Me.clTableCode1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clCommentNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
-        Me.TabControl1.SuspendLayout()
+        Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.dgvProjectMessages, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -63,6 +65,15 @@ Partial Class frmPDevelopmentseecomments
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(646, 34)
         Me.Panel1.TabIndex = 2
+        '
+        'lblNotVisible
+        '
+        Me.lblNotVisible.AutoSize = True
+        Me.lblNotVisible.Location = New System.Drawing.Point(411, 4)
+        Me.lblNotVisible.Name = "lblNotVisible"
+        Me.lblNotVisible.Size = New System.Drawing.Size(0, 13)
+        Me.lblNotVisible.TabIndex = 6
+        Me.lblNotVisible.Visible = False
         '
         'cmdExit
         '
@@ -91,15 +102,15 @@ Partial Class frmPDevelopmentseecomments
         Me.cmddelete.Text = "Delete"
         Me.cmddelete.UseVisualStyleBackColor = True
         '
-        'TabControl1
+        'SSTab1
         '
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Location = New System.Drawing.Point(7, 12)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(655, 382)
-        Me.TabControl1.TabIndex = 3
+        Me.SSTab1.Controls.Add(Me.TabPage1)
+        Me.SSTab1.Controls.Add(Me.TabPage2)
+        Me.SSTab1.Location = New System.Drawing.Point(7, 12)
+        Me.SSTab1.Name = "SSTab1"
+        Me.SSTab1.SelectedIndex = 0
+        Me.SSTab1.Size = New System.Drawing.Size(655, 382)
+        Me.SSTab1.TabIndex = 3
         '
         'TabPage1
         '
@@ -115,35 +126,19 @@ Partial Class frmPDevelopmentseecomments
         '
         'dgvProjectMessages
         '
+        Me.dgvProjectMessages.AllowUserToAddRows = False
+        Me.dgvProjectMessages.AllowUserToDeleteRows = False
         Me.dgvProjectMessages.AllowUserToResizeColumns = False
+        Me.dgvProjectMessages.AllowUserToResizeRows = False
         Me.dgvProjectMessages.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvProjectMessages.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvProjectMessages.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clSubject, Me.clDateEntered, Me.clTimeEntered, Me.clUser})
+        Me.dgvProjectMessages.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clSubject, Me.clDateEntered, Me.clTimeEntered, Me.clUser, Me.clTableCode})
         Me.dgvProjectMessages.Location = New System.Drawing.Point(11, 60)
         Me.dgvProjectMessages.Name = "dgvProjectMessages"
         Me.dgvProjectMessages.RowHeadersVisible = False
+        Me.dgvProjectMessages.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvProjectMessages.Size = New System.Drawing.Size(619, 265)
         Me.dgvProjectMessages.TabIndex = 2
-        '
-        'clSubject
-        '
-        Me.clSubject.HeaderText = "Subject"
-        Me.clSubject.Name = "clSubject"
-        '
-        'clDateEntered
-        '
-        Me.clDateEntered.HeaderText = "Date Entered"
-        Me.clDateEntered.Name = "clDateEntered"
-        '
-        'clTimeEntered
-        '
-        Me.clTimeEntered.HeaderText = "Time Entered"
-        Me.clTimeEntered.Name = "clTimeEntered"
-        '
-        'clUser
-        '
-        Me.clUser.HeaderText = "User"
-        Me.clUser.Name = "clUser"
         '
         'TableLayoutPanel1
         '
@@ -213,46 +208,72 @@ Partial Class frmPDevelopmentseecomments
         '
         'dgvProjectMessage2
         '
+        Me.dgvProjectMessage2.AllowUserToAddRows = False
         Me.dgvProjectMessage2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvProjectMessage2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvProjectMessage2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clSelection, Me.clComments})
+        Me.dgvProjectMessage2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clComments, Me.clTableCode1, Me.clCommentNo})
         Me.dgvProjectMessage2.Location = New System.Drawing.Point(7, 7)
         Me.dgvProjectMessage2.Name = "dgvProjectMessage2"
         Me.dgvProjectMessage2.RowHeadersVisible = False
+        Me.dgvProjectMessage2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvProjectMessage2.Size = New System.Drawing.Size(634, 213)
         Me.dgvProjectMessage2.TabIndex = 0
         '
-        'clSelection
+        'clSubject
         '
-        Me.clSelection.HeaderText = "Selection"
-        Me.clSelection.Name = "clSelection"
+        Me.clSubject.HeaderText = "Subject"
+        Me.clSubject.Name = "clSubject"
+        '
+        'clDateEntered
+        '
+        Me.clDateEntered.HeaderText = "Date Entered"
+        Me.clDateEntered.Name = "clDateEntered"
+        '
+        'clTimeEntered
+        '
+        Me.clTimeEntered.HeaderText = "Time Entered"
+        Me.clTimeEntered.Name = "clTimeEntered"
+        '
+        'clUser
+        '
+        Me.clUser.HeaderText = "User"
+        Me.clUser.Name = "clUser"
+        '
+        'clTableCode
+        '
+        Me.clTableCode.HeaderText = "Table Code"
+        Me.clTableCode.Name = "clTableCode"
+        Me.clTableCode.Visible = False
         '
         'clComments
         '
         Me.clComments.HeaderText = "Comments"
         Me.clComments.Name = "clComments"
         '
-        'lblNotVisible
+        'clTableCode1
         '
-        Me.lblNotVisible.AutoSize = True
-        Me.lblNotVisible.Location = New System.Drawing.Point(411, 4)
-        Me.lblNotVisible.Name = "lblNotVisible"
-        Me.lblNotVisible.Size = New System.Drawing.Size(0, 13)
-        Me.lblNotVisible.TabIndex = 6
-        Me.lblNotVisible.Visible = False
+        Me.clTableCode1.HeaderText = "Table Code"
+        Me.clTableCode1.Name = "clTableCode1"
+        Me.clTableCode1.Visible = False
+        '
+        'clCommentNo
+        '
+        Me.clCommentNo.HeaderText = "Comment No"
+        Me.clCommentNo.Name = "clCommentNo"
+        Me.clCommentNo.Visible = False
         '
         'frmPDevelopmentseecomments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(666, 450)
-        Me.Controls.Add(Me.TabControl1)
+        Me.Controls.Add(Me.SSTab1)
         Me.Controls.Add(Me.Panel1)
         Me.Name = "frmPDevelopmentseecomments"
         Me.Text = "frmPDevelopmentseecomments"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.TabControl1.ResumeLayout(False)
+        Me.SSTab1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         CType(Me.dgvProjectMessages, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
@@ -266,13 +287,9 @@ Partial Class frmPDevelopmentseecomments
     Friend WithEvents cmdExit As Button
     Friend WithEvents cmdprint As Button
     Friend WithEvents cmddelete As Button
-    Friend WithEvents TabControl1 As TabControl
+    Friend WithEvents SSTab1 As TabControl
     Friend WithEvents TabPage1 As TabPage
     Friend WithEvents dgvProjectMessages As DataGridView
-    Friend WithEvents clSubject As DataGridViewTextBoxColumn
-    Friend WithEvents clDateEntered As DataGridViewTextBoxColumn
-    Friend WithEvents clTimeEntered As DataGridViewTextBoxColumn
-    Friend WithEvents clUser As DataGridViewTextBoxColumn
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents Label1 As Label
     Friend WithEvents txtCode As TextBox
@@ -280,7 +297,13 @@ Partial Class frmPDevelopmentseecomments
     Friend WithEvents txtpartno As TextBox
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents dgvProjectMessage2 As DataGridView
-    Friend WithEvents clSelection As DataGridViewCheckBoxColumn
-    Friend WithEvents clComments As DataGridViewTextBoxColumn
     Friend WithEvents lblNotVisible As Label
+    Friend WithEvents clSubject As DataGridViewTextBoxColumn
+    Friend WithEvents clDateEntered As DataGridViewTextBoxColumn
+    Friend WithEvents clTimeEntered As DataGridViewTextBoxColumn
+    Friend WithEvents clUser As DataGridViewTextBoxColumn
+    Friend WithEvents clTableCode As DataGridViewTextBoxColumn
+    Friend WithEvents clComments As DataGridViewTextBoxColumn
+    Friend WithEvents clTableCode1 As DataGridViewTextBoxColumn
+    Friend WithEvents clCommentNo As DataGridViewTextBoxColumn
 End Class

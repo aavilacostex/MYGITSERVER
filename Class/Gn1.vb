@@ -245,6 +245,21 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function GetDataByCodAndPartProdAndComm2(tableCode As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDCMD WHERE PRDCCO = " & tableCode
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
