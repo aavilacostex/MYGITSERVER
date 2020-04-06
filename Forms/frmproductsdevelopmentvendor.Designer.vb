@@ -27,7 +27,6 @@ Partial Class frmproductsdevelopmentvendor
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.lblproject = New System.Windows.Forms.Label()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.clSelect = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clPartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clDescription = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clVendorNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -68,25 +67,23 @@ Partial Class frmproductsdevelopmentvendor
         Me.lblproject.Location = New System.Drawing.Point(10, 10)
         Me.lblproject.Margin = New System.Windows.Forms.Padding(10, 10, 3, 0)
         Me.lblproject.Name = "lblproject"
-        Me.lblproject.Size = New System.Drawing.Size(39, 13)
+        Me.lblproject.Size = New System.Drawing.Size(0, 13)
         Me.lblproject.TabIndex = 0
-        Me.lblproject.Text = "Label1"
         '
         'DataGridView1
         '
+        Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clSelect, Me.clPartNo, Me.clDescription, Me.clVendorNo})
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clPartNo, Me.clDescription, Me.clVendorNo})
+        Me.DataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DataGridView1.GridColor = System.Drawing.SystemColors.Menu
         Me.DataGridView1.Location = New System.Drawing.Point(3, 35)
         Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.RowHeadersVisible = False
+        Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.DataGridView1.Size = New System.Drawing.Size(520, 306)
         Me.DataGridView1.TabIndex = 1
-        '
-        'clSelect
-        '
-        Me.clSelect.HeaderText = "Select"
-        Me.clSelect.Name = "clSelect"
         '
         'clPartNo
         '
@@ -153,11 +150,10 @@ Partial Class frmproductsdevelopmentvendor
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents lblproject As Label
     Friend WithEvents DataGridView1 As DataGridView
-    Friend WithEvents clSelect As DataGridViewTextBoxColumn
-    Friend WithEvents clPartNo As DataGridViewTextBoxColumn
-    Friend WithEvents clDescription As DataGridViewTextBoxColumn
-    Friend WithEvents clVendorNo As DataGridViewTextBoxColumn
     Friend WithEvents Panel2 As Panel
     Friend WithEvents cmdSave1 As Button
     Friend WithEvents cmdexit1 As Button
+    Friend WithEvents clPartNo As DataGridViewTextBoxColumn
+    Friend WithEvents clDescription As DataGridViewTextBoxColumn
+    Friend WithEvents clVendorNo As DataGridViewTextBoxColumn
 End Class

@@ -96,18 +96,19 @@ Partial Class frmproductsdevelopmentmanu
         Me.Label1.Location = New System.Drawing.Point(10, 10)
         Me.Label1.Margin = New System.Windows.Forms.Padding(10, 10, 3, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(39, 13)
+        Me.Label1.Size = New System.Drawing.Size(0, 13)
         Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Label1"
         '
         'DataGridView1
         '
+        Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clSelect, Me.clPartNo, Me.clDescription, Me.clVendorNo})
         Me.DataGridView1.GridColor = System.Drawing.SystemColors.Menu
         Me.DataGridView1.Location = New System.Drawing.Point(3, 35)
         Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.RowHeadersVisible = False
         Me.DataGridView1.Size = New System.Drawing.Size(582, 306)
         Me.DataGridView1.TabIndex = 1
         '

@@ -31,6 +31,11 @@ Partial Class frmPDevelopmentseecomments
         Me.SSTab1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.dgvProjectMessages = New System.Windows.Forms.DataGridView()
+        Me.clSubject = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clDateEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clTimeEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clUser = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clTableCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtCode = New System.Windows.Forms.TextBox()
@@ -38,11 +43,6 @@ Partial Class frmPDevelopmentseecomments
         Me.txtpartno = New System.Windows.Forms.TextBox()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.dgvProjectMessage2 = New System.Windows.Forms.DataGridView()
-        Me.clSubject = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clDateEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clTimeEntered = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clUser = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clTableCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clTableCode1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clCommentNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -140,6 +140,32 @@ Partial Class frmPDevelopmentseecomments
         Me.dgvProjectMessages.Size = New System.Drawing.Size(619, 265)
         Me.dgvProjectMessages.TabIndex = 2
         '
+        'clSubject
+        '
+        Me.clSubject.HeaderText = "Subject"
+        Me.clSubject.Name = "clSubject"
+        '
+        'clDateEntered
+        '
+        Me.clDateEntered.HeaderText = "Date Entered"
+        Me.clDateEntered.Name = "clDateEntered"
+        '
+        'clTimeEntered
+        '
+        Me.clTimeEntered.HeaderText = "Time Entered"
+        Me.clTimeEntered.Name = "clTimeEntered"
+        '
+        'clUser
+        '
+        Me.clUser.HeaderText = "User"
+        Me.clUser.Name = "clUser"
+        '
+        'clTableCode
+        '
+        Me.clTableCode.HeaderText = "Table Code"
+        Me.clTableCode.Name = "clTableCode"
+        Me.clTableCode.Visible = False
+        '
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.ColumnCount = 4
@@ -218,32 +244,6 @@ Partial Class frmPDevelopmentseecomments
         Me.dgvProjectMessage2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvProjectMessage2.Size = New System.Drawing.Size(634, 213)
         Me.dgvProjectMessage2.TabIndex = 0
-        '
-        'clSubject
-        '
-        Me.clSubject.HeaderText = "Subject"
-        Me.clSubject.Name = "clSubject"
-        '
-        'clDateEntered
-        '
-        Me.clDateEntered.HeaderText = "Date Entered"
-        Me.clDateEntered.Name = "clDateEntered"
-        '
-        'clTimeEntered
-        '
-        Me.clTimeEntered.HeaderText = "Time Entered"
-        Me.clTimeEntered.Name = "clTimeEntered"
-        '
-        'clUser
-        '
-        Me.clUser.HeaderText = "User"
-        Me.clUser.Name = "clUser"
-        '
-        'clTableCode
-        '
-        Me.clTableCode.HeaderText = "Table Code"
-        Me.clTableCode.Name = "clTableCode"
-        Me.clTableCode.Visible = False
         '
         'clComments
         '

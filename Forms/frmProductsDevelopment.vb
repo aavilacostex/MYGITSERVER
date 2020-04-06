@@ -1,12 +1,10 @@
 ﻿Imports System.Globalization
+Imports System.IO
 Imports System.Text.RegularExpressions
 Imports System.Web.UI.WebControls
 Imports outlook = Microsoft.Office.Interop.Outlook
 
 Public Class frmProductsDevelopment
-
-    Dim gnr As Gn1 = New Gn1()
-
     Public flagdeve As Long '1 is new
     'Public filepicture As New clsReadWrite
     Public strwhere As String
@@ -18,7 +16,20 @@ Public Class frmProductsDevelopment
     Dim requireValidation As Integer = 0
     Dim partstoshow As String
     Dim toemails As String = ""
+    Dim gnr As Gn1 = New Gn1()
 
+    Public Sub New()
+
+
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+
+
+        ' Add any initialization after the InitializeComponent() call.
+
+    End Sub
 
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SSTab1.ItemSize = (New Size(SSTab1.Width / SSTab1.TabCount, 0))
@@ -466,7 +477,7 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub fillcell2(code As String)
+    Public Sub fillcell2(code As String)
         Dim exMessage As String = " "
         Try
             Dim ds As New DataSet()
@@ -905,15 +916,15 @@ Public Class frmProductsDevelopment
         'Dim validationResult = mandatoryFields("new", SSTab1.SelectedTab.Name)
         'If validationResult.Equals(0) Then
         Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
-            If result = DialogResult.No Then
-                'MessageBox.Show("No pressed")
-            ElseIf result = DialogResult.Yes Then
+        If result = DialogResult.No Then
+            'MessageBox.Show("No pressed")
+        ElseIf result = DialogResult.Yes Then
             'MessageBox.Show("Yes pressed")
             flagdeve = 1
             flagnewpart = 1
             cleanFormValues("TabPage2", 2)
             gotonew()
-            End If
+        End If
         'Else
         '    Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
         '    If resultNew = DialogResult.Yes Then
@@ -946,6 +957,7 @@ Public Class frmProductsDevelopment
         Dim exMessage As String = " "
         Dim statusquote As String
         Dim Status2 As String = ""
+
         Try
             statusquote = "D-" & Status2
             Dim mpnopo As String = String.Empty
@@ -1551,7 +1563,7 @@ Public Class frmProductsDevelopment
 
                 Dim dspUpdMess As DialogResult = MessageBox.Show("Record updated", "CTP System", MessageBoxButtons.OK)
                 requireValidation = 0
-                End If
+            End If
 
             If SSTab1.SelectedIndex = 2 Then
                 If Trim(txtpartno.Text) <> "" Then
@@ -2360,6 +2372,239 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Private Sub cmdcomments_Click(sender As Object, e As EventArgs) Handles cmdcomments.Click
+        gnr.seeaddprocomments = 5
+        frmproductsdevelopmentcomments.lblNotVisible.Text = gnr.seeaddprocomments
+        frmproductsdevelopmentcomments.Show()
+    End Sub
+
+    Private Sub cmdseecomments_Click(sender As Object, e As EventArgs) Handles cmdseecomments.Click
+        gnr.seeaddprocomments = 5
+        frmPDevelopmentseecomments.lblNotVisible.Text = gnr.seeaddprocomments
+        frmPDevelopmentseecomments.Show()
+    End Sub
+
+    Private Sub cmdseefiles_Click(sender As Object, e As EventArgs) Handles cmdseefiles.Click
+        cmdseefiles_Click()
+    End Sub
+
+    Private Sub cmdfiles_Click(sender As Object, e As EventArgs) Handles cmdfiles.Click
+        cmdfiles_Click()
+    End Sub
+
+    Private Sub cmdfiles_Click()
+        Dim exMessage As String = " "
+        Dim fullFilename As String
+        Try
+            If Trim(txtCode.Text) <> "" And Trim(txtpartno.Text) <> "" Then
+                gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
+
+                If Not Directory.Exists(gnr.folderpathvendor) Then
+                    System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
+                End If
+                gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
+                If Not Directory.Exists(gnr.folderpathproject) Then
+                    System.IO.Directory.CreateDirectory(gnr.folderpathproject)
+                End If
+
+                Using ofd As New OpenFileDialog
+                    ' Give the user some info:
+                    ofd.Title = "Select file to copy"
+                    ofd.InitialDirectory = "C:\"
+                    ' Set the file filter, it looks bad if it is empty.
+                    'ofd.Filter = "All files (*.*)/*.*"
+                    If ofd.ShowDialog = Windows.Forms.DialogResult.OK Then
+                        fullFilename = ofd.FileName
+                    Else
+                        ' error message
+                        Exit Sub
+                    End If
+                End Using
+
+                Dim destinationFilename As String = IO.Path.GetFileName(fullFilename)
+
+                If System.IO.File.Exists(gnr.folderpathproject & destinationFilename) = True Then
+                    Dim result As DialogResult = MessageBox.Show("Sorry,the file had existed in the folder! Do you want to replace it?", "CTP System", MessageBoxButtons.YesNo)
+                    If result = DialogResult.Yes Then
+                        My.Computer.FileSystem.CopyFile(fullFilename, gnr.folderpathproject & destinationFilename, True)
+                        MessageBox.Show("File had been copy successfully!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
+                Else
+                    My.Computer.FileSystem.CopyFile(fullFilename, gnr.folderpathproject & destinationFilename, True)
+                    MessageBox.Show("File had been copy successfully!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+
+                'Dim saveFileDialog1 As New SaveFileDialog()
+                'saveFileDialog1.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif"
+                ''saveFileDialog1.Filter = "JPeg Image|*.jpg|Bitmap Image|*.bmp|Gif Image|*.gif"
+                'saveFileDialog1.Title = ""
+                'saveFileDialog1.InitialDirectory = "C: \"
+                'saveFileDialog1.ShowDialog()
+                'If saveFileDialog1.FileName <> "" Then
+                '    Dim fs As FileStream = DirectCast(saveFileDialog1.OpenFile(), FileStream)
+                '    fs.Close()
+                'End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Sub cmdseefiles_Click()
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtCode.Text) <> "" And Trim(txtpartno.Text) <> "" Then
+                gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
+                gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(txtpartno.Text) & "\"
+                If Directory.Exists(gnr.folderpathproject) Then
+                    Using fbd As OpenFileDialog = New OpenFileDialog()
+                        fbd.Title = "Open"
+                        fbd.InitialDirectory = gnr.folderpathproject
+                        Dim result As DialogResult = fbd.ShowDialog()
+
+                        If result = DialogResult.OK And Not String.IsNullOrWhiteSpace(fbd.SafeFileName) Then
+                            gnr.startProcessOF(gnr.folderpathproject & Trim(fbd.SafeFileName))
+                        Else
+                            'error message
+                        End If
+                    End Using
+                Else
+                    'error message
+                End If
+            Else
+                'error message
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+        Exit Sub
+    End Sub
+
+    Private Sub cmdfilespart_Click(sender As Object, e As EventArgs) Handles cmdfilespart.Click
+        cmdfilespart_Click()
+    End Sub
+
+    Private Sub cmdseeqcontrol_Click(sender As Object, e As EventArgs) Handles cmdseeqcontrol.Click
+        cmdseeqcontrol_Click()
+    End Sub
+
+    Private Sub cmdfilespart_Click()
+        Dim PartNo As String
+        Dim fullFilename As String
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtpartno.Text) <> "" Then
+                'fieldpart = Trim(txtpartno.Text)
+                PartNo = Trim(txtpartno.Text)
+
+                gnr.FolderPath = gnr.pathgeneral & "PartsFiles"
+                gnr.folderpathpart = gnr.FolderPath & "\" & Trim(UCase(PartNo)) & "\"
+
+                If Not Directory.Exists(gnr.folderpathpart) Then
+                    System.IO.Directory.CreateDirectory(gnr.folderpathpart)
+                End If
+
+                Using ofd As New OpenFileDialog
+                    ' Give the user some info:
+                    ofd.Title = "Open"
+                    ofd.InitialDirectory = "C:\"
+                    ' Set the file filter, it looks bad if it is empty.
+                    'ofd.Filter = "All files (*.*)/*.*"
+                    If ofd.ShowDialog = Windows.Forms.DialogResult.OK Then
+                        fullFilename = ofd.FileName
+                    Else
+                        ' error message
+                        Exit Sub
+                    End If
+                End Using
+
+                Dim destinationFilename As String = IO.Path.GetFileName(fullFilename)
+
+                If System.IO.File.Exists(gnr.folderpathpart & destinationFilename) = True Then
+                    Dim result As DialogResult = MessageBox.Show("Sorry,the file had existed in the folder! Do you want to replace it?", "CTP System", MessageBoxButtons.YesNo)
+                    If result = DialogResult.Yes Then
+                        My.Computer.FileSystem.CopyFile(fullFilename, gnr.folderpathpart & destinationFilename, True)
+                        MessageBox.Show("File added to Part No." & PartNo, "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End If
+                Else
+                    My.Computer.FileSystem.CopyFile(fullFilename, gnr.folderpathpart & destinationFilename, True)
+                    MessageBox.Show("File added to Part No." & PartNo, "Done", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Dim rsUpdate = gnr.UpdateInvByPhotoAddition(PartNo)
+                    If rsUpdate = "" Then
+                        'check functionality
+                    End If
+                End If
+            Else
+                'error message
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+        'MsgBox "You didn't select any file.", vbOKOnly + vbInformation, "CTP System"
+        'MsgBox "Select Part to add files.", vbOKOnly + vbInformation, "CTP System"
+    End Sub
+
+    Private Sub cmdseeqcontrol_Click()
+        Dim PartNo As String
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtCode.Text) <> "" And Trim(txtpartno.Text) <> "" Then
+                PartNo = Trim(txtpartno.Text)
+                gnr.FolderPath = gnr.pathgeneral & "PartsFiles"
+                gnr.folderpathpart = gnr.FolderPath & "\" & Trim(UCase(PartNo)) & "\"
+                If Directory.Exists(gnr.folderpathpart) Then
+                    Using fbd As OpenFileDialog = New OpenFileDialog()
+                        fbd.Title = "Open"
+                        fbd.InitialDirectory = gnr.folderpathpart
+                        Dim result As DialogResult = fbd.ShowDialog()
+
+                        If result = DialogResult.OK And Not String.IsNullOrWhiteSpace(fbd.SafeFileName) Then
+                            gnr.startProcessOF(gnr.folderpathproject & Trim(fbd.SafeFileName))
+                        Else
+                            'error message
+                        End If
+                    End Using
+                Else
+                    'error message
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+        'MsgBox "No files for this Part #.", vbOKOnly + vbInformation, "CTP System"
+        'MsgBox "Select Project and Part # to see files.", vbOKOnly + vbInformation, "CTP System"
+    End Sub
+
+    Private Sub cmdcvendor_Click(sender As Object, e As EventArgs) Handles cmdcvendor.Click
+        cmdcvendor_Click()
+    End Sub
+
+    Private Sub cmdcvendor_Click()
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtCode.Text) <> "" Then
+                If dgvProjectDetails.Rows.Count > 0 Then
+                    frmproductsdevelopmentvendor.Show()
+                End If
+                'actualizo el detalle
+                If SSTab1.SelectedIndex = 2 Then
+                    If Trim(txtpartno.Text) <> "" Then
+                    End If
+                End If
+                fillcell2(txtCode.Text)
+            Else
+                If Trim(txtpartno.Text) <> "" Then
+                    Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
+                End If
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
 #End Region
 
 #Region "Utils"
@@ -2663,17 +2908,6 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdcomments_Click(sender As Object, e As EventArgs) Handles cmdcomments.Click
-        gnr.seeaddprocomments = 5
-        frmproductsdevelopmentcomments.lblNotVisible.Text = gnr.seeaddprocomments
-        frmproductsdevelopmentcomments.Show()
-    End Sub
-
-    Private Sub cmdseecomments_Click(sender As Object, e As EventArgs) Handles cmdseecomments.Click
-        gnr.seeaddprocomments = 5
-        frmPDevelopmentseecomments.lblNotVisible.Text = gnr.seeaddprocomments
-        frmPDevelopmentseecomments.Show()
-    End Sub
 
 #End Region
 

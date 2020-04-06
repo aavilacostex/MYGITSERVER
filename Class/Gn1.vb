@@ -5,6 +5,7 @@ Imports System.Net
 Imports System.Net.NetworkInformation
 Imports System.Runtime.InteropServices
 Imports Microsoft.Office.Interop
+Imports System.Diagnostics
 
 NotInheritable Class Gn1
 
@@ -12,7 +13,7 @@ NotInheritable Class Gn1
     Public Const strCompany = "COSTEX"
     Public Const strdatabase = "dbCTPSystem"
     Public pathpicture As String
-    Public pathgeneral As String
+    'Public pathgeneral As String
     Public Const strconnection = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100"
     Public Const strcrystalconn = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100;"
     Public Const strconnSQL = "Data Source=CTPSystem;Initial Catalog=dbCTPSystem;User Id=sa;Password=ctp6100;"
@@ -92,6 +93,25 @@ NotInheritable Class Gn1
     Public Chunk As String
     Public Digits As Integer
     Public LeftDigit As Integer
+    Public folderpathproject As String
+    Public folderpathvendor As String
+    Public FolderPath As String
+    Public folderpathpart As String
+
+    Public Property pathgeneral() As String
+        Get
+            Return "C:\TestFileFunction\"
+        End Get
+        Set(ByVal value As String)
+            'pathgeneral = value
+        End Set
+    End Property
+
+    Public Sub New()
+        'FolderPath = "C:\TestFileFunction"
+
+    End Sub
+
 
     <DllImport("IpHlpApi.dll")>
     Private Shared Function GetIpAddrTable_API(pIPAddrTable As String, pdwSize As Long, ByVal bOrder As Long) As Long
@@ -676,7 +696,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT * FROM PRDVLD INNER JOIN INMSTA ON TRIM(PRDVLD.PRDPTN) = TRIM(INMSTA.IMPTN) WHERE PRHCOD = " & code & " ORDER BY PRDPTN"
+            Sql = "SELECT PRDVLD.PRDPTN, PRDVLD.VMVNUM, INMSTA.IMDSC FROM PRDVLD INNER JOIN INMSTA ON TRIM(PRDVLD.PRDPTN) = TRIM(INMSTA.IMPTN) WHERE PRHCOD = " & code & " ORDER BY PRDPTN"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -944,6 +964,21 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function UpdatePoQoraRowVendor(oldVendorNo As String, newVendorNo As String, partNo As String, poQotaSeq As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQVND = " & newVendorNo & ", PQPRC = 0 WHERE PQVND = " & oldVendorNo & " AND
+                    PQPTN = '" & Trim(UCase(partNo)) & "' AND PQSEQ = " & poQotaSeq & " AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
     Public Function UpdatePoQoraRow1(mpnopo As String, statusquote As String, insertYear As String, insertMonth As String, insertDay As String,
                                     vendorNo As String, partNo As String) As Integer
         Dim exMessage As String = " "
@@ -1109,6 +1144,43 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function UpdateChangedVendor(userId As String, vendorNo As String, partNo As String, codeNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLD SET MOUSER = '" & userId & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "',VMVNUM = " & vendorNo & ", PRDCON = 0 WHERE PRHCOD = " & codeNo & " AND 
+                    PRDPTN = '" & Trim(UCase(partNo)) & "'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdateInvByPhotoAddition(partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE INMSTA SET imfpoe = '7' WHERE IMPTN = '" & Trim(UCase(partNo)) & "' AND IMFPOE <> '6'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+#End Region
+
+#Region "ComboBoxes"
+
+#End Region
+
+#Region "SelectionFields"
+
 #End Region
 
 #Region "Utils"
@@ -1243,16 +1315,6 @@ NotInheritable Class Gn1
         End If
 
     End Function
-
-#End Region
-
-#Region "ComboBoxes"
-
-#End Region
-
-#Region "SelectionFields"
-
-#End Region
 
     Public Function getmax(table, field)
         Dim exMessage As String = " "
@@ -1606,6 +1668,42 @@ errhandler:
         intrespond = MsgBox("Error. See Log", vbInformation + vbOKOnly, "CTP System")
     End Sub
 
+    Public Sub startProcessOF(pathToOpen As String)
+        Dim exMessage As String = " "
+        Try
+            Dim ProcessProperties As New ProcessStartInfo
+            ProcessProperties.FileName = pathToOpen
+            ProcessProperties.WindowStyle = ProcessWindowStyle.Maximized
+            Dim myProcess As Process = Process.Start(ProcessProperties)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Function getProgramByExtension(fileName As String) As String
+        Dim exMessage As String = " "
+        Dim fileNameOk As String = Nothing
+        Try
+            Select Case fileNameOk
+                Case "pdf"
+                    Console.WriteLine("Excellent!")
+                Case "jpg", "jpeg", "png"
+                    Console.WriteLine("Well done")
+                Case "txt"
+                    fileNameOk = "notepad"
+                Case "doc", "docx"
+                    fileNameOk = "winword"
+                Case Else
+                    fileNameOk = ""
+            End Select
+            Return fileNameOk
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return fileNameOk
+        End Try
+    End Function
+
+#End Region
 #End Region
 
 #Region "Generic Methods"
@@ -1764,6 +1862,28 @@ errhandler:
         Try
             Sql = "delete from loginctp where codlogin = " & code
             rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm = 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function DeleteGeneral(table As String, field As String, values As String) As Integer
+        Dim exMessage As String = " "
+        'Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Dim sqlQuery As String = "DELETE * FROM {0} WHERE {1} IN ({2})"
+            Dim sqlFormattedQuery As String = String.Format(sqlQuery, table, field, values)
+            rsConfirm = ExecuteNotQueryCommand(sqlFormattedQuery, strconnection)
+
             If rsConfirm = 1 Then
                 Return rsConfirm
             Else
