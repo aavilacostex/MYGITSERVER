@@ -454,15 +454,24 @@ NotInheritable Class Gn1
         Dim Sql As String
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
-        'burned data
-        'vendorNo = "261747"
-        'partNo = "CABLE14B"
-        'vendorNo = "261138"
-        'partNo = "99983"
-        'end burned data
 
         Try
             Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPOQotaDataDuplex(strWhereAdd As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM POQOTA " & strWhereAdd & "  AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -696,7 +705,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT PRDVLD.PRDPTN, PRDVLD.VMVNUM, INMSTA.IMDSC FROM PRDVLD INNER JOIN INMSTA ON TRIM(PRDVLD.PRDPTN) = TRIM(INMSTA.IMPTN) WHERE PRHCOD = " & code & " ORDER BY PRDPTN"
+            Sql = "SELECT * FROM PRDVLD INNER JOIN INMSTA ON TRIM(PRDVLD.PRDPTN) = TRIM(INMSTA.IMPTN) WHERE PRHCOD = " & code & " ORDER BY PRDPTN"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -763,8 +772,24 @@ NotInheritable Class Gn1
         Dim QueryResult As Integer = -1
         Try
             Sql = "INSERT INTO PRDCMH(PRHCOD,PRDPTN,PRDCCO,PRDCDA,PRDCTI,PRDCSU,USUSER) 
-                    VALUES(" & Trim(code) & ",'" & Trim(partNo) & "'," & comment & ",'" & Format(DateTime.Now, "yyyy-mm-dd") & "','" & Format(DateTime.Now, "hh:mm:ss") & "',
+                    VALUES(" & Trim(code) & ",'" & Trim(partNo) & "'," & comment & ",'" & Format(DateTime.Now, "yyyy-MM-dd") & "','" & Format(DateTime.Now, "hh:mm:ss") & "',
                             'Person in charge changed','" & userId & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertProductCommentNew(code As String, partNo As String, comment As String, userId As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "INSERT INTO PRDCMH(PRHCOD,PRDPTN,PRDCCO,PRDCDA,PRDCTI,PRDCSU,USUSER) 
+                    VALUES(" & Trim(code) & ",'" & Trim(partNo) & "'," & comment & ",'" & Format(DateTime.Now, "yyyy-MM-dd") & "','" & Format(DateTime.Now, "hh:mm:ss") & "',
+                            'Unit Price changed','" & userId & "')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -979,6 +1004,36 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function UpdatePoQoraMfr(mpnopo As String, vendorNo As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQMPTN = '" & Trim(UCase(mpnopo)) & "' WHERE PQVND = " & vendorNo & " 
+                    AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdatePoQoraUC(unitCost As String, vendorNo As String, partNo As String, strYear As String, strMonth As String, strDay As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQPRC = '" & Trim(UCase(unitCost)) & "', PQQDTY = " & strYear.Substring(2, 2) & ", PQQDTM = " & strMonth & ", PQQDTD = " & strDay & "  
+                    WHERE PQVND = " & vendorNo & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
     Public Function UpdatePoQoraRow1(mpnopo As String, statusquote As String, insertYear As String, insertMonth As String, insertDay As String,
                                     vendorNo As String, partNo As String) As Integer
         Dim exMessage As String = " "
@@ -1034,11 +1089,16 @@ NotInheritable Class Gn1
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
-            Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(strDate1, "yyyy-mm-dd") & "', 
+            Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(strDate1, "yyyy-MM-dd") & "', 
                     PRDJIRA = '" & Trim(jiraTask) & "', " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(strDate2, "yyyy-mm-dd") & "',
                     PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(strDate3, "yyyy-mm-dd") & "',MOUSER = '" & userid & "',
                     MODATE = '" & Format(Now, "yyyy-mm-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
-                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(strDate4, "yyyy-mm-dd") & "',
+                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(strDate4, "
+                    
+
+
+
+") & "',
                     PRDSTS = '" & Trim(status) & "',PRDBEN = '" & Trim(benefits) & "',PRDINF = '" & Trim(comments) & "' WHERE PRHCOD = " & Trim(code) & " AND
                     PRDPTN = '" & Trim(UCase(partNo)) & "'"
             QueryResult = UpdateDataInDatabase(Sql)
@@ -1057,7 +1117,7 @@ NotInheritable Class Gn1
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
-            Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(strDate1, "yyyy-mm-dd") & "', 
+            Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(strDate1, "yyyy-MM-dd") & "', 
                      " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(strDate2, "yyyy-mm-dd") & "',
                     PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(strDate3, "yyyy-mm-dd") & "',MOUSER = '" & userid & "',
                     MODATE = '" & Format(Now, "yyyy-mm-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
@@ -1150,6 +1210,21 @@ NotInheritable Class Gn1
         Dim QueryResult As Integer = -1
         Try
             Sql = "UPDATE PRDVLD SET MOUSER = '" & userId & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "',VMVNUM = " & vendorNo & ", PRDCON = 0 WHERE PRHCOD = " & codeNo & " AND 
+                    PRDPTN = '" & Trim(UCase(partNo)) & "'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdateChangedMFR(userId As String, unitCost As String, partNo As String, codeNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLD SET MOUSER = '" & userId & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "', PRDCON = '" & Trim(unitCost) & "' WHERE PRHCOD = " & codeNo & " AND 
                     PRDPTN = '" & Trim(UCase(partNo)) & "'"
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
@@ -1596,6 +1671,7 @@ errhandler:
 
     Public Function FillGrid(query As String) As Data.DataSet
         Dim exMessage As String = " "
+        Dim PageSize As Integer = 5
         Try
             Dim ObjConn As New Odbc.OdbcConnection(strconnection)
             Dim dataAdapter As New Odbc.OdbcDataAdapter()

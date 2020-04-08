@@ -165,8 +165,15 @@ Public Class frmproductsdevelopmentvendor
             If dsPoQota IsNot Nothing Then
                 If dsPoQota.Tables(0).Rows.Count > 0 Then
                     Dim poqSeq = dsPoQota.Tables(0).Rows(0).ItemArray(dsPoQota.Tables(0).Columns("PQSEQ").Ordinal)
-                    dsUpdatedData = gnr.UpdatePoQoraRowVendor(oldVendorNo, newVendorNo, partNo, poqSeq)
-                    'validation result
+                    Dim rsResult = PoQotaFunctionDuplex(newVendorNo, partNo, poqSeq)
+                    If rsResult = 0 Then
+                        Dim updatedSeq = CInt(poqSeq) + 1
+                        dsUpdatedData = gnr.UpdatePoQoraRowVendor(oldVendorNo, newVendorNo, partNo, updatedSeq)
+                        'validation result
+                    Else
+                        dsUpdatedData = gnr.UpdatePoQoraRowVendor(oldVendorNo, newVendorNo, partNo, poqSeq)
+                        'validation result
+                    End If
                 Else
                     'error message
                 End If
@@ -180,12 +187,34 @@ Public Class frmproductsdevelopmentvendor
                 Dim rsInsertion = gnr.InsertNewPOQotaLess(partNo, newVendorNo, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), "", DateTime.Now.Day.ToString(), "", spacepoqota, 0)
                 'insertion validation
             End If
-
-
-
         Catch ex As Exception
-
         End Try
     End Sub
+
+    Private Function PoQotaFunctionDuplex(newVendorNo As String, partNo As String, seqNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim statusquote As String
+        Dim Status2 As String = ""
+        Dim strQueryAdd As String = " WHERE PQVND = " & Trim(newVendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND PQSEQ = '" & Trim(seqNo) & "'"
+        Try
+            statusquote = "D-" & Status2
+            Dim spacepoqota As String = String.Empty
+            'Dim strQueryAdd As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
+            Dim dsPoQota = gnr.GetPOQotaDataDuplex(strQueryAdd)
+            If dsPoQota IsNot Nothing Then
+                If dsPoQota.Tables(0).Rows.Count > 0 Then
+                    Return 0
+                    'validation result
+                Else
+                    Return -1
+                    'error message
+                End If
+            Else
+                Return -1
+            End If
+        Catch ex As Exception
+            Return -1
+        End Try
+    End Function
 
 End Class

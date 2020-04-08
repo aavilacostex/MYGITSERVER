@@ -25,18 +25,17 @@ Partial Class frmproductsdevelopmentunitcost
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmproductsdevelopmentunitcost))
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.cmdSelectAll = New System.Windows.Forms.Button()
         Me.cmdSave1 = New System.Windows.Forms.Button()
         Me.cmdexit1 = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.clSelect = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.lblproject = New System.Windows.Forms.Label()
         Me.clPartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clCtpNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clVendorNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clMfrNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clDescription = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clUnitCost = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -45,25 +44,38 @@ Partial Class frmproductsdevelopmentunitcost
         '
         'DataGridView1
         '
+        Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clSelect, Me.clPartNo, Me.clCtpNo, Me.clVendorNo, Me.clDescription, Me.clUnitCost})
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clPartNo, Me.clCtpNo, Me.clMfrNo, Me.clDescription, Me.clUnitCost})
+        Me.DataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DataGridView1.GridColor = System.Drawing.SystemColors.Menu
         Me.DataGridView1.Location = New System.Drawing.Point(3, 35)
         Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.RowHeadersVisible = False
+        Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.DataGridView1.Size = New System.Drawing.Size(695, 306)
         Me.DataGridView1.TabIndex = 1
         '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.SystemColors.GrayText
-        Me.Panel2.Controls.Add(Me.Button1)
+        Me.Panel2.Controls.Add(Me.cmdSelectAll)
         Me.Panel2.Controls.Add(Me.cmdSave1)
         Me.Panel2.Controls.Add(Me.cmdexit1)
         Me.Panel2.Location = New System.Drawing.Point(18, 369)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(695, 34)
         Me.Panel2.TabIndex = 5
+        '
+        'cmdSelectAll
+        '
+        Me.cmdSelectAll.Location = New System.Drawing.Point(493, 3)
+        Me.cmdSelectAll.Name = "cmdSelectAll"
+        Me.cmdSelectAll.Size = New System.Drawing.Size(75, 28)
+        Me.cmdSelectAll.TabIndex = 10
+        Me.cmdSelectAll.Text = "Select All"
+        Me.cmdSelectAll.UseVisualStyleBackColor = True
         '
         'cmdSave1
         '
@@ -95,7 +107,7 @@ Partial Class frmproductsdevelopmentunitcost
         '
         Me.TableLayoutPanel1.ColumnCount = 1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblproject, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.DataGridView1, 0, 1)
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
@@ -105,20 +117,14 @@ Partial Class frmproductsdevelopmentunitcost
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(701, 344)
         Me.TableLayoutPanel1.TabIndex = 0
         '
-        'Label1
+        'lblproject
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(10, 10)
-        Me.Label1.Margin = New System.Windows.Forms.Padding(10, 10, 3, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(39, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Label1"
-        '
-        'clSelect
-        '
-        Me.clSelect.HeaderText = "Select"
-        Me.clSelect.Name = "clSelect"
+        Me.lblproject.AutoSize = True
+        Me.lblproject.Location = New System.Drawing.Point(10, 10)
+        Me.lblproject.Margin = New System.Windows.Forms.Padding(10, 10, 3, 0)
+        Me.lblproject.Name = "lblproject"
+        Me.lblproject.Size = New System.Drawing.Size(0, 13)
+        Me.lblproject.TabIndex = 0
         '
         'clPartNo
         '
@@ -130,10 +136,10 @@ Partial Class frmproductsdevelopmentunitcost
         Me.clCtpNo.HeaderText = "CTP No."
         Me.clCtpNo.Name = "clCtpNo"
         '
-        'clVendorNo
+        'clMfrNo
         '
-        Me.clVendorNo.HeaderText = "MFR No."
-        Me.clVendorNo.Name = "clVendorNo"
+        Me.clMfrNo.HeaderText = "MFR No."
+        Me.clMfrNo.Name = "clMfrNo"
         '
         'clDescription
         '
@@ -144,15 +150,6 @@ Partial Class frmproductsdevelopmentunitcost
         '
         Me.clUnitCost.HeaderText = "Unit Cost"
         Me.clUnitCost.Name = "clUnitCost"
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(493, 3)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 28)
-        Me.Button1.TabIndex = 10
-        Me.Button1.Text = "Select All"
-        Me.Button1.UseVisualStyleBackColor = True
         '
         'frmproductsdevelopmentunitcost
         '
@@ -178,12 +175,11 @@ Partial Class frmproductsdevelopmentunitcost
     Friend WithEvents cmdexit1 As Button
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents Label1 As Label
-    Friend WithEvents clSelect As DataGridViewTextBoxColumn
+    Friend WithEvents lblproject As Label
+    Friend WithEvents cmdSelectAll As Button
     Friend WithEvents clPartNo As DataGridViewTextBoxColumn
     Friend WithEvents clCtpNo As DataGridViewTextBoxColumn
-    Friend WithEvents clVendorNo As DataGridViewTextBoxColumn
+    Friend WithEvents clMfrNo As DataGridViewTextBoxColumn
     Friend WithEvents clDescription As DataGridViewTextBoxColumn
     Friend WithEvents clUnitCost As DataGridViewTextBoxColumn
-    Friend WithEvents Button1 As Button
 End Class

@@ -546,6 +546,75 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Public Sub fillcell22(query As String)
+        Dim exMessage As String = " "
+        Try
+            Dim ds As New DataSet()
+            ds.Locale = CultureInfo.InvariantCulture
+
+            'sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
+            'get the query results
+            ds = gnr.FillGrid(query)
+
+            If Not ds Is Nothing Then
+
+                If ds.Tables(0).Rows.Count > 0 Then
+                    dgvProjectDetails.DataSource = Nothing
+                    dgvProjectDetails.Refresh()
+                    dgvProjectDetails.AutoGenerateColumns = False
+                    'dgvProjectDetails.ColumnCount = 8
+
+                    'Add Columns
+                    dgvProjectDetails.Columns(0).Name = "Date"
+                    dgvProjectDetails.Columns(0).HeaderText = "Date"
+                    dgvProjectDetails.Columns(0).DataPropertyName = "PRDDAT"
+
+                    dgvProjectDetails.Columns(1).Name = "PartNo"
+                    dgvProjectDetails.Columns(1).HeaderText = "Part#"
+                    dgvProjectDetails.Columns(1).DataPropertyName = "PRDPTN"
+
+                    dgvProjectDetails.Columns(2).Name = "CTPNo"
+                    dgvProjectDetails.Columns(2).HeaderText = "CTP#"
+                    dgvProjectDetails.Columns(2).DataPropertyName = "PRDCTP"
+
+                    dgvProjectDetails.Columns(3).Name = "MFRNo"
+                    dgvProjectDetails.Columns(3).HeaderText = "MFR#"
+                    dgvProjectDetails.Columns(3).DataPropertyName = "PRDMFR#"
+
+                    dgvProjectDetails.Columns(4).Name = "Vendor"
+                    dgvProjectDetails.Columns(4).HeaderText = "Vendor"
+                    dgvProjectDetails.Columns(4).DataPropertyName = "VMVNUM"
+
+                    dgvProjectDetails.Columns(5).Name = "VendorName"
+                    dgvProjectDetails.Columns(5).HeaderText = "Vendor Name"
+                    dgvProjectDetails.Columns(5).DataPropertyName = "VMNAME"
+
+                    dgvProjectDetails.Columns(6).Name = "Status"
+                    dgvProjectDetails.Columns(6).HeaderText = "Status"
+                    dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
+
+                    'FILL GRID
+                    dgvProjectDetails.DataSource = ds.Tables(0)
+                    'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
+                Else
+                    dgvProjectDetails.DataSource = Nothing
+                    dgvProjectDetails.Refresh()
+                    Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+            Else
+                dgvProjectDetails.DataSource = Nothing
+                dgvProjectDetails.Refresh()
+                Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                Exit Sub
+            End If
+        Catch ex As Exception
+            dgvProjectDetails.DataSource = Nothing
+            dgvProjectDetails.Refresh()
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     Private Sub fillcelldetail(strwhere)
         Dim exMessage As String = " "
         Dim ds As New DataSet()
@@ -2604,6 +2673,209 @@ Public Class frmProductsDevelopment
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
+
+    Private Sub cmdmpartno_Click(sender As Object, e As EventArgs) Handles cmdmpartno.Click
+        cmdmpartno_Click()
+    End Sub
+
+    Private Sub cmdmpartno_Click()
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtCode.Text) <> "" Then
+                If dgvProjectDetails.Rows.Count > 0 Then
+                    frmproductsdevelopmentmanu.Show()
+                End If
+                'actualizo el detalle
+                If SSTab1.SelectedIndex = 2 Then
+                    If Trim(txtpartno.Text) <> "" Then
+                    End If
+                End If
+                fillcell2(txtCode.Text)
+            Else
+                If Trim(txtpartno.Text) <> "" Then
+                    Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
+                End If
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdunitcost_Click(sender As Object, e As EventArgs) Handles cmdunitcost.Click
+        cmdunitcost_Click()
+    End Sub
+
+    Private Sub cmdunitcost_Click()
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtCode.Text) <> "" Then
+                If dgvProjectDetails.Rows.Count > 0 Then
+                    frmproductsdevelopmentunitcost.Show()
+                End If
+                'actualizo el detalle
+                If SSTab1.SelectedIndex = 2 Then
+                    If Trim(txtpartno.Text) <> "" Then
+                    End If
+                End If
+                fillcell2(txtCode.Text)
+            Else
+                If Trim(txtpartno.Text) <> "" Then
+                    Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
+                End If
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdchange_Click(sender As Object, e As EventArgs) Handles cmdchange.Click
+        cmdchange_Click()
+    End Sub
+
+    Private Sub cmdchange_Click()
+        Dim exMessage As String = " "
+        Try
+            If Trim(txtCode.Text) <> "" Then
+                If dgvProjectDetails.Rows.Count > 0 Then
+                    frmproductsdevelopmentstatus.Show()
+                End If
+                'actualizo el detalle
+                If SSTab1.SelectedIndex = 2 Then
+                    If Trim(txtpartno.Text) <> "" Then
+                    End If
+                End If
+                fillcell2(txtCode.Text)
+            Else
+                If Trim(txtpartno.Text) <> "" Then
+                    Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
+                End If
+            End If
+            Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub btnAll_Click(sender As Object, e As EventArgs) Handles btnAll.Click
+        Dim exMessage As String = " "
+        Dim strQueryPartNo = " AND PRDPTN = '" & txtPartNoMore.Text & "'"
+        Dim strQueryMfrNo = " AND PRDMFR# = '" & txtMfrNoMore.Text & "'"
+        Dim strQueryStatus = " And PRDSTS = '" & cmbStatusMore.Text & "'"
+        Dim strQueryCtpNo = " AND PRDCTP = '" & txtCtpNoMore.Text & "'"
+        Try
+            'Dim foo as String = If(bar = buz, cat, dog)
+            'ternary
+            Dim strPartNo As String = If(Not String.IsNullOrEmpty(txtPartNoMore.Text), strQueryPartNo, "")
+            Dim strMfrNo As String = If(Not String.IsNullOrEmpty(txtMfrNoMore.Text), strQueryMfrNo, "")
+            Dim strCtpNo As String = If(Not String.IsNullOrEmpty(txtCtpNoMore.Text), strQueryCtpNo, "")
+            Dim strStatus As String = If(Not String.IsNullOrEmpty(cmbStatusMore.Text), strQueryStatus, "")
+
+            If String.IsNullOrEmpty(txtPartNoMore.Text) And String.IsNullOrEmpty(txtMfrNoMore.Text) And String.IsNullOrEmpty(txtCtpNoMore.Text) And String.IsNullOrEmpty(cmbStatusMore.Text) Then
+                fillcell2(txtCode.Text)
+            Else
+                sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM 
+                    WHERE PRHCOD = " & txtCode.Text & " " + strPartNo + strMfrNo + strCtpNo + strStatus 'DELETE BURNED REFERENCE
+
+                fillcell22(sql)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdMfrNoMore_Click(sender As Object, e As EventArgs) Handles cmdMfrNoMore.Click
+        Dim strAddMfrSentence As String = ""
+        strAddMfrSentence = " AND PRDMFR# = " ' & txtMfrNoMore.Text & '" 
+
+        Dim exMessage As String = " "
+        Try
+            If Not String.IsNullOrEmpty(txtMfrNoMore.Text) Then
+                Dim dt As New DataTable
+                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim Qry = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDMFR#"))) = Trim(UCase(txtMfrNoMore.Text))) _
+                          .CopyToDataTable
+                dgvProjectDetails.DataSource = Qry
+                dgvProjectDetails.Refresh()
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            'display error message
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdPartNoMore_Click(sender As Object, e As EventArgs) Handles cmdPartNoMore.Click
+        'Dim strAddPartSentence As String = ""
+        'strAddPartSentence = " AND PRDPTN = " ' & txtPartNoMore.Text & '" 
+        Dim exMessage As String = " "
+        Try
+            If Not String.IsNullOrEmpty(txtPartNoMore.Text) Then
+                Dim dt As New DataTable
+                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim Qry = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDPTN"))) = Trim(UCase(txtPartNoMore.Text))) _
+                          .CopyToDataTable
+                dgvProjectDetails.DataSource = Qry
+                dgvProjectDetails.Refresh()
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            'display error message
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdCtpNoMore_Click(sender As Object, e As EventArgs) Handles cmdCtpNoMore.Click
+        Dim strAddCtpSentence As String = ""
+        strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
+
+        Dim exMessage As String = " "
+        Try
+            If Not String.IsNullOrEmpty(txtCtpNoMore.Text) Then
+                Dim dt As New DataTable
+                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim Qry = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDCTP"))) = Trim(UCase(txtCtpNoMore.Text))) _
+                          .CopyToDataTable
+                dgvProjectDetails.DataSource = Qry
+                dgvProjectDetails.Refresh()
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            'display error message
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdStatusMore_Click(sender As Object, e As EventArgs) Handles cmdStatusMore.Click
+        Dim strAddStatusSentence As String = ""
+        strAddStatusSentence = " AND PRDSTS = " ' & cmbStatusMore.Text & '" 
+
+        Dim exMessage As String = " "
+        Try
+            If Not String.IsNullOrEmpty(cmbStatusMore.Text) Then
+                Dim dt As New DataTable
+                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim Qry = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDSTS"))) = Trim(UCase(cmbStatusMore.Text))) _
+                          .CopyToDataTable
+                dgvProjectDetails.DataSource = Qry
+                dgvProjectDetails.Refresh()
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            'display error message
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
 
 #End Region
 
