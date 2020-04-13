@@ -18,6 +18,9 @@ Public Class frmProductsDevelopment
     Dim partstoshow As String
     Dim toemails As String = ""
     Dim gnr As Gn1 = New Gn1()
+    'Public Const PageSize = 10
+    'Public Property TotalRecords() As Integer
+
     Public Event PositionChanged(sender As Object, e As EventArgs)
 
     Public Sub New()
@@ -34,10 +37,11 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        SSTab1.ItemSize = (New Size(SSTab1.Width / SSTab1.TabCount, 0))
+
+        SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
         SSTab1.Padding = New System.Drawing.Point(300, 10)
         SSTab1.Appearance = TabAppearance.FlatButtons
-        'TabControl1.ItemSize = New Size(0, 1)
+        ''TabControl1.ItemSize = New Size(0, 1)
         SSTab1.SizeMode = TabSizeMode.Fixed
 
         cmdSave1.Enabled = False
@@ -109,8 +113,6 @@ Public Class frmProductsDevelopment
         cmbprstatus.Items.Add("F - Finished")
         cmbprstatus.SelectedIndex = 1
 
-        AddHandler Me.PositionChanged, AddressOf bs_PositionChanged
-
         Dim posValue As Integer = 0
         For Each obj As DataRowView In cmbstatus.Items
             Dim VarQuery = "E"
@@ -147,6 +149,9 @@ Public Class frmProductsDevelopment
         If UCase(userid) = "AALZATE" Then
             flagallow = 1
         End If
+
+        ResizeTabs()
+
     End Sub
 
 #Region "Combobox load Region"
@@ -332,9 +337,11 @@ Public Class frmProductsDevelopment
         If SSTab1.SelectedTab.Name = "TabPage1" Then
             cmdSave1.Enabled = False
             cmdSave1.Visible = True
+        ElseIf SSTab1.SelectedTab.Name = "TabPage2" Then
+            Panel4.Enabled = True
         ElseIf SSTab1.SelectedTab.Name = "TabPage3" Then
             Dim rsValue As Integer = -1
-            cmdnew3.Enabled = False
+            Panel4.Enabled = True
             rsValue = mandatoryFields("new", "TabPage2")
             If rsValue = 0 Then
                 flagdeve = 0
@@ -346,6 +353,11 @@ Public Class frmProductsDevelopment
                 End If
             End If
         End If
+        TableLayoutPanel15.Enabled = True
+        cmdchange.Enabled = True
+        cmdunitcost.Enabled = True
+        cmdmpartno.Enabled = True
+        cmdcvendor.Enabled = True
     End Sub
 
 
@@ -395,18 +407,6 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
 
                     'FILL GRID
-
-                    'BindingNavigator1.BindingSource = bs;
-                    'bs.DataSource = tables;
-                    'bs.PositionChanged += bs_PositionChanged;
-                    'bs_PositionChanged(bs, EventArgs.Empty);
-
-                    'Dim bs As BindingSource = New BindingSource()
-                    'bs.DataSource = ds.Tables(0)
-
-                    BindingSource1.DataSource = ds.Tables(0)
-                    BindingNavigator1.BindingSource = BindingSource1
-
                     DataGridView1.DataSource = ds.Tables(0)
 
                 Else
@@ -430,13 +430,6 @@ Public Class frmProductsDevelopment
             DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
-    End Sub
-
-    Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
-
-        Dim pepe As String = "oepe"
-        Dim number As Integer = 72
-        'DataGridView1.DataSource = tables[bs.Position];
     End Sub
 
     Private Sub fillcell1LastOne(strwhere)
@@ -477,9 +470,6 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).Name = "Status"
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
-
-                    BindingSource1.DataSource = ds.Tables(0)
-                    BindingNavigator1.BindingSource = BindingSource1
 
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
@@ -548,9 +538,6 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(6).Name = "Status"
                     dgvProjectDetails.Columns(6).HeaderText = "Status"
                     dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
-
-                    BindingSource1.DataSource = ds.Tables(0)
-                    BindingNavigator1.BindingSource = BindingSource1
 
                     'FILL GRID
                     dgvProjectDetails.DataSource = ds.Tables(0)
@@ -621,9 +608,6 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(6).HeaderText = "Status"
                     dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
 
-                    BindingSource1.DataSource = ds.Tables(0)
-                    BindingNavigator1.BindingSource = BindingSource1
-
                     'FILL GRID
                     dgvProjectDetails.DataSource = ds.Tables(0)
                     'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
@@ -685,9 +669,6 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).Name = "Status"
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
-
-                    BindingSource1.DataSource = ds.Tables(0)
-                    BindingNavigator1.BindingSource = BindingSource1
 
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
@@ -787,7 +768,9 @@ Public Class frmProductsDevelopment
                             txtmfrno.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR#").Ordinal).ToString()
                             txtsampleqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDSQTY").Ordinal).ToString()
                             'txtminqty.Text = RowDs.Item(ds.Tables(0).Columns("PQMIN").Ordinal).ToString()
-                            txtunitcostnew.Text = RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()
+                            Dim unitCostNew = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()), 3)
+                            'Dim strPartNo As String = If(Not String.IsNullOrEmpty(txtPartNoMore.Text), strQueryPartNo, "")
+                            txtunitcostnew.Text = If(unitCostNew <> 0, String.Format("{0:0.00}", unitCostNew), "0")
                             txtunitcost.Text = RowDs.Item(ds.Tables(0).Columns("PRDCOS").Ordinal).ToString()
                             txtsample.Text = RowDs.Item(ds.Tables(0).Columns("PRDSCO").Ordinal).ToString()
                             txttcost.Text = RowDs.Item(ds.Tables(0).Columns("PRDTTC").Ordinal).ToString()
@@ -999,6 +982,11 @@ Public Class frmProductsDevelopment
             flagnewpart = 1
             cleanFormValues("TabPage2", 2)
             cleanFormValues("TabPage3", 2)
+            TableLayoutPanel15.Enabled = False
+            cmdchange.Enabled = False
+            cmdunitcost.Enabled = False
+            cmdmpartno.Enabled = False
+            cmdcvendor.Enabled = False
             gotonew()
 
         Else
@@ -1008,6 +996,11 @@ Public Class frmProductsDevelopment
                 flagnewpart = 1
                 cleanFormValues("TabPage2", 2)
                 cleanFormValues("TabPage3", 2)
+                TableLayoutPanel15.Enabled = False
+                cmdchange.Enabled = False
+                cmdunitcost.Enabled = False
+                cmdmpartno.Enabled = False
+                cmdcvendor.Enabled = False
                 gotonew()
             End If
         End If
@@ -2696,7 +2689,7 @@ Public Class frmProductsDevelopment
                     If Trim(txtpartno.Text) <> "" Then
                     End If
                 End If
-                fillcell2(txtCode.Text)
+                'fillcell2(txtCode.Text)
             Else
                 If Trim(txtpartno.Text) <> "" Then
                     Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
@@ -2724,7 +2717,7 @@ Public Class frmProductsDevelopment
                     If Trim(txtpartno.Text) <> "" Then
                     End If
                 End If
-                fillcell2(txtCode.Text)
+                'fillcell2(txtCode.Text)
             Else
                 If Trim(txtpartno.Text) <> "" Then
                     Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
@@ -2752,7 +2745,7 @@ Public Class frmProductsDevelopment
                     If Trim(txtpartno.Text) <> "" Then
                     End If
                 End If
-                fillcell2(txtCode.Text)
+                'fillcell2(txtCode.Text)
             Else
                 If Trim(txtpartno.Text) <> "" Then
                     Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
@@ -2780,7 +2773,7 @@ Public Class frmProductsDevelopment
                     If Trim(txtpartno.Text) <> "" Then
                     End If
                 End If
-                fillcell2(txtCode.Text)
+                'fillcell2(txtCode.Text)
             Else
                 If Trim(txtpartno.Text) <> "" Then
                     Dim result As DialogResult = MessageBox.Show("Select Project.", "CTP System", MessageBoxButtons.OK)
@@ -2908,36 +2901,6 @@ Public Class frmProductsDevelopment
             'display error message
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
-    End Sub
-
-    Private Sub btNext_Click(ByVal sender As Object, ByVal e As EventArgs)
-        If (Me.BindingSource1.Position + 1 < Me.BindingSource1.Count) Then
-            Me.BindingSource1.MoveNext()
-            Me.fnDisplayPosition()
-        End If
-    End Sub
-
-
-
-    Private Sub btPrevious_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Me.BindingSource1.MovePrevious()
-        Me.fnDisplayPosition()
-    End Sub
-
-
-    Private Sub btFirst_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Me.BindingSource1.MoveFirst()
-        Me.fnDisplayPosition()
-    End Sub
-
-    Private Sub btLast_Click(ByVal sender As Object, ByVal e As EventArgs)
-        Me.BindingSource1.MoveLast()
-        Me.fnDisplayPosition()
-    End Sub
-
-    Private Sub fnDisplayPosition()
-        ' Me.labelPosition.Text = Me.bindingSource1.Position +
-        '1 + " of " + Me.bindingSource1.Count
     End Sub
 
 #End Region
@@ -3243,6 +3206,21 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Sub ResizeTabs()
+        Dim numTabs As Integer = SSTab1.TabCount
+
+        Dim totLen As Decimal = 0
+        Using g As Graphics = CreateGraphics()
+            ' Get total length of the text of each Tab name
+            For i As Integer = 0 To numTabs - 1
+                totLen += g.MeasureString(SSTab1.TabPages(i).Text, SSTab1.Font).Width
+            Next
+        End Using
+
+        Dim newX As Integer = ((SSTab1.Width - totLen) / numTabs) / 2
+        SSTab1.Padding = New Point(newX, SSTab1.Padding.Y)
+    End Sub
+
 
 #End Region
 
@@ -3258,3 +3236,4 @@ Public Class frmProductsDevelopment
     'End Sub
 
 End Class
+

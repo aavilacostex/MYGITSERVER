@@ -22,20 +22,9 @@ Partial Class frmProductsDevelopment
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductsDevelopment))
         Me.SSTab1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.BindingNavigator1 = New System.Windows.Forms.BindingNavigator(Me.components)
-        Me.BindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel()
-        Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMovePreviousItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorSeparator = New System.Windows.Forms.ToolStripSeparator()
-        Me.BindingNavigatorPositionItem = New System.Windows.Forms.ToolStripTextBox()
-        Me.BindingNavigatorSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.Button8 = New System.Windows.Forms.Button()
         Me.Button9 = New System.Windows.Forms.Button()
@@ -210,11 +199,8 @@ Partial Class frmProductsDevelopment
         Me.Label35 = New System.Windows.Forms.Label()
         Me.DTPicker4 = New System.Windows.Forms.DateTimePicker()
         Me.chknew = New System.Windows.Forms.CheckBox()
-        Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
-        CType(Me.BindingNavigator1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.BindingNavigator1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
@@ -236,7 +222,6 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel9.SuspendLayout()
         Me.TableLayoutPanel10.SuspendLayout()
         Me.TableLayoutPanel11.SuspendLayout()
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'SSTab1
@@ -257,7 +242,6 @@ Partial Class frmProductsDevelopment
         'TabPage1
         '
         Me.TabPage1.BackColor = System.Drawing.SystemColors.Menu
-        Me.TabPage1.Controls.Add(Me.BindingNavigator1)
         Me.TabPage1.Controls.Add(Me.TableLayoutPanel2)
         Me.TabPage1.Controls.Add(Me.Panel1)
         Me.TabPage1.Controls.Add(Me.DataGridView1)
@@ -268,92 +252,6 @@ Partial Class frmProductsDevelopment
         Me.TabPage1.Size = New System.Drawing.Size(1094, 707)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Projects"
-        '
-        'BindingNavigator1
-        '
-        Me.BindingNavigator1.AddNewItem = Nothing
-        Me.BindingNavigator1.BindingSource = Me.BindingSource1
-        Me.BindingNavigator1.CountItem = Me.BindingNavigatorCountItem
-        Me.BindingNavigator1.DeleteItem = Nothing
-        Me.BindingNavigator1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BindingNavigatorMoveFirstItem, Me.BindingNavigatorMovePreviousItem, Me.BindingNavigatorSeparator, Me.BindingNavigatorPositionItem, Me.BindingNavigatorCountItem, Me.BindingNavigatorSeparator1, Me.BindingNavigatorMoveNextItem, Me.BindingNavigatorMoveLastItem, Me.BindingNavigatorSeparator2})
-        Me.BindingNavigator1.Location = New System.Drawing.Point(3, 3)
-        Me.BindingNavigator1.MoveFirstItem = Me.BindingNavigatorMoveFirstItem
-        Me.BindingNavigator1.MoveLastItem = Me.BindingNavigatorMoveLastItem
-        Me.BindingNavigator1.MoveNextItem = Me.BindingNavigatorMoveNextItem
-        Me.BindingNavigator1.MovePreviousItem = Me.BindingNavigatorMovePreviousItem
-        Me.BindingNavigator1.Name = "BindingNavigator1"
-        Me.BindingNavigator1.PositionItem = Me.BindingNavigatorPositionItem
-        Me.BindingNavigator1.Size = New System.Drawing.Size(1088, 25)
-        Me.BindingNavigator1.TabIndex = 3
-        Me.BindingNavigator1.Text = "BindingNavigator1"
-        '
-        'BindingNavigatorCountItem
-        '
-        Me.BindingNavigatorCountItem.Name = "BindingNavigatorCountItem"
-        Me.BindingNavigatorCountItem.Size = New System.Drawing.Size(35, 22)
-        Me.BindingNavigatorCountItem.Text = "of {0}"
-        Me.BindingNavigatorCountItem.ToolTipText = "Total number of items"
-        '
-        'BindingNavigatorMoveFirstItem
-        '
-        Me.BindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveFirstItem.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveFirstItem.Name = "BindingNavigatorMoveFirstItem"
-        Me.BindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveFirstItem.Size = New System.Drawing.Size(23, 22)
-        Me.BindingNavigatorMoveFirstItem.Text = "Move first"
-        '
-        'BindingNavigatorMovePreviousItem
-        '
-        Me.BindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMovePreviousItem.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMovePreviousItem.Name = "BindingNavigatorMovePreviousItem"
-        Me.BindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMovePreviousItem.Size = New System.Drawing.Size(23, 22)
-        Me.BindingNavigatorMovePreviousItem.Text = "Move previous"
-        '
-        'BindingNavigatorSeparator
-        '
-        Me.BindingNavigatorSeparator.Name = "BindingNavigatorSeparator"
-        Me.BindingNavigatorSeparator.Size = New System.Drawing.Size(6, 25)
-        '
-        'BindingNavigatorPositionItem
-        '
-        Me.BindingNavigatorPositionItem.AccessibleName = "Position"
-        Me.BindingNavigatorPositionItem.AutoSize = False
-        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
-        Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(50, 23)
-        Me.BindingNavigatorPositionItem.Text = "0"
-        Me.BindingNavigatorPositionItem.ToolTipText = "Current position"
-        '
-        'BindingNavigatorSeparator1
-        '
-        Me.BindingNavigatorSeparator1.Name = "BindingNavigatorSeparator1"
-        Me.BindingNavigatorSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
-        'BindingNavigatorMoveNextItem
-        '
-        Me.BindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveNextItem.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveNextItem.Name = "BindingNavigatorMoveNextItem"
-        Me.BindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveNextItem.Size = New System.Drawing.Size(23, 22)
-        Me.BindingNavigatorMoveNextItem.Text = "Move next"
-        '
-        'BindingNavigatorMoveLastItem
-        '
-        Me.BindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveLastItem.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveLastItem.Name = "BindingNavigatorMoveLastItem"
-        Me.BindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveLastItem.Size = New System.Drawing.Size(23, 22)
-        Me.BindingNavigatorMoveLastItem.Text = "Move last"
-        '
-        'BindingNavigatorSeparator2
-        '
-        Me.BindingNavigatorSeparator2.Name = "BindingNavigatorSeparator2"
-        Me.BindingNavigatorSeparator2.Size = New System.Drawing.Size(6, 25)
         '
         'TableLayoutPanel2
         '
@@ -458,11 +356,9 @@ Partial Class frmProductsDevelopment
         Me.DataGridView1.AllowUserToDeleteRows = False
         Me.DataGridView1.AllowUserToResizeColumns = False
         Me.DataGridView1.AllowUserToResizeRows = False
-        Me.DataGridView1.AutoGenerateColumns = False
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ProjectNo, Me.ProjectName, Me.DateEnt, Me.PersonInCharge, Me.Status})
-        Me.DataGridView1.DataSource = Me.BindingSource1
         Me.DataGridView1.Location = New System.Drawing.Point(3, 114)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -506,7 +402,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 152.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 169.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 58.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 76.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.txtsearch, 1, 0)
@@ -563,21 +459,21 @@ Partial Class frmProductsDevelopment
         '
         'txtsearch
         '
-        Me.txtsearch.Location = New System.Drawing.Point(137, 3)
+        Me.txtsearch.Location = New System.Drawing.Point(136, 3)
         Me.txtsearch.Name = "txtsearch"
-        Me.txtsearch.Size = New System.Drawing.Size(122, 20)
+        Me.txtsearch.Size = New System.Drawing.Size(120, 20)
         Me.txtsearch.TabIndex = 2
         '
         'txtsearchcode
         '
-        Me.txtsearchcode.Location = New System.Drawing.Point(137, 36)
+        Me.txtsearchcode.Location = New System.Drawing.Point(136, 36)
         Me.txtsearchcode.Name = "txtsearchcode"
-        Me.txtsearchcode.Size = New System.Drawing.Size(122, 20)
+        Me.txtsearchcode.Size = New System.Drawing.Size(120, 20)
         Me.txtsearchcode.TabIndex = 3
         '
         'cmdsearch
         '
-        Me.cmdsearch.Location = New System.Drawing.Point(265, 3)
+        Me.cmdsearch.Location = New System.Drawing.Point(262, 3)
         Me.cmdsearch.Name = "cmdsearch"
         Me.cmdsearch.Size = New System.Drawing.Size(49, 23)
         Me.cmdsearch.TabIndex = 4
@@ -586,7 +482,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchcode
         '
-        Me.cmdsearchcode.Location = New System.Drawing.Point(265, 36)
+        Me.cmdsearchcode.Location = New System.Drawing.Point(262, 36)
         Me.cmdsearchcode.Name = "cmdsearchcode"
         Me.cmdsearchcode.Size = New System.Drawing.Size(49, 23)
         Me.cmdsearchcode.TabIndex = 5
@@ -596,7 +492,7 @@ Partial Class frmProductsDevelopment
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(320, 5)
+        Me.Label3.Location = New System.Drawing.Point(317, 5)
         Me.Label3.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
@@ -606,7 +502,7 @@ Partial Class frmProductsDevelopment
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(320, 38)
+        Me.Label4.Location = New System.Drawing.Point(317, 38)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(97, 13)
@@ -615,21 +511,21 @@ Partial Class frmProductsDevelopment
         '
         'txtsearch1
         '
-        Me.txtsearch1.Location = New System.Drawing.Point(438, 3)
+        Me.txtsearch1.Location = New System.Drawing.Point(435, 3)
         Me.txtsearch1.Name = "txtsearch1"
         Me.txtsearch1.Size = New System.Drawing.Size(130, 20)
         Me.txtsearch1.TabIndex = 8
         '
         'txtsearchpart
         '
-        Me.txtsearchpart.Location = New System.Drawing.Point(438, 36)
+        Me.txtsearchpart.Location = New System.Drawing.Point(435, 36)
         Me.txtsearchpart.Name = "txtsearchpart"
         Me.txtsearchpart.Size = New System.Drawing.Size(130, 20)
         Me.txtsearchpart.TabIndex = 9
         '
         'cmdsearch1
         '
-        Me.cmdsearch1.Location = New System.Drawing.Point(575, 3)
+        Me.cmdsearch1.Location = New System.Drawing.Point(572, 3)
         Me.cmdsearch1.Name = "cmdsearch1"
         Me.cmdsearch1.Size = New System.Drawing.Size(50, 23)
         Me.cmdsearch1.TabIndex = 10
@@ -638,7 +534,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchpart
         '
-        Me.cmdsearchpart.Location = New System.Drawing.Point(575, 36)
+        Me.cmdsearchpart.Location = New System.Drawing.Point(572, 36)
         Me.cmdsearchpart.Name = "cmdsearchpart"
         Me.cmdsearchpart.Size = New System.Drawing.Size(50, 23)
         Me.cmdsearchpart.TabIndex = 11
@@ -648,7 +544,7 @@ Partial Class frmProductsDevelopment
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(633, 5)
+        Me.Label5.Location = New System.Drawing.Point(630, 5)
         Me.Label5.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(88, 13)
@@ -658,7 +554,7 @@ Partial Class frmProductsDevelopment
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(633, 38)
+        Me.Label6.Location = New System.Drawing.Point(630, 38)
         Me.Label6.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(89, 13)
@@ -667,14 +563,14 @@ Partial Class frmProductsDevelopment
         '
         'txtsearchctp
         '
-        Me.txtsearchctp.Location = New System.Drawing.Point(785, 36)
+        Me.txtsearchctp.Location = New System.Drawing.Point(782, 36)
         Me.txtsearchctp.Name = "txtsearchctp"
         Me.txtsearchctp.Size = New System.Drawing.Size(163, 20)
         Me.txtsearchctp.TabIndex = 15
         '
         'cmdsearchctp
         '
-        Me.cmdsearchctp.Location = New System.Drawing.Point(954, 36)
+        Me.cmdsearchctp.Location = New System.Drawing.Point(951, 36)
         Me.cmdsearchctp.Name = "cmdsearchctp"
         Me.cmdsearchctp.Size = New System.Drawing.Size(50, 23)
         Me.cmdsearchctp.TabIndex = 17
@@ -683,7 +579,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdsearchstatus
         '
-        Me.cmdsearchstatus.Location = New System.Drawing.Point(1012, 3)
+        Me.cmdsearchstatus.Location = New System.Drawing.Point(1009, 3)
         Me.cmdsearchstatus.Name = "cmdsearchstatus"
         Me.cmdsearchstatus.Size = New System.Drawing.Size(50, 23)
         Me.cmdsearchstatus.TabIndex = 18
@@ -692,7 +588,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdall
         '
-        Me.cmdall.Location = New System.Drawing.Point(1012, 36)
+        Me.cmdall.Location = New System.Drawing.Point(1009, 36)
         Me.cmdall.Name = "cmdall"
         Me.cmdall.Size = New System.Drawing.Size(50, 23)
         Me.cmdall.TabIndex = 19
@@ -703,14 +599,14 @@ Partial Class frmProductsDevelopment
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.cmbstatus1, 2)
         Me.cmbstatus1.FormattingEnabled = True
-        Me.cmbstatus1.Location = New System.Drawing.Point(785, 3)
+        Me.cmbstatus1.Location = New System.Drawing.Point(782, 3)
         Me.cmbstatus1.Name = "cmbstatus1"
         Me.cmbstatus1.Size = New System.Drawing.Size(220, 21)
         Me.cmbstatus1.TabIndex = 20
         '
         'cmdMfrNoSearch
         '
-        Me.cmdMfrNoSearch.Location = New System.Drawing.Point(954, 72)
+        Me.cmdMfrNoSearch.Location = New System.Drawing.Point(951, 72)
         Me.cmdMfrNoSearch.Name = "cmdMfrNoSearch"
         Me.cmdMfrNoSearch.Size = New System.Drawing.Size(50, 23)
         Me.cmdMfrNoSearch.TabIndex = 23
@@ -719,7 +615,7 @@ Partial Class frmProductsDevelopment
         '
         'txtMfrNoSearch
         '
-        Me.txtMfrNoSearch.Location = New System.Drawing.Point(785, 72)
+        Me.txtMfrNoSearch.Location = New System.Drawing.Point(782, 72)
         Me.txtMfrNoSearch.Name = "txtMfrNoSearch"
         Me.txtMfrNoSearch.Size = New System.Drawing.Size(163, 20)
         Me.txtMfrNoSearch.TabIndex = 26
@@ -727,7 +623,7 @@ Partial Class frmProductsDevelopment
         'Label39
         '
         Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(633, 74)
+        Me.Label39.Location = New System.Drawing.Point(630, 74)
         Me.Label39.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label39.Name = "Label39"
         Me.Label39.Size = New System.Drawing.Size(143, 13)
@@ -736,7 +632,7 @@ Partial Class frmProductsDevelopment
         '
         'cmdPrpech
         '
-        Me.cmdPrpech.Location = New System.Drawing.Point(575, 72)
+        Me.cmdPrpech.Location = New System.Drawing.Point(572, 72)
         Me.cmdPrpech.Name = "cmdPrpech"
         Me.cmdPrpech.Size = New System.Drawing.Size(50, 23)
         Me.cmdPrpech.TabIndex = 22
@@ -747,7 +643,7 @@ Partial Class frmProductsDevelopment
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.cmbPrpech, 2)
         Me.cmbPrpech.FormattingEnabled = True
-        Me.cmbPrpech.Location = New System.Drawing.Point(320, 72)
+        Me.cmbPrpech.Location = New System.Drawing.Point(317, 72)
         Me.cmbPrpech.Name = "cmbPrpech"
         Me.cmbPrpech.Size = New System.Drawing.Size(248, 21)
         Me.cmbPrpech.TabIndex = 27
@@ -756,7 +652,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label37.AutoSize = True
         Me.TableLayoutPanel1.SetColumnSpan(Me.Label37, 2)
-        Me.Label37.Location = New System.Drawing.Point(137, 74)
+        Me.Label37.Location = New System.Drawing.Point(136, 74)
         Me.Label37.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(139, 13)
@@ -1096,7 +992,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 73.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 76.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
@@ -1183,14 +1079,14 @@ Partial Class frmProductsDevelopment
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(100, 3)
+        Me.txtCode.Location = New System.Drawing.Point(99, 3)
         Me.txtCode.Name = "txtCode"
         Me.txtCode.Size = New System.Drawing.Size(200, 20)
         Me.txtCode.TabIndex = 6
         '
         'txtname
         '
-        Me.txtname.Location = New System.Drawing.Point(100, 36)
+        Me.txtname.Location = New System.Drawing.Point(99, 36)
         Me.txtname.Name = "txtname"
         Me.txtname.Size = New System.Drawing.Size(200, 20)
         Me.txtname.TabIndex = 7
@@ -1198,7 +1094,7 @@ Partial Class frmProductsDevelopment
         'cmbprstatus
         '
         Me.cmbprstatus.FormattingEnabled = True
-        Me.cmbprstatus.Location = New System.Drawing.Point(100, 103)
+        Me.cmbprstatus.Location = New System.Drawing.Point(99, 103)
         Me.cmbprstatus.Name = "cmbprstatus"
         Me.cmbprstatus.Size = New System.Drawing.Size(200, 21)
         Me.cmbprstatus.TabIndex = 9
@@ -1206,14 +1102,14 @@ Partial Class frmProductsDevelopment
         'cmbuser1
         '
         Me.cmbuser1.FormattingEnabled = True
-        Me.cmbuser1.Location = New System.Drawing.Point(100, 136)
+        Me.cmbuser1.Location = New System.Drawing.Point(99, 136)
         Me.cmbuser1.Name = "cmbuser1"
         Me.cmbuser1.Size = New System.Drawing.Size(200, 21)
         Me.cmbuser1.TabIndex = 10
         '
         'txtainfo
         '
-        Me.txtainfo.Location = New System.Drawing.Point(100, 169)
+        Me.txtainfo.Location = New System.Drawing.Point(99, 169)
         Me.txtainfo.Multiline = True
         Me.txtainfo.Name = "txtainfo"
         Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -1222,7 +1118,8 @@ Partial Class frmProductsDevelopment
         '
         'DTPicker1
         '
-        Me.DTPicker1.Location = New System.Drawing.Point(100, 70)
+        Me.DTPicker1.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.DTPicker1.Location = New System.Drawing.Point(99, 70)
         Me.DTPicker1.Name = "DTPicker1"
         Me.DTPicker1.Size = New System.Drawing.Size(200, 20)
         Me.DTPicker1.TabIndex = 12
@@ -1993,6 +1890,7 @@ Partial Class frmProductsDevelopment
         'DTPicker2
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.DTPicker2, 2)
+        Me.DTPicker2.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.DTPicker2.Location = New System.Drawing.Point(106, 5)
         Me.DTPicker2.Name = "DTPicker2"
         Me.DTPicker2.Size = New System.Drawing.Size(187, 20)
@@ -2024,6 +1922,7 @@ Partial Class frmProductsDevelopment
         '
         'DateTimePicker1
         '
+        Me.DateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.DateTimePicker1.Location = New System.Drawing.Point(3, 27)
         Me.DateTimePicker1.Name = "DateTimePicker1"
         Me.DateTimePicker1.Size = New System.Drawing.Size(180, 20)
@@ -2117,6 +2016,7 @@ Partial Class frmProductsDevelopment
         '
         'DTPicker3
         '
+        Me.DTPicker3.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.DTPicker3.Location = New System.Drawing.Point(3, 30)
         Me.DTPicker3.Name = "DTPicker3"
         Me.DTPicker3.Size = New System.Drawing.Size(180, 20)
@@ -2148,6 +2048,7 @@ Partial Class frmProductsDevelopment
         '
         'DTPicker4
         '
+        Me.DTPicker4.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.DTPicker4.Location = New System.Drawing.Point(3, 30)
         Me.DTPicker4.Name = "DTPicker4"
         Me.DTPicker4.Size = New System.Drawing.Size(180, 20)
@@ -2173,10 +2074,6 @@ Partial Class frmProductsDevelopment
         Me.Text = "Form2"
         Me.SSTab1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
-        CType(Me.BindingNavigator1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.BindingNavigator1.ResumeLayout(False)
-        Me.BindingNavigator1.PerformLayout()
         Me.TableLayoutPanel2.ResumeLayout(False)
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
@@ -2209,7 +2106,6 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel10.PerformLayout()
         Me.TableLayoutPanel11.ResumeLayout(False)
         Me.TableLayoutPanel11.PerformLayout()
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -2390,15 +2286,4 @@ Partial Class frmProductsDevelopment
     Friend WithEvents cmdStatusMore As Button
     Friend WithEvents cmbStatusMore As ComboBox
     Friend WithEvents btnAll As Button
-    Friend WithEvents BindingNavigator1 As BindingNavigator
-    Friend WithEvents BindingNavigatorCountItem As ToolStripLabel
-    Friend WithEvents BindingNavigatorMoveFirstItem As ToolStripButton
-    Friend WithEvents BindingNavigatorMovePreviousItem As ToolStripButton
-    Friend WithEvents BindingNavigatorSeparator As ToolStripSeparator
-    Friend WithEvents BindingNavigatorPositionItem As ToolStripTextBox
-    Friend WithEvents BindingNavigatorSeparator1 As ToolStripSeparator
-    Friend WithEvents BindingNavigatorMoveNextItem As ToolStripButton
-    Friend WithEvents BindingNavigatorMoveLastItem As ToolStripButton
-    Friend WithEvents BindingNavigatorSeparator2 As ToolStripSeparator
-    Friend WithEvents BindingSource1 As BindingSource
 End Class
