@@ -1,4 +1,5 @@
-﻿Imports System.Globalization
+﻿Imports System.ComponentModel
+Imports System.Globalization
 Imports System.IO
 Imports System.Text.RegularExpressions
 Imports System.Web.UI.WebControls
@@ -17,6 +18,7 @@ Public Class frmProductsDevelopment
     Dim partstoshow As String
     Dim toemails As String = ""
     Dim gnr As Gn1 = New Gn1()
+    Public Event PositionChanged(sender As Object, e As EventArgs)
 
     Public Sub New()
 
@@ -107,6 +109,8 @@ Public Class frmProductsDevelopment
         cmbprstatus.Items.Add("F - Finished")
         cmbprstatus.SelectedIndex = 1
 
+        AddHandler Me.PositionChanged, AddressOf bs_PositionChanged
+
         Dim posValue As Integer = 0
         For Each obj As DataRowView In cmbstatus.Items
             Dim VarQuery = "E"
@@ -143,7 +147,6 @@ Public Class frmProductsDevelopment
         If UCase(userid) = "AALZATE" Then
             flagallow = 1
         End If
-
     End Sub
 
 #Region "Combobox load Region"
@@ -392,6 +395,18 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
 
                     'FILL GRID
+
+                    'BindingNavigator1.BindingSource = bs;
+                    'bs.DataSource = tables;
+                    'bs.PositionChanged += bs_PositionChanged;
+                    'bs_PositionChanged(bs, EventArgs.Empty);
+
+                    'Dim bs As BindingSource = New BindingSource()
+                    'bs.DataSource = ds.Tables(0)
+
+                    BindingSource1.DataSource = ds.Tables(0)
+                    BindingNavigator1.BindingSource = BindingSource1
+
                     DataGridView1.DataSource = ds.Tables(0)
 
                 Else
@@ -415,6 +430,13 @@ Public Class frmProductsDevelopment
             DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
+    End Sub
+
+    Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+
+        Dim pepe As String = "oepe"
+        Dim number As Integer = 72
+        'DataGridView1.DataSource = tables[bs.Position];
     End Sub
 
     Private Sub fillcell1LastOne(strwhere)
@@ -455,6 +477,9 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).Name = "Status"
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+
+                    BindingSource1.DataSource = ds.Tables(0)
+                    BindingNavigator1.BindingSource = BindingSource1
 
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
@@ -523,6 +548,9 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(6).Name = "Status"
                     dgvProjectDetails.Columns(6).HeaderText = "Status"
                     dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
+
+                    BindingSource1.DataSource = ds.Tables(0)
+                    BindingNavigator1.BindingSource = BindingSource1
 
                     'FILL GRID
                     dgvProjectDetails.DataSource = ds.Tables(0)
@@ -593,6 +621,9 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(6).HeaderText = "Status"
                     dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
 
+                    BindingSource1.DataSource = ds.Tables(0)
+                    BindingNavigator1.BindingSource = BindingSource1
+
                     'FILL GRID
                     dgvProjectDetails.DataSource = ds.Tables(0)
                     'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
@@ -654,6 +685,9 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).Name = "Status"
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+
+                    BindingSource1.DataSource = ds.Tables(0)
+                    BindingNavigator1.BindingSource = BindingSource1
 
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
@@ -2876,6 +2910,35 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Private Sub btNext_Click(ByVal sender As Object, ByVal e As EventArgs)
+        If (Me.BindingSource1.Position + 1 < Me.BindingSource1.Count) Then
+            Me.BindingSource1.MoveNext()
+            Me.fnDisplayPosition()
+        End If
+    End Sub
+
+
+
+    Private Sub btPrevious_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Me.BindingSource1.MovePrevious()
+        Me.fnDisplayPosition()
+    End Sub
+
+
+    Private Sub btFirst_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Me.BindingSource1.MoveFirst()
+        Me.fnDisplayPosition()
+    End Sub
+
+    Private Sub btLast_Click(ByVal sender As Object, ByVal e As EventArgs)
+        Me.BindingSource1.MoveLast()
+        Me.fnDisplayPosition()
+    End Sub
+
+    Private Sub fnDisplayPosition()
+        ' Me.labelPosition.Text = Me.bindingSource1.Position +
+        '1 + " of " + Me.bindingSource1.Count
+    End Sub
 
 #End Region
 

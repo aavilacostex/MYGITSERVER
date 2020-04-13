@@ -136,7 +136,7 @@
                             Dim oldUCOld = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRDCON").Ordinal)
                             If Trim(UCase(oldUCOld)) <> Trim(UCase(row.Cells("clUnitCost").Value.ToString())) Then
                                 PoQotaFunction(oldVendorNo, row.Cells("clPartNo").Value.ToString(), row.Cells("clUnitCost").Value.ToString())
-                                Dim rsResultUpdate = gnr.UpdateChangedMFR(userid, row.Cells("clUnitCost").Value.ToString(), row.Cells("clPartNo").Value.ToString(), frmProductsDevelopment.txtCode.Text)
+                                Dim rsResultUpdate = gnr.UpdateChangedUC(userid, row.Cells("clUnitCost").Value.ToString(), row.Cells("clPartNo").Value.ToString(), frmProductsDevelopment.txtCode.Text)
                                 'update validation
                                 updatedRecords += 1
                             End If
@@ -199,7 +199,7 @@
                 If wrtmessage = 1 Then
                     Dim cod_comment = CInt(gnr.getmax("PRDCMH", "PRDCCO")) + 1
 
-                    Dim rsInsertCommentHeader = gnr.InsertProductCommentNew(frmProductsDevelopment.txtCode.Text, partNo, cod_comment, userid)
+                    Dim rsInsertCommentHeader = gnr.InsertProductCommentNew(frmProductsDevelopment.txtCode.Text, partNo, cod_comment, "Unit Cost Changed", userid)
                     'validation message result
                     Dim cod_detcomment = 1
                     Dim messcomm = "Unit Price changed from " & auxpart2 & " to " & auxpart1

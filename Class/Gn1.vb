@@ -782,14 +782,14 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function InsertProductCommentNew(code As String, partNo As String, comment As String, userId As String) As Integer
+    Public Function InsertProductCommentNew(code As String, partNo As String, comment As String, commentSubject As String, userId As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
             Sql = "INSERT INTO PRDCMH(PRHCOD,PRDPTN,PRDCCO,PRDCDA,PRDCTI,PRDCSU,USUSER) 
-                    VALUES(" & Trim(code) & ",'" & Trim(partNo) & "'," & comment & ",'" & Format(DateTime.Now, "yyyy-MM-dd") & "','" & Format(DateTime.Now, "hh:mm:ss") & "',
-                            'Unit Price changed','" & userId & "')"
+                    VALUES(" & Trim(code) & ",'" & Trim(partNo) & "'," & comment & ",'" & Format(DateTime.Now, "yyyy-MM-dd") & "',
+                    '" & Format(DateTime.Now, "hh:mm:ss") & "','" & commentSubject & "','" & userId & "')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -934,14 +934,14 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function InsertNewInv(strdvlocn As String, strdvpart As String, strdvmjpc As String, strdvmnpc As String, strdvindt As String, strdvunt As String, strdvslr As String, strdvohr As String,
+    Public Function InsertNewInv(strdvlocn As String, strdvpart As String, strdvmjpc As String, strdvmnpc As String, strdvindt As Decimal, strdvunt As String, strdvslr As String, strdvohr As String,
                                     dvprmg As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
             Sql = "insert into dvinva(dvlocn,dvpart,dvmjpc,dvmnpc,dvindt,dvunt$,dvslr,dvohr,dvprmg) 
-                    values('01','" & Trim(UCase(strdvpart)) & "','" & Trim(UCase(strdvmjpc)) & "'," & Trim(UCase(strdvmnpc)) & "','" & Format(DateTime.Now, "yy-MM-dd") & "',
+                    values('01','" & Trim(UCase(strdvpart)) & "','" & Trim(UCase(strdvmjpc)) & "','" & Trim(UCase(strdvmnpc)) & "'," & strdvindt & ",
                             " & strdvunt & ",'99999','99999','" & Trim(dvprmg) & "')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
@@ -981,6 +981,22 @@ NotInheritable Class Gn1
                 PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
                 WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
                 " AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdatePoQoraRowNew(statusquote As String, insertYear As String, insertMonth As String, insertDay As String, vendorNo As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE POQOTA SET PQCOMM = '" & statusquote & "', PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,
+                    PQQDTD = " & insertDay & " WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
+                    " AND PQCOMM LIKE 'D%'"
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -1219,13 +1235,42 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function UpdateChangedMFR(userId As String, unitCost As String, partNo As String, codeNo As String) As Integer
+    Public Function UpdateChangedUC(userId As String, unitCost As String, partNo As String, codeNo As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
             Sql = "UPDATE PRDVLD SET MOUSER = '" & userId & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "', PRDCON = '" & Trim(unitCost) & "' WHERE PRHCOD = " & codeNo & " AND 
                     PRDPTN = '" & Trim(UCase(partNo)) & "'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdateChangedMFR(userId As String, mfrNo As String, partNo As String, codeNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLD SET MOUSER = '" & userId & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "', PRDMFR# = '" & Trim(mfrNo) & "' WHERE PRHCOD = " & codeNo & " AND 
+                    PRDPTN = '" & Trim(UCase(partNo)) & "'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function UpdateChangedStatus(userId As String, status As String, partNo As String, codeNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "UPDATE PRDVLD SET MOUSER = '" & userId & "',MODATE = '" & Format(Now, "yyyy-MM-dd") & "',PRDSTS = '" & Trim(status) & "' WHERE PRHCOD = " & codeNo & " AND PRDPTN = '" & Trim(UCase(partNo)) & "'"
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -1295,7 +1340,7 @@ NotInheritable Class Gn1
             OutlookMessage.Subject = "Newly Developed Part(s)"
             OutlookMessage.Body = "Part No. " & Trim(partNo)
             OutlookMessage.BodyFormat = Outlook.OlBodyFormat.olFormatHTML
-            'OutlookMessage.Send() 'must be uncommented to send emails
+            OutlookMessage.Send() 'must be uncommented to send emails
             Return rsResult = 1
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString

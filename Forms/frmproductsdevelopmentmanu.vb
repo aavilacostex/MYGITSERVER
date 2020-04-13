@@ -28,6 +28,7 @@ Public Class frmproductsdevelopmentmanu
             'check delete temp
             fillcell2(codeproject)
 
+            userid = frmLogin.txtUserName.Text
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -191,7 +192,7 @@ Public Class frmproductsdevelopmentmanu
                 If wrtmessage = 1 Then
                     Dim cod_comment = CInt(gnr.getmax("PRDCMH", "PRDCCO")) + 1
 
-                    Dim rsInsertCommentHeader = gnr.InsertProductCommentNew(frmProductsDevelopment.txtCode.Text, partNo, cod_comment, userid)
+                    Dim rsInsertCommentHeader = gnr.InsertProductCommentNew(frmProductsDevelopment.txtCode.Text, partNo, cod_comment, "Manufacturer Number Changed", userid)
                     'validation message result
                     Dim cod_detcomment = 1
                     Dim messcomm = "Part Number changed from " & auxpart2 & " to " & auxpart1
@@ -231,4 +232,7 @@ Public Class frmproductsdevelopmentmanu
         End Try
     End Function
 
+    Private Sub TableLayoutPanel1_Paint(sender As Object, e As PaintEventArgs) Handles TableLayoutPanel1.Paint
+
+    End Sub
 End Class

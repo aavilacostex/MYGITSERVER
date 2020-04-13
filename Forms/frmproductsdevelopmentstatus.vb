@@ -2,6 +2,7 @@
 
     Dim gnr As Gn1 = New Gn1()
     Public userid As String
+    Dim toemails As String = ""
 
     Private Sub frmproductsdevelopmentstatus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Form_Load()
@@ -22,6 +23,7 @@
             lblproject.Text = frmProductsDevelopment.txtCode.Text & " - " & Trim(frmProductsDevelopment.txtname.Text)
 
             'check delete temp
+
 
             Dim dsInvPrdoDet = gnr.GetInvProdDetailByProject(codeproject)
             fillcell2(dsInvPrdoDet)
@@ -65,7 +67,7 @@
         If e.ColumnIndex = 5 Then
             If e.Value IsNot Nothing Then
                 CurrentState = e.Value.ToString
-                If CurrentState = "A" Then
+                If CurrentState = "A " Then
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Approved"
                 ElseIf CurrentState = "R " Then
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Rejected"
@@ -83,7 +85,7 @@
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Closed w/o negotiation"
                 ElseIf CurrentState = "AA" Then
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Approved with advice"
-                ElseIf CurrentState = "Q" Then
+                ElseIf CurrentState = "Q " Then
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Quoting"
                 ElseIf CurrentState = "TD" Then
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Technical Documentation"
@@ -97,8 +99,8 @@
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Pending from Supplier"
                 ElseIf CurrentState = "AS" Then
                     DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Analysis of Samples"
-                    'ElseIf CurrentState = "NS" Then
-                    '    DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "Negotiation with Supplier"
+                ElseIf CurrentState = "E " Then
+                    DataGridView1.Rows(e.RowIndex).Cells("clStatus").Value = "Entered"
                 End If
             End If
         End If
@@ -202,10 +204,262 @@
     End Sub
 
     Private Sub cmdSave1_Click(sender As Object, e As EventArgs) Handles cmdSave1.Click
+        Dim exMessage As String = " "
+        Dim ds As DataSet
+        Dim flagustatus As Integer
+        Dim oldStatus As String
+        Dim unitCostVendor As String
+        Dim status1 As String = ""
+        Dim status2 As String = ""
+        Dim messcomm As String
+        Dim updatedRecords As Integer = 0
+        Dim intMassVendNoFlg As Integer = 0
+        Dim allpartno As String = ""
+        Dim partNo As String
+        Try
+            Dim rsMessage As DialogResult = MessageBox.Show("Do you want to change the assigned vendor for these part number?", "CTP System", MessageBoxButtons.YesNo)
+            If rsMessage = DialogResult.Yes Then
+                intMassVendNoFlg = 1
+            End If
 
+            Dim cmbStatusSelection = Trim(cmbstatus.Text.Substring(0, 2))
+
+            For Each row As DataGridViewRow In DataGridView1.Rows
+                If row.Cells("checkBoxColumn").Value = True Then
+                    partNo = Trim(row.Cells("clPartNo").Value.ToString())
+                    ds = gnr.GetDataByCodeAndPartNoProdDesc(frmProductsDevelopment.txtCode.Text, partNo)
+                    If ds IsNot Nothing Then
+                        If ds.Tables(0).Rows.Count > 0 Then
+                            flagustatus = 1
+                            oldStatus = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRDSTS").Ordinal)
+                            unitCostVendor = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRDCON").Ordinal)
+                            If Trim(oldStatus) = "AS" And cmbStatusSelection <> "AS" Then
+                                If Trim(cmbStatusSelection) = "R" Or cmbStatusSelection = "A" Or cmbStatusSelection = "AA" Then
+                                    flagustatus = 1
+                                Else
+                                    flagustatus = 0
+                                End If
+                            Else
+                                flagustatus = 1
+                            End If
+
+                            If Trim(cmbStatusSelection) <> Trim(oldStatus) Then
+                                If flagustatus = 1 Then
+                                    Dim cod_comment = CInt(gnr.getmax("PRDCMH", "PRDCCO")) + 1
+                                    Dim rsInsertCommentHeader = gnr.InsertProductCommentNew(frmProductsDevelopment.txtCode.Text, partNo, cod_comment, "Status changed", userid)
+                                    'validation message result
+                                    Dim cod_detcomment = 1
+                                    status1 = ""
+                                    status1 = If(Not String.IsNullOrEmpty(gnr.GetProjectStatusDescription(oldStatus)), Trim(gnr.GetProjectStatusDescription(oldStatus)), "")
+                                    status2 = ""
+                                    status2 = If(Not String.IsNullOrEmpty(gnr.GetProjectStatusDescription(Trim(cmbStatusSelection))), Trim(gnr.GetProjectStatusDescription(Trim(cmbStatusSelection))), "")
+
+                                    messcomm = "Status changed from " & status1 & " to " & status2
+                                    Dim rsResult = gnr.InsertProductCommentDetail(frmProductsDevelopment.txtCode.Text, partNo, cod_comment, cod_detcomment, messcomm)
+                                    'validate error message update
+
+                                End If
+                            End If
+
+                            Dim oldVendorNo = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("VMVNUM").Ordinal)
+                            PoQotaFunction(oldVendorNo, partNo)
+
+                            If (Trim(status2) = "Approved") Or (Trim(status2) = "Approved with advice") Then
+                                If intMassVendNoFlg = 1 Then
+                                    Dim dsDataPart = gnr.GetDataByPartVendor(partNo)
+                                    If dsDataPart IsNot Nothing Then
+                                        If dsDataPart.Tables(0).Rows.Count > 0 Then
+                                            'call changeVendor
+                                        End If
+                                    Else
+                                        Dim dsNoDataPart As DataSet
+                                        dsNoDataPart = gnr.GetDataByPartNoVendor(partNo)
+                                        If dsNoDataPart IsNot Nothing Then
+                                            If dsNoDataPart.Tables(0).Rows.Count > 0 Then
+                                                Dim impc1 = dsNoDataPart.Tables(0).Rows(0).ItemArray(dsNoDataPart.Tables(0).Columns("impc1").Ordinal)
+                                                Dim impc2 = dsNoDataPart.Tables(0).Rows(0).ItemArray(dsNoDataPart.Tables(0).Columns("impc2").Ordinal)
+                                                Dim decimalDate = getDataAsDecimal()
+                                                Dim newChar = oldVendorNo.ToString().Insert(0, "000000")
+                                                Dim lengthVendor = newChar.Length()
+                                                Dim value1 = lengthVendor - 6
+                                                Dim vendor = newChar.Substring(value1, lengthVendor - value1)
+                                                'check dvinva insertion
+                                                Dim rsInsertResult = gnr.InsertNewInv("01", partNo, impc1, impc2, decimalDate, unitCostVendor, "99999", "99999", vendor)
+                                                'validation insert message
+                                            End If
+                                        End If
+                                    End If
+                                End If
+                            End If
+                        Else
+                            'no data message
+                        End If
+                    Else
+                        'no data message
+                    End If
+
+                    If flagustatus = 1 Then
+                        Dim rsResultUpdate = gnr.UpdateChangedStatus(userid, Trim(cmbStatusSelection), partNo, frmProductsDevelopment.txtCode.Text)
+                        'validation update result message
+                        updatedRecords += 1
+                        allpartno = allpartno & " - " & UCase(partNo)
+                    End If
+                End If
+            Next
+            If (Trim(status2) = "Technical Documentation") Or (Trim(status2) = "Analysis of Samples") Or (Trim(status2) = "Pending from Supplier") Then
+                'send email
+            End If
+            If Trim(status2) = "Closed Successfully" Then
+                toemails = prepareEmailsToSend(1)
+                Dim rsResult = gnr.sendEmail(toemails, UCase(partNo))
+                If rsResult < 0 Then
+                    'mensaje de error
+                End If
+            End If
+
+            If updatedRecords > 0 Then
+                MessageBox.Show("Records Updated.", "CTP System", MessageBoxButtons.OK)
+                Form_Load()
+                frmProductsDevelopment.fillcell2(frmProductsDevelopment.txtCode.Text)
+            Else
+                MessageBox.Show("No records to update.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
     End Sub
+
+    Private Sub PoQotaFunction(oldVendorNo As String, partNo As String)
+        Dim exMessage As String = " "
+        Dim statusquote As String
+        Dim Status2 As String = ""
+        Dim strQueryAdd As String = "WHERE PQVND = " & Trim(oldVendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "'"
+        Try
+            statusquote = "D-" & Status2
+            Dim spacepoqota As String = String.Empty
+            Dim dsPoQota = gnr.GetPOQotaData(oldVendorNo, partNo)
+            Dim MaxValue As Integer
+            If dsPoQota IsNot Nothing Then
+                If dsPoQota.Tables(0).Rows.Count > 0 Then
+                    Dim rsUpdResult = gnr.UpdatePoQoraRowNew(statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(), oldVendorNo, partNo)
+                Else
+                    MaxValue = 1
+                    MaxValue = If(Not String.IsNullOrEmpty(gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)), CInt(gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)) + 1, "")
+                    spacepoqota = "                               DEV"
+                    Dim rsInsertionPoqota = gnr.InsertNewPOQota1(partNo, oldVendorNo, MaxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), "", DateTime.Now.Day.ToString(), Trim(statusquote), spacepoqota)
+                    'validate insertion message
+                End If
+            Else
+                'error message
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Function PoQotaFunctionDuplex(newMFRNo As String, partNo As String, seqNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim statusquote As String
+        Dim Status2 As String = ""
+        Dim strQueryAdd As String = " WHERE PRDMFR# = " & Trim(newMFRNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND PQSEQ = '" & Trim(seqNo) & "'"
+        Try
+            statusquote = "D-" & Status2
+            Dim spacepoqota As String = String.Empty
+            'Dim strQueryAdd As String = "WHERE PQVND = " & Trim(txtvendorno.Text) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
+            Dim dsPoQota = gnr.GetPOQotaDataDuplex(strQueryAdd)
+            If dsPoQota IsNot Nothing Then
+                If dsPoQota.Tables(0).Rows.Count > 0 Then
+                    Return 0
+                    'validation result
+                Else
+                    Return -1
+                    'error message
+                End If
+            Else
+                Return -1
+            End If
+        Catch ex As Exception
+            Return -1
+        End Try
+    End Function
 
     Private Sub cmdSelectAll_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
     End Sub
+
+    Private Function prepareEmailsToSend(flag As Integer) As String
+        Dim exMessage As String = " "
+        Dim toemailss As String = ""
+        Dim toemailsok As String = ""
+        Try
+            If flag = 1 Then
+                toemailss = prepareEmailSalesDict()
+                toemailsok = prepareEmailMktDict(toemailss)
+            ElseIf flag = 2 Then
+                toemailsok = prepareEmailSalesDict()
+            Else
+                toemailsok = prepareEmailMktDict()
+            End If
+
+            Return toemailsok
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function prepareEmailSalesDict() As String
+        Dim exMessage As String = " "
+        Try
+            Dim toemailss As String = ""
+            Dim dsSls As DataSet
+            dsSls = gnr.GetEmailData(1)
+            If dsSls IsNot Nothing Then
+                If dsSls.Tables(0).Rows.Count > 0 Then
+                    For Each tt As DataRow In dsSls.Tables(0).Rows
+                        toemailss += Trim(tt.ItemArray(0).ToString()) + ";"
+                    Next
+                End If
+            End If
+            Return toemailss
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function prepareEmailMktDict(Optional ByVal toemailss As String = Nothing) As String
+        Dim exMessage As String = " "
+        Try
+            'Dim toemailss As String = ""
+            Dim dsMkt As DataSet
+            dsMkt = gnr.GetEmailData(2)
+            If dsMkt IsNot Nothing Then
+                If dsMkt.Tables(0).Rows.Count > 0 Then
+                    For Each tt As DataRow In dsMkt.Tables(0).Rows
+                        toemailss += Trim(tt.ItemArray(0).ToString()) + ";"
+                    Next
+                End If
+            End If
+            Return toemailss
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function getDataAsDecimal() As Decimal
+        Dim exMessage As String = " "
+        Dim days As Decimal = -1
+        Try
+            Dim epoch As DateTime = New DateTime(1900, 1, 1)
+            Dim difference As TimeSpan = DateTime.Now - epoch
+            days = difference.TotalDays
+            Return days
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return days
+        End Try
+
+    End Function
+
 End Class
