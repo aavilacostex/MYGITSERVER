@@ -1097,24 +1097,24 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function UpdateProductDetail1(partstoshow As String, minorCode As String, tooCost As String, strDate1 As String, jiraTask As String, vendorNo As String, strChkSel As String,
-                                        strDate2 As String, sampleCost As String, miscCost As String, userSelec As String, strDate3 As String, userid As String, tcpNo As String, sampleQty As String,
-                                        qty As String, mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, strDate4 As String, status As String,
+    Public Function UpdateProductDetail1(partstoshow As String, minorCode As String, tooCost As String, strDate1 As Date, jiraTask As String, vendorNo As String, strChkSel As String,
+                                        strDate2 As Date, sampleCost As String, miscCost As String, userSelec As String, strDate3 As Date, userid As String, tcpNo As String, sampleQty As String,
+                                        qty As String, mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, strDate4 As Date, status As String,
                                         benefits As String, comments As String, code As String, partNo As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
+            Dim checkDate1 = Format(strDate1, "yyyy-MM-dd")
+            Dim checkDate2 = Format(strDate2, "yyyy-MM-dd")
+            Dim checkDate3 = Format(strDate3, "yyyy-MM-dd")
+            Dim checkDate4 = Format(Now, "yyyy-MM-dd")
+
             Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(strDate1, "yyyy-MM-dd") & "', 
-                    PRDJIRA = '" & Trim(jiraTask) & "', " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(strDate2, "yyyy-mm-dd") & "',
-                    PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(strDate3, "yyyy-mm-dd") & "',MOUSER = '" & userid & "',
-                    MODATE = '" & Format(Now, "yyyy-mm-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
-                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(strDate4, "
-                    
-
-
-
-") & "',
+                    PRDJIRA = '" & Trim(jiraTask) & "', " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(strDate2, "yyyy-MM-dd") & "',
+                    PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(strDate3, "yyyy-MM-dd") & "',MOUSER = '" & userid & "',
+                    MODATE = '" & Format(Now, "yyyy-MM-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
+                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(strDate4, "yyyy-MM-dd") & "',
                     PRDSTS = '" & Trim(status) & "',PRDBEN = '" & Trim(benefits) & "',PRDINF = '" & Trim(comments) & "' WHERE PRHCOD = " & Trim(code) & " AND
                     PRDPTN = '" & Trim(UCase(partNo)) & "'"
             QueryResult = UpdateDataInDatabase(Sql)
@@ -1125,19 +1125,19 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function UpdateProductDetail2(partstoshow As String, minorCode As String, tooCost As String, strDate1 As String, vendorNo As String, strChkSel As String,
-                                        strDate2 As String, sampleCost As String, miscCost As String, userSelec As String, strDate3 As String, userid As String, tcpNo As String, sampleQty As String,
-                                        qty As String, mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, strDate4 As String,
+    Public Function UpdateProductDetail2(partstoshow As String, minorCode As String, tooCost As String, strDate1 As Date, vendorNo As String, strChkSel As String,
+                                        strDate2 As Date, sampleCost As String, miscCost As String, userSelec As String, strDate3 As Date, userid As String, tcpNo As String, sampleQty As String,
+                                        qty As String, mfr As String, mfrNo As String, unitCost As String, unitCostNew As String, poNo As String, strDate4 As Date,
                                         benefits As String, comments As String, code As String, partNo As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
             Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(strDate1, "yyyy-MM-dd") & "', 
-                     " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(strDate2, "yyyy-mm-dd") & "',
-                    PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(strDate3, "yyyy-mm-dd") & "',MOUSER = '" & userid & "',
-                    MODATE = '" & Format(Now, "yyyy-mm-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
-                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(strDate4, "yyyy-mm-dd") & "',
+                     " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(strDate2, "yyyy-MM-dd") & "',
+                    PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(strDate3, "yyyy-MM-dd") & "',MOUSER = '" & userid & "',
+                    MODATE = '" & Format(Now, "yyyy-MM-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
+                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(strDate4, "yyyy-MM-dd") & "',
                     PRDBEN = '" & Trim(benefits) & "',PRDINF = '" & Trim(comments) & "' WHERE PRHCOD = " & Trim(code) & " AND
                     PRDPTN = '" & Trim(UCase(partNo)) & "'"
             QueryResult = UpdateDataInDatabase(Sql)
