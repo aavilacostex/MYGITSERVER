@@ -235,6 +235,21 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function GetDataByCodeAndVendorAndPart(code As String, vendorNo As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLD WHERE PRHCOD = " & Trim(code) & " and VMVNUM = " & Trim(vendorNo) & " AND TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetDataByCodAndPartProdAndComm(code As String, partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -563,6 +578,21 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataFromProdHeaderAndDetail2(code As String, partNo As String, vendorNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE PRDVLD.VMVNUM = " & Trim(vendorNo) & " AND TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' AND PRDVLH.prhcod <> " & Trim(code) & " AND PRDSTS <> 'CS' AND PRDSTS <> 'CN' AND PRDSTS <> 'CL'"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -958,6 +988,31 @@ NotInheritable Class Gn1
         Try
             Sql = "INSERT INTO LOGINCTP VALUES(" & codloginctp & ",'" & userid & "','" & Format(Now, "yyyy-MM-dd") &
                         "','" & Format(Now, "hh:MM:ss") & "','" & Versionctp & "')"
+            QueryResult = InsertDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
+
+    Public Function InsertIntoLogProdDetail(userid As String, code As String, partNo As String, prdDat As DateTime, cruser As String, crDate As DateTime, mouser As String, moDate As DateTime,
+                                            ctpNo As String, qty As String, mfrProd As String, mfrProdNo As String, prdCos As String, prdCon As String, poNo As String,
+                                            poDate As DateTime, status As String, benefits As String, info As String, prdUsr As String, chkNew As String, prdEdd As DateTime,
+                                            sampleCost As String, miscCost As String, vendorNo As String, prdPts As String, prdMpc As String, toolCost As String, prdErd As DateTime,
+                                            prdPda As DateTime, prdsQty As String, prwLda As DateTime, prwLfl As String, partNoo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Try
+            Sql = "insert into logprdvld(LGUSRDEL, LGDELDATE, LGTRSTATUS, LGPRHCOD, LGPRDPTN,LGPRDDAT, LGCRUSER, LGCRDATE, LGMOUSER, LGMODATE, 
+                    LGPRDCTP,LGPRDQTY, LGPRDMFR, LGPRDMFR#, LGPRDCOS, LGPRDCON, LGPRDPO#,LGPODATE, LGPRDSTS, LGPRDBEN, LGPRDINF, LGPRDUSR, 
+                    LGPRDNEW,LGPRDEDD, LGPRDSCO, LGPRDTTC, LGVMVNUM, LGPRDPTS, LGPRDMPC,LGPRDTCO, LGPRDERD, LGPRDPDA, LGPRDSQTY, LGPRWLDA, LGPRWLFL,LGPARTNO) 
+                    values('" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','DEL'," & code & ",'" & Trim(partNo) & "','" & Format(prdDat, "yyyy-MM-dd") & "',
+                    '" & Trim(cruser) & "','" & Format(crDate, "yyyy-MM-dd") & "','" & Trim(mouser) & "','" & Format(moDate, "yyyy-MM-dd") & "','" & Trim(ctpNo) & "'," & qty & ",'" & Trim(mfrProd) &
+                "','" & Trim(mfrProdNo) & "'," & prdCos & "," & prdCon & ",'" & Trim(poNo) & "','" & Format(poDate, "yyyy-MM-dd") & "','" & Trim(status) & "','" & Trim(benefits) & "',
+                '" & Trim(info) & "','" & Trim(prdUsr) & "'," & chkNew & ",'" & Format(prdEdd, "yyyy-MM-dd") & "'," & sampleCost & "," & miscCost & "," & vendorNo & ",'" & Trim(prdPts) & "',
+                '" & Trim(prdMpc) & "'," & toolCost & ",'" & Format(prdErd, "yyyy-MM-dd") & "','" & Format(prdPda, "yyyy-MM-dd") & "'," & prdsQty & ",'" & Format(prwLda, "yyyy-MM-dd") & "'," & prwLfl & ",'" & Trim(partNoo) & "')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -1975,6 +2030,88 @@ errhandler:
         End Try
     End Function
 
+    Public Function DeleteDataFromProdDet(code As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Sql = "delete from prdvld where prhcod = " & Trim(code) & " and prdptn = '" & Trim(partNo) & "'"
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm = 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function DeleteDataFromPoQota(vendorNo As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Sql = "delete FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%'"
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm = 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function DeleteDataFromProdCommHeader(code As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Sql = "delete from prdcmh where prhcod = " & Trim(code) & " and prdptn = '" & Trim(partNo) & "'"
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm > 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function DeleteDataFromProdCommDet(code As String, partNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Sql = "delete from prdcmd where prhcod = " & Trim(code) & " and prdptn = '" & Trim(partNo) & "'"
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm > 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+
+
     Public Function DeleteRecorFromLoginTcp(code As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
@@ -2001,9 +2138,10 @@ errhandler:
         Dim rsConfirm As Integer
 
         Try
-            Dim sqlQuery As String = "DELETE * FROM {0} WHERE {1} IN ({2})"
+            Dim sqlQuery As String = "DELETE FROM {0} WHERE {1} IN ({2})"
             Dim sqlFormattedQuery As String = String.Format(sqlQuery, table, field, values)
-            rsConfirm = ExecuteNotQueryCommand(sqlFormattedQuery, strconnection)
+            rsConfirm = DeleteRecordFromDatabase(sqlFormattedQuery)
+            'rsConfirm = ExecuteNotQueryCommand(sqlFormattedQuery, strconnection)
 
             If rsConfirm = 1 Then
                 Return rsConfirm

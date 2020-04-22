@@ -9,6 +9,10 @@ Public Class frmPDevelopmentseecomments
     Public cod_detcomment As Integer
 
     Private Sub frmPDevelopmentseecomments_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Form_Load()
+    End Sub
+
+    Private Sub Form_Load()
         Dim exMessage As String = " "
         cmddelete.Enabled = False
         Try
@@ -40,12 +44,11 @@ Public Class frmPDevelopmentseecomments
     Handles SSTab1.Selected
         If SSTab1.SelectedTab.Name = "TabPage1" Then
             cmddelete.Enabled = False
-
             dgvProjectMessage2.DataSource = Nothing
             dgvProjectMessage2.Refresh()
             dgvProjectMessage2.AutoGenerateColumns = False
+            Form_Load()
             'dgvProjectMessage2.ColumnCount = 1
-
         Else
             cmddelete.Enabled = True
         End If
@@ -165,12 +168,17 @@ Public Class frmPDevelopmentseecomments
 
                 If dgvProjectMessages.Rows(Index).Selected = True Then
                     Dim tableCode As String = row.Cells(4).Value.ToString()
+                    hdField.Text = tableCode
                     dsResult = gnr.GetDataByCodAndPartProdAndComm2(tableCode)
                     If dsResult IsNot Nothing Then
                         If dsResult.Tables(0).Rows.Count > 0 Then
                             fillDgvProjectMessage2(dsResult)
                             SSTab1.SelectedIndex = 1
+                        Else
+                            Dim rsMessage As DialogResult = MessageBox.Show("There is not a detail message for this header message!", "CTP System", MessageBoxButtons.OK)
                         End If
+                    Else
+                        Dim rsMessage As DialogResult = MessageBox.Show("There is not a detail message for this header message!", "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
             Next
@@ -191,6 +199,10 @@ Public Class frmPDevelopmentseecomments
             Dim myItem As CheckBox = CType(sender, CheckBox)
             checkBox.Value = myItem.Checked
         Next
+    End Sub
+
+    Private Sub cmdExit_Click(sender As Object, e As EventArgs) Handles cmdExit.Click
+        Me.Close()
     End Sub
 
     'Private Sub DataGridView_CellClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs)
@@ -238,8 +250,38 @@ Public Class frmPDevelopmentseecomments
             Next
 
             Dim rsDeletion = gnr.DeleteGeneral("PRDCMD", "PRDCCO", strValues)
+            'Dim rsDeletion = 1
             If rsDeletion = 1 Then
+                Dim ds As New DataSet
+                Dim dt As New DataTable
+                dt = (DirectCast(dgvProjectMessage2.DataSource, DataTable))
 
+                Dim rows As DataRow() = (From anyNamehere In dt.AsEnumerable().Cast(Of DataRow)() Where anyNamehere.ItemArray(0).ToString().Contains(strValues)).ToArray()
+                If rows.Count > 0 Then
+                    For Each row As DataRow In rows
+                        dt.Rows.Remove(row)
+                    Next
+
+                    'ds.Tables.Add(dt)
+                    If dt IsNot Nothing Then
+                        If dt.Rows.Count > 0 Then
+                            dgvProjectMessage2.DataSource = dt
+                            dgvProjectMessage2.Refresh()
+                        Else
+                            dgvProjectMessage2.DataSource = Nothing
+                            dgvProjectMessage2.Refresh()
+                            SSTab1.SelectedIndex = 0
+                        End If
+                    Else
+                        dgvProjectMessage2.DataSource = Nothing
+                        dgvProjectMessage2.Refresh()
+                        SSTab1.SelectedIndex = 0
+                    End If
+                Else
+                    dgvProjectMessage2.DataSource = Nothing
+                    dgvProjectMessage2.Refresh()
+                    SSTab1.SelectedIndex = 0
+                End If
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString

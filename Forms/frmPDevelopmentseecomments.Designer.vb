@@ -46,6 +46,7 @@ Partial Class frmPDevelopmentseecomments
         Me.clComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clTableCode1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clCommentNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.hdField = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -57,6 +58,7 @@ Partial Class frmPDevelopmentseecomments
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.hdField)
         Me.Panel1.Controls.Add(Me.lblNotVisible)
         Me.Panel1.Controls.Add(Me.cmdExit)
         Me.Panel1.Controls.Add(Me.cmdprint)
@@ -262,6 +264,16 @@ Partial Class frmPDevelopmentseecomments
         Me.clCommentNo.Name = "clCommentNo"
         Me.clCommentNo.Visible = False
         '
+        'hdField
+        '
+        Me.hdField.AutoSize = True
+        Me.hdField.Location = New System.Drawing.Point(332, 17)
+        Me.hdField.Name = "hdField"
+        Me.hdField.Size = New System.Drawing.Size(39, 13)
+        Me.hdField.TabIndex = 7
+        Me.hdField.Text = "Label3"
+        Me.hdField.Visible = False
+        '
         'frmPDevelopmentseecomments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -306,4 +318,5 @@ Partial Class frmPDevelopmentseecomments
     Friend WithEvents clComments As DataGridViewTextBoxColumn
     Friend WithEvents clTableCode1 As DataGridViewTextBoxColumn
     Friend WithEvents clCommentNo As DataGridViewTextBoxColumn
+    Friend WithEvents hdField As Label
 End Class
