@@ -1,4 +1,6 @@
-﻿Public Class frmproductsdevelopmentunitcost
+﻿Imports System.Text.RegularExpressions
+
+Public Class frmproductsdevelopmentunitcost
 
     Dim gnr As Gn1 = New Gn1()
     Public userid As String
@@ -90,6 +92,7 @@
                     DataGridView1.Columns("clDescription").ReadOnly = True
                     DataGridView1.Columns("clCtpNo").ReadOnly = True
                     DataGridView1.Columns("clMfrNo").ReadOnly = True
+                    DataGridView1.Columns("clUnitCost").ReadOnly = True
                 Else
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
@@ -108,6 +111,180 @@
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
+
+    Private Sub DataGridView1_CellMouseUp(ByVal sender As Object, ByVal e As DataGridViewCellMouseEventArgs) _
+        Handles DataGridView1.CellMouseUp
+        Dim exMessage As String = " "
+        Try
+            If e.ColumnIndex = 0 Then
+                Dim row As DataGridViewRow = DataGridView1.Rows(e.RowIndex)
+                row.Cells("checkBoxColumn").Value = Convert.ToBoolean(row.Cells("checkBoxColumn").EditedFormattedValue)
+                If Convert.ToBoolean(row.Cells("checkBoxColumn").Value) Then
+                    DataGridView1(5, e.RowIndex).ReadOnly = False
+                Else
+                    DataGridView1(5, e.RowIndex).ReadOnly = True
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Sub
+
+    'Private Sub DataGridView1_EditingControlShowing(ByVal sender As Object, ByVal e As DataGridViewEditingControlShowingEventArgs) Handles DataGridView1.EditingControlShowing
+    '    AddHandler e.Control.KeyPress, AddressOf DataGridView1_KeyPress
+    'End Sub
+
+    'Private Sub DataGridView1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles DataGridView1.KeyPress
+    '    If Asc(e.KeyChar) = 13 Then
+    '        If Not (Char.IsDigit(e.KeyChar.ToString()) Or e.KeyChar.ToString() = "." Or Asc(e.KeyChar.ToString()) = 8) Then
+    '            MessageBox.Show("You must change the value only for numbers or decimals!", "CTP System", MessageBoxButtons.OK)
+    '        Else
+    '            Dim pepe = DataGridView1.Rows(0).Cells("clUnitCost").FormattedValue.ToString()
+    '            Dim papa = ""
+    '        End If
+    '    End If
+    'End Sub
+
+    'Private Sub DataGridView1_EditingControlShowing(ByVal sender As Object, ByVal e As DataGridViewEditingControlShowingEventArgs) Handles DataGridView1.EditingControlShowing
+    '    AddHandler e.Control.KeyDown, AddressOf DataGridView1_KeyDown
+    'End Sub
+
+    'Private Sub DataGridView1_KeyDown(ByVal sender As Object, ByVal e As KeyEventArgs) Handles DataGridView1.KeyDown
+    '    Dim exMessage As String = " "
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
+    '            e.SuppressKeyPress = True
+
+    '            If Not (Char.IsDigit(e.KeyValue.ToString()) Or e.KeyValue.ToString() = "." Or Asc(e.KeyValue.ToString()) = 8) Then
+    '                MessageBox.Show("You must change the value only for numbers or decimals!", "CTP System", MessageBoxButtons.OK)
+    '            Else
+
+    '                Dim pepe = DataGridView1.Rows(0).Cells("clUnitCost").FormattedValue.ToString()
+
+    '            End If
+
+    '            SendKeys.Send(Chr(Keys.Tab))
+    '        End If
+
+
+    '    Catch ex As Exception
+    '        exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+    '    End Try
+
+
+    'End Sub
+
+    Private Sub DataGridView1_DataError(ByVal sender As Object, ByVal e As DataGridViewDataErrorEventArgs) _
+    Handles DataGridView1.DataError
+        Dim exMessage As String = " "
+        Try
+            If e.ColumnIndex = 5 Then
+                Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+                Dim inputText = DataGridView1.EditingControl.Text
+                If Not (Regex.IsMatch(inputText, "^\d{1,4}(\.\d{1,2})?$")) Then
+                    DataGridView1.CancelEdit()
+                    DataGridView1.RefreshEdit()
+                    MessageBox.Show("You must change the value only for numbers or decimals!", "CTP System", MessageBoxButtons.OK)
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub DataGridView1_CellValueChanged(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+    Handles DataGridView1.CellValueChanged
+        Dim exMessage As String = " "
+        'Not 
+        Try
+            If e.ColumnIndex = 5 Then
+                Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+                Dim inputText = DataGridView1.EditingControl.Text
+                If Not (Regex.IsMatch(inputText, "^\d{1,4}\.?\d{2}$")) Then
+                    DataGridView1.CancelEdit()
+                    DataGridView1.RefreshEdit()
+                    MessageBox.Show("You must change the value only for numbers or decimals!", "CTP System", MessageBoxButtons.OK)
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Sub
+
+    Private Function cmdSave_custom(unitCost As String) As Integer
+        Dim result As String = -1
+        Dim exMessage As String = " "
+        Try
+            If Not (Regex.IsMatch(unitCost, "^\d{1,4}\.?\d{2}$")) Then
+                Return result
+            Else
+                Return result = 0
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return result
+        End Try
+
+    End Function
+
+    'Private Sub Datagridview1_CellEndEdit(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+    '    Handles DataGridView1.CellEndEdit
+    '    Try
+    '        If e.ColumnIndex = 5 Then
+    '            Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+    '            Dim inputText = DataGridView1.EditingControl.Text
+
+    '            Dim value1 = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+    '            Dim inputText1 = DataGridView1.EditingControl.Text
+    '        End If
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
+
+    'Private Sub Datagridview1_CellEnter(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+    '    Handles DataGridView1.CellEnter
+    '    Try
+    '        If e.ColumnIndex = 5 Then
+    '            Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+    '            Dim inputText = DataGridView1.EditingControl.Text
+
+    '            Dim value1 = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+    '            Dim inputText1 = DataGridView1.EditingControl.Text
+    '        End If
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
+
+    'Private Sub Datagridview1_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+    '    Handles DataGridView1.CellContentClick
+    '    Try
+    '        If e.ColumnIndex = 5 Then
+    '            Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+    '            Dim inputText = DataGridView1.EditingControl.Text
+
+    '            DataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit)
+    '            If CBool(DataGridView1.CurrentCell.Value) = True Then
+    '                Dim ppe = ""
+    '                Dim calros = "1"
+
+    '                Dim ok = ppe & " - " & calros
+    '            Else
+    '                Dim ppe = ""
+    '                Dim calros = "1"
+
+    '                Dim ok = ppe & " - " & calros
+    '            End If
+    '        End If
+    '    Catch ex As Exception
+
+    '    End Try
+    'End Sub
 
     Private Sub HeaderCheckBox_Clicked(ByVal sender As Object, ByVal e As EventArgs)
         'Necessary to end the edit mode of the Cell.
@@ -129,24 +306,27 @@
         Try
             For Each row As DataGridViewRow In DataGridView1.Rows
                 If row.Cells("checkBoxColumn").Value = True Then
-                    ds = gnr.GetDataByCodeAndPartNoProdDesc(frmProductsDevelopment.txtCode.Text, row.Cells("clPartNo").Value.ToString())
-                    If ds IsNot Nothing Then
-                        If ds.Tables(0).Rows.Count > 0 Then
-                            Dim oldVendorNo = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("VMVNUM").Ordinal)
-                            Dim oldUCOld = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRDCON").Ordinal)
-                            If Trim(UCase(oldUCOld)) <> Trim(UCase(row.Cells("clUnitCost").Value.ToString())) Then
-                                PoQotaFunction(oldVendorNo, row.Cells("clPartNo").Value.ToString(), row.Cells("clUnitCost").Value.ToString())
-                                Dim rsResultUpdate = gnr.UpdateChangedUC(userid, row.Cells("clUnitCost").Value.ToString(), row.Cells("clPartNo").Value.ToString(), frmProductsDevelopment.txtCode.Text)
-                                'update validation
-                                updatedRecords += 1
+                    If cmdSave_custom(row.Cells("clPartNo").Value.ToString()) = 0 Then
+                        ds = gnr.GetDataByCodeAndPartNoProdDesc(frmProductsDevelopment.txtCode.Text, row.Cells("clPartNo").Value.ToString())
+                        If ds IsNot Nothing Then
+                            If ds.Tables(0).Rows.Count > 0 Then
+                                Dim oldVendorNo = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("VMVNUM").Ordinal)
+                                Dim oldUCOld = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRDCON").Ordinal)
+                                If Trim(UCase(oldUCOld)) <> Trim(UCase(row.Cells("clUnitCost").Value.ToString())) Then
+                                    PoQotaFunction(oldVendorNo, row.Cells("clPartNo").Value.ToString(), row.Cells("clUnitCost").Value.ToString())
+                                    Dim rsResultUpdate = gnr.UpdateChangedUC(userid, row.Cells("clUnitCost").Value.ToString(), row.Cells("clPartNo").Value.ToString(), frmProductsDevelopment.txtCode.Text)
+                                    'update validation
+                                    updatedRecords += 1
+                                End If
+                            Else
+                                'no data message
                             End If
                         Else
                             'no data message
                         End If
                     Else
-                        'no data message
+                        MessageBox.Show("You must change the value only for numbers or decimals!", "CTP System", MessageBoxButtons.OK)
                     End If
-
                 End If
             Next
 
@@ -170,7 +350,7 @@
         Dim exMessage As String = " "
         Dim statusquote As String
         Dim Status2 As String = ""
-        Dim strQueryAdd As String = "WHERE PQVND = " & Trim(oldVendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "'"
+        Dim strQueryAdd As String = "WHERE PQVND = " & Trim(oldVendorNo) & " And PQPTN = '" & Trim(UCase(partNo)) & "'"
         Try
             statusquote = "D-" & Status2
             Dim spacepoqota As String = String.Empty

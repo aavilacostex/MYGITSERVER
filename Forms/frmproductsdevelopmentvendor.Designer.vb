@@ -27,12 +27,12 @@ Partial Class frmproductsdevelopmentvendor
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.lblproject = New System.Windows.Forms.Label()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.clPartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clDescription = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clVendorNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.cmdSave1 = New System.Windows.Forms.Button()
         Me.cmdexit1 = New System.Windows.Forms.Button()
+        Me.clPartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clDescription = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clVendorNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -85,21 +85,6 @@ Partial Class frmproductsdevelopmentvendor
         Me.DataGridView1.Size = New System.Drawing.Size(520, 306)
         Me.DataGridView1.TabIndex = 1
         '
-        'clPartNo
-        '
-        Me.clPartNo.HeaderText = "Part No."
-        Me.clPartNo.Name = "clPartNo"
-        '
-        'clDescription
-        '
-        Me.clDescription.HeaderText = "Description"
-        Me.clDescription.Name = "clDescription"
-        '
-        'clVendorNo
-        '
-        Me.clVendorNo.HeaderText = "VendorNo."
-        Me.clVendorNo.Name = "clVendorNo"
-        '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.SystemColors.GrayText
@@ -127,6 +112,22 @@ Partial Class frmproductsdevelopmentvendor
         Me.cmdexit1.Size = New System.Drawing.Size(43, 28)
         Me.cmdexit1.TabIndex = 8
         Me.cmdexit1.UseVisualStyleBackColor = True
+        '
+        'clPartNo
+        '
+        Me.clPartNo.HeaderText = "Part No."
+        Me.clPartNo.Name = "clPartNo"
+        '
+        'clDescription
+        '
+        Me.clDescription.HeaderText = "Description"
+        Me.clDescription.Name = "clDescription"
+        '
+        'clVendorNo
+        '
+        Me.clVendorNo.HeaderText = "VendorNo."
+        Me.clVendorNo.MaxInputLength = 6
+        Me.clVendorNo.Name = "clVendorNo"
         '
         'frmproductsdevelopmentvendor
         '

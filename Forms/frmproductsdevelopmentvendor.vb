@@ -1,4 +1,5 @@
 ﻿Imports System.Globalization
+Imports System.Text.RegularExpressions
 
 Public Class frmproductsdevelopmentvendor
 
@@ -31,6 +32,9 @@ Public Class frmproductsdevelopmentvendor
             fillcell2(dsInvPrdoDet)
 
             userid = frmLogin.txtUserName.Text
+
+            CType(Me.DataGridView1.Columns(3), DataGridViewTextBoxColumn).MaxInputLength = 6
+
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -86,6 +90,8 @@ Public Class frmproductsdevelopmentvendor
 
                     DataGridView1.Columns("clPartNo").ReadOnly = True
                     DataGridView1.Columns("clDescription").ReadOnly = True
+                    DataGridView1.Columns("clVendorNo").ReadOnly = True
+
 
                 Else
                     DataGridView1.DataSource = Nothing
@@ -106,6 +112,94 @@ Public Class frmproductsdevelopmentvendor
         End Try
     End Sub
 
+    Private Sub DataGridView1_DataError(ByVal sender As Object, ByVal e As DataGridViewDataErrorEventArgs) _
+    Handles DataGridView1.DataError
+        Dim exMessage As String = " "
+        Try
+            If e.ColumnIndex = 3 Then
+                Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+                Dim inputText = DataGridView1.EditingControl.Text
+                If Not Regex.IsMatch(inputText, "^[0-9]{1,6}$") Then
+                    DataGridView1.CancelEdit()
+                    DataGridView1.RefreshEdit()
+                    MessageBox.Show("The Vendor Number must be changed for a numeric value!", "CTP System", MessageBoxButtons.OK)
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub Datagridview1_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+        Handles DataGridView1.CellContentClick
+        Try
+            If e.ColumnIndex = 0 Then
+                Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+                Dim inputText = DataGridView1.EditingControl.Text
+
+                DataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit)
+                If CBool(DataGridView1.CurrentCell.Value) = True Then
+                    Dim ppe = ""
+                    Dim calros = "1"
+
+                    Dim ok = ppe & " - " & calros
+                Else
+                    Dim ppe = ""
+                    Dim calros = "1"
+
+                    Dim ok = ppe & " - " & calros
+                End If
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub DataGridView1_CellMouseUp(ByVal sender As Object, ByVal e As DataGridViewCellMouseEventArgs) _
+        Handles DataGridView1.CellMouseUp
+        Dim exMessage As String = " "
+        Try
+            If e.ColumnIndex = 0 Then
+                Dim row As DataGridViewRow = DataGridView1.Rows(e.RowIndex)
+                row.Cells("checkBoxColumn").Value = Convert.ToBoolean(row.Cells("checkBoxColumn").EditedFormattedValue)
+                If Convert.ToBoolean(row.Cells("checkBoxColumn").Value) Then
+                    DataGridView1(3, e.RowIndex).ReadOnly = False
+                Else
+                    DataGridView1(3, e.RowIndex).ReadOnly = True
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Sub
+
+    Private Sub DataGridView1_CellValueChanged(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+    Handles DataGridView1.CellValueChanged
+        Dim exMessage As String = " "
+        Try
+            If e.ColumnIndex = 3 Then
+                Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+                Dim inputText = DataGridView1.EditingControl.Text
+                If Not Regex.IsMatch(inputText, "^[0-9]{1,6}$") Then
+                    DataGridView1.CancelEdit()
+                    DataGridView1.RefreshEdit()
+                    MessageBox.Show("The Vendor Number must be changed for a numeric value!", "CTP System", MessageBoxButtons.OK)
+                Else
+                    Dim result = cmdSave_custom(inputText)
+                    If result = -1 Then
+                        DataGridView1.CancelEdit()
+                        DataGridView1.RefreshEdit()
+                        MessageBox.Show("The Vendor Number does not exist in our records!", "CTP System", MessageBoxButtons.OK)
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Sub
+
     Private Sub HeaderCheckBox_Clicked(ByVal sender As Object, ByVal e As EventArgs)
         'Necessary to end the edit mode of the Cell.
         DataGridView1.EndEdit()
@@ -119,31 +213,95 @@ Public Class frmproductsdevelopmentvendor
         Next
     End Sub
 
+
+
+    Private Function cmdSave_custom(vendorNo As String) As Integer
+        Dim result As String = -1
+        Dim exMessage As String = " "
+        Try
+            Dim dsVendor = gnr.GetVendorByVendorNo(Trim(UCase(vendorNo)))
+            If dsVendor Is Nothing Then
+                Return result
+            Else
+                If dsVendor.Tables(0).Rows.Count <= 0 Then
+                    Return result
+                Else
+                    Return result = 0
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return result
+        End Try
+
+    End Function
+
     Private Sub cmdSave1_Click(sender As Object, e As EventArgs) Handles cmdSave1.Click
         Dim exMessage As String = " "
         Dim ds As DataSet
         Dim updatedRecords As Integer = 0
+        Dim strVendorErrors As String = ""
+        Dim value As String
+        Dim lstChar As Array
+        Dim lngLstArray As Integer
+        Dim strDupMessage As String
+        Dim strEndMessage As String
         Try
 
             For Each row As DataGridViewRow In DataGridView1.Rows
                 If row.Cells("checkBoxColumn").Value = True Then
-                    ds = gnr.GetDataByCodeAndPartNoProdDesc(frmProductsDevelopment.txtCode.Text, row.Cells("clPartNo").Value.ToString())
-                    Dim oldVendorNo = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("VMVNUM").Ordinal)
-                    If Trim(UCase(oldVendorNo)) <> Trim(UCase(row.Cells("clVendorNo").Value.ToString())) Then
-                        PoQotaFunction(oldVendorNo, row.Cells("clPartNo").Value.ToString(), row.Cells("clVendorNo").Value.ToString())
-                        gnr.UpdateChangedVendor(userid, row.Cells("clVendorNo").Value.ToString(), row.Cells("clPartNo").Value.ToString(), frmProductsDevelopment.txtCode.Text)
-                        'update validation
-                        updatedRecords += 1
+                    If cmdSave_custom(row.Cells("clVendorNo").Value.ToString()) = 0 Then
+                        ds = gnr.GetDataByCodeAndPartNoProdDesc(frmProductsDevelopment.txtCode.Text, row.Cells("clPartNo").Value.ToString())
+                        Dim oldVendorNo = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("VMVNUM").Ordinal)
+                        If Trim(UCase(oldVendorNo)) <> Trim(UCase(row.Cells("clVendorNo").Value.ToString())) Then
+                            Dim dsVendor = gnr.GetVendorByVendorNo(Trim(UCase(row.Cells("clVendorNo").Value.ToString())))
+                            If dsVendor IsNot Nothing Then
+                                If dsVendor.Tables(0).Rows.Count > 0 Then
+                                    PoQotaFunction(oldVendorNo, row.Cells("clPartNo").Value.ToString(), row.Cells("clVendorNo").Value.ToString())
+                                    gnr.UpdateChangedVendor(userid, row.Cells("clVendorNo").Value.ToString(), row.Cells("clPartNo").Value.ToString(), frmProductsDevelopment.txtCode.Text)
+                                    'update validation
+                                    updatedRecords += 1
+                                Else
+                                    strVendorErrors += Trim(UCase(row.Cells("clVendorNo").Value.ToString())) & ","
+                                End If
+                            Else
+                                strVendorErrors += Trim(UCase(row.Cells("clVendorNo").Value.ToString())) & ","
+                            End If
+                        End If
+                    Else
+                        MessageBox.Show("The Vendor Number does not exist in our records!", "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
             Next
 
             If updatedRecords > 0 Then
-                MessageBox.Show("Records Updated.", "CTP System", MessageBoxButtons.OK)
+                If String.IsNullOrEmpty(strVendorErrors) Then
+                    MessageBox.Show("Records Updated.", "CTP System", MessageBoxButtons.OK)
+                Else
+                    value = strVendorErrors(strVendorErrors.Length - 1)
+                    strEndMessage = If(value.Equals(","), strVendorErrors.Substring(0, strVendorErrors.Length - 1), strVendorErrors)
+                    lstChar = strVendorErrors.Split(",")
+                    lngLstArray = lstChar.Length
+                    strDupMessage = If(lngLstArray > 0, "There are errors with this vendor numbers.", "There is an error with this vendor number.")
+
+                    MessageBox.Show("Check the data input. " & strDupMessage & " - " & strEndMessage, "CTP System", MessageBoxButtons.OK)
+                End If
                 Form_Load()
                 frmProductsDevelopment.fillcell2(frmProductsDevelopment.txtCode.Text)
             Else
-                MessageBox.Show("No records to update.", "CTP System", MessageBoxButtons.OK)
+                If String.IsNullOrEmpty(strVendorErrors) Then
+                    MessageBox.Show("No records to update.", "CTP System", MessageBoxButtons.OK)
+                Else
+                    value = strVendorErrors(strVendorErrors.Length - 1)
+                    strEndMessage = If(value.Equals(","), strVendorErrors.Remove(strVendorErrors.Length - 1), strVendorErrors)
+                    lstChar = strEndMessage.Split(",")
+                    lngLstArray = lstChar.Length
+                    strDupMessage = If(lngLstArray > 1, "There are errors with this vendor numbers.", "There is an error with this vendor number.")
+
+                    MessageBox.Show("Check the data input. " & strDupMessage & " - " & strEndMessage, "CTP System", MessageBoxButtons.OK)
+                    Form_Load()
+                    frmProductsDevelopment.fillcell2(frmProductsDevelopment.txtCode.Text)
+                End If
             End If
 
         Catch ex As Exception

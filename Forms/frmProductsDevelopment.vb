@@ -1283,7 +1283,6 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub cmdnew1_Click(sender As Object, e As EventArgs) Handles cmdnew1.Click
-
         'Dim validationResult = mandatoryFields("new", SSTab1.SelectedTab.Name)
         'If validationResult.Equals(0) Then
         Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
@@ -1569,8 +1568,12 @@ Public Class frmProductsDevelopment
             Dim statusquote As String
 
             If flagdeve = 1 Then 'new
-                Dim strPosition As Integer = cmbuser1.Text.IndexOf("N/A")
-                Dim validUser As String = If(strPosition = 0, userid, cmbuser1.Text)
+                'assign logged user if not selected
+                Dim validUser As String = If(cmbuser1.SelectedIndex < 1, userid, "")
+
+                If Not String.IsNullOrEmpty(validUser) Then
+                    cmbuser1.SelectedIndex = If(cmbuser1.FindString(Trim(UCase(validUser))) > 0, cmbuser1.FindString(Trim(validUser)), 0)
+                End If
 
                 Dim ProjectNo = gnr.getmax("PRDVLH", "PRHCOD") + 1
                 Dim queryResult = gnr.InsertNewProject(ProjectNo, userid, DTPicker1, txtainfo.Text, txtname.Text, cmbprstatus, validUser)
@@ -1984,6 +1987,7 @@ Public Class frmProductsDevelopment
                         SSTab1.SelectedTab = TabPage2
                     Else
                         SSTab1.SelectedTab = TabPage3
+                        '
                     End If
                     cleanFormValues("TabPage3", 0)
                 End If
@@ -3641,7 +3645,9 @@ Public Class frmProductsDevelopment
                         tt.Text = ""
                     End If
                 ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
-                    tt.selectedIndex = 0
+                    If tt.name <> "cmbuser" Then
+                        tt.selectedIndex = 0
+                    End If
                 ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
                     tt.Value = DateTime.Now
                 End If

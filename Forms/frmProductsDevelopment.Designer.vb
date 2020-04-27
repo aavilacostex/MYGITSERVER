@@ -1105,7 +1105,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 91.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
@@ -1198,14 +1198,14 @@ Partial Class frmProductsDevelopment
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(96, 3)
+        Me.txtCode.Location = New System.Drawing.Point(95, 3)
         Me.txtCode.Name = "txtCode"
         Me.txtCode.Size = New System.Drawing.Size(200, 20)
         Me.txtCode.TabIndex = 6
         '
         'txtname
         '
-        Me.txtname.Location = New System.Drawing.Point(96, 36)
+        Me.txtname.Location = New System.Drawing.Point(95, 36)
         Me.txtname.Name = "txtname"
         Me.txtname.Size = New System.Drawing.Size(200, 20)
         Me.txtname.TabIndex = 7
@@ -1213,7 +1213,7 @@ Partial Class frmProductsDevelopment
         'cmbprstatus
         '
         Me.cmbprstatus.FormattingEnabled = True
-        Me.cmbprstatus.Location = New System.Drawing.Point(96, 103)
+        Me.cmbprstatus.Location = New System.Drawing.Point(95, 103)
         Me.cmbprstatus.Name = "cmbprstatus"
         Me.cmbprstatus.Size = New System.Drawing.Size(200, 21)
         Me.cmbprstatus.TabIndex = 9
@@ -1221,14 +1221,14 @@ Partial Class frmProductsDevelopment
         'cmbuser1
         '
         Me.cmbuser1.FormattingEnabled = True
-        Me.cmbuser1.Location = New System.Drawing.Point(96, 136)
+        Me.cmbuser1.Location = New System.Drawing.Point(95, 136)
         Me.cmbuser1.Name = "cmbuser1"
         Me.cmbuser1.Size = New System.Drawing.Size(200, 21)
         Me.cmbuser1.TabIndex = 10
         '
         'txtainfo
         '
-        Me.txtainfo.Location = New System.Drawing.Point(96, 169)
+        Me.txtainfo.Location = New System.Drawing.Point(95, 169)
         Me.txtainfo.Multiline = True
         Me.txtainfo.Name = "txtainfo"
         Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -1238,7 +1238,7 @@ Partial Class frmProductsDevelopment
         'DTPicker1
         '
         Me.DTPicker1.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker1.Location = New System.Drawing.Point(96, 70)
+        Me.DTPicker1.Location = New System.Drawing.Point(95, 70)
         Me.DTPicker1.Name = "DTPicker1"
         Me.DTPicker1.Size = New System.Drawing.Size(200, 20)
         Me.DTPicker1.TabIndex = 12
@@ -1264,7 +1264,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150.0!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150.0!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150.0!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 320.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 322.0!))
         Me.TableLayoutPanel4.Controls.Add(Me.Panel4, 0, 18)
         Me.TableLayoutPanel4.Controls.Add(Me.Label13, 0, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label14, 0, 1)
@@ -2126,7 +2126,7 @@ Partial Class frmProductsDevelopment
         Me.Panel5.Location = New System.Drawing.Point(523, 298)
         Me.Panel5.Name = "Panel5"
         Me.TableLayoutPanel4.SetRowSpan(Me.Panel5, 5)
-        Me.Panel5.Size = New System.Drawing.Size(314, 100)
+        Me.Panel5.Size = New System.Drawing.Size(316, 100)
         Me.Panel5.TabIndex = 58
         '
         'TableLayoutPanel7
@@ -2174,7 +2174,7 @@ Partial Class frmProductsDevelopment
         Me.Panel6.Location = New System.Drawing.Point(523, 460)
         Me.Panel6.Name = "Panel6"
         Me.TableLayoutPanel4.SetRowSpan(Me.Panel6, 4)
-        Me.Panel6.Size = New System.Drawing.Size(314, 100)
+        Me.Panel6.Size = New System.Drawing.Size(316, 100)
         Me.Panel6.TabIndex = 59
         '
         'TableLayoutPanel6
