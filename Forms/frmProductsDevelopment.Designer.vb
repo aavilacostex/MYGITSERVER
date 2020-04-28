@@ -22,6 +22,7 @@ Partial Class frmProductsDevelopment
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductsDevelopment))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -213,6 +214,12 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel16 = New System.Windows.Forms.TableLayoutPanel()
         Me.lbljiratask = New System.Windows.Forms.Label()
         Me.txtjiratask = New System.Windows.Forms.TextBox()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.AddNewProjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddNewPartToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.AddNewProjectToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddNewPartToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -242,6 +249,8 @@ Partial Class frmProductsDevelopment
         Me.Panel6.SuspendLayout()
         Me.TableLayoutPanel6.SuspendLayout()
         Me.TableLayoutPanel16.SuspendLayout()
+        Me.ContextMenuStrip1.SuspendLayout()
+        Me.ContextMenuStrip2.SuspendLayout()
         Me.SuspendLayout()
         '
         'SSTab1
@@ -255,7 +264,7 @@ Partial Class frmProductsDevelopment
         Me.SSTab1.Location = New System.Drawing.Point(3, 12)
         Me.SSTab1.Name = "SSTab1"
         Me.SSTab1.SelectedIndex = 0
-        Me.SSTab1.Size = New System.Drawing.Size(838, 682)
+        Me.SSTab1.Size = New System.Drawing.Size(838, 686)
         Me.SSTab1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.SSTab1.TabIndex = 0
         '
@@ -268,7 +277,7 @@ Partial Class frmProductsDevelopment
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(830, 656)
+        Me.TabPage1.Size = New System.Drawing.Size(830, 639)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Projects"
         '
@@ -315,6 +324,7 @@ Partial Class frmProductsDevelopment
         Me.Button8.TabIndex = 0
         Me.Button8.Text = "Change Vendor"
         Me.Button8.UseVisualStyleBackColor = True
+        Me.Button8.Visible = False
         '
         'Button9
         '
@@ -324,6 +334,7 @@ Partial Class frmProductsDevelopment
         Me.Button9.TabIndex = 1
         Me.Button9.Text = "Change Manuf. PartNo."
         Me.Button9.UseVisualStyleBackColor = True
+        Me.Button9.Visible = False
         '
         'Button10
         '
@@ -333,6 +344,7 @@ Partial Class frmProductsDevelopment
         Me.Button10.TabIndex = 2
         Me.Button10.Text = "Change Unit Cost"
         Me.Button10.UseVisualStyleBackColor = True
+        Me.Button10.Visible = False
         '
         'Button11
         '
@@ -342,6 +354,7 @@ Partial Class frmProductsDevelopment
         Me.Button11.TabIndex = 3
         Me.Button11.Text = "Change Status"
         Me.Button11.UseVisualStyleBackColor = True
+        Me.Button11.Visible = False
         '
         'cmdnew1
         '
@@ -755,7 +768,7 @@ Partial Class frmProductsDevelopment
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(830, 656)
+        Me.TabPage2.Size = New System.Drawing.Size(830, 639)
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         '
@@ -866,6 +879,7 @@ Partial Class frmProductsDevelopment
         Me.cmbStatusMore.Name = "cmbStatusMore"
         Me.cmbStatusMore.Size = New System.Drawing.Size(175, 21)
         Me.cmbStatusMore.TabIndex = 12
+        Me.cmbStatusMore.Visible = False
         '
         'cmdStatusMore
         '
@@ -876,6 +890,7 @@ Partial Class frmProductsDevelopment
         Me.cmdStatusMore.TabIndex = 11
         Me.cmdStatusMore.Text = "Search"
         Me.cmdStatusMore.UseVisualStyleBackColor = True
+        Me.cmdStatusMore.Visible = False
         '
         'lblStatusMore
         '
@@ -887,6 +902,7 @@ Partial Class frmProductsDevelopment
         Me.lblStatusMore.Size = New System.Drawing.Size(37, 13)
         Me.lblStatusMore.TabIndex = 3
         Me.lblStatusMore.Text = "Status"
+        Me.lblStatusMore.Visible = False
         '
         'cmdMfrNoMore
         '
@@ -920,6 +936,7 @@ Partial Class frmProductsDevelopment
         Me.btnAll.Text = "Unify Search"
         Me.btnAll.UseCompatibleTextRendering = True
         Me.btnAll.UseVisualStyleBackColor = True
+        Me.btnAll.Visible = False
         '
         'Panel3
         '
@@ -1105,7 +1122,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 91.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
@@ -1148,9 +1165,9 @@ Partial Class frmProductsDevelopment
         Me.Label8.Location = New System.Drawing.Point(3, 38)
         Me.Label8.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(69, 13)
+        Me.Label8.Size = New System.Drawing.Size(82, 13)
         Me.Label8.TabIndex = 1
-        Me.Label8.Text = "Project Name"
+        Me.Label8.Text = "Project Name (*)"
         '
         'Label9
         '
@@ -1183,7 +1200,7 @@ Partial Class frmProductsDevelopment
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(54, 26)
         Me.Label11.TabIndex = 4
-        Me.Label11.Text = "Person in Charge"
+        Me.Label11.Text = "Person in Charge (*)"
         '
         'Label12
         '
@@ -1198,14 +1215,14 @@ Partial Class frmProductsDevelopment
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(95, 3)
+        Me.txtCode.Location = New System.Drawing.Point(94, 3)
         Me.txtCode.Name = "txtCode"
         Me.txtCode.Size = New System.Drawing.Size(200, 20)
         Me.txtCode.TabIndex = 6
         '
         'txtname
         '
-        Me.txtname.Location = New System.Drawing.Point(95, 36)
+        Me.txtname.Location = New System.Drawing.Point(94, 36)
         Me.txtname.Name = "txtname"
         Me.txtname.Size = New System.Drawing.Size(200, 20)
         Me.txtname.TabIndex = 7
@@ -1213,7 +1230,7 @@ Partial Class frmProductsDevelopment
         'cmbprstatus
         '
         Me.cmbprstatus.FormattingEnabled = True
-        Me.cmbprstatus.Location = New System.Drawing.Point(95, 103)
+        Me.cmbprstatus.Location = New System.Drawing.Point(94, 103)
         Me.cmbprstatus.Name = "cmbprstatus"
         Me.cmbprstatus.Size = New System.Drawing.Size(200, 21)
         Me.cmbprstatus.TabIndex = 9
@@ -1221,14 +1238,14 @@ Partial Class frmProductsDevelopment
         'cmbuser1
         '
         Me.cmbuser1.FormattingEnabled = True
-        Me.cmbuser1.Location = New System.Drawing.Point(95, 136)
+        Me.cmbuser1.Location = New System.Drawing.Point(94, 136)
         Me.cmbuser1.Name = "cmbuser1"
         Me.cmbuser1.Size = New System.Drawing.Size(200, 21)
         Me.cmbuser1.TabIndex = 10
         '
         'txtainfo
         '
-        Me.txtainfo.Location = New System.Drawing.Point(95, 169)
+        Me.txtainfo.Location = New System.Drawing.Point(94, 169)
         Me.txtainfo.Multiline = True
         Me.txtainfo.Name = "txtainfo"
         Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -1238,7 +1255,7 @@ Partial Class frmProductsDevelopment
         'DTPicker1
         '
         Me.DTPicker1.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker1.Location = New System.Drawing.Point(95, 70)
+        Me.DTPicker1.Location = New System.Drawing.Point(94, 70)
         Me.DTPicker1.Name = "DTPicker1"
         Me.DTPicker1.Size = New System.Drawing.Size(200, 20)
         Me.DTPicker1.TabIndex = 12
@@ -1250,7 +1267,7 @@ Partial Class frmProductsDevelopment
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(830, 656)
+        Me.TabPage3.Size = New System.Drawing.Size(830, 660)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
         '
@@ -1260,12 +1277,11 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.AutoSize = True
         Me.TableLayoutPanel4.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Inset
         Me.TableLayoutPanel4.ColumnCount = 5
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60.0!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150.0!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150.0!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150.0!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 322.0!))
-        Me.TableLayoutPanel4.Controls.Add(Me.Panel4, 0, 18)
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 102.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 124.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 332.0!))
         Me.TableLayoutPanel4.Controls.Add(Me.Label13, 0, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label14, 0, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.Label15, 0, 2)
@@ -1323,6 +1339,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.Controls.Add(Me.Panel5, 4, 9)
         Me.TableLayoutPanel4.Controls.Add(Me.Panel6, 4, 14)
         Me.TableLayoutPanel4.Controls.Add(Me.TableLayoutPanel16, 3, 8)
+        Me.TableLayoutPanel4.Controls.Add(Me.Panel4, 0, 18)
         Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
@@ -1331,8 +1348,8 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 48.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
@@ -1343,10 +1360,10 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65.0!))
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(824, 661)
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(824, 638)
         Me.TableLayoutPanel4.TabIndex = 0
         '
         'Panel4
@@ -1354,9 +1371,9 @@ Partial Class frmProductsDevelopment
         Me.Panel4.BackColor = System.Drawing.SystemColors.GrayText
         Me.TableLayoutPanel4.SetColumnSpan(Me.Panel4, 5)
         Me.Panel4.Controls.Add(Me.TableLayoutPanel13)
-        Me.Panel4.Location = New System.Drawing.Point(5, 597)
+        Me.Panel4.Location = New System.Drawing.Point(5, 599)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(816, 37)
+        Me.Panel4.Size = New System.Drawing.Size(819, 34)
         Me.Panel4.TabIndex = 4
         '
         'TableLayoutPanel13
@@ -1377,54 +1394,58 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel13.Controls.Add(Me.cmdnew3, 4, 0)
         Me.TableLayoutPanel13.Controls.Add(Me.cmdSave3, 5, 0)
         Me.TableLayoutPanel13.Controls.Add(Me.cmdexit3, 6, 0)
-        Me.TableLayoutPanel13.Location = New System.Drawing.Point(83, 3)
+        Me.TableLayoutPanel13.Location = New System.Drawing.Point(83, 1)
         Me.TableLayoutPanel13.Name = "TableLayoutPanel13"
         Me.TableLayoutPanel13.RowCount = 1
         Me.TableLayoutPanel13.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel13.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel13.Size = New System.Drawing.Size(731, 34)
+        Me.TableLayoutPanel13.Size = New System.Drawing.Size(706, 34)
         Me.TableLayoutPanel13.TabIndex = 3
         '
         'Button15
         '
         Me.Button15.Location = New System.Drawing.Point(3, 3)
         Me.Button15.Name = "Button15"
-        Me.Button15.Size = New System.Drawing.Size(134, 28)
+        Me.Button15.Size = New System.Drawing.Size(125, 28)
         Me.Button15.TabIndex = 0
         Me.Button15.Text = "Change Vendor"
         Me.Button15.UseVisualStyleBackColor = True
+        Me.Button15.Visible = False
         '
         'Button16
         '
-        Me.Button16.Location = New System.Drawing.Point(147, 3)
+        Me.Button16.Location = New System.Drawing.Point(134, 3)
         Me.Button16.Name = "Button16"
-        Me.Button16.Size = New System.Drawing.Size(134, 28)
+        Me.Button16.Size = New System.Drawing.Size(125, 28)
         Me.Button16.TabIndex = 1
         Me.Button16.Text = "Change Manuf. PartNo."
         Me.Button16.UseVisualStyleBackColor = True
+        Me.Button16.Visible = False
         '
         'Button17
         '
-        Me.Button17.Location = New System.Drawing.Point(291, 3)
+        Me.Button17.Location = New System.Drawing.Point(265, 3)
         Me.Button17.Name = "Button17"
         Me.Button17.Size = New System.Drawing.Size(134, 28)
         Me.Button17.TabIndex = 2
         Me.Button17.Text = "Change Unit Cost"
         Me.Button17.UseVisualStyleBackColor = True
+        Me.Button17.Visible = False
         '
         'Button18
         '
-        Me.Button18.Location = New System.Drawing.Point(435, 3)
+        Me.Button18.Location = New System.Drawing.Point(409, 3)
         Me.Button18.Name = "Button18"
         Me.Button18.Size = New System.Drawing.Size(134, 28)
         Me.Button18.TabIndex = 3
         Me.Button18.Text = "Change Status"
         Me.Button18.UseVisualStyleBackColor = True
+        Me.Button18.Visible = False
         '
         'cmdnew3
         '
         Me.cmdnew3.Image = CType(resources.GetObject("cmdnew3.Image"), System.Drawing.Image)
-        Me.cmdnew3.Location = New System.Drawing.Point(578, 3)
+        Me.cmdnew3.Location = New System.Drawing.Point(552, 3)
         Me.cmdnew3.Name = "cmdnew3"
         Me.cmdnew3.Size = New System.Drawing.Size(43, 28)
         Me.cmdnew3.TabIndex = 4
@@ -1433,7 +1454,7 @@ Partial Class frmProductsDevelopment
         'cmdSave3
         '
         Me.cmdSave3.Image = CType(resources.GetObject("cmdSave3.Image"), System.Drawing.Image)
-        Me.cmdSave3.Location = New System.Drawing.Point(631, 3)
+        Me.cmdSave3.Location = New System.Drawing.Point(605, 3)
         Me.cmdSave3.Name = "cmdSave3"
         Me.cmdSave3.Size = New System.Drawing.Size(43, 28)
         Me.cmdSave3.TabIndex = 5
@@ -1442,7 +1463,7 @@ Partial Class frmProductsDevelopment
         'cmdexit3
         '
         Me.cmdexit3.Image = CType(resources.GetObject("cmdexit3.Image"), System.Drawing.Image)
-        Me.cmdexit3.Location = New System.Drawing.Point(683, 3)
+        Me.cmdexit3.Location = New System.Drawing.Point(657, 3)
         Me.cmdexit3.Name = "cmdexit3"
         Me.cmdexit3.Size = New System.Drawing.Size(43, 28)
         Me.cmdexit3.TabIndex = 6
@@ -1455,7 +1476,7 @@ Partial Class frmProductsDevelopment
         Me.Label13.Location = New System.Drawing.Point(2, 7)
         Me.Label13.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(49, 20)
+        Me.Label13.Size = New System.Drawing.Size(72, 13)
         Me.Label13.TabIndex = 0
         Me.Label13.Text = "Creation Date"
         '
@@ -1466,9 +1487,9 @@ Partial Class frmProductsDevelopment
         Me.Label14.Location = New System.Drawing.Point(2, 34)
         Me.Label14.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(60, 13)
+        Me.Label14.Size = New System.Drawing.Size(73, 13)
         Me.Label14.TabIndex = 1
-        Me.Label14.Text = "Vendor No."
+        Me.Label14.Text = "Vendor No. (*)"
         '
         'Label15
         '
@@ -1477,9 +1498,9 @@ Partial Class frmProductsDevelopment
         Me.Label15.Location = New System.Drawing.Point(2, 61)
         Me.Label15.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(45, 13)
+        Me.Label15.Size = New System.Drawing.Size(58, 13)
         Me.Label15.TabIndex = 2
-        Me.Label15.Text = "Part No."
+        Me.Label15.Text = "Part No. (*)"
         '
         'TableLayoutPanel5
         '
@@ -1494,14 +1515,14 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.SetRowSpan(Me.TableLayoutPanel5, 9)
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.55824!))
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.44177!))
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(298, 258)
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(326, 285)
         Me.TableLayoutPanel5.TabIndex = 1
         '
         'PictureBox1
         '
         Me.PictureBox1.Location = New System.Drawing.Point(3, 3)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(290, 251)
+        Me.PictureBox1.Size = New System.Drawing.Size(298, 279)
         Me.PictureBox1.TabIndex = 0
         Me.PictureBox1.TabStop = False
         '
@@ -1512,9 +1533,9 @@ Partial Class frmProductsDevelopment
         Me.Label16.Location = New System.Drawing.Point(2, 88)
         Me.Label16.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(46, 20)
+        Me.Label16.Size = New System.Drawing.Size(86, 13)
         Me.Label16.TabIndex = 3
-        Me.Label16.Text = "Parts to Show"
+        Me.Label16.Text = "Parts to Show (*)"
         '
         'Label17
         '
@@ -1523,7 +1544,7 @@ Partial Class frmProductsDevelopment
         Me.Label17.Location = New System.Drawing.Point(2, 115)
         Me.Label17.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(53, 20)
+        Me.Label17.Size = New System.Drawing.Size(87, 13)
         Me.Label17.TabIndex = 4
         Me.Label17.Text = "Assigned Vendor"
         '
@@ -1531,10 +1552,10 @@ Partial Class frmProductsDevelopment
         '
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.Location = New System.Drawing.Point(2, 142)
+        Me.Label18.Location = New System.Drawing.Point(2, 141)
         Me.Label18.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(36, 20)
+        Me.Label18.Size = New System.Drawing.Size(61, 13)
         Me.Label18.TabIndex = 5
         Me.Label18.Text = "Minor Code"
         '
@@ -1588,7 +1609,7 @@ Partial Class frmProductsDevelopment
         Me.Label23.Location = New System.Drawing.Point(2, 327)
         Me.Label23.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(52, 20)
+        Me.Label23.Size = New System.Drawing.Size(92, 13)
         Me.Label23.TabIndex = 10
         Me.Label23.Text = "Unit Cost (Current)"
         '
@@ -1599,7 +1620,7 @@ Partial Class frmProductsDevelopment
         Me.Label24.Location = New System.Drawing.Point(2, 354)
         Me.Label24.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(45, 20)
+        Me.Label24.Size = New System.Drawing.Size(66, 13)
         Me.Label24.TabIndex = 11
         Me.Label24.Text = "Sample Cost"
         '
@@ -1610,7 +1631,7 @@ Partial Class frmProductsDevelopment
         Me.Label25.Location = New System.Drawing.Point(2, 381)
         Me.Label25.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(43, 20)
+        Me.Label25.Size = New System.Drawing.Size(64, 13)
         Me.Label25.TabIndex = 12
         Me.Label25.Text = "Tooling Cost"
         '
@@ -1632,9 +1653,9 @@ Partial Class frmProductsDevelopment
         Me.Label27.Location = New System.Drawing.Point(2, 462)
         Me.Label27.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(54, 20)
+        Me.Label27.Size = New System.Drawing.Size(101, 13)
         Me.Label27.TabIndex = 14
-        Me.Label27.Text = "Person in Charge"
+        Me.Label27.Text = "Person in Charge (*)"
         '
         'Label28
         '
@@ -1643,7 +1664,7 @@ Partial Class frmProductsDevelopment
         Me.Label28.Location = New System.Drawing.Point(2, 489)
         Me.Label28.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(54, 26)
+        Me.Label28.Size = New System.Drawing.Size(99, 13)
         Me.Label28.TabIndex = 15
         Me.Label28.Text = "Purchase Order No."
         '
@@ -1660,24 +1681,24 @@ Partial Class frmProductsDevelopment
         '
         'txtvendorno
         '
-        Me.txtvendorno.Location = New System.Drawing.Point(67, 32)
+        Me.txtvendorno.Location = New System.Drawing.Point(109, 32)
         Me.txtvendorno.Name = "txtvendorno"
-        Me.txtvendorno.Size = New System.Drawing.Size(119, 20)
+        Me.txtvendorno.Size = New System.Drawing.Size(118, 20)
         Me.txtvendorno.TabIndex = 21
         '
         'txtvendorname
         '
-        Me.txtvendorname.Location = New System.Drawing.Point(219, 32)
+        Me.txtvendorname.Location = New System.Drawing.Point(235, 32)
         Me.txtvendorname.Name = "txtvendorname"
-        Me.txtvendorname.Size = New System.Drawing.Size(142, 20)
+        Me.txtvendorname.Size = New System.Drawing.Size(136, 20)
         Me.txtvendorname.TabIndex = 22
         '
         'cmdvendor
         '
-        Me.cmdvendor.Location = New System.Drawing.Point(371, 29)
+        Me.cmdvendor.Location = New System.Drawing.Point(379, 29)
         Me.cmdvendor.Margin = New System.Windows.Forms.Padding(3, 0, 3, 3)
         Me.cmdvendor.Name = "cmdvendor"
-        Me.cmdvendor.Size = New System.Drawing.Size(141, 21)
+        Me.cmdvendor.Size = New System.Drawing.Size(136, 22)
         Me.cmdvendor.TabIndex = 23
         Me.cmdvendor.Text = "Change Project Vendor"
         Me.cmdvendor.UseVisualStyleBackColor = True
@@ -1688,9 +1709,9 @@ Partial Class frmProductsDevelopment
         Me.Panel2.Controls.Add(Me.optboth)
         Me.Panel2.Controls.Add(Me.optVENDOR)
         Me.Panel2.Controls.Add(Me.optCTP)
-        Me.Panel2.Location = New System.Drawing.Point(67, 86)
+        Me.Panel2.Location = New System.Drawing.Point(109, 86)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(411, 19)
+        Me.Panel2.Size = New System.Drawing.Size(406, 19)
         Me.Panel2.TabIndex = 20
         '
         'optboth
@@ -1731,55 +1752,55 @@ Partial Class frmProductsDevelopment
         '
         'txtvendornoa
         '
-        Me.txtvendornoa.Location = New System.Drawing.Point(67, 113)
+        Me.txtvendornoa.Location = New System.Drawing.Point(109, 113)
         Me.txtvendornoa.Name = "txtvendornoa"
-        Me.txtvendornoa.Size = New System.Drawing.Size(119, 20)
+        Me.txtvendornoa.Size = New System.Drawing.Size(118, 20)
         Me.txtvendornoa.TabIndex = 24
         '
         'txtminor
         '
-        Me.txtminor.Location = New System.Drawing.Point(67, 140)
+        Me.txtminor.Location = New System.Drawing.Point(109, 139)
         Me.txtminor.Name = "txtminor"
-        Me.txtminor.Size = New System.Drawing.Size(119, 20)
+        Me.txtminor.Size = New System.Drawing.Size(118, 20)
         Me.txtminor.TabIndex = 26
         '
         'txtvendornamea
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtvendornamea, 2)
-        Me.txtvendornamea.Location = New System.Drawing.Point(219, 113)
+        Me.txtvendornamea.Location = New System.Drawing.Point(235, 113)
         Me.txtvendornamea.Name = "txtvendornamea"
-        Me.txtvendornamea.Size = New System.Drawing.Size(283, 20)
+        Me.txtvendornamea.Size = New System.Drawing.Size(280, 20)
         Me.txtvendornamea.TabIndex = 25
         '
         'cmbminorcode
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.cmbminorcode, 2)
         Me.cmbminorcode.FormattingEnabled = True
-        Me.cmbminorcode.Location = New System.Drawing.Point(219, 140)
+        Me.cmbminorcode.Location = New System.Drawing.Point(235, 139)
         Me.cmbminorcode.Name = "cmbminorcode"
-        Me.cmbminorcode.Size = New System.Drawing.Size(283, 21)
+        Me.cmbminorcode.Size = New System.Drawing.Size(280, 21)
         Me.cmbminorcode.TabIndex = 27
         '
         'txtpartno
         '
-        Me.txtpartno.Location = New System.Drawing.Point(67, 59)
+        Me.txtpartno.Location = New System.Drawing.Point(109, 59)
         Me.txtpartno.Name = "txtpartno"
-        Me.txtpartno.Size = New System.Drawing.Size(119, 20)
+        Me.txtpartno.Size = New System.Drawing.Size(118, 20)
         Me.txtpartno.TabIndex = 28
         '
         'txtpartdescription
         '
-        Me.txtpartdescription.Location = New System.Drawing.Point(219, 59)
+        Me.txtpartdescription.Location = New System.Drawing.Point(235, 59)
         Me.txtpartdescription.Name = "txtpartdescription"
-        Me.txtpartdescription.Size = New System.Drawing.Size(142, 20)
+        Me.txtpartdescription.Size = New System.Drawing.Size(136, 20)
         Me.txtpartdescription.TabIndex = 29
         '
         'cmdpartno
         '
-        Me.cmdpartno.Location = New System.Drawing.Point(371, 56)
+        Me.cmdpartno.Location = New System.Drawing.Point(379, 56)
         Me.cmdpartno.Margin = New System.Windows.Forms.Padding(3, 0, 3, 3)
         Me.cmdpartno.Name = "cmdpartno"
-        Me.cmdpartno.Size = New System.Drawing.Size(141, 21)
+        Me.cmdpartno.Size = New System.Drawing.Size(136, 22)
         Me.cmdpartno.TabIndex = 30
         Me.cmdpartno.Text = "Select Part No."
         Me.cmdpartno.UseVisualStyleBackColor = True
@@ -1787,57 +1808,57 @@ Partial Class frmProductsDevelopment
         'txtctpno
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtctpno, 2)
-        Me.txtctpno.Location = New System.Drawing.Point(67, 167)
+        Me.txtctpno.Location = New System.Drawing.Point(109, 167)
         Me.txtctpno.Name = "txtctpno"
-        Me.txtctpno.Size = New System.Drawing.Size(296, 20)
+        Me.txtctpno.Size = New System.Drawing.Size(262, 20)
         Me.txtctpno.TabIndex = 31
         '
         'cmdgenerate
         '
-        Me.cmdgenerate.Location = New System.Drawing.Point(371, 164)
+        Me.cmdgenerate.Location = New System.Drawing.Point(379, 164)
         Me.cmdgenerate.Margin = New System.Windows.Forms.Padding(3, 0, 3, 3)
         Me.cmdgenerate.Name = "cmdgenerate"
-        Me.cmdgenerate.Size = New System.Drawing.Size(141, 21)
+        Me.cmdgenerate.Size = New System.Drawing.Size(136, 22)
         Me.cmdgenerate.TabIndex = 32
         Me.cmdgenerate.Text = "Generate CTP #"
         Me.cmdgenerate.UseVisualStyleBackColor = True
         '
         'txtunitcost
         '
-        Me.txtunitcost.Location = New System.Drawing.Point(67, 325)
+        Me.txtunitcost.Location = New System.Drawing.Point(109, 325)
         Me.txtunitcost.Name = "txtunitcost"
-        Me.txtunitcost.Size = New System.Drawing.Size(119, 20)
+        Me.txtunitcost.Size = New System.Drawing.Size(118, 20)
         Me.txtunitcost.TabIndex = 33
         '
         'Label31
         '
         Me.Label31.AutoSize = True
         Me.Label31.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label31.Location = New System.Drawing.Point(219, 322)
+        Me.Label31.Location = New System.Drawing.Point(235, 322)
         Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(113, 13)
+        Me.Label31.Size = New System.Drawing.Size(126, 13)
         Me.Label31.TabIndex = 34
-        Me.Label31.Text = "Unit Cost(New Vendor)"
+        Me.Label31.Text = "Unit Cost(New Vendor) (*)"
         '
         'txtunitcostnew
         '
-        Me.txtunitcostnew.Location = New System.Drawing.Point(371, 325)
+        Me.txtunitcostnew.Location = New System.Drawing.Point(379, 325)
         Me.txtunitcostnew.Name = "txtunitcostnew"
-        Me.txtunitcostnew.Size = New System.Drawing.Size(141, 20)
+        Me.txtunitcostnew.Size = New System.Drawing.Size(136, 20)
         Me.txtunitcostnew.TabIndex = 35
         '
         'txtsample
         '
-        Me.txtsample.Location = New System.Drawing.Point(67, 352)
+        Me.txtsample.Location = New System.Drawing.Point(109, 352)
         Me.txtsample.Name = "txtsample"
-        Me.txtsample.Size = New System.Drawing.Size(119, 20)
+        Me.txtsample.Size = New System.Drawing.Size(118, 20)
         Me.txtsample.TabIndex = 36
         '
         'Label32
         '
         Me.Label32.AutoSize = True
         Me.Label32.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label32.Location = New System.Drawing.Point(219, 349)
+        Me.Label32.Location = New System.Drawing.Point(235, 349)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(97, 13)
         Me.Label32.TabIndex = 37
@@ -1845,32 +1866,32 @@ Partial Class frmProductsDevelopment
         '
         'txttcost
         '
-        Me.txttcost.Location = New System.Drawing.Point(371, 352)
+        Me.txttcost.Location = New System.Drawing.Point(379, 352)
         Me.txttcost.Name = "txttcost"
-        Me.txttcost.Size = New System.Drawing.Size(141, 20)
+        Me.txttcost.Size = New System.Drawing.Size(136, 20)
         Me.txttcost.TabIndex = 38
         '
         'txttoocost
         '
-        Me.txttoocost.Location = New System.Drawing.Point(67, 379)
+        Me.txttoocost.Location = New System.Drawing.Point(109, 379)
         Me.txttoocost.Name = "txttoocost"
-        Me.txttoocost.Size = New System.Drawing.Size(119, 20)
+        Me.txttoocost.Size = New System.Drawing.Size(118, 20)
         Me.txttoocost.TabIndex = 39
         '
         'cmbuser
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.cmbuser, 2)
         Me.cmbuser.FormattingEnabled = True
-        Me.cmbuser.Location = New System.Drawing.Point(67, 460)
+        Me.cmbuser.Location = New System.Drawing.Point(109, 460)
         Me.cmbuser.Name = "cmbuser"
-        Me.cmbuser.Size = New System.Drawing.Size(296, 21)
+        Me.cmbuser.Size = New System.Drawing.Size(262, 21)
         Me.cmbuser.TabIndex = 40
         '
         'Label30
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(2, 572)
+        Me.Label30.Location = New System.Drawing.Point(2, 570)
         Me.Label30.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(58, 13)
@@ -1880,67 +1901,67 @@ Partial Class frmProductsDevelopment
         'txtcomm
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtcomm, 3)
-        Me.txtcomm.Location = New System.Drawing.Point(67, 570)
+        Me.txtcomm.Location = New System.Drawing.Point(109, 568)
         Me.txtcomm.Multiline = True
         Me.txtcomm.Name = "txtcomm"
         Me.txtcomm.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtcomm.Size = New System.Drawing.Size(448, 19)
+        Me.txtcomm.Size = New System.Drawing.Size(406, 19)
         Me.txtcomm.TabIndex = 42
         '
         'txtBenefits
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtBenefits, 3)
-        Me.txtBenefits.Location = New System.Drawing.Point(67, 541)
+        Me.txtBenefits.Location = New System.Drawing.Point(109, 541)
         Me.txtBenefits.Multiline = True
         Me.txtBenefits.Name = "txtBenefits"
         Me.txtBenefits.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtBenefits.Size = New System.Drawing.Size(448, 21)
+        Me.txtBenefits.Size = New System.Drawing.Size(262, 19)
         Me.txtBenefits.TabIndex = 43
         '
         'txtmfr
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtmfr, 2)
-        Me.txtmfr.Location = New System.Drawing.Point(67, 244)
+        Me.txtmfr.Location = New System.Drawing.Point(109, 244)
         Me.txtmfr.Name = "txtmfr"
-        Me.txtmfr.Size = New System.Drawing.Size(296, 20)
+        Me.txtmfr.Size = New System.Drawing.Size(262, 20)
         Me.txtmfr.TabIndex = 44
         '
         'txtmfrno
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtmfrno, 2)
-        Me.txtmfrno.Location = New System.Drawing.Point(67, 298)
+        Me.txtmfrno.Location = New System.Drawing.Point(109, 298)
         Me.txtmfrno.Name = "txtmfrno"
-        Me.txtmfrno.Size = New System.Drawing.Size(296, 20)
+        Me.txtmfrno.Size = New System.Drawing.Size(262, 20)
         Me.txtmfrno.TabIndex = 45
         '
         'cmbstatus
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.cmbstatus, 2)
         Me.cmbstatus.FormattingEnabled = True
-        Me.cmbstatus.Location = New System.Drawing.Point(67, 406)
+        Me.cmbstatus.Location = New System.Drawing.Point(109, 406)
         Me.cmbstatus.Name = "cmbstatus"
-        Me.cmbstatus.Size = New System.Drawing.Size(296, 21)
+        Me.cmbstatus.Size = New System.Drawing.Size(262, 21)
         Me.cmbstatus.TabIndex = 46
         '
         'txtqty
         '
-        Me.txtqty.Location = New System.Drawing.Point(67, 194)
+        Me.txtqty.Location = New System.Drawing.Point(109, 194)
         Me.txtqty.Name = "txtqty"
-        Me.txtqty.Size = New System.Drawing.Size(119, 20)
+        Me.txtqty.Size = New System.Drawing.Size(118, 20)
         Me.txtqty.TabIndex = 47
         '
         'txtpo
         '
-        Me.txtpo.Location = New System.Drawing.Point(67, 487)
+        Me.txtpo.Location = New System.Drawing.Point(109, 487)
         Me.txtpo.Name = "txtpo"
-        Me.txtpo.Size = New System.Drawing.Size(119, 20)
+        Me.txtpo.Size = New System.Drawing.Size(118, 20)
         Me.txtpo.TabIndex = 50
         '
         'DTPicker2
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.DTPicker2, 2)
         Me.DTPicker2.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker2.Location = New System.Drawing.Point(67, 5)
+        Me.DTPicker2.Location = New System.Drawing.Point(109, 5)
         Me.DTPicker2.Name = "DTPicker2"
         Me.DTPicker2.Size = New System.Drawing.Size(187, 20)
         Me.DTPicker2.TabIndex = 53
@@ -1951,31 +1972,31 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel14.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel14.Controls.Add(Me.Label38, 0, 0)
         Me.TableLayoutPanel14.Controls.Add(Me.DTPicker5, 0, 1)
-        Me.TableLayoutPanel14.Location = New System.Drawing.Point(371, 406)
+        Me.TableLayoutPanel14.Location = New System.Drawing.Point(379, 406)
         Me.TableLayoutPanel14.Name = "TableLayoutPanel14"
         Me.TableLayoutPanel14.RowCount = 2
-        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel14.Size = New System.Drawing.Size(144, 46)
+        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 47.82609!))
+        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 52.17391!))
+        Me.TableLayoutPanel14.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel14.Size = New System.Drawing.Size(136, 46)
         Me.TableLayoutPanel14.TabIndex = 0
         '
         'Label38
         '
-        Me.Label38.AutoSize = True
         Me.Label38.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label38.Location = New System.Drawing.Point(3, 6)
         Me.Label38.Margin = New System.Windows.Forms.Padding(3, 6, 3, 0)
         Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(123, 13)
+        Me.Label38.Size = New System.Drawing.Size(130, 11)
         Me.Label38.TabIndex = 55
         Me.Label38.Text = "Estimate Response Date"
         '
         'DTPicker5
         '
         Me.DTPicker5.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker5.Location = New System.Drawing.Point(3, 26)
+        Me.DTPicker5.Location = New System.Drawing.Point(3, 25)
         Me.DTPicker5.Name = "DTPicker5"
-        Me.DTPicker5.Size = New System.Drawing.Size(138, 20)
+        Me.DTPicker5.Size = New System.Drawing.Size(130, 20)
         Me.DTPicker5.TabIndex = 0
         '
         'TableLayoutPanel8
@@ -1984,12 +2005,12 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel8.Controls.Add(Me.Label33, 0, 0)
         Me.TableLayoutPanel8.Controls.Add(Me.txtsampleqty, 0, 1)
-        Me.TableLayoutPanel8.Location = New System.Drawing.Point(219, 194)
+        Me.TableLayoutPanel8.Location = New System.Drawing.Point(235, 194)
         Me.TableLayoutPanel8.Name = "TableLayoutPanel8"
         Me.TableLayoutPanel8.RowCount = 2
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.68085!))
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.31915!))
-        Me.TableLayoutPanel8.Size = New System.Drawing.Size(120, 42)
+        Me.TableLayoutPanel8.Size = New System.Drawing.Size(136, 42)
         Me.TableLayoutPanel8.TabIndex = 54
         '
         'Label33
@@ -2007,7 +2028,7 @@ Partial Class frmProductsDevelopment
         '
         Me.txtsampleqty.Location = New System.Drawing.Point(3, 21)
         Me.txtsampleqty.Name = "txtsampleqty"
-        Me.txtsampleqty.Size = New System.Drawing.Size(100, 20)
+        Me.txtsampleqty.Size = New System.Drawing.Size(67, 20)
         Me.txtsampleqty.TabIndex = 1
         '
         'TableLayoutPanel9
@@ -2016,12 +2037,12 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel9.Controls.Add(Me.label200, 0, 0)
         Me.TableLayoutPanel9.Controls.Add(Me.txtminqty, 0, 1)
-        Me.TableLayoutPanel9.Location = New System.Drawing.Point(371, 194)
+        Me.TableLayoutPanel9.Location = New System.Drawing.Point(379, 194)
         Me.TableLayoutPanel9.Name = "TableLayoutPanel9"
         Me.TableLayoutPanel9.RowCount = 2
         Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.55319!))
         Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.44681!))
-        Me.TableLayoutPanel9.Size = New System.Drawing.Size(121, 42)
+        Me.TableLayoutPanel9.Size = New System.Drawing.Size(136, 42)
         Me.TableLayoutPanel9.TabIndex = 55
         '
         'label200
@@ -2039,7 +2060,7 @@ Partial Class frmProductsDevelopment
         '
         Me.txtminqty.Location = New System.Drawing.Point(3, 20)
         Me.txtminqty.Name = "txtminqty"
-        Me.txtminqty.Size = New System.Drawing.Size(100, 20)
+        Me.txtminqty.Size = New System.Drawing.Size(67, 20)
         Me.txtminqty.TabIndex = 1
         '
         'TableLayoutPanel10
@@ -2048,12 +2069,12 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel10.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel10.Controls.Add(Me.Label34, 0, 0)
         Me.TableLayoutPanel10.Controls.Add(Me.DTPicker3, 0, 1)
-        Me.TableLayoutPanel10.Location = New System.Drawing.Point(219, 487)
+        Me.TableLayoutPanel10.Location = New System.Drawing.Point(235, 487)
         Me.TableLayoutPanel10.Name = "TableLayoutPanel10"
         Me.TableLayoutPanel10.RowCount = 2
         Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel10.Size = New System.Drawing.Size(142, 46)
+        Me.TableLayoutPanel10.Size = New System.Drawing.Size(136, 46)
         Me.TableLayoutPanel10.TabIndex = 56
         '
         'Label34
@@ -2072,7 +2093,7 @@ Partial Class frmProductsDevelopment
         Me.DTPicker3.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.DTPicker3.Location = New System.Drawing.Point(3, 26)
         Me.DTPicker3.Name = "DTPicker3"
-        Me.DTPicker3.Size = New System.Drawing.Size(136, 20)
+        Me.DTPicker3.Size = New System.Drawing.Size(130, 20)
         Me.DTPicker3.TabIndex = 1
         '
         'TableLayoutPanel11
@@ -2081,12 +2102,12 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel11.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel11.Controls.Add(Me.Label35, 0, 0)
         Me.TableLayoutPanel11.Controls.Add(Me.DTPicker4, 0, 1)
-        Me.TableLayoutPanel11.Location = New System.Drawing.Point(371, 487)
+        Me.TableLayoutPanel11.Location = New System.Drawing.Point(379, 487)
         Me.TableLayoutPanel11.Name = "TableLayoutPanel11"
         Me.TableLayoutPanel11.RowCount = 2
         Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel11.Size = New System.Drawing.Size(144, 46)
+        Me.TableLayoutPanel11.Size = New System.Drawing.Size(136, 46)
         Me.TableLayoutPanel11.TabIndex = 57
         '
         'Label35
@@ -2105,14 +2126,14 @@ Partial Class frmProductsDevelopment
         Me.DTPicker4.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.DTPicker4.Location = New System.Drawing.Point(3, 26)
         Me.DTPicker4.Name = "DTPicker4"
-        Me.DTPicker4.Size = New System.Drawing.Size(138, 20)
+        Me.DTPicker4.Size = New System.Drawing.Size(130, 20)
         Me.DTPicker4.TabIndex = 1
         '
         'chknew
         '
         Me.chknew.AutoSize = True
         Me.chknew.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chknew.Location = New System.Drawing.Point(371, 5)
+        Me.chknew.Location = New System.Drawing.Point(379, 5)
         Me.chknew.Name = "chknew"
         Me.chknew.Size = New System.Drawing.Size(70, 17)
         Me.chknew.TabIndex = 19
@@ -2126,7 +2147,7 @@ Partial Class frmProductsDevelopment
         Me.Panel5.Location = New System.Drawing.Point(523, 298)
         Me.Panel5.Name = "Panel5"
         Me.TableLayoutPanel4.SetRowSpan(Me.Panel5, 5)
-        Me.Panel5.Size = New System.Drawing.Size(316, 100)
+        Me.Panel5.Size = New System.Drawing.Size(326, 100)
         Me.Panel5.TabIndex = 58
         '
         'TableLayoutPanel7
@@ -2174,7 +2195,7 @@ Partial Class frmProductsDevelopment
         Me.Panel6.Location = New System.Drawing.Point(523, 460)
         Me.Panel6.Name = "Panel6"
         Me.TableLayoutPanel4.SetRowSpan(Me.Panel6, 4)
-        Me.Panel6.Size = New System.Drawing.Size(316, 100)
+        Me.Panel6.Size = New System.Drawing.Size(326, 67)
         Me.Panel6.TabIndex = 59
         '
         'TableLayoutPanel6
@@ -2265,12 +2286,12 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel16.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel16.Controls.Add(Me.lbljiratask, 0, 0)
         Me.TableLayoutPanel16.Controls.Add(Me.txtjiratask, 0, 1)
-        Me.TableLayoutPanel16.Location = New System.Drawing.Point(371, 244)
+        Me.TableLayoutPanel16.Location = New System.Drawing.Point(379, 244)
         Me.TableLayoutPanel16.Name = "TableLayoutPanel16"
         Me.TableLayoutPanel16.RowCount = 2
         Me.TableLayoutPanel16.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.65217!))
         Me.TableLayoutPanel16.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 54.34783!))
-        Me.TableLayoutPanel16.Size = New System.Drawing.Size(144, 46)
+        Me.TableLayoutPanel16.Size = New System.Drawing.Size(136, 46)
         Me.TableLayoutPanel16.TabIndex = 60
         '
         'lbljiratask
@@ -2287,15 +2308,52 @@ Partial Class frmProductsDevelopment
         '
         Me.txtjiratask.Location = New System.Drawing.Point(3, 23)
         Me.txtjiratask.Name = "txtjiratask"
-        Me.txtjiratask.Size = New System.Drawing.Size(138, 20)
+        Me.txtjiratask.Size = New System.Drawing.Size(87, 20)
         Me.txtjiratask.TabIndex = 1
+        '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddNewProjectToolStripMenuItem, Me.AddNewPartToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(164, 48)
+        '
+        'AddNewProjectToolStripMenuItem
+        '
+        Me.AddNewProjectToolStripMenuItem.Name = "AddNewProjectToolStripMenuItem"
+        Me.AddNewProjectToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.AddNewProjectToolStripMenuItem.Text = "Add New Project"
+        '
+        'AddNewPartToolStripMenuItem
+        '
+        Me.AddNewPartToolStripMenuItem.Name = "AddNewPartToolStripMenuItem"
+        Me.AddNewPartToolStripMenuItem.Size = New System.Drawing.Size(163, 22)
+        Me.AddNewPartToolStripMenuItem.Text = "Add New Part"
+        '
+        'ContextMenuStrip2
+        '
+        Me.ContextMenuStrip2.ImageScalingSize = New System.Drawing.Size(24, 24)
+        Me.ContextMenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddNewProjectToolStripMenuItem1, Me.AddNewPartToolStripMenuItem1})
+        Me.ContextMenuStrip2.Name = "ContextMenuStrip2"
+        Me.ContextMenuStrip2.Size = New System.Drawing.Size(164, 48)
+        '
+        'AddNewProjectToolStripMenuItem1
+        '
+        Me.AddNewProjectToolStripMenuItem1.Name = "AddNewProjectToolStripMenuItem1"
+        Me.AddNewProjectToolStripMenuItem1.Size = New System.Drawing.Size(163, 22)
+        Me.AddNewProjectToolStripMenuItem1.Text = "Add New Project"
+        '
+        'AddNewPartToolStripMenuItem1
+        '
+        Me.AddNewPartToolStripMenuItem1.Name = "AddNewPartToolStripMenuItem1"
+        Me.AddNewPartToolStripMenuItem1.Size = New System.Drawing.Size(163, 22)
+        Me.AddNewPartToolStripMenuItem1.Text = "Add New Part"
         '
         'frmProductsDevelopment
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(1141, 749)
+        Me.ClientSize = New System.Drawing.Size(1141, 701)
         Me.Controls.Add(Me.SSTab1)
         Me.Name = "frmProductsDevelopment"
         Me.Text = "Form2"
@@ -2325,7 +2383,6 @@ Partial Class frmProductsDevelopment
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         Me.TableLayoutPanel14.ResumeLayout(False)
-        Me.TableLayoutPanel14.PerformLayout()
         Me.TableLayoutPanel8.ResumeLayout(False)
         Me.TableLayoutPanel8.PerformLayout()
         Me.TableLayoutPanel9.ResumeLayout(False)
@@ -2341,6 +2398,8 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel6.ResumeLayout(False)
         Me.TableLayoutPanel16.ResumeLayout(False)
         Me.TableLayoutPanel16.PerformLayout()
+        Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.ContextMenuStrip2.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -2531,4 +2590,10 @@ Partial Class frmProductsDevelopment
     Friend WithEvents TableLayoutPanel16 As TableLayoutPanel
     Friend WithEvents lbljiratask As Label
     Friend WithEvents txtjiratask As TextBox
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents AddNewProjectToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AddNewPartToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ContextMenuStrip2 As ContextMenuStrip
+    Friend WithEvents AddNewProjectToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents AddNewPartToolStripMenuItem1 As ToolStripMenuItem
 End Class

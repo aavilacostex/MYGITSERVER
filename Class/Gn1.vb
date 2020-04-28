@@ -97,6 +97,8 @@ NotInheritable Class Gn1
     Public folderpathvendor As String
     Public FolderPath As String
     Public folderpathpart As String
+    Public pathfolderfrom As String
+
 
     Public Property pathgeneral() As String
         Get
@@ -1455,11 +1457,14 @@ NotInheritable Class Gn1
 
 #Region "NumericFields"
 
-        If String.IsNullOrEmpty(projectno) Then
-            strError += "Project Number,"
+        If String.IsNullOrEmpty(partNo) Then
+            strError += "Part Number,"
         End If
-        If String.IsNullOrEmpty(qty) Then
-            strError += "Quantity,"
+        If String.IsNullOrEmpty(ctpNo) Then
+            strError += "CTP Number,"
+        End If
+        If String.IsNullOrEmpty(ddlUser) Then
+            strError += "Person in Charge,"
         End If
         If String.IsNullOrEmpty(unitCost) Then
             strError += "Unit Cost,"
@@ -1467,21 +1472,10 @@ NotInheritable Class Gn1
         If String.IsNullOrEmpty(unitCostNew) Then
             strError += "Unit Cost New,"
         End If
-        If String.IsNullOrEmpty(sampleCost) Then
-            strError += "Sample Cost,"
-        End If
-        If String.IsNullOrEmpty(miscCost) Then
-            strError += "Misc. Cost,"
-        End If
         If String.IsNullOrEmpty(vendorNo) Then
             strError += "Vendor Number,"
         End If
-        If String.IsNullOrEmpty(toolingCost) Then
-            strError += "Tooling Cost,"
-        End If
-        If String.IsNullOrEmpty(sampleQty) Then
-            strError += "Sample Quantity,"
-        End If
+
 
         If String.IsNullOrEmpty(strError) Then
             Return ""

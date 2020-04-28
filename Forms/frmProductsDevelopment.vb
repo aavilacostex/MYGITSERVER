@@ -39,12 +39,18 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        frmProductsDevelopment_load()
+    End Sub
 
+    Private Sub frmProductsDevelopment_load()
         SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
         SSTab1.Padding = New System.Drawing.Point(300, 10)
         SSTab1.Appearance = TabAppearance.FlatButtons
         ''TabControl1.ItemSize = New Size(0, 1)
         SSTab1.SizeMode = TabSizeMode.Fixed
+
+        'VScrollBar2.Height = 650
+        'VScrollBar2.Dock = DockStyle.Right
 
         cmdSave1.Enabled = False
 
@@ -64,6 +70,9 @@ Public Class frmProductsDevelopment
         cmdsearchctp.FlatStyle = FlatStyle.Flat
         cmdsearchstatus.FlatStyle = FlatStyle.Flat
         cmdall.FlatStyle = FlatStyle.Flat
+        cmdJiraTask.FlatStyle = FlatStyle.Flat
+        cmdPrpech.FlatStyle = FlatStyle.Flat
+        cmdMfrNoSearch.FlatStyle = FlatStyle.Flat
 
         DataGridView1.RowHeadersVisible = False
         dgvProjectDetails.RowHeadersVisible = False
@@ -158,8 +167,9 @@ Public Class frmProductsDevelopment
 
         'AddHandler frmProductsDevelopment.dgvProjectDetails_CellContentClick, AddressOf dgvProjectDetails_CellContentClick
 
-        ResizeTabs()
+        ContextMenuStrip1.Visible = False
 
+        ResizeTabs()
     End Sub
 
 #Region "Combobox load Region"
@@ -347,6 +357,11 @@ Public Class frmProductsDevelopment
             cmdnew1.Enabled = True
         ElseIf SSTab1.SelectedIndex = 1 Then
             Panel4.Enabled = True
+            If flagdeve = 1 Then
+                cmdnew2.Enabled = False
+            Else
+                cmdnew2.Enabled = True
+            End If
         ElseIf SSTab1.SelectedIndex = 2 Then
             Dim rsValue As Integer = -1
             Panel4.Enabled = True
@@ -1083,6 +1098,9 @@ Public Class frmProductsDevelopment
                                 lbljiratask.Visible = False
                                 Cmdjira.Visible = False
                             End If
+
+                            searchpart()
+
                         End If
                     End If
                 End If
@@ -1151,6 +1169,7 @@ Public Class frmProductsDevelopment
                     'clean all other fields
                     flagdeve = 0
                     flagnewpart = 1
+                    cmdnew2.Enabled = True
                     fillcell2(code)
                 Else
                     'is is not selected
@@ -1223,86 +1242,188 @@ Public Class frmProductsDevelopment
         cmdall_Click()
     End Sub
 
-    Private Sub cmdnew3_Click(sender As Object, e As EventArgs) Handles cmdnew3.Click
-
-        Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex)
-        If validationResult.Equals(0) Then
-            Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.OK)
-            flagdeve = 1
-            flagnewpart = 1
-            cleanFormValues("TabPage2", 2)
-            cleanFormValues("TabPage3", 2)
-            gotonew()
-
-        Else
-            Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
-            If resultNew = DialogResult.Yes Then
+    Private Sub AddNewProjectToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles AddNewProjectToolStripMenuItem1.Click
+        Try
+            Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
+            If result = DialogResult.Yes Then
                 flagdeve = 1
                 flagnewpart = 1
                 cleanFormValues("TabPage2", 2)
                 cleanFormValues("TabPage3", 2)
+                TableLayoutPanel15.Enabled = True
+                cmdchange.Enabled = True
+                cmdunitcost.Enabled = True
+                cmdmpartno.Enabled = True
+                cmdcvendor.Enabled = True
+                cmdSave2.Enabled = True
                 gotonew()
+                SSTab1.SelectedIndex = 1
             End If
-        End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub AddNewPartToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles AddNewPartToolStripMenuItem1.Click
+        Try
+            Dim result As DialogResult = MessageBox.Show("Do you want to add a new part to the project?", "CTP System", MessageBoxButtons.YesNo)
+            If result = DialogResult.Yes Then
+                flagdeve = 0
+                flagnewpart = 1
+                cleanFormValues("TabPage3", 1)
+                TableLayoutPanel15.Enabled = False
+                cmdchange.Enabled = False
+                cmdunitcost.Enabled = False
+                cmdmpartno.Enabled = False
+                cmdcvendor.Enabled = False
+                'gotonew()
+                'frmProductsDevelopment_load()
+            End If
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub cmdnew3_Click(sender As Object, e As EventArgs) Handles cmdnew3.Click
+        Try
+            Dim screenPoint As Point = cmdnew3.PointToScreen(New Point(cmdnew3.Left, cmdnew3.Bottom))
+            If screenPoint.Y & ContextMenuStrip2.Size.Height > Screen.PrimaryScreen.WorkingArea.Height Then
+                ContextMenuStrip2.Show(cmdnew3, New Point(0, -ContextMenuStrip2.Size.Height))
+            Else
+                ContextMenuStrip2.Show(cmdnew3, New Point(0, cmdnew3.Height))
+            End If
+            'ContextMenuStrip1.Show(cmdSplit, New Point(0, cmdSplit.Height))
+        Catch ex As Exception
+
+        End Try
+
+
+        'Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex)
+        'If validationResult.Equals(0) Then
+        '    Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.OK)
+        '    flagdeve = 1
+        '    flagnewpart = 1
+        '    cleanFormValues("TabPage2", 2)
+        '    cleanFormValues("TabPage3", 2)
+        '    gotonew()
+
+        'Else
+        '    Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
+        '    If resultNew = DialogResult.Yes Then
+        '        flagdeve = 1
+        '        flagnewpart = 1
+        '        cleanFormValues("TabPage2", 2)
+        '        cleanFormValues("TabPage3", 2)
+        '        gotonew()
+        '    End If
+        'End If
 
     End Sub
 
-    Private Sub cmdnew2_Click(sender As Object, e As EventArgs) Handles cmdnew2.Click
+    Private Sub AddNewProjectToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddNewProjectToolStripMenuItem.Click
+        Try
+            Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex, 1)
+            If validationResult.Equals(0) Then
+                Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
+                If result = DialogResult.Yes Then
+                    flagdeve = 1
+                    flagnewpart = 1
+                    cleanFormValues("TabPage2", 2)
+                    TableLayoutPanel15.Enabled = True
+                    cmdchange.Enabled = True
+                    cmdunitcost.Enabled = True
+                    cmdmpartno.Enabled = True
+                    cmdcvendor.Enabled = True
+                    gotonew()
+                    'frmProductsDevelopment_load()
+                End If
+            End If
+        Catch ex As Exception
 
-        Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex, 1)
-        If validationResult.Equals(0) Then
-            Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.OK)
-            flagdeve = 1
+        End Try
+    End Sub
+
+    Private Sub AddNewPartToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddNewPartToolStripMenuItem.Click
+        Try
+            flagdeve = 0
             flagnewpart = 1
-            cleanFormValues("TabPage2", 2)
-            cleanFormValues("TabPage3", 2)
+            cleanFormValues("TabPage3", 1)
             TableLayoutPanel15.Enabled = False
             cmdchange.Enabled = False
             cmdunitcost.Enabled = False
             cmdmpartno.Enabled = False
             cmdcvendor.Enabled = False
             gotonew()
+            SSTab1.SelectedIndex = 2
+        Catch ex As Exception
 
+        End Try
+    End Sub
+
+    Private Sub cmdnew2_Click(sender As Object, e As EventArgs) Handles cmdnew2.Click
+
+        Dim screenPoint As Point = cmdnew2.PointToScreen(New Point(cmdnew2.Left, cmdnew2.Bottom))
+        If screenPoint.Y & ContextMenuStrip1.Size.Height > Screen.PrimaryScreen.WorkingArea.Height Then
+            If flagdeve = 0 Then
+                ContextMenuStrip1.Show(cmdnew2, New Point(0, -ContextMenuStrip1.Size.Height))
+            End If
         Else
-            Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
-            If resultNew = DialogResult.Yes Then
-                flagdeve = 1
-                flagnewpart = 1
-                cleanFormValues("TabPage2", 2)
-                cleanFormValues("TabPage3", 2)
-                TableLayoutPanel15.Enabled = False
-                cmdchange.Enabled = False
-                cmdunitcost.Enabled = False
-                cmdmpartno.Enabled = False
-                cmdcvendor.Enabled = False
-                gotonew()
+            If flagdeve = 0 Then
+                ContextMenuStrip1.Show(cmdnew2, New Point(0, cmdnew2.Height))
             End If
         End If
-        cmdSave2.Enabled = True
+
+        'Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex, 1)
+        'If validationResult.Equals(0) Then
+        '    Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.OK)
+        '    flagdeve = 1
+        '    flagnewpart = 1
+        '    cleanFormValues("TabPage2", 2)
+        '    cleanFormValues("TabPage3", 2)
+        '    TableLayoutPanel15.Enabled = False
+        '    cmdchange.Enabled = False
+        '    cmdunitcost.Enabled = False
+        '    cmdmpartno.Enabled = False
+        '    cmdcvendor.Enabled = False
+        '    gotonew()
+
+        'Else
+        '    Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
+        '    If resultNew = DialogResult.Yes Then
+        '        flagdeve = 1
+        '        flagnewpart = 1
+        '        cleanFormValues("TabPage2", 2)
+        '        cleanFormValues("TabPage3", 2)
+        '        TableLayoutPanel15.Enabled = False
+        '        cmdchange.Enabled = False
+        '        cmdunitcost.Enabled = False
+        '        cmdmpartno.Enabled = False
+        '        cmdcvendor.Enabled = False
+        '        gotonew()
+        '    End If
+        'End If
+        'cmdSave2.Enabled = True
 
     End Sub
 
     Private Sub cmdnew1_Click(sender As Object, e As EventArgs) Handles cmdnew1.Click
-        'Dim validationResult = mandatoryFields("new", SSTab1.SelectedTab.Name)
-        'If validationResult.Equals(0) Then
-        Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
-        If result = DialogResult.No Then
-            'MessageBox.Show("No pressed")
-        ElseIf result = DialogResult.Yes Then
-            'MessageBox.Show("Yes pressed")
-            flagdeve = 1
-            flagnewpart = 1
-            cleanFormValues("TabPage2", 2)
+        Try
+            'If flagdeve = 1 Then
             gotonew()
-        End If
-        'Else
-        '    Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
-        '    If resultNew = DialogResult.Yes Then
-        '        cleanFormValues(SSTab1.SelectedTab.Name, 0)
-        '        gotonew()
-        '    End If
-        'End If
+            'End If
+        Catch ex As Exception
 
+        End Try
+        'Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
+        'If result = DialogResult.No Then
+        '    'MessageBox.Show("No pressed")
+        'ElseIf result = DialogResult.Yes Then
+        '    'MessageBox.Show("Yes pressed")
+        '    flagdeve = 1
+        '    flagnewpart = 1
+        '    cleanFormValues("TabPage2", 2)
+        '    gotonew()
+        'End If
     End Sub
 
     Private Sub cmdexit1_Click(sender As Object, e As EventArgs) Handles cmdexit1.Click
@@ -1634,7 +1755,31 @@ Public Class frmProductsDevelopment
 
                                         Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                         If resultMsgUser = DialogResult.Yes Then
+
                                             'save files
+                                            gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                                            gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
+                                            If Not Directory.Exists(gnr.folderpathvendor) Then
+                                                System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
+                                            End If
+
+                                            gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
+                                            If Not Directory.Exists(gnr.folderpathproject) Then
+                                                System.IO.Directory.CreateDirectory(gnr.folderpathproject)
+                                            End If
+
+                                            gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
+
+                                            Dim di As New DirectoryInfo(gnr.pathfolderfrom)
+                                            Dim fiArr As FileInfo() = di.GetFiles()
+                                            For Each tt As FileInfo In fiArr
+                                                tt.CopyTo(gnr.folderpathproject, True)
+                                            Next
+
+                                            'Set fsoFolder = fso.GetFolder(pathfolderfrom)
+                                            '            For Each Item In fsoFolder.Files
+                                            '                fso.CopyFile Item, folderpathproject, True
+                                            'Next
                                         End If
                                     End If
                                 End If
@@ -1653,6 +1798,30 @@ Public Class frmProductsDevelopment
                                 Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                 If resultMsgUser = DialogResult.Yes Then
                                     'save files
+                                    gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                                    gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
+                                    If Not Directory.Exists(gnr.folderpathvendor) Then
+                                        System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
+                                    End If
+
+                                    gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
+                                    If Not Directory.Exists(gnr.folderpathproject) Then
+                                        System.IO.Directory.CreateDirectory(gnr.folderpathproject)
+                                    End If
+
+                                    gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
+
+                                    Dim di As New DirectoryInfo(gnr.pathfolderfrom)
+                                    Dim fiArr As FileInfo() = di.GetFiles()
+                                    For Each tt As FileInfo In fiArr
+                                        tt.CopyTo(gnr.folderpathproject, True)
+                                    Next
+
+                                    'Set fsoFolder = fso.GetFolder(pathfolderfrom)
+                                    '            For Each Item In fsoFolder.Files
+                                    '                fso.CopyFile Item, folderpathproject, True
+                                    'Next
+
                                 End If
                             End If
                         End If
@@ -1768,6 +1937,29 @@ Public Class frmProductsDevelopment
                                     Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                     If resultMsgUser = DialogResult.Yes Then
                                         'save files
+                                        gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                                        gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
+                                        If Not Directory.Exists(gnr.folderpathvendor) Then
+                                            System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
+                                        End If
+
+                                        gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
+                                        If Not Directory.Exists(gnr.folderpathproject) Then
+                                            System.IO.Directory.CreateDirectory(gnr.folderpathproject)
+                                        End If
+
+                                        gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
+
+                                        Dim di As New DirectoryInfo(gnr.pathfolderfrom)
+                                        Dim fiArr As FileInfo() = di.GetFiles()
+                                        For Each tt As FileInfo In fiArr
+                                            tt.CopyTo(gnr.folderpathproject, True)
+                                        Next
+
+                                        'Set fsoFolder = fso.GetFolder(pathfolderfrom)
+                                        '            For Each Item In fsoFolder.Files
+                                        '                fso.CopyFile Item, folderpathproject, True
+                                        'Next
                                     End If
                                 End If
                             End If
@@ -1805,6 +1997,29 @@ Public Class frmProductsDevelopment
                                     Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                     If resultMsgUser = DialogResult.Yes Then
                                         'save files
+                                        gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                                        gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
+                                        If Not Directory.Exists(gnr.folderpathvendor) Then
+                                            System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
+                                        End If
+
+                                        gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
+                                        If Not Directory.Exists(gnr.folderpathproject) Then
+                                            System.IO.Directory.CreateDirectory(gnr.folderpathproject)
+                                        End If
+
+                                        gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
+
+                                        Dim di As New DirectoryInfo(gnr.pathfolderfrom)
+                                        Dim fiArr As FileInfo() = di.GetFiles()
+                                        For Each tt As FileInfo In fiArr
+                                            tt.CopyTo(gnr.folderpathproject, True)
+                                        Next
+
+                                        'Set fsoFolder = fso.GetFolder(pathfolderfrom)
+                                        '            For Each Item In fsoFolder.Files
+                                        '                fso.CopyFile Item, folderpathproject, True
+                                        'Next
                                     End If
                                 End If
                             End If
@@ -2034,9 +2249,10 @@ Public Class frmProductsDevelopment
                                                                 cmbuser.SelectedValue, chknew, DtUseTime, txtsample.Text, txttcost.Text, txtvendorno.Text, 0, cmbminorcode.SelectedValue, txttoocost.Text, DtUseTime,
                                                                 DateTime.Now.ToShortDateString(), txtsampleqty.Text)
 
-        Dim validationResult = mandatoryFields("save", SSTab1.SelectedIndex, 1)
+        Dim validationResult = mandatoryFields("save", SSTab1.SelectedIndex, 1, rsValidation)
         If validationResult.Equals(0) Then
-            Dim result As DialogResult = MessageBox.Show("If click yes the part will be added to the project. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
+            Dim result As DialogResult = If(flagnewpart = 1, MessageBox.Show("If click yes the part will be added to the project. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo),
+                                                MessageBox.Show("If click yes will updated this part data. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo))
             If result = DialogResult.No Then
                 'MessageBox.Show("No pressed")
             ElseIf result = DialogResult.Yes Then
@@ -3462,7 +3678,7 @@ Public Class frmProductsDevelopment
             If Not Directory.Exists(pathPictures) Then
                 System.IO.Directory.CreateDirectory(pathPictures)
             End If
-            pathpictureparts = pathPictures & "avatar-ctp.PNG"
+            pathpictureparts = pathPictures & "part-test.PNG"
 
             Dim existsFile As Boolean = File.Exists(pathpictureparts)
             If existsFile Then
@@ -3472,7 +3688,7 @@ Public Class frmProductsDevelopment
             If Trim(txtpartno.Text) <> "" Then
                 Dim PartNo = Trim(UCase(txtpartno.Text))
                 Dim folderpathproject = gnr.pathgeneral & "PartsFiles" & "\" & Trim(UCase(txtpartno.Text)) & "\OEM_" & Trim(UCase(PartNo)) & ".jpg"
-                If File.Exists(pathpictureparts) Then
+                If File.Exists(folderpathproject) Then
                     PictureBox1.Load(folderpathproject)
                 End If
             End If
@@ -3554,7 +3770,7 @@ Public Class frmProductsDevelopment
         End Try
     End Function
 
-    Private Function mandatoryFields(flag As String, index As Integer, Optional ByVal requireValidation As Integer = 0) As Integer
+    Private Function mandatoryFields(flag As String, index As Integer, Optional ByVal requireValidation As Integer = 0, Optional ByVal strArrayCheck As String = Nothing) As Integer
 
         Dim methodResult As Integer = 0
         Dim myTableLayout As TableLayoutPanel
@@ -3601,20 +3817,39 @@ Public Class frmProductsDevelopment
                 If index = 1 Then
                     txtCode.Text = " "
 
-                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0)
+                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And txt.Name <> "txtainfo")
+                    If empty.Any Then
+                        methodResult = 1
+                        'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
+                    End If
+                Else
+                    Dim arrayCheck As New List(Of String)
+                    Dim arrayCheckOk As New List(Of String)
+                    arrayCheck = strArrayCheck.Split(",").ToList()
+                    For Each item As String In arrayCheck
+                        If item = "Part Number" Then
+                            arrayCheckOk.Add("txtpartno")
+                        ElseIf item = "Part Name" Then
+                            arrayCheckOk.Add("txtpartdescription")
+                        ElseIf item = "Vendor Number" Then
+                            arrayCheckOk.Add("txtvendorno")
+                        ElseIf item = "Vendor Name" Then
+                            arrayCheckOk.Add("txtvendorname")
+                        ElseIf item = "CTP Number" Then
+                            arrayCheckOk.Add("txtctpno")
+                        ElseIf item = "Person in Charge" Then
+                            arrayCheckOk.Add("cmbuser")
+                        ElseIf item = "Unit Cost New" Then
+                            arrayCheckOk.Add("txtunitcostnew")
+                        End If
+                    Next
+
+                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And arrayCheckOk.Contains(txt.Name))
                     If empty.Any Then
                         methodResult = 1
                         'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
                     End If
                 End If
-
-                'Dim empties As Integer
-                ''let optional empty values
-                'For Each Val As Windows.Forms.TextBox In myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)
-                '    If String.IsNullOrEmpty(Val.Text) Then
-                '        empties += 1
-                '    End If
-                'Next
             End If
 
             Return methodResult
@@ -3805,6 +4040,22 @@ Public Class frmProductsDevelopment
     Private Sub txtvendorno_TextChanged(sender As Object, e As EventArgs) Handles txtvendorno.TextChanged
 
     End Sub
+
+    Private Sub VScrollBar2_Scroll(sender As Object, e As ScrollEventArgs)
+
+    End Sub
+
+    'Private Sub cmdSplit_Click(sender As Object, e As EventArgs) Handles cmdSplit.Click
+    '    Dim screenPoint As Point = cmdSplit.PointToScreen(New Point(cmdSplit.Left, cmdSplit.Bottom))
+    '    If screenPoint.Y & ContextMenuStrip1.Size.Height > Screen.PrimaryScreen.WorkingArea.Height Then
+    '        ContextMenuStrip1.Show(cmdSplit, New Point(0, -ContextMenuStrip1.Size.Height))
+    '    Else
+    '        ContextMenuStrip1.Show(cmdSplit, New Point(0, cmdSplit.Height))
+    '    End If
+    '    'ContextMenuStrip1.Show(cmdSplit, New Point(0, cmdSplit.Height))
+    'End Sub
+
+
 
 #End Region
 
