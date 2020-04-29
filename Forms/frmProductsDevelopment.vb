@@ -51,6 +51,23 @@ Public Class frmProductsDevelopment
 
         'VScrollBar2.Height = 650
         'VScrollBar2.Dock = DockStyle.Right
+        TableLayoutPanel4.AutoScroll = True
+        TableLayoutPanel4.AutoScrollPosition = New Point(0, TableLayoutPanel4.VerticalScroll.Maximum)
+        TableLayoutPanel4.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+
+        TabPage2.AutoScroll = True
+        TabPage2.AutoScrollPosition = New Point(0, TabPage2.VerticalScroll.Maximum)
+        TabPage2.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+
+        Dim vScrollBar1 As ScrollBar = New VScrollBar()
+        vScrollBar1.Dock = DockStyle.Right
+        vScrollBar1.Dock = DockStyle.Right
+        vScrollBar1.Padding = New Padding(0, 0, 0, 31)
+        vScrollBar1.Margin = New Padding(6, 7, 6, 20)
+
+        AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
+        'vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
+        TabPage2.Controls.Add(vScrollBar1)
 
         cmdSave1.Enabled = False
 
@@ -307,11 +324,6 @@ Public Class frmProductsDevelopment
             cmbstatus1.DataSource = dsStatuses.Tables(0)
             cmbstatus1.DisplayMember = "FullValue"
             cmbstatus1.ValueMember = "CNT03"
-
-            cmbStatusMore.DataSource = dsStatuses.Tables(0)
-            cmbStatusMore.DisplayMember = "FullValue"
-            cmbStatusMore.ValueMember = "CNT03"
-
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -381,6 +393,27 @@ Public Class frmProductsDevelopment
         cmdunitcost.Enabled = True
         cmdmpartno.Enabled = True
         cmdcvendor.Enabled = True
+    End Sub
+
+    'Private Sub pScrollForm()
+    '    Dim ctl As Control
+
+
+    '    If SSTab1.SelectedIndex = 1 Then
+    '        Dim myScrollBar As VScrollBar = Me.Controls.Find("vScrollBar1", True).FirstOrDefault()
+    '        If (myScrollBar IsNot Nothing) Then
+    '            For Each ctl In Me.Controls
+    '                If Not (TypeOf ctl Is VScrollBar) Then
+    '                    ctl.Top = ctl.Top + oldPos - myScrollBar.Value
+    '                End If
+    '            Next
+    '        End If
+    '        ol = myScrollBar.Value
+    '    End If
+    'End Sub
+
+    Private Sub vScrollBar1_Scroll(ByVal sender As Object, ByVal e As ScrollEventArgs)
+        Panel1.VerticalScroll.Value = e.NewValue
     End Sub
 
 #End Region
@@ -1292,6 +1325,8 @@ Public Class frmProductsDevelopment
             Else
                 ContextMenuStrip2.Show(cmdnew3, New Point(0, cmdnew3.Height))
             End If
+
+            cmdSave2.Enabled = True
             'ContextMenuStrip1.Show(cmdSplit, New Point(0, cmdSplit.Height))
         Catch ex As Exception
 
@@ -1372,6 +1407,7 @@ Public Class frmProductsDevelopment
                 ContextMenuStrip1.Show(cmdnew2, New Point(0, cmdnew2.Height))
             End If
         End If
+        cmdSave2.Enabled = True
 
         'Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex, 1)
         'If validationResult.Equals(0) Then
@@ -1408,9 +1444,20 @@ Public Class frmProductsDevelopment
 
     Private Sub cmdnew1_Click(sender As Object, e As EventArgs) Handles cmdnew1.Click
         Try
-            'If flagdeve = 1 Then
-            gotonew()
-            'End If
+            If flagdeve = 1 Then
+                gotonew()
+            Else
+                flagdeve = 1
+                flagnewpart = 1
+                cleanFormValues("TabPage2", 2)
+                TableLayoutPanel15.Enabled = True
+                cmdchange.Enabled = True
+                cmdunitcost.Enabled = True
+                cmdmpartno.Enabled = True
+                cmdcvendor.Enabled = True
+                cmdSave2.Enabled = True
+                gotonew()
+            End If
         Catch ex As Exception
 
         End Try
@@ -1755,7 +1802,6 @@ Public Class frmProductsDevelopment
 
                                         Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                         If resultMsgUser = DialogResult.Yes Then
-
                                             'save files
                                             gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
                                             gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
@@ -1769,17 +1815,7 @@ Public Class frmProductsDevelopment
                                             End If
 
                                             gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-
-                                            Dim di As New DirectoryInfo(gnr.pathfolderfrom)
-                                            Dim fiArr As FileInfo() = di.GetFiles()
-                                            For Each tt As FileInfo In fiArr
-                                                tt.CopyTo(gnr.folderpathproject, True)
-                                            Next
-
-                                            'Set fsoFolder = fso.GetFolder(pathfolderfrom)
-                                            '            For Each Item In fsoFolder.Files
-                                            '                fso.CopyFile Item, folderpathproject, True
-                                            'Next
+                                            My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
                                         End If
                                     End If
                                 End If
@@ -1810,18 +1846,7 @@ Public Class frmProductsDevelopment
                                     End If
 
                                     gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-
-                                    Dim di As New DirectoryInfo(gnr.pathfolderfrom)
-                                    Dim fiArr As FileInfo() = di.GetFiles()
-                                    For Each tt As FileInfo In fiArr
-                                        tt.CopyTo(gnr.folderpathproject, True)
-                                    Next
-
-                                    'Set fsoFolder = fso.GetFolder(pathfolderfrom)
-                                    '            For Each Item In fsoFolder.Files
-                                    '                fso.CopyFile Item, folderpathproject, True
-                                    'Next
-
+                                    My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
                                 End If
                             End If
                         End If
@@ -1949,17 +1974,7 @@ Public Class frmProductsDevelopment
                                         End If
 
                                         gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-
-                                        Dim di As New DirectoryInfo(gnr.pathfolderfrom)
-                                        Dim fiArr As FileInfo() = di.GetFiles()
-                                        For Each tt As FileInfo In fiArr
-                                            tt.CopyTo(gnr.folderpathproject, True)
-                                        Next
-
-                                        'Set fsoFolder = fso.GetFolder(pathfolderfrom)
-                                        '            For Each Item In fsoFolder.Files
-                                        '                fso.CopyFile Item, folderpathproject, True
-                                        'Next
+                                        My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
                                     End If
                                 End If
                             End If
@@ -2009,17 +2024,7 @@ Public Class frmProductsDevelopment
                                         End If
 
                                         gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-
-                                        Dim di As New DirectoryInfo(gnr.pathfolderfrom)
-                                        Dim fiArr As FileInfo() = di.GetFiles()
-                                        For Each tt As FileInfo In fiArr
-                                            tt.CopyTo(gnr.folderpathproject, True)
-                                        Next
-
-                                        'Set fsoFolder = fso.GetFolder(pathfolderfrom)
-                                        '            For Each Item In fsoFolder.Files
-                                        '                fso.CopyFile Item, folderpathproject, True
-                                        'Next
+                                        My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
                                     End If
                                 End If
                             End If
@@ -3491,7 +3496,6 @@ Public Class frmProductsDevelopment
         Dim exMessage As String = " "
         Dim strQueryPartNo = " AND PRDPTN = '" & txtPartNoMore.Text & "'"
         Dim strQueryMfrNo = " AND PRDMFR# = '" & txtMfrNoMore.Text & "'"
-        Dim strQueryStatus = " And PRDSTS = '" & cmbStatusMore.Text & "'"
         Dim strQueryCtpNo = " AND PRDCTP = '" & txtCtpNoMore.Text & "'"
         Try
             'Dim foo as String = If(bar = buz, cat, dog)
@@ -3499,13 +3503,12 @@ Public Class frmProductsDevelopment
             Dim strPartNo As String = If(Not String.IsNullOrEmpty(txtPartNoMore.Text), strQueryPartNo, "")
             Dim strMfrNo As String = If(Not String.IsNullOrEmpty(txtMfrNoMore.Text), strQueryMfrNo, "")
             Dim strCtpNo As String = If(Not String.IsNullOrEmpty(txtCtpNoMore.Text), strQueryCtpNo, "")
-            Dim strStatus As String = If(Not String.IsNullOrEmpty(cmbStatusMore.Text), strQueryStatus, "")
 
-            If String.IsNullOrEmpty(txtPartNoMore.Text) And String.IsNullOrEmpty(txtMfrNoMore.Text) And String.IsNullOrEmpty(txtCtpNoMore.Text) And String.IsNullOrEmpty(cmbStatusMore.Text) Then
+            If String.IsNullOrEmpty(txtPartNoMore.Text) And String.IsNullOrEmpty(txtMfrNoMore.Text) And String.IsNullOrEmpty(txtCtpNoMore.Text) Then
                 fillcell2(txtCode.Text)
             Else
                 sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM 
-                    WHERE PRHCOD = " & txtCode.Text & " " + strPartNo + strMfrNo + strCtpNo + strStatus 'DELETE BURNED REFERENCE
+                    WHERE PRHCOD = " & txtCode.Text & " " + strPartNo + strMfrNo + strCtpNo 'DELETE BURNED REFERENCE
 
                 fillcell22(sql)
             End If
@@ -3565,7 +3568,7 @@ Public Class frmProductsDevelopment
             Else
                 fillcell2(txtCode.Text)
             End If
-            cmbStatusMore.SelectedIndex = 0
+
         Catch ex As Exception
             'display error message
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -3589,44 +3592,6 @@ Public Class frmProductsDevelopment
             Else
                 fillcell2(txtCode.Text)
             End If
-        Catch ex As Exception
-            'display error message
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Private Sub cmdStatusMore_Click(sender As Object, e As EventArgs) Handles cmdStatusMore.Click
-        Dim exMessage As String = " "
-        Dim Qry As New DataTable
-        Try
-            If Not String.IsNullOrEmpty(cmbStatusMore.Text) Then
-
-                dgvProjectDetails.DataSource = Nothing
-                dgvProjectDetails.Refresh()
-                fillcell2(txtCode.Text)
-
-                Dim dt As New DataTable
-                Dim myStatus = Trim(UCase(cmbStatusMore.Text))
-                Dim arrayCheck As New List(Of String)
-                arrayCheck = myStatus.Split("--").ToList()
-                Dim statusDesc = Trim(UCase(arrayCheck(2)))
-
-                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-                Dim Qry1 = dt.AsEnumerable() _
-                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDSTS"))) = statusDesc)
-                If Qry1.Count > 0 Then
-                    Qry = Qry1.CopyToDataTable
-                    dgvProjectDetails.DataSource = Qry
-                    dgvProjectDetails.Refresh()
-                Else
-                    dgvProjectDetails.DataSource = Nothing
-                    dgvProjectDetails.Refresh()
-                    Dim result As DialogResult = MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
-                End If
-            Else
-                fillcell2(txtCode.Text)
-            End If
-            txtPartNoMore.Text = ""
         Catch ex As Exception
             'display error message
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -3864,10 +3829,13 @@ Public Class frmProductsDevelopment
             Dim myTableLayout As TableLayoutPanel
             If tab = "TabPage1" Then
                 myTableLayout = Me.TableLayoutPanel1
+                SSTab1.TabPages(0).Text = ""
             ElseIf tab = "TabPage2" Then
                 myTableLayout = Me.TableLayoutPanel3
+                SSTab1.TabPages(1).Text = ""
             Else
                 myTableLayout = Me.TableLayoutPanel4
+                SSTab1.TabPages(2).Text = ""
             End If
 
             For Each tt In myTableLayout.Controls
