@@ -43,6 +43,10 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub frmProductsDevelopment_load()
+
+
+
+
         SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
         SSTab1.Padding = New System.Drawing.Point(300, 10)
         SSTab1.Appearance = TabAppearance.FlatButtons
@@ -54,20 +58,30 @@ Public Class frmProductsDevelopment
         TableLayoutPanel4.AutoScroll = True
         TableLayoutPanel4.AutoScrollPosition = New Point(0, TableLayoutPanel4.VerticalScroll.Maximum)
         TableLayoutPanel4.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+        TableLayoutPanel4.AutoScrollMinSize = New Drawing.Size(800, 0)
 
-        TabPage2.AutoScroll = True
-        TabPage2.AutoScrollPosition = New Point(0, TabPage2.VerticalScroll.Maximum)
-        TabPage2.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+        'TabPage2.AutoScroll = True
+        'TabPage2.AutoScrollPosition = New Point(0, TabPage2.VerticalScroll.Maximum)
+        'TabPage2.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
 
-        Dim vScrollBar1 As ScrollBar = New VScrollBar()
-        vScrollBar1.Dock = DockStyle.Right
-        vScrollBar1.Dock = DockStyle.Right
-        vScrollBar1.Padding = New Padding(0, 0, 0, 31)
-        vScrollBar1.Margin = New Padding(6, 7, 6, 20)
+        TabPage3.AutoScroll = True
+        TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
+        TabPage3.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+        TabPage3.AutoScrollMinSize = New Drawing.Size(800, 0)
 
-        AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
-        'vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
-        TabPage2.Controls.Add(vScrollBar1)
+        'Dim vScrollBar1 As ScrollBar = New VScrollBar()
+        'vScrollBar1.Dock = DockStyle.Right
+        'vScrollBar1.Dock = DockStyle.Right
+        'vScrollBar1.Padding = New Padding(0, 0, 0, 31)
+        'vScrollBar1.Margin = New Padding(6, 7, 6, 20)
+
+        'AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
+        ''vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
+        'TabPage2.Controls.Add(vScrollBar1)
+
+        Me.WindowState = FormWindowState.Maximized
+
+
 
         cmdSave1.Enabled = False
 
@@ -2102,12 +2116,11 @@ Public Class frmProductsDevelopment
                                     End If
                                 End If
                                 'paso de receiving of first production a rejected y esto implica cambio de vendor asignado
-                                If (Trim(cmbstatus.SelectedValue) = "R") Then
-                                    'If (Trim(cmbstatus.SelectedValue) = "R ") And (dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "RP") Then
-                                    Dim flagchangevendor = 1
-                                    frmChangeVendor.ShowDialog() '  check in vb net
+                                If (Trim(cmbstatus.SelectedValue) = "R ") And (dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "RP") Then
+                                        Dim flagchangevendor = 1
+                                    frmChangeVendor.ShowDialog()
                                 End If
-                                If Trim(Status2) = "Closed Successfully" Then
+                                    If Trim(Status2) = "Closed Successfully" Then
                                     toemails = prepareEmailsToSend(1)
                                     Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
                                     If rsResult < 0 Then

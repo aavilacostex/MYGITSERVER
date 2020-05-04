@@ -73,8 +73,8 @@
             'IpAddrs = gnr.LocalIPAddress
             'IpAddrs = gnr.GetARPTablr()
             IpAddrs = gnr.GetIPv4Address()
-            gnr.ipaddresslocal = IpAddrs(1)
-            Versionctp = CurrentCTPVersion.Build & " - " & Strings.Right(IpAddrs(1), 5)
+            gnr.ipaddresslocal = IpAddrs
+            Versionctp = CurrentCTPVersion.Build & " - " & Strings.Right(IpAddrs, 5)
             'Versionctp = Version & " - " & Right(IpAddrs(1), 5)
 
             'revisar este codigo con alejandro
@@ -86,6 +86,9 @@
             '    printpath = "\\Dalsvr\CTP_System\Reports"
             'End If
 
+            cmdok.FlatStyle = FlatStyle.Flat
+            cmdcancel.FlatStyle = FlatStyle.Flat
+
             Dim maxValue = gnr.getmax("loginctp", "codlogin")
             If Not String.IsNullOrEmpty(maxValue) Then
                 maxValue += 1
@@ -94,9 +97,12 @@
             End If
 
             'codloginctp = gnr.getmax("loginctp", "codlogin")
-            Dim rsInsLoginTcp = gnr.InsertIntoLoginTcp(maxValue, "LREDONDO", Versionctp)
-            If rsInsLoginTcp <> 0 Then
-                'error message
+            Dim userName = If(String.IsNullOrEmpty(Environment.UserName), "", Environment.UserName)
+            If Not String.IsNullOrEmpty(userName) Then
+                Dim rsInsLoginTcp = gnr.InsertIntoLoginTcp(maxValue, userName, Versionctp)
+                If rsInsLoginTcp <> 0 Then
+                    'error message
+                End If
             End If
             Exit Sub
         Catch ex As Exception
@@ -270,7 +276,7 @@
                             Else
                                 maxValue = 1 'preguntar duda
                             End If
-                            Dim rsInsLoginTcp = gnr.InsertIntoLoginTcp(maxValue, "LREDONDO", Versionctp)
+                            Dim rsInsLoginTcp = gnr.InsertIntoLoginTcp(maxValue, Trim(UCase(txtUserName.Text)), Versionctp)
                             If rsInsLoginTcp <> 0 Then
                                 'error message
                             End If

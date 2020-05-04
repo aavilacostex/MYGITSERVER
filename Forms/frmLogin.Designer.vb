@@ -191,7 +191,7 @@ Partial Class frmLogin
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmLogin"
-        Me.Text = "Form3"
+        Me.Text = "Login"
         Me.TableLayoutPanel1.ResumeLayout(False)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel2.ResumeLayout(False)
