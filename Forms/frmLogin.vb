@@ -35,7 +35,7 @@
 
         'On Error GoTo errhandler
         Try
-            Conn.ConnectionString = Gn1.strconnection
+            Conn.ConnectionString = gnr.Conexion
             Conn.Open()
 
             Dim dsControlData = gnr.GetDataByPartMix1()
@@ -51,7 +51,7 @@
                                 Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
                         End If
                         If tt.ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "GEN" Then
-                            gnr.pathgeneral = Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
+                            gnr.Path = Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
                                 Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
                         End If
                         If tt.ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "EMA" Then
@@ -59,7 +59,7 @@
                                 Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
                         End If
                         If tt.ItemArray(dsControlData.Tables(0).Columns("cnt03").Ordinal) = "REP" Then
-                            gnr.printpath = Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
+                            gnr.JiraPathBaseValue = Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde1").Ordinal)) &
                                 Trim(tt.ItemArray(dsControlData.Tables(0).Columns("cntde2").Ordinal))
                         End If
                     Next
@@ -277,10 +277,10 @@
                             Call amenu()
 
                             If userid = "CARLOS" Or userid = "JDMERCADO" Or userid = "MVELEZ" Or userid = "KRODRIGUEZ" Or userid = "JDMIRA" Or userid = "HOLIVEROS" Or userid = "LARIAS" Or userid = "AAVILA" Then
-                                ConnSql.ConnectionString = gnr.strconnSQL
+                                ConnSql.ConnectionString = gnr.SQLCon
                                 ConnSql.Open()
 
-                                gnr.ConnSqlNOVA.ConnectionString = gnr.strconnSQLNOVA
+                                gnr.ConnSqlNOVA.ConnectionString = gnr.NOVASQLCon
                                 gnr.ConnSqlNOVA.Open()
                             End If
                         End If

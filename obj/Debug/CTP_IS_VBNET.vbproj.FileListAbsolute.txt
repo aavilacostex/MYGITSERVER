@@ -28,3 +28,9 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmproductsdeve
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmproductsdevelopmentvendor.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\System.Data.SqlClient.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\System.Data.SqlClient.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Interop.Crystal.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\AxInterop.Crystal.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.CRPEAuto.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.Crystal.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\AxInterop.Crystal.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmChangeVendor.resources

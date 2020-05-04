@@ -20,7 +20,7 @@ Public Class frmProductsDevelopment
     Dim gnr As Gn1 = New Gn1()
     'Public Const PageSize = 10
     'Public Property TotalRecords() As Integer
-    Dim urlPathBase As String = "https://costex.atlassian.net/browse/"
+    'Dim urlPathBase As String = "https://costex.atlassian.net/browse/"
     Dim pathpictureparts As String
 
     Public Event PositionChanged(sender As Object, e As EventArgs)
@@ -132,6 +132,7 @@ Public Class frmProductsDevelopment
 
         FillDDlUser() 'Fill user cmb
         FillDDlUser1()
+        FillDDlUser2()
         FillDDLStatus()
         FillDDlMinorCode()
         FillDDlPrPech()
@@ -224,6 +225,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -260,6 +262,41 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub FillDDlUser2()
+        Dim exMessage As String = " "
+        Dim CleanUser As String
+        Try
+            Dim dsUser = gnr.FillDDLUser()
+
+            dsUser.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsUser.Tables(0).Rows.Count - 1
+                If dsUser.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsUser.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsUser.Tables(0).Rows(i).Item(1).ToString()
+                    CleanUser = Trim(dsUser.Tables(0).Rows(i).Item(0).ToString())
+                    dsUser.Tables(0).Rows(i).Item(2) = fllValueName
+                    dsUser.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+            Dim newRow As DataRow = dsUser.Tables(0).NewRow
+            newRow("USUSER") = "N/A"
+            newRow("USNAME") = "NO NAME"
+            newRow("FullValue") = "N/A -- NO NAME"
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsUser.Tables(0).Rows.InsertAt(newRow, 0)
+
+            cmbuser2.DataSource = dsUser.Tables(0)
+            cmbuser2.DisplayMember = "FullValue"
+            cmbuser2.ValueMember = "USUSER"
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -296,6 +333,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -326,6 +364,7 @@ Public Class frmProductsDevelopment
             cmbstatus1.ValueMember = "CNT03"
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -352,6 +391,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -484,6 +524,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -544,6 +585,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -553,7 +595,7 @@ Public Class frmProductsDevelopment
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
 
-            sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS,PRDJIRA FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
+            sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS,PRDJIRA,PRDUSR FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
             'get the query results
             ds = gnr.FillGrid(sql)
 
@@ -637,6 +679,7 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -706,6 +749,7 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -767,6 +811,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         Exit Sub
     End Sub
@@ -834,6 +879,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
 
             ds = Nothing
             Return ds
@@ -1145,6 +1191,7 @@ Public Class frmProductsDevelopment
             txtminor.Enabled = False
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -1210,6 +1257,7 @@ Public Class frmProductsDevelopment
             Next
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
 
@@ -1218,11 +1266,11 @@ Public Class frmProductsDevelopment
     Private Sub dgvProjectDetails_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
     Handles dgvProjectDetails.CellContentClick
         If e.ColumnIndex = 7 Then
-            Dim UrlAddress = urlPathBase + dgvProjectDetails(e.ColumnIndex, e.RowIndex).Value.ToString()
+            Dim UrlAddress = gnr.JiraPathBaseValue + dgvProjectDetails(e.ColumnIndex, e.RowIndex).Value.ToString()
             If System.Uri.IsWellFormedUriString(UrlAddress, UriKind.Absolute) Then
                 Process.Start(UrlAddress)
             Else
-                'error message bad url
+                MessageBox.Show("The formed url has error.", "CTP System", MessageBoxButtons.OK)
             End If
         Else
             DataGridView1_DoubleClick(sender, e)
@@ -1490,7 +1538,7 @@ Public Class frmProductsDevelopment
         requireValidation = 1
         cmbprstatus.SelectedIndex = 1
         'pathpictureparts = pathgeneral & "CTPPictures\pic_not_av.jpg"
-        Dim pathPictures = gnr.pathgeneral & "CTPPictures\"
+        Dim pathPictures = gnr.Path & "CTPPictures\"
         If Not Directory.Exists(pathPictures) Then
             System.IO.Directory.CreateDirectory(pathPictures)
         End If
@@ -1527,7 +1575,7 @@ Public Class frmProductsDevelopment
                         dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
                                             txtvendorno.Text, txtpartno.Text)
                         If dsUpdatedData <> 0 Then
-                            'show message error
+                            MessageBox.Show("An error ocurred updating fields.", "CTP System", MessageBoxButtons.OK)
                         End If
                     Else
                         Dim arrayCheck As New List(Of String)
@@ -1598,6 +1646,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -1659,16 +1708,17 @@ Public Class frmProductsDevelopment
                                     cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
                                     dtTime5, CInt(txtsampleqty.Text))
                 Else
-                    'message answering for a vendor
                     QueryDetailResult = -1
+                    MessageBox.Show("The project number an d vendor number must have value.", "CTP System", MessageBoxButtons.OK)
                 End If
 
                 If QueryDetailResult <0 Then
-                    'error message
+                    MessageBox.Show("Ann error ocurred inserting data in database.", "CTP System", MessageBoxButtons.OK)
                 End If
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -1684,12 +1734,13 @@ Public Class frmProductsDevelopment
                     Dim maxItemWL = gnr.getmax("PRDWL", "PRWCOD")
                     Dim rsInsWishListPart = gnr.InsertWishListProduct(maxItemWL, userId, txtpartno.Text)
                     If rsInsWishListPart < 0 Then
-                        'error message
+                        MessageBox.Show("Ann error ocurred inserting data in WishList.", "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -1699,24 +1750,25 @@ Public Class frmProductsDevelopment
             If flag = 0 Then
                 Dim queryProdDetail = gnr.UpdateProductDetail(txtCode.Text, txtpartno.Text)
                 If queryProdDetail <> 0 Then
-                    'error message
+                    MessageBox.Show("Ann error ocurred updating data in Prodcut Detail.", "CTP System", MessageBoxButtons.OK)
                 End If
             End If
 
-            Dim codComment = gnr.getmax("PRDCMH", "PRDCCO")
+            Dim codComment = gnr.getmax("PRDCMH", "PRDCCO") + 1
             Dim queryProdComments = gnr.InsertProductComment(txtCode.Text, txtpartno.Text, codComment, userid)
             If queryProdComments <> 0 Then
-                'ERROR MESSAGE  
+                MessageBox.Show("Ann error ocurred inserting data in Product Comment Header database.", "CTP System", MessageBoxButtons.OK)
             End If
             Dim codDetComment = 1
             'Dim messcomm = "Person in charge changed assigned " & Trim(cmbuser.SelectedValue)
             Dim messcomm = strUser
             Dim queryProdCommentsDet = gnr.InsertProductCommentDetail(txtCode.Text, txtpartno.Text, codComment, codDetComment, messcomm)
             If queryProdCommentsDet <> 0 Then
-                'error message
+                MessageBox.Show("Ann error ocurred inserting data in Product Comment Detail database.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -1747,7 +1799,7 @@ Public Class frmProductsDevelopment
                 Dim queryResult = gnr.InsertNewProject(ProjectNo, userid, DTPicker1, txtainfo.Text, txtname.Text, cmbprstatus, validUser)
                 'Dim queryResult = 1
                 If queryResult < 0 Then
-                    'error message 
+                    MessageBox.Show("Ann error ocurred inserting data in Product Header database.", "CTP System", MessageBoxButtons.OK)
                 Else
                     txtCode.Text = ProjectNo
                     flagdeve = 0
@@ -1803,19 +1855,7 @@ Public Class frmProductsDevelopment
                                         Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                         If resultMsgUser = DialogResult.Yes Then
                                             'save files
-                                            gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
-                                            gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
-                                            If Not Directory.Exists(gnr.folderpathvendor) Then
-                                                System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
-                                            End If
-
-                                            gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                            If Not Directory.Exists(gnr.folderpathproject) Then
-                                                System.IO.Directory.CreateDirectory(gnr.folderpathproject)
-                                            End If
-
-                                            gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                            My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
+                                            copyProjecFiles(strProjectNo)
                                         End If
                                     End If
                                 End If
@@ -1831,23 +1871,13 @@ Public Class frmProductsDevelopment
                                     ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                                 End If
 
-                                Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
-                                If resultMsgUser = DialogResult.Yes Then
-                                    'save files
-                                    gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
-                                    gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
-                                    If Not Directory.Exists(gnr.folderpathvendor) Then
-                                        System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
-                                    End If
+                                'rectificado probar
 
-                                    gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                    If Not Directory.Exists(gnr.folderpathproject) Then
-                                        System.IO.Directory.CreateDirectory(gnr.folderpathproject)
-                                    End If
-
-                                    gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                    My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
-                                End If
+                                'Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
+                                'If resultMsgUser = DialogResult.Yes Then
+                                '    'save files
+                                '    copyProjecFiles(strProjectNo)
+                                'End If
                             End If
                         End If
                     End If
@@ -1860,7 +1890,7 @@ Public Class frmProductsDevelopment
                     flagnewpart = 0
                     requireValidation = 0
                 End If
-            Else 'update
+            Else 'modify
                 Dim Status2 As String = ""
                 If Not (String.IsNullOrEmpty(gnr.GetProjectStatusDescription(cmbstatus.SelectedValue.ToString()))) Then
                     Status2 = gnr.GetProjectStatusDescription(cmbstatus.SelectedValue.ToString())
@@ -1879,19 +1909,18 @@ Public Class frmProductsDevelopment
                     'If cmbprstatus.FindString("F") Then
                     Dim dsProdDet = gnr.GetProdDetByCodeAndExc(txtCode.Text)
                     If Not dsProdDet Is Nothing Then
-                        If dsProdDet.Tables(0).Rows.Count <= 0 Then
+                        If dsProdDet.Tables(0).Rows.Count <= 0 Then 'todos los parts# estan cerrados
                             rsProdClosedParts = gnr.UpdateProdClosedParts(userid, DTPicker1.Value.ToString(), Trim(cmbuser1.SelectedValue.ToString()), Trim(txtainfo.Text), Trim(txtname.Text),
                                                                                   Trim(cmbprstatus.Text.ToString()), Trim(txtCode.Text))
                             If Not rsProdClosedParts.Equals(0) Then
-                                'error message
+                                MessageBox.Show("Ann error ocurred updating Closed Parts.", "CTP System", MessageBoxButtons.OK)
                             End If
-                        Else
-
+                        Else 'hay # de parte abiertos
                             Dim resultOpenParts As DialogResult = MessageBox.Show("All Items must be closed if you want to finish the project.", "CTP System", MessageBoxButtons.OK)
                             Dim rsProdOpenParts = gnr.UpdateProdOpenParts(userid, DTPicker1.Value.ToString(), Trim(cmbuser1.SelectedValue.ToString()), Trim(txtainfo.Text), Trim(txtname.Text),
                                                                               Trim(txtCode.Text))
                             If Not rsProdOpenParts.Equals(0) Then
-                                'error message
+                                MessageBox.Show("Ann error ocurred updating Open Parts.", "CTP System", MessageBoxButtons.OK)
                             End If
 
                             'Dim resultError As DialogResult = MessageBox.Show("An error ocurred. Call to an administrator.", "CTP System", MessageBoxButtons.OK)
@@ -1902,7 +1931,7 @@ Public Class frmProductsDevelopment
                     rsProdClosedParts = gnr.UpdateProdClosedParts(userid, DTPicker1.Value.ToString(), Trim(cmbuser1.SelectedValue.ToString()), Trim(txtainfo.Text), Trim(txtname.Text),
                                                                               Trim(cmbprstatus.Text.ToString()), Trim(txtCode.Text))
                     If Not rsProdClosedParts.Equals(0) Then
-                        'error message
+                        MessageBox.Show("Ann error ocurred updating closed parts.", "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
                 'End If
@@ -1962,19 +1991,7 @@ Public Class frmProductsDevelopment
                                     Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                     If resultMsgUser = DialogResult.Yes Then
                                         'save files
-                                        gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
-                                        gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
-                                        If Not Directory.Exists(gnr.folderpathvendor) Then
-                                            System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
-                                        End If
-
-                                        gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                        If Not Directory.Exists(gnr.folderpathproject) Then
-                                            System.IO.Directory.CreateDirectory(gnr.folderpathproject)
-                                        End If
-
-                                        gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                        My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
+                                        copyProjecFiles(strProjectNo)
                                     End If
                                 End If
                             End If
@@ -2012,25 +2029,25 @@ Public Class frmProductsDevelopment
                                     Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
                                     If resultMsgUser = DialogResult.Yes Then
                                         'save files
-                                        gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
-                                        gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
-                                        If Not Directory.Exists(gnr.folderpathvendor) Then
-                                            System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
-                                        End If
-
-                                        gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                        If Not Directory.Exists(gnr.folderpathproject) Then
-                                            System.IO.Directory.CreateDirectory(gnr.folderpathproject)
-                                        End If
-
-                                        gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
-                                        My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
+                                        copyProjecFiles(strProjectNo)
                                     End If
                                 End If
                             End If
+                        Else
+                            InsertProductDetails(ProjectNo, partstoshow)
+
+                            If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
+                                'send email
+                            End If
+
+                            PoQotaFunction()
+
+                            If cmbuser.SelectedValue <> "N/A " Then
+                                ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
+                            End If
                         End If
                     End If
-                Else
+                Else 'update
                     If Trim(txtpartno.Text) <> "" And Trim(txtvendorno.Text) <> "" Then
                         Dim dsGetProdDesc = gnr.GetDataByCodeAndPartNoProdDesc(txtCode.Text, txtpartno.Text)
                         If dsGetProdDesc.Tables(0).Rows.Count > 0 Then
@@ -2061,38 +2078,40 @@ Public Class frmProductsDevelopment
                             flagustatus = 1
 
                             If Trim(cmbstatus.SelectedValue) <> dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) Then
-                                If (Trim(Status2) = "Closed without Negotiation") Or (Trim(Status2) = "Closed (Demand/cost/material)") Then
+                                If (Trim(Status2) = "Closed w/o negotiation") Or (Trim(Status2) = "Closed (Demand/cost/material)") Then
                                     Dim rsEnterComm As DialogResult = MessageBox.Show("Enter Comment.", "CTP System", MessageBoxButtons.OK)
                                     gnr.seeaddprocomments = 5
-                                    frmproductsdevelopmentcomments.Show()
+                                    frmproductsdevelopmentcomments.ShowDialog()
                                 End If
                                 If (Trim(Status2) = "Approved") Or (Trim(Status2) = "Approved with advice") Then
                                     Dim rsAssignVendor As DialogResult = MessageBox.Show("Do you want to change the assigned vendor?", "CTP System", MessageBoxButtons.YesNo)
                                     If rsAssignVendor = DialogResult.Yes Then
                                         Dim dsGetPartVendor = gnr.GetDataByPartVendor(txtpartno.Text)
                                         If dsGetPartVendor.Tables(0).Rows.Count > 0 Then
-                                            'change vendor method
+                                            gnr.changeVendor(txtpartno.Text, txtvendorno.Text, userid)
                                         Else
                                             Dim dsGetPartNoVendor = gnr.GetDataByPartNoVendor(txtpartno.Text)
                                             If dsGetPartNoVendor.Tables(0).Rows.Count > 0 Then
                                                 Dim rsInsertNewInv = gnr.InsertNewInv("", txtpartno.Text, dsGetPartNoVendor.Tables(0).Rows(0).ItemArray(dsGetPartNoVendor.Tables(0).Columns("impc1").Ordinal),
                                                                                       dsGetPartNoVendor.Tables(0).Rows(0).ItemArray(dsGetPartNoVendor.Tables(0).Columns("impc2").Ordinal), "", txtunitcostnew.Text, "", "", txtvendorno.Text)
                                                 If rsInsertNewInv <> 0 Then
-                                                    'error message
+                                                    MessageBox.Show("Ann error ocurred inserting data in Inventory.", "CTP System", MessageBoxButtons.OK)
                                                 End If
                                             End If
                                         End If
                                     End If
                                 End If
-                                If (Trim(cmbstatus.SelectedValue) = "R") And (dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "RP") Then
+                                'paso de receiving of first production a rejected y esto implica cambio de vendor asignado
+                                If (Trim(cmbstatus.SelectedValue) = "R") Then
+                                    'If (Trim(cmbstatus.SelectedValue) = "R ") And (dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "RP") Then
                                     Dim flagchangevendor = 1
-                                    'frmchangevendor.Show 1  check in vb net
+                                    frmChangeVendor.ShowDialog() '  check in vb net
                                 End If
                                 If Trim(Status2) = "Closed Successfully" Then
                                     toemails = prepareEmailsToSend(1)
                                     Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
                                     If rsResult < 0 Then
-                                        'mensaje de error
+                                        MessageBox.Show("Ann error ocurred sending emails.", "CTP System", MessageBoxButtons.OK)
                                     End If
 
                                 End If
@@ -2127,7 +2146,7 @@ Public Class frmProductsDevelopment
                                                                         txtctpno.Text, txtsampleqty.Text, txtqty.Text, txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text,
                                                                         DTPicker3.Value, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text, txtCode.Text, txtpartno.Text)
                             If rsUpdProdDet <> 0 Then
-                                'error message
+                                MessageBox.Show("Ann error ocurred updating data in Product Detail database.", "CTP System", MessageBoxButtons.OK)
                             End If
                         Else
                             Dim rsUpdProdDet = gnr.UpdateProductDetail2(partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, DTPicker5.Value, txtvendorno.Text, chkValue,
@@ -2135,7 +2154,7 @@ Public Class frmProductsDevelopment
                                                                        txtctpno.Text, txtsampleqty.Text, txtqty.Text, txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text,
                                                                        DTPicker3.Value, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text, txtpartno.Text)
                             If rsUpdProdDet <> 0 Then
-                                'error message
+                                MessageBox.Show("Ann error ocurred updating data in Product Detail database.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
 
@@ -2183,12 +2202,12 @@ Public Class frmProductsDevelopment
 
                 Dim dsGetProdDetByCodeAndExc = gnr.GetProdDetByCodeAndExc(txtCode.Text)
                 If Not dsGetProdDetByCodeAndExc Is Nothing Then
-                    If dsGetProdDetByCodeAndExc.Tables(0).Rows.Count = 0 Then
+                    If dsGetProdDetByCodeAndExc.Tables(0).Rows.Count = 0 Then 'todos los parts# estan cerrados
                         Dim dspMsg As DialogResult = MessageBox.Show("All parts for this project are closed. Do you want to finish the project?", "CTP System", MessageBoxButtons.YesNo)
                         If dspMsg = DialogResult.Yes Then
                             Dim rsUpdProdDevHeader = gnr.UpdateProductDevHeader(txtCode.Text)
                             If rsUpdProdDevHeader <> 0 Then
-                                'error message
+                                MessageBox.Show("Ann error ocurred updating data in Product Header datatable.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     End If
@@ -2216,6 +2235,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -2284,6 +2304,7 @@ Public Class frmProductsDevelopment
             Return dtChange
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
     End Function
@@ -2335,7 +2356,7 @@ Public Class frmProductsDevelopment
                                                                             benefits, info, prdUsr, chkNew, prdEdd, prdSco, miscCost, vendorNo, prdPts, prdMpc, toolCost, prdErd, prdPda,
                                                                             prdSqty, prwLda, prwLfl, partNo)
                             If rsInsertion < 0 Then
-                                'error message
+                                MessageBox.Show("Ann error ocurred inserting data in Log Product Detail datatable.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     End If
@@ -2346,7 +2367,7 @@ Public Class frmProductsDevelopment
                         If prodCommHeaderDeletion > 1 Then
                             Dim prodCommDetDeletion = gnr.DeleteDataFromProdCommDet(txtCode.Text, txtpartno.Text)
                             If prodCommDetDeletion > 1 Then
-                                'message fo right deletion process
+                                MessageBox.Show("Deletion process succeed.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     End If
@@ -2355,13 +2376,13 @@ Public Class frmProductsDevelopment
                     If dsData Is Nothing Then
                         Dim rsPoqotaDeletion = gnr.DeleteDataFromPoQota(txtvendorno.Text, txtpartno.Text)
                         If rsPoqotaDeletion < 0 Then
-                            'error message
+                            MessageBox.Show("Ann error ocurred deleting data from POQOTA.", "CTP System", MessageBoxButtons.OK)
                         End If
                     Else
                         If dsData.Tables(0).Rows.Count = 0 Then
                             Dim rsPoqotaDeletion = gnr.DeleteDataFromPoQota(txtvendorno.Text, txtpartno.Text)
                             If rsPoqotaDeletion < 0 Then
-                                'error message
+                                MessageBox.Show("Ann error ocurred deleting data from POQOTA.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     End If
@@ -2376,6 +2397,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -2420,7 +2442,7 @@ Public Class frmProductsDevelopment
                                 End If
                             End If
                         Else
-                            'error message no part exists
+                            MessageBox.Show("There is not a Part Number with the entered value.", "CTP System", MessageBoxButtons.OK)
                         End If
 
                         Dim dsGetDataFromDualInv = gnr.GetDataFromDualInventory(partno)
@@ -2793,6 +2815,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -2826,7 +2849,7 @@ Public Class frmProductsDevelopment
                                     Dim rsUpdatePoQotaByVendorAndPart = gnr.UpdatePoQotaByVendorAndPart(vendorno, oldvendorno, txtpartno.Text,
                                                                         dsGetDataByVendorAndPartNo.Tables(0).Rows(0).ItemArray(dsGetDataByVendorAndPartNo.Tables(0).Columns("PQSEQ").Ordinal).ToString())
                                     If rsUpdatePoQotaByVendorAndPart <> 0 Then
-                                        'error message
+                                        MessageBox.Show("Ann error ocurred updating POQOTA datatable.", "CTP System", MessageBoxButtons.OK)
                                     End If
                                 Else
                                     Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
@@ -2836,7 +2859,7 @@ Public Class frmProductsDevelopment
                                         Dim spacepoqota = "                               DEV"
                                         Dim rsInsertNewPOQota = gnr.InsertNewPOQotaLess(txtpartno.Text, vendorno, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), "", DateTime.Now.Day.ToString(), "", spacepoqota, 0)
                                         If rsInsertNewPOQota <> 0 Then
-                                            'error message
+                                            MessageBox.Show("Ann error ocurred inserting data in POQOTA.", "CTP System", MessageBoxButtons.OK)
                                         End If
                                         maxValue = 1 'preguntar duda
                                     End If
@@ -2844,7 +2867,7 @@ Public Class frmProductsDevelopment
                                 End If
                                 Dim rsUpdProdDetVend = gnr.UpdateProdDetailVendor(partstoshow, vendorno, txtCode.Text, txtpartno.Text)
                                 If rsUpdProdDetVend <> 0 Then
-                                    'erro message
+                                    MessageBox.Show("Ann error ocurred updating data in Product Detail Datatable.", "CTP System", MessageBoxButtons.OK)
                                 End If
                                 fillcell2(txtCode.Text)
                             End If
@@ -2861,6 +2884,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -2891,6 +2915,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
     End Sub
@@ -2919,6 +2944,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
     End Sub
@@ -2947,6 +2973,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -2975,6 +3002,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3002,6 +3030,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3063,6 +3092,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3090,6 +3120,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3117,6 +3148,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3145,6 +3177,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3172,6 +3205,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3200,7 +3234,7 @@ Public Class frmProductsDevelopment
         Dim fullFilename As String
         Try
             If Trim(txtCode.Text) <> "" And Trim(txtpartno.Text) <> "" Then
-                gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                gnr.FolderPath = gnr.Path & "PDevelopment"
                 gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
 
                 If Not Directory.Exists(gnr.folderpathvendor) Then
@@ -3251,6 +3285,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3258,7 +3293,7 @@ Public Class frmProductsDevelopment
         Dim exMessage As String = " "
         Try
             If Trim(txtCode.Text) <> "" And Trim(txtpartno.Text) <> "" Then
-                gnr.FolderPath = gnr.pathgeneral & "PDevelopment"
+                gnr.FolderPath = gnr.Path & "PDevelopment"
                 gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
                 gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(txtpartno.Text) & "\"
                 If Directory.Exists(gnr.folderpathproject) Then
@@ -3274,13 +3309,14 @@ Public Class frmProductsDevelopment
                         End If
                     End Using
                 Else
-                    'error message
+                    MessageBox.Show("There is not a directory in the seleted path.", "CTP System", MessageBoxButtons.OK)
                 End If
             Else
-                'error message
+                MessageBox.Show("The Project Number and Part Number are mandatory fields.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         Exit Sub
     End Sub
@@ -3302,7 +3338,7 @@ Public Class frmProductsDevelopment
                 'fieldpart = Trim(txtpartno.Text)
                 PartNo = Trim(txtpartno.Text)
 
-                gnr.FolderPath = gnr.pathgeneral & "PartsFiles"
+                gnr.FolderPath = gnr.Path & "PartsFiles"
                 gnr.folderpathpart = gnr.FolderPath & "\" & Trim(UCase(PartNo)) & "\"
 
                 If Not Directory.Exists(gnr.folderpathpart) Then
@@ -3340,10 +3376,11 @@ Public Class frmProductsDevelopment
                     End If
                 End If
             Else
-                'error message
+                MessageBox.Show("The part number is a mandatory field.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         'MsgBox "You didn't select any file.", vbOKOnly + vbInformation, "CTP System"
         'MsgBox "Select Part to add files.", vbOKOnly + vbInformation, "CTP System"
@@ -3355,7 +3392,7 @@ Public Class frmProductsDevelopment
         Try
             If Trim(txtCode.Text) <> "" And Trim(txtpartno.Text) <> "" Then
                 PartNo = Trim(txtpartno.Text)
-                gnr.FolderPath = gnr.pathgeneral & "PartsFiles"
+                gnr.FolderPath = gnr.Path & "PartsFiles"
                 gnr.folderpathpart = gnr.FolderPath & "\" & Trim(UCase(PartNo)) & "\"
                 If Directory.Exists(gnr.folderpathpart) Then
                     Using fbd As OpenFileDialog = New OpenFileDialog()
@@ -3370,11 +3407,12 @@ Public Class frmProductsDevelopment
                         End If
                     End Using
                 Else
-                    'error message
+                    MessageBox.Show("There is not a dairectory in the selected path.", "CTP System", MessageBoxButtons.OK)
                 End If
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         'MsgBox "No files for this Part #.", vbOKOnly + vbInformation, "CTP System"
         'MsgBox "Select Project and Part # to see files.", vbOKOnly + vbInformation, "CTP System"
@@ -3405,6 +3443,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3433,6 +3472,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3461,6 +3501,7 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3489,10 +3530,12 @@ Public Class frmProductsDevelopment
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
+
     End Sub
 
-    Private Sub btnAll_Click(sender As Object, e As EventArgs) Handles btnAll.Click
+    Private Sub btnAll_Click(sender As Object, e As EventArgs)
         Dim exMessage As String = " "
         Dim strQueryPartNo = " AND PRDPTN = '" & txtPartNoMore.Text & "'"
         Dim strQueryMfrNo = " AND PRDMFR# = '" & txtMfrNoMore.Text & "'"
@@ -3514,6 +3557,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3526,17 +3570,19 @@ Public Class frmProductsDevelopment
             If Not String.IsNullOrEmpty(txtMfrNoMore.Text) Then
                 Dim dt As New DataTable
                 dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-                Dim Qry = dt.AsEnumerable() _
+                If dt IsNot Nothing Then
+                    Dim Qry = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDMFR#"))) = Trim(UCase(txtMfrNoMore.Text))) _
                           .CopyToDataTable
-                dgvProjectDetails.DataSource = Qry
-                dgvProjectDetails.Refresh()
+                    dgvProjectDetails.DataSource = Qry
+                    dgvProjectDetails.Refresh()
+                End If
             Else
                 fillcell2(txtCode.Text)
             End If
         Catch ex As Exception
-            'display error message
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3570,8 +3616,8 @@ Public Class frmProductsDevelopment
             End If
 
         Catch ex As Exception
-            'display error message
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3584,17 +3630,44 @@ Public Class frmProductsDevelopment
             If Not String.IsNullOrEmpty(txtCtpNoMore.Text) Then
                 Dim dt As New DataTable
                 dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-                Dim Qry = dt.AsEnumerable() _
+                If dt IsNot Nothing Then
+                    Dim Qry = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDCTP"))) = Trim(UCase(txtCtpNoMore.Text))) _
                           .CopyToDataTable
-                dgvProjectDetails.DataSource = Qry
-                dgvProjectDetails.Refresh()
+                    dgvProjectDetails.DataSource = Qry
+                    dgvProjectDetails.Refresh()
+                End If
             Else
                 fillcell2(txtCode.Text)
             End If
         Catch ex As Exception
-            'display error message
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdPePechMore.Click
+        'Dim strAddCtpSentence As String = ""
+        'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
+
+        Dim exMessage As String = " "
+        Try
+            If Not String.IsNullOrEmpty(cmbuser2.Text) Then
+                Dim dt As New DataTable
+                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                If dt IsNot Nothing Then
+                    Dim Qry = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDUSR"))) = Trim(UCase(cmbuser2.SelectedValue))) _
+                          .CopyToDataTable
+                    dgvProjectDetails.DataSource = Qry
+                    dgvProjectDetails.Refresh()
+                End If
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -3614,20 +3687,21 @@ Public Class frmProductsDevelopment
                                 If System.Uri.IsWellFormedUriString(jiraUrl, UriKind.Absolute) Then
                                     Process.Start(jiraUrl)
                                 Else
-                                    'error message wrong url
+                                    MessageBox.Show("The jira url is not well formed.", "CTP System", MessageBoxButtons.OK)
                                 End If
                             Else
-                                'error message no jira valuie assigned
+                                MessageBox.Show("The jira field must have value.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     End If
                 Else
-                    'error message no jira path exists
+                    MessageBox.Show("There is a not base jira path value.", "CTP System", MessageBoxButtons.OK)
                 End If
             Else
-                'error message no empty fields
+                MessageBox.Show("The project number and part number are mandatory fields.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
@@ -3636,10 +3710,31 @@ Public Class frmProductsDevelopment
 
 #Region "Utils"
 
+    Private Sub copyProjecFiles(strProjectNo As String)
+        Try
+            'save files
+            gnr.FolderPath = gnr.Path & "PDevelopment"
+            gnr.folderpathvendor = gnr.FolderPath & "\" & Trim(txtCode.Text)
+            If Not Directory.Exists(gnr.folderpathvendor) Then
+                System.IO.Directory.CreateDirectory(gnr.folderpathvendor)
+            End If
+
+            gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(UCase(txtpartno.Text)) & "\"
+            If Not Directory.Exists(gnr.folderpathproject) Then
+                System.IO.Directory.CreateDirectory(gnr.folderpathproject)
+            End If
+
+            gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
+            My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
     Private Sub searchpart()
         Dim exMessage As String = " "
         Try
-            Dim pathPictures = gnr.pathgeneral & "CTPPictures\"
+            Dim pathPictures = gnr.Path & "CTPPictures\"
             If Not Directory.Exists(pathPictures) Then
                 System.IO.Directory.CreateDirectory(pathPictures)
             End If
@@ -3652,13 +3747,14 @@ Public Class frmProductsDevelopment
 
             If Trim(txtpartno.Text) <> "" Then
                 Dim PartNo = Trim(UCase(txtpartno.Text))
-                Dim folderpathproject = gnr.pathgeneral & "PartsFiles" & "\" & Trim(UCase(txtpartno.Text)) & "\OEM_" & Trim(UCase(PartNo)) & ".jpg"
+                Dim folderpathproject = gnr.Path & "PartsFiles" & "\" & Trim(UCase(txtpartno.Text)) & "\OEM_" & Trim(UCase(PartNo)) & ".jpg"
                 If File.Exists(folderpathproject) Then
                     PictureBox1.Load(folderpathproject)
                 End If
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         Exit Sub
     End Sub
@@ -3691,6 +3787,7 @@ Public Class frmProductsDevelopment
             Return toemailsok
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
     End Function
@@ -3711,6 +3808,7 @@ Public Class frmProductsDevelopment
             Return toemailss
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
     End Function
@@ -3731,6 +3829,7 @@ Public Class frmProductsDevelopment
             Return toemailss
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
     End Function
@@ -3868,6 +3967,7 @@ Public Class frmProductsDevelopment
             'myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Select(Function(ctx) ctx.Text = "")
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
     End Sub
@@ -3983,6 +4083,7 @@ Public Class frmProductsDevelopment
             Next
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 

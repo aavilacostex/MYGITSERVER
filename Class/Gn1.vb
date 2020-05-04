@@ -6,25 +6,27 @@ Imports System.Net.NetworkInformation
 Imports System.Runtime.InteropServices
 Imports Microsoft.Office.Interop
 Imports System.Diagnostics
+Imports System.Configuration
 
 NotInheritable Class Gn1
 
-    Public Const Version = "V.02/20/20"
-    Public Const strCompany = "COSTEX"
-    Public Const strdatabase = "dbCTPSystem"
-    Public pathpicture As String
+    'Public Const Version = "V.02/20/20"
+    'Public Const strCompany = "COSTEX"
+    'Public Const strdatabase = "dbCTPSystem"
+
     'Public pathgeneral As String
-    Public Const strconnection = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100"
-    Public Const strcrystalconn = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100;"
-    Public Const strconnSQL = "Data Source=CTPSystem;Initial Catalog=dbCTPSystem;User Id=sa;Password=ctp6100;"
+    'Public Const strconnection = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100"
+    'Public Const strcrystalconn = "DSN=COSTEX400;UID=INTRANET;PWD=CTP6100;"
+    'Public Const strconnSQL = "Data Source=CTPSystem;Initial Catalog=dbCTPSystem;User Id=sa;Password=ctp6100;"
     'Public Const strconnSQL = "DSN=CTPSystem;UID=sa;PWD=ctp6100;"
-    Public Const strcrystalconnSQL = "DSN=CTPSystem;UID=sa;PWD=ctp6100;"
-    Public Const strmailhostctp = "mail.costex.com"
+    'Public Const strcrystalconnSQL = "DSN=CTPSystem;UID=sa;PWD=ctp6100;"
+    'Public Const strmailhostctp = "mail.costex.com"
     'Public Const strmailhostctp = "mail.costex.com"
     'Public Const strconnSQL = "Driver={SQL Server};Server=dellserver;Database=dbCTPSystem;Uid=sa;Pwd=ctp6100;"
     'Public Const strcrystalconnSQL = "Driver={SQL Server};Server=dellserver;Database=dbCTPSystem;Uid=sa;Pwd=ctp6100;"
-    Public Const strconnSQLNOVA = "DSN=NOVATIME;UID=NTI_CS;PWD=csadmin;"
-    Public Const strcrystalconnSQLNOVA = "DSN=NOVATIME;UID=NTI_CS;PWD=csadmin;"
+    'Public Const strconnSQLNOVA = "DSN=NOVATIME;UID=NTI_CS;PWD=csadmin;"
+    'Public Const strcrystalconnSQLNOVA = "DSN=NOVATIME;UID=NTI_CS;PWD=csadmin;"
+    Public pathpicture As String
     Public emailspath As String
     Public pictureSizeFlag As Integer
     Public filesQuantity As Integer
@@ -50,7 +52,7 @@ NotInheritable Class Gn1
     Public getclaimnosave As Integer
     Public seeaddcomments As Integer
     Public seeaddprocomments As Integer
-    Public printpath As String
+    'Public printpath As String
     Public flagchangevendor As Integer
     Public getclaimno As Long
     Public getclaim As Long
@@ -100,18 +102,165 @@ NotInheritable Class Gn1
     Public pathfolderfrom As String
 
 
-    Public Property pathgeneral() As String
+#Region "Defaul Variables"
+
+    Private Pathgeneral As String
+    Public Property Path() As String
         Get
-            Return "C:\TestFileFunction\"
+            Return Pathgeneral
         End Get
         Set(ByVal value As String)
-            'pathgeneral = value
+            Pathgeneral = value
         End Set
     End Property
 
-    Public Sub New()
-        'FolderPath = "C:\TestFileFunction"
+    Private ConString As String
+    Public Property Number() As String
+        Get
+            Return ConString
+        End Get
+        Set(ByVal value As String)
+            ConString = value
+        End Set
+    End Property
 
+    Private Version As String
+    Public Property VersionNo() As String
+        Get
+            Return Version
+        End Get
+        Set(ByVal value As String)
+            Version = value
+        End Set
+    End Property
+
+    Private strCompany As String
+    Public Property Company() As String
+        Get
+            Return strCompany
+        End Get
+        Set(ByVal value As String)
+            strCompany = value
+        End Set
+    End Property
+
+    Private strdatabase As String
+    Public Property Database() As String
+        Get
+            Return strdatabase
+        End Get
+        Set(ByVal value As String)
+            strdatabase = value
+        End Set
+    End Property
+
+    Private strconnection As String
+    Public Property Conexion() As String
+        Get
+            Return strconnection
+        End Get
+        Set(ByVal value As String)
+            strconnection = value
+        End Set
+    End Property
+
+    Private strcrystalconn As String
+    Public Property CrystalCon() As String
+        Get
+            Return strcrystalconn
+        End Get
+        Set(ByVal value As String)
+            strcrystalconn = value
+        End Set
+    End Property
+
+    Private strconnSQL As String
+    Public Property SQLCon() As String
+        Get
+            Return strconnSQL
+        End Get
+        Set(ByVal value As String)
+            strconnSQL = value
+        End Set
+    End Property
+
+    Private strcrystalconnSQL As String
+    Public Property CrystalSQLCon() As String
+        Get
+            Return strcrystalconnSQL
+        End Get
+        Set(ByVal value As String)
+            strcrystalconnSQL = value
+        End Set
+    End Property
+
+    Private strmailhostctp As String
+    Public Property MailHostCTP() As String
+        Get
+            Return strmailhostctp
+        End Get
+        Set(ByVal value As String)
+            strmailhostctp = value
+        End Set
+    End Property
+
+    Private strconnSQLNOVA As String
+    Public Property NOVASQLCon() As String
+        Get
+            Return strconnSQLNOVA
+        End Get
+        Set(ByVal value As String)
+            strconnSQLNOVA = value
+        End Set
+    End Property
+
+    Private strcrystalconnSQLNOVA As String
+    Public Property NOVASQLCRYSTALCon() As String
+        Get
+            Return strcrystalconnSQLNOVA
+        End Get
+        Set(ByVal value As String)
+            strcrystalconnSQLNOVA = value
+        End Set
+    End Property
+
+    Private printpath As String
+    Public Property ReportsValue() As String
+        Get
+            Return printpath
+        End Get
+        Set(ByVal value As String)
+            printpath = value
+        End Set
+    End Property
+
+    Private jiraPathBase As String
+    Public Property JiraPathBaseValue() As String
+        Get
+            Return jiraPathBase
+        End Get
+        Set(ByVal value As String)
+            jiraPathBase = value
+        End Set
+    End Property
+
+#End Region
+
+    Public Sub New()
+        ConString = ConfigurationManager.AppSettings("ConnectionString").ToString()
+        Pathgeneral = ConfigurationManager.AppSettings("pathgeneral").ToString()
+        Version = ConfigurationManager.AppSettings("Version").ToString()
+        Company = ConfigurationManager.AppSettings("strCompany").ToString()
+        Database = ConfigurationManager.AppSettings("strdatabase").ToString()
+        Conexion = ConfigurationManager.AppSettings("strconnection").ToString()
+        CrystalCon = ConfigurationManager.AppSettings("strcrystalconn").ToString()
+        SQLCon = ConfigurationManager.AppSettings("strconnSQL").ToString()
+        CrystalSQLCon = ConfigurationManager.AppSettings("strcrystalconnSQL").ToString()
+        MailHostCTP = ConfigurationManager.AppSettings("strmailhostctp").ToString()
+        NOVASQLCon = ConfigurationManager.AppSettings("strconnSQLNOVA").ToString()
+        NOVASQLCRYSTALCon = ConfigurationManager.AppSettings("strcrystalconnSQLNOVA").ToString()
+        ReportsValue = ConfigurationManager.AppSettings("printpath").ToString()
+        JiraPathBaseValue = ConfigurationManager.AppSettings("urlPathBase").ToString()
     End Sub
 
 
@@ -274,6 +423,21 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM PRDCMH WHERE PRDCMH.PRHCOD = " & code & " AND prdcmh.PRDPTN = '" & Trim(UCase(partNo)) & "' ORDER BY  PRDCDA DESC,PRDCTI DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByCodAndPartProdAndComm2(code As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRDCMH.*,PRDCMD.* FROM PRDCMH INNER JOIN PRDCMD ON PRDCMH.PRDCCO = PRDCMD.PRDCCO WHERE PRDCMH.PRHCOD = " & Trim(code) & " AND PRDCMH.PRDPTN = '" & Trim(partNo) & "' ORDER BY  PRDCDA ASC,PRDCTI ASC"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -550,6 +714,36 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM VNMAS WHERE DIGITS(VMVNUM) = " & variable
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetVendorByName(vendorName As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM VNMAS WHERE TRIM(UCASE(VMNAME)) LIKE '" & Trim(UCase(vendorName)) & "%'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetVendorByNumber(vendorNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM VNMAS WHERE VMVNUM = " & Trim(vendorNo)
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -1763,6 +1957,83 @@ errhandler:
 
     End Function
 
+    Public Sub changeVendor(PartNumber, VendorNumber, User_ID)
+        Dim as400 As New cwbx.AS400System
+        Dim prog As New cwbx.Program
+        Dim parms As New cwbx.ProgramParameters
+        Dim server As New cwbx.SystemNames
+        Dim pckCvtr As New cwbx.PackedConverter
+        Dim stringCvtr As New cwbx.StringConverter
+        Dim p1, p2, p3, p4, p5, returnedValue
+        Dim cwbcoPromptNever As New cwbx.cwbcoPromptModeEnum
+
+        Try
+            'Program Parameters
+            p1 = "01"
+            p2 = Left((Trim(UCase(PartNumber)) & "                   "), 19)
+            p3 = Right("000000" & Trim(VendorNumber), 6)
+            p4 = Left((User_ID & "          "), 10)
+            p5 = "CTP "
+
+            'AS400 Connection Parameters
+            as400.Define(server.DefaultSystem)
+            as400.UserID = "INTRANET"
+            as400.Password = "CTP6100"
+            as400.IPAddress = "172.0.0.21"
+            as400.PromptMode = cwbcoPromptNever
+            as400.Signon()
+
+            as400.Connect(cwbx.cwbcoServiceEnum.cwbcoServiceODBC)
+
+            If as400.IsConnected(cwbx.cwbcoServiceEnum.cwbcoServiceODBC) = 1 Then
+                'Program to call
+                prog.system = as400
+                prog.LibraryName = "CTPINV"
+                prog.ProgramName = "UPDDVVNDR"
+
+                parms.Clear()
+
+                'Parameters Definition
+                parms.Append("LOC", cwbx.cwbrcParameterTypeEnum.cwbrcInput, 2)
+                parms.Append("PART#", cwbx.cwbrcParameterTypeEnum.cwbrcInput, 19)
+                parms.Append("VENDOR", cwbx.cwbrcParameterTypeEnum.cwbrcInput, 6)
+                parms.Append("USER", cwbx.cwbrcParameterTypeEnum.cwbrcInput, 10)
+                parms.Append("WS", cwbx.cwbrcParameterTypeEnum.cwbrcInput, 10)
+                parms.Append("ERROR", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 3)
+
+                stringCvtr.CodePage = 37
+
+                'Assign Values to Parameters
+                parms("LOC").Value = stringCvtr.ToBytes(p1)
+                parms("PART#").Value = stringCvtr.ToBytes(p2)
+                parms("VENDOR").Value = stringCvtr.ToBytes(p3)
+                parms("USER").Value = stringCvtr.ToBytes(p4)
+                parms("WS").Value = stringCvtr.ToBytes(p5)
+                parms("ERROR").Value = stringCvtr.ToBytes("   ")
+
+                prog.Call(parms)
+
+                returnedValue = stringCvtr.FromBytes(parms("ERROR").Value)
+
+                If Trim(returnedValue) = "AUT" Then
+                    MsgBox("Vendor could not be changed, user not authorized!", vbInformation + vbOKOnly, "CTP System")
+                End If
+                If Trim(returnedValue) = "VEN" Then
+                    MsgBox("Vendor could not be changed, Invalid Vendor!", vbInformation + vbOKOnly, "CTP System")
+                End If
+                If Trim(returnedValue) = "L/P" Then
+                    MsgBox("Vendor could not be changed, Invalid Location or Part Number!", vbInformation + vbOKOnly, "CTP System")
+                End If
+
+                as400.Disconnect(cwbx.cwbcoServiceEnum.cwbcoServiceAll)
+            End If
+            Exit Sub
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
     Public Function FillGrid(query As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim PageSize As Integer = 5
@@ -1872,6 +2143,7 @@ errhandler:
             Return fileNameOk
         End Try
     End Function
+
 
 #End Region
 #End Region

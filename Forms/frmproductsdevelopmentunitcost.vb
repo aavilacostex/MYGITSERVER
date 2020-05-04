@@ -14,7 +14,7 @@ Public Class frmproductsdevelopmentunitcost
         Try
             If gnr.ConnSql.State = 1 Then
             Else
-                gnr.ConnSql.ConnectionString = gnr.strconnSQL
+                gnr.ConnSql.ConnectionString = gnr.SQLCon
                 gnr.ConnSql.Open()
             End If
 
@@ -306,7 +306,7 @@ Public Class frmproductsdevelopmentunitcost
         Try
             For Each row As DataGridViewRow In DataGridView1.Rows
                 If row.Cells("checkBoxColumn").Value = True Then
-                    If cmdSave_custom(row.Cells("clPartNo").Value.ToString()) = 0 Then
+                    If cmdSave_custom(row.Cells("clUnitCost").Value.ToString()) = 0 Then
                         ds = gnr.GetDataByCodeAndPartNoProdDesc(frmProductsDevelopment.txtCode.Text, row.Cells("clPartNo").Value.ToString())
                         If ds IsNot Nothing Then
                             If ds.Tables(0).Rows.Count > 0 Then

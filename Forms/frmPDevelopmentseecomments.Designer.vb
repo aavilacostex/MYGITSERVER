@@ -24,6 +24,7 @@ Partial Class frmPDevelopmentseecomments
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPDevelopmentseecomments))
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.hdField = New System.Windows.Forms.Label()
         Me.lblNotVisible = New System.Windows.Forms.Label()
         Me.cmdExit = New System.Windows.Forms.Button()
         Me.cmdprint = New System.Windows.Forms.Button()
@@ -46,7 +47,7 @@ Partial Class frmPDevelopmentseecomments
         Me.clComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clTableCode1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clCommentNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.hdField = New System.Windows.Forms.Label()
+        Me.AxCrystalReport1 = New AxCrystal.AxCrystalReport()
         Me.Panel1.SuspendLayout()
         Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -54,10 +55,12 @@ Partial Class frmPDevelopmentseecomments
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         CType(Me.dgvProjectMessage2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.AxCrystalReport1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.AxCrystalReport1)
         Me.Panel1.Controls.Add(Me.hdField)
         Me.Panel1.Controls.Add(Me.lblNotVisible)
         Me.Panel1.Controls.Add(Me.cmdExit)
@@ -67,6 +70,16 @@ Partial Class frmPDevelopmentseecomments
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(646, 34)
         Me.Panel1.TabIndex = 2
+        '
+        'hdField
+        '
+        Me.hdField.AutoSize = True
+        Me.hdField.Location = New System.Drawing.Point(332, 17)
+        Me.hdField.Name = "hdField"
+        Me.hdField.Size = New System.Drawing.Size(39, 13)
+        Me.hdField.TabIndex = 7
+        Me.hdField.Text = "Label3"
+        Me.hdField.Visible = False
         '
         'lblNotVisible
         '
@@ -91,7 +104,7 @@ Partial Class frmPDevelopmentseecomments
         Me.cmdprint.Image = CType(resources.GetObject("cmdprint.Image"), System.Drawing.Image)
         Me.cmdprint.Location = New System.Drawing.Point(539, 3)
         Me.cmdprint.Name = "cmdprint"
-        Me.cmdprint.Size = New System.Drawing.Size(43, 28)
+        Me.cmdprint.Size = New System.Drawing.Size(43, 31)
         Me.cmdprint.TabIndex = 4
         Me.cmdprint.UseVisualStyleBackColor = True
         '
@@ -264,15 +277,14 @@ Partial Class frmPDevelopmentseecomments
         Me.clCommentNo.Name = "clCommentNo"
         Me.clCommentNo.Visible = False
         '
-        'hdField
+        'AxCrystalReport1
         '
-        Me.hdField.AutoSize = True
-        Me.hdField.Location = New System.Drawing.Point(332, 17)
-        Me.hdField.Name = "hdField"
-        Me.hdField.Size = New System.Drawing.Size(39, 13)
-        Me.hdField.TabIndex = 7
-        Me.hdField.Text = "Label3"
-        Me.hdField.Visible = False
+        Me.AxCrystalReport1.Enabled = True
+        Me.AxCrystalReport1.Location = New System.Drawing.Point(425, 4)
+        Me.AxCrystalReport1.Name = "AxCrystalReport1"
+        Me.AxCrystalReport1.OcxState = CType(resources.GetObject("AxCrystalReport1.OcxState"), System.Windows.Forms.AxHost.State)
+        Me.AxCrystalReport1.Size = New System.Drawing.Size(28, 28)
+        Me.AxCrystalReport1.TabIndex = 8
         '
         'frmPDevelopmentseecomments
         '
@@ -292,6 +304,7 @@ Partial Class frmPDevelopmentseecomments
         Me.TableLayoutPanel1.PerformLayout()
         Me.TabPage2.ResumeLayout(False)
         CType(Me.dgvProjectMessage2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.AxCrystalReport1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -319,4 +332,5 @@ Partial Class frmPDevelopmentseecomments
     Friend WithEvents clTableCode1 As DataGridViewTextBoxColumn
     Friend WithEvents clCommentNo As DataGridViewTextBoxColumn
     Friend WithEvents hdField As Label
+    Friend WithEvents AxCrystalReport1 As AxCrystal.AxCrystalReport
 End Class

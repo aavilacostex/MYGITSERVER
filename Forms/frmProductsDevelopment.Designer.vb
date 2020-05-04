@@ -87,7 +87,9 @@ Partial Class frmProductsDevelopment
         Me.cmdCtpNoMore = New System.Windows.Forms.Button()
         Me.cmdMfrNoMore = New System.Windows.Forms.Button()
         Me.lblPartNoMore = New System.Windows.Forms.Label()
-        Me.btnAll = New System.Windows.Forms.Button()
+        Me.lblPrPech = New System.Windows.Forms.Label()
+        Me.cmbuser2 = New System.Windows.Forms.ComboBox()
+        Me.cmdPePechMore = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel12 = New System.Windows.Forms.TableLayoutPanel()
         Me.cmdcvendor = New System.Windows.Forms.Button()
@@ -98,14 +100,6 @@ Partial Class frmProductsDevelopment
         Me.cmdSave2 = New System.Windows.Forms.Button()
         Me.cmdexit2 = New System.Windows.Forms.Button()
         Me.dgvProjectDetails = New System.Windows.Forms.DataGridView()
-        Me.DateColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CTPNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MFRNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VendorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VendorNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.JiraTaskColumn = New System.Windows.Forms.DataGridViewLinkColumn()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -121,15 +115,6 @@ Partial Class frmProductsDevelopment
         Me.DTPicker1 = New System.Windows.Forms.DateTimePicker()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.TableLayoutPanel13 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Button15 = New System.Windows.Forms.Button()
-        Me.Button16 = New System.Windows.Forms.Button()
-        Me.Button17 = New System.Windows.Forms.Button()
-        Me.Button18 = New System.Windows.Forms.Button()
-        Me.cmdnew3 = New System.Windows.Forms.Button()
-        Me.cmdSave3 = New System.Windows.Forms.Button()
-        Me.cmdexit3 = New System.Windows.Forms.Button()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -213,12 +198,30 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel16 = New System.Windows.Forms.TableLayoutPanel()
         Me.lbljiratask = New System.Windows.Forms.Label()
         Me.txtjiratask = New System.Windows.Forms.TextBox()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.TableLayoutPanel13 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Button15 = New System.Windows.Forms.Button()
+        Me.Button16 = New System.Windows.Forms.Button()
+        Me.Button17 = New System.Windows.Forms.Button()
+        Me.Button18 = New System.Windows.Forms.Button()
+        Me.cmdnew3 = New System.Windows.Forms.Button()
+        Me.cmdSave3 = New System.Windows.Forms.Button()
+        Me.cmdexit3 = New System.Windows.Forms.Button()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddNewProjectToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddNewPartToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddNewProjectToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddNewPartToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DateColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CTPNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MFRNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VendorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VendorNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.JiraTaskColumn = New System.Windows.Forms.DataGridViewLinkColumn()
+        Me.clPerson = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -233,8 +236,6 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.SuspendLayout()
         Me.TabPage3.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
-        Me.Panel4.SuspendLayout()
-        Me.TableLayoutPanel13.SuspendLayout()
         Me.TableLayoutPanel5.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
@@ -248,6 +249,8 @@ Partial Class frmProductsDevelopment
         Me.Panel6.SuspendLayout()
         Me.TableLayoutPanel6.SuspendLayout()
         Me.TableLayoutPanel16.SuspendLayout()
+        Me.Panel4.SuspendLayout()
+        Me.TableLayoutPanel13.SuspendLayout()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.ContextMenuStrip2.SuspendLayout()
         Me.SuspendLayout()
@@ -781,15 +784,15 @@ Partial Class frmProductsDevelopment
         '
         'TableLayoutPanel15
         '
-        Me.TableLayoutPanel15.ColumnCount = 6
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.7033!))
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.4011!))
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.97802!))
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.4011!))
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.84066!))
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.67582!))
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel15.ColumnCount = 8
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.0!))
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.0!))
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.0!))
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.0!))
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.0!))
+        Me.TableLayoutPanel15.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.0!))
         Me.TableLayoutPanel15.Controls.Add(Me.lblCtpNoMore, 2, 0)
         Me.TableLayoutPanel15.Controls.Add(Me.lblMfrNoMore, 4, 0)
         Me.TableLayoutPanel15.Controls.Add(Me.txtPartNoMore, 0, 1)
@@ -799,14 +802,15 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel15.Controls.Add(Me.cmdCtpNoMore, 3, 1)
         Me.TableLayoutPanel15.Controls.Add(Me.cmdMfrNoMore, 5, 1)
         Me.TableLayoutPanel15.Controls.Add(Me.lblPartNoMore, 0, 0)
-        Me.TableLayoutPanel15.Controls.Add(Me.btnAll, 2, 2)
+        Me.TableLayoutPanel15.Controls.Add(Me.lblPrPech, 6, 0)
+        Me.TableLayoutPanel15.Controls.Add(Me.cmbuser2, 6, 1)
+        Me.TableLayoutPanel15.Controls.Add(Me.cmdPePechMore, 7, 1)
         Me.TableLayoutPanel15.Location = New System.Drawing.Point(15, 214)
         Me.TableLayoutPanel15.Name = "TableLayoutPanel15"
-        Me.TableLayoutPanel15.RowCount = 3
+        Me.TableLayoutPanel15.RowCount = 2
         Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.14754!))
         Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 68.85246!))
-        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
-        Me.TableLayoutPanel15.Size = New System.Drawing.Size(810, 108)
+        Me.TableLayoutPanel15.Size = New System.Drawing.Size(810, 60)
         Me.TableLayoutPanel15.TabIndex = 5
         '
         'lblCtpNoMore
@@ -814,7 +818,7 @@ Partial Class frmProductsDevelopment
         Me.lblCtpNoMore.AutoSize = True
         Me.TableLayoutPanel15.SetColumnSpan(Me.lblCtpNoMore, 2)
         Me.lblCtpNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCtpNoMore.Location = New System.Drawing.Point(270, 4)
+        Me.lblCtpNoMore.Location = New System.Drawing.Point(188, 4)
         Me.lblCtpNoMore.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.lblCtpNoMore.Name = "lblCtpNoMore"
         Me.lblCtpNoMore.Size = New System.Drawing.Size(42, 13)
@@ -825,7 +829,7 @@ Partial Class frmProductsDevelopment
         '
         Me.lblMfrNoMore.AutoSize = True
         Me.lblMfrNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMfrNoMore.Location = New System.Drawing.Point(540, 4)
+        Me.lblMfrNoMore.Location = New System.Drawing.Point(373, 4)
         Me.lblMfrNoMore.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.lblMfrNoMore.Name = "lblMfrNoMore"
         Me.lblMfrNoMore.Size = New System.Drawing.Size(45, 13)
@@ -834,32 +838,32 @@ Partial Class frmProductsDevelopment
         '
         'txtPartNoMore
         '
-        Me.txtPartNoMore.Location = New System.Drawing.Point(3, 24)
+        Me.txtPartNoMore.Location = New System.Drawing.Point(3, 21)
         Me.txtPartNoMore.Multiline = True
         Me.txtPartNoMore.Name = "txtPartNoMore"
-        Me.txtPartNoMore.Size = New System.Drawing.Size(116, 25)
+        Me.txtPartNoMore.Size = New System.Drawing.Size(115, 25)
         Me.txtPartNoMore.TabIndex = 4
         '
         'txtCtpNoMore
         '
-        Me.txtCtpNoMore.Location = New System.Drawing.Point(270, 24)
+        Me.txtCtpNoMore.Location = New System.Drawing.Point(188, 21)
         Me.txtCtpNoMore.Multiline = True
         Me.txtCtpNoMore.Name = "txtCtpNoMore"
-        Me.txtCtpNoMore.Size = New System.Drawing.Size(118, 25)
+        Me.txtCtpNoMore.Size = New System.Drawing.Size(115, 25)
         Me.txtCtpNoMore.TabIndex = 5
         '
         'txtMfrNoMore
         '
-        Me.txtMfrNoMore.Location = New System.Drawing.Point(540, 24)
+        Me.txtMfrNoMore.Location = New System.Drawing.Point(373, 21)
         Me.txtMfrNoMore.Multiline = True
         Me.txtMfrNoMore.Name = "txtMfrNoMore"
-        Me.txtMfrNoMore.Size = New System.Drawing.Size(117, 25)
+        Me.txtMfrNoMore.Size = New System.Drawing.Size(115, 25)
         Me.txtMfrNoMore.TabIndex = 6
         '
         'cmdPartNoMore
         '
         Me.cmdPartNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdPartNoMore.Location = New System.Drawing.Point(178, 24)
+        Me.cmdPartNoMore.Location = New System.Drawing.Point(124, 21)
         Me.cmdPartNoMore.Name = "cmdPartNoMore"
         Me.cmdPartNoMore.Size = New System.Drawing.Size(58, 23)
         Me.cmdPartNoMore.TabIndex = 8
@@ -869,7 +873,7 @@ Partial Class frmProductsDevelopment
         'cmdCtpNoMore
         '
         Me.cmdCtpNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdCtpNoMore.Location = New System.Drawing.Point(448, 24)
+        Me.cmdCtpNoMore.Location = New System.Drawing.Point(309, 21)
         Me.cmdCtpNoMore.Name = "cmdCtpNoMore"
         Me.cmdCtpNoMore.Size = New System.Drawing.Size(58, 23)
         Me.cmdCtpNoMore.TabIndex = 9
@@ -879,9 +883,9 @@ Partial Class frmProductsDevelopment
         'cmdMfrNoMore
         '
         Me.cmdMfrNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdMfrNoMore.Location = New System.Drawing.Point(716, 24)
+        Me.cmdMfrNoMore.Location = New System.Drawing.Point(494, 21)
         Me.cmdMfrNoMore.Name = "cmdMfrNoMore"
-        Me.cmdMfrNoMore.Size = New System.Drawing.Size(59, 23)
+        Me.cmdMfrNoMore.Size = New System.Drawing.Size(58, 23)
         Me.cmdMfrNoMore.TabIndex = 10
         Me.cmdMfrNoMore.Text = "Search"
         Me.cmdMfrNoMore.UseVisualStyleBackColor = True
@@ -898,18 +902,33 @@ Partial Class frmProductsDevelopment
         Me.lblPartNoMore.TabIndex = 0
         Me.lblPartNoMore.Text = "PartNo."
         '
-        'btnAll
+        'lblPrPech
         '
-        Me.btnAll.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAll.Location = New System.Drawing.Point(297, 70)
-        Me.btnAll.Margin = New System.Windows.Forms.Padding(30, 3, 3, 3)
-        Me.btnAll.Name = "btnAll"
-        Me.btnAll.Size = New System.Drawing.Size(117, 30)
-        Me.btnAll.TabIndex = 13
-        Me.btnAll.Text = "Unify Search"
-        Me.btnAll.UseCompatibleTextRendering = True
-        Me.btnAll.UseVisualStyleBackColor = True
-        Me.btnAll.Visible = False
+        Me.lblPrPech.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblPrPech.Location = New System.Drawing.Point(558, 4)
+        Me.lblPrPech.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
+        Me.lblPrPech.Name = "lblPrPech"
+        Me.lblPrPech.Size = New System.Drawing.Size(117, 13)
+        Me.lblPrPech.TabIndex = 14
+        Me.lblPrPech.Text = "Person in Charge"
+        '
+        'cmbuser2
+        '
+        Me.cmbuser2.FormattingEnabled = True
+        Me.cmbuser2.Location = New System.Drawing.Point(558, 21)
+        Me.cmbuser2.Name = "cmbuser2"
+        Me.cmbuser2.Size = New System.Drawing.Size(180, 21)
+        Me.cmbuser2.TabIndex = 15
+        '
+        'cmdPePechMore
+        '
+        Me.cmdPePechMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cmdPePechMore.Location = New System.Drawing.Point(744, 21)
+        Me.cmdPePechMore.Name = "cmdPePechMore"
+        Me.cmdPePechMore.Size = New System.Drawing.Size(63, 23)
+        Me.cmdPePechMore.TabIndex = 16
+        Me.cmdPePechMore.Text = "Search"
+        Me.cmdPePechMore.UseVisualStyleBackColor = True
         '
         'Panel3
         '
@@ -1024,7 +1043,7 @@ Partial Class frmProductsDevelopment
         DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvProjectDetails.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.dgvProjectDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvProjectDetails.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DateColumn, Me.PartNo, Me.CTPNo, Me.MFRNo, Me.VendorColumn, Me.VendorNameColumn, Me.StatusColumn, Me.JiraTaskColumn})
+        Me.dgvProjectDetails.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DateColumn, Me.PartNo, Me.CTPNo, Me.MFRNo, Me.VendorColumn, Me.VendorNameColumn, Me.StatusColumn, Me.JiraTaskColumn, Me.clPerson})
         DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1047,63 +1066,13 @@ Partial Class frmProductsDevelopment
         Me.dgvProjectDetails.Size = New System.Drawing.Size(810, 250)
         Me.dgvProjectDetails.TabIndex = 2
         '
-        'DateColumn
-        '
-        Me.DateColumn.HeaderText = "Date"
-        Me.DateColumn.Name = "DateColumn"
-        Me.DateColumn.Width = 90
-        '
-        'PartNo
-        '
-        Me.PartNo.HeaderText = "Part#"
-        Me.PartNo.Name = "PartNo"
-        Me.PartNo.Width = 90
-        '
-        'CTPNo
-        '
-        Me.CTPNo.HeaderText = "CTP#"
-        Me.CTPNo.Name = "CTPNo"
-        Me.CTPNo.Width = 98
-        '
-        'MFRNo
-        '
-        Me.MFRNo.HeaderText = "MFR#"
-        Me.MFRNo.Name = "MFRNo"
-        Me.MFRNo.Width = 98
-        '
-        'VendorColumn
-        '
-        Me.VendorColumn.HeaderText = "Vendor"
-        Me.VendorColumn.Name = "VendorColumn"
-        Me.VendorColumn.Width = 90
-        '
-        'VendorNameColumn
-        '
-        Me.VendorNameColumn.HeaderText = "Vendor Name"
-        Me.VendorNameColumn.Name = "VendorNameColumn"
-        Me.VendorNameColumn.Width = 98
-        '
-        'StatusColumn
-        '
-        Me.StatusColumn.HeaderText = "Status"
-        Me.StatusColumn.Name = "StatusColumn"
-        Me.StatusColumn.Width = 90
-        '
-        'JiraTaskColumn
-        '
-        Me.JiraTaskColumn.HeaderText = "Jira Task"
-        Me.JiraTaskColumn.Name = "JiraTaskColumn"
-        Me.JiraTaskColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.JiraTaskColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.JiraTaskColumn.Width = 115
-        '
         'TableLayoutPanel3
         '
         Me.TableLayoutPanel3.ColumnCount = 4
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 98.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
@@ -1262,7 +1231,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 124.0!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142.0!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142.0!))
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 332.0!))
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 336.0!))
         Me.TableLayoutPanel4.Controls.Add(Me.Label13, 0, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.Label14, 0, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.Label15, 0, 2)
@@ -1346,109 +1315,6 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(824, 638)
         Me.TableLayoutPanel4.TabIndex = 0
-        '
-        'Panel4
-        '
-        Me.Panel4.BackColor = System.Drawing.SystemColors.GrayText
-        Me.TableLayoutPanel4.SetColumnSpan(Me.Panel4, 5)
-        Me.Panel4.Controls.Add(Me.TableLayoutPanel13)
-        Me.Panel4.Location = New System.Drawing.Point(5, 599)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(844, 34)
-        Me.Panel4.TabIndex = 4
-        '
-        'TableLayoutPanel13
-        '
-        Me.TableLayoutPanel13.BackColor = System.Drawing.SystemColors.GrayText
-        Me.TableLayoutPanel13.ColumnCount = 7
-        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144.0!))
-        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143.0!))
-        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 53.0!))
-        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
-        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 51.0!))
-        Me.TableLayoutPanel13.Controls.Add(Me.Button15, 0, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.Button16, 1, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.Button17, 2, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.Button18, 3, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.cmdnew3, 4, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.cmdSave3, 5, 0)
-        Me.TableLayoutPanel13.Controls.Add(Me.cmdexit3, 6, 0)
-        Me.TableLayoutPanel13.Location = New System.Drawing.Point(83, 1)
-        Me.TableLayoutPanel13.Name = "TableLayoutPanel13"
-        Me.TableLayoutPanel13.RowCount = 1
-        Me.TableLayoutPanel13.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel13.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel13.Size = New System.Drawing.Size(706, 34)
-        Me.TableLayoutPanel13.TabIndex = 3
-        '
-        'Button15
-        '
-        Me.Button15.Location = New System.Drawing.Point(3, 3)
-        Me.Button15.Name = "Button15"
-        Me.Button15.Size = New System.Drawing.Size(125, 28)
-        Me.Button15.TabIndex = 0
-        Me.Button15.Text = "Change Vendor"
-        Me.Button15.UseVisualStyleBackColor = True
-        Me.Button15.Visible = False
-        '
-        'Button16
-        '
-        Me.Button16.Location = New System.Drawing.Point(134, 3)
-        Me.Button16.Name = "Button16"
-        Me.Button16.Size = New System.Drawing.Size(125, 28)
-        Me.Button16.TabIndex = 1
-        Me.Button16.Text = "Change Manuf. PartNo."
-        Me.Button16.UseVisualStyleBackColor = True
-        Me.Button16.Visible = False
-        '
-        'Button17
-        '
-        Me.Button17.Location = New System.Drawing.Point(265, 3)
-        Me.Button17.Name = "Button17"
-        Me.Button17.Size = New System.Drawing.Size(134, 28)
-        Me.Button17.TabIndex = 2
-        Me.Button17.Text = "Change Unit Cost"
-        Me.Button17.UseVisualStyleBackColor = True
-        Me.Button17.Visible = False
-        '
-        'Button18
-        '
-        Me.Button18.Location = New System.Drawing.Point(409, 3)
-        Me.Button18.Name = "Button18"
-        Me.Button18.Size = New System.Drawing.Size(134, 28)
-        Me.Button18.TabIndex = 3
-        Me.Button18.Text = "Change Status"
-        Me.Button18.UseVisualStyleBackColor = True
-        Me.Button18.Visible = False
-        '
-        'cmdnew3
-        '
-        Me.cmdnew3.Image = CType(resources.GetObject("cmdnew3.Image"), System.Drawing.Image)
-        Me.cmdnew3.Location = New System.Drawing.Point(552, 3)
-        Me.cmdnew3.Name = "cmdnew3"
-        Me.cmdnew3.Size = New System.Drawing.Size(43, 28)
-        Me.cmdnew3.TabIndex = 4
-        Me.cmdnew3.UseVisualStyleBackColor = True
-        '
-        'cmdSave3
-        '
-        Me.cmdSave3.Image = CType(resources.GetObject("cmdSave3.Image"), System.Drawing.Image)
-        Me.cmdSave3.Location = New System.Drawing.Point(605, 3)
-        Me.cmdSave3.Name = "cmdSave3"
-        Me.cmdSave3.Size = New System.Drawing.Size(43, 28)
-        Me.cmdSave3.TabIndex = 5
-        Me.cmdSave3.UseVisualStyleBackColor = True
-        '
-        'cmdexit3
-        '
-        Me.cmdexit3.Image = CType(resources.GetObject("cmdexit3.Image"), System.Drawing.Image)
-        Me.cmdexit3.Location = New System.Drawing.Point(657, 3)
-        Me.cmdexit3.Name = "cmdexit3"
-        Me.cmdexit3.Size = New System.Drawing.Size(43, 28)
-        Me.cmdexit3.TabIndex = 6
-        Me.cmdexit3.UseVisualStyleBackColor = True
         '
         'Label13
         '
@@ -2128,7 +1994,7 @@ Partial Class frmProductsDevelopment
         Me.Panel5.Location = New System.Drawing.Point(523, 298)
         Me.Panel5.Name = "Panel5"
         Me.TableLayoutPanel4.SetRowSpan(Me.Panel5, 5)
-        Me.Panel5.Size = New System.Drawing.Size(326, 150)
+        Me.Panel5.Size = New System.Drawing.Size(330, 150)
         Me.Panel5.TabIndex = 58
         '
         'TableLayoutPanel7
@@ -2176,7 +2042,7 @@ Partial Class frmProductsDevelopment
         Me.Panel6.Location = New System.Drawing.Point(523, 460)
         Me.Panel6.Name = "Panel6"
         Me.TableLayoutPanel4.SetRowSpan(Me.Panel6, 4)
-        Me.Panel6.Size = New System.Drawing.Size(326, 101)
+        Me.Panel6.Size = New System.Drawing.Size(330, 101)
         Me.Panel6.TabIndex = 59
         '
         'TableLayoutPanel6
@@ -2292,6 +2158,109 @@ Partial Class frmProductsDevelopment
         Me.txtjiratask.Size = New System.Drawing.Size(87, 20)
         Me.txtjiratask.TabIndex = 1
         '
+        'Panel4
+        '
+        Me.Panel4.BackColor = System.Drawing.SystemColors.GrayText
+        Me.TableLayoutPanel4.SetColumnSpan(Me.Panel4, 5)
+        Me.Panel4.Controls.Add(Me.TableLayoutPanel13)
+        Me.Panel4.Location = New System.Drawing.Point(5, 599)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(844, 34)
+        Me.Panel4.TabIndex = 4
+        '
+        'TableLayoutPanel13
+        '
+        Me.TableLayoutPanel13.BackColor = System.Drawing.SystemColors.GrayText
+        Me.TableLayoutPanel13.ColumnCount = 7
+        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144.0!))
+        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143.0!))
+        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 53.0!))
+        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
+        Me.TableLayoutPanel13.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
+        Me.TableLayoutPanel13.Controls.Add(Me.Button15, 0, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.Button16, 1, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.Button17, 2, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.Button18, 3, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.cmdnew3, 4, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.cmdSave3, 5, 0)
+        Me.TableLayoutPanel13.Controls.Add(Me.cmdexit3, 6, 0)
+        Me.TableLayoutPanel13.Location = New System.Drawing.Point(83, 1)
+        Me.TableLayoutPanel13.Name = "TableLayoutPanel13"
+        Me.TableLayoutPanel13.RowCount = 1
+        Me.TableLayoutPanel13.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel13.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel13.Size = New System.Drawing.Size(706, 34)
+        Me.TableLayoutPanel13.TabIndex = 3
+        '
+        'Button15
+        '
+        Me.Button15.Location = New System.Drawing.Point(3, 3)
+        Me.Button15.Name = "Button15"
+        Me.Button15.Size = New System.Drawing.Size(125, 28)
+        Me.Button15.TabIndex = 0
+        Me.Button15.Text = "Change Vendor"
+        Me.Button15.UseVisualStyleBackColor = True
+        Me.Button15.Visible = False
+        '
+        'Button16
+        '
+        Me.Button16.Location = New System.Drawing.Point(134, 3)
+        Me.Button16.Name = "Button16"
+        Me.Button16.Size = New System.Drawing.Size(125, 28)
+        Me.Button16.TabIndex = 1
+        Me.Button16.Text = "Change Manuf. PartNo."
+        Me.Button16.UseVisualStyleBackColor = True
+        Me.Button16.Visible = False
+        '
+        'Button17
+        '
+        Me.Button17.Location = New System.Drawing.Point(265, 3)
+        Me.Button17.Name = "Button17"
+        Me.Button17.Size = New System.Drawing.Size(134, 28)
+        Me.Button17.TabIndex = 2
+        Me.Button17.Text = "Change Unit Cost"
+        Me.Button17.UseVisualStyleBackColor = True
+        Me.Button17.Visible = False
+        '
+        'Button18
+        '
+        Me.Button18.Location = New System.Drawing.Point(409, 3)
+        Me.Button18.Name = "Button18"
+        Me.Button18.Size = New System.Drawing.Size(134, 28)
+        Me.Button18.TabIndex = 3
+        Me.Button18.Text = "Change Status"
+        Me.Button18.UseVisualStyleBackColor = True
+        Me.Button18.Visible = False
+        '
+        'cmdnew3
+        '
+        Me.cmdnew3.Image = CType(resources.GetObject("cmdnew3.Image"), System.Drawing.Image)
+        Me.cmdnew3.Location = New System.Drawing.Point(552, 3)
+        Me.cmdnew3.Name = "cmdnew3"
+        Me.cmdnew3.Size = New System.Drawing.Size(43, 28)
+        Me.cmdnew3.TabIndex = 4
+        Me.cmdnew3.UseVisualStyleBackColor = True
+        '
+        'cmdSave3
+        '
+        Me.cmdSave3.Image = CType(resources.GetObject("cmdSave3.Image"), System.Drawing.Image)
+        Me.cmdSave3.Location = New System.Drawing.Point(605, 3)
+        Me.cmdSave3.Name = "cmdSave3"
+        Me.cmdSave3.Size = New System.Drawing.Size(43, 28)
+        Me.cmdSave3.TabIndex = 5
+        Me.cmdSave3.UseVisualStyleBackColor = True
+        '
+        'cmdexit3
+        '
+        Me.cmdexit3.Image = CType(resources.GetObject("cmdexit3.Image"), System.Drawing.Image)
+        Me.cmdexit3.Location = New System.Drawing.Point(657, 3)
+        Me.cmdexit3.Name = "cmdexit3"
+        Me.cmdexit3.Size = New System.Drawing.Size(43, 28)
+        Me.cmdexit3.TabIndex = 6
+        Me.cmdexit3.UseVisualStyleBackColor = True
+        '
         'ContextMenuStrip1
         '
         Me.ContextMenuStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
@@ -2330,6 +2299,62 @@ Partial Class frmProductsDevelopment
         Me.AddNewPartToolStripMenuItem1.Size = New System.Drawing.Size(163, 22)
         Me.AddNewPartToolStripMenuItem1.Text = "Add New Part"
         '
+        'DateColumn
+        '
+        Me.DateColumn.HeaderText = "Date"
+        Me.DateColumn.Name = "DateColumn"
+        Me.DateColumn.Width = 90
+        '
+        'PartNo
+        '
+        Me.PartNo.HeaderText = "Part#"
+        Me.PartNo.Name = "PartNo"
+        Me.PartNo.Width = 90
+        '
+        'CTPNo
+        '
+        Me.CTPNo.HeaderText = "CTP#"
+        Me.CTPNo.Name = "CTPNo"
+        Me.CTPNo.Width = 98
+        '
+        'MFRNo
+        '
+        Me.MFRNo.HeaderText = "MFR#"
+        Me.MFRNo.Name = "MFRNo"
+        Me.MFRNo.Width = 98
+        '
+        'VendorColumn
+        '
+        Me.VendorColumn.HeaderText = "Vendor"
+        Me.VendorColumn.Name = "VendorColumn"
+        Me.VendorColumn.Width = 90
+        '
+        'VendorNameColumn
+        '
+        Me.VendorNameColumn.HeaderText = "Vendor Name"
+        Me.VendorNameColumn.Name = "VendorNameColumn"
+        Me.VendorNameColumn.Width = 98
+        '
+        'StatusColumn
+        '
+        Me.StatusColumn.HeaderText = "Status"
+        Me.StatusColumn.Name = "StatusColumn"
+        Me.StatusColumn.Width = 90
+        '
+        'JiraTaskColumn
+        '
+        Me.JiraTaskColumn.HeaderText = "Jira Task"
+        Me.JiraTaskColumn.Name = "JiraTaskColumn"
+        Me.JiraTaskColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.JiraTaskColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.JiraTaskColumn.Width = 115
+        '
+        'clPerson
+        '
+        Me.clPerson.HeaderText = "Person"
+        Me.clPerson.Name = "clPerson"
+        Me.clPerson.Visible = False
+        '
         'frmProductsDevelopment
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2357,8 +2382,6 @@ Partial Class frmProductsDevelopment
         Me.TabPage3.PerformLayout()
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout()
-        Me.Panel4.ResumeLayout(False)
-        Me.TableLayoutPanel13.ResumeLayout(False)
         Me.TableLayoutPanel5.ResumeLayout(False)
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
@@ -2379,6 +2402,8 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel6.ResumeLayout(False)
         Me.TableLayoutPanel16.ResumeLayout(False)
         Me.TableLayoutPanel16.PerformLayout()
+        Me.Panel4.ResumeLayout(False)
+        Me.TableLayoutPanel13.ResumeLayout(False)
         Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ContextMenuStrip2.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -2544,7 +2569,6 @@ Partial Class frmProductsDevelopment
     Friend WithEvents cmdPartNoMore As Button
     Friend WithEvents cmdCtpNoMore As Button
     Friend WithEvents cmdMfrNoMore As Button
-    Friend WithEvents btnAll As Button
     Friend WithEvents ProjectNo As DataGridViewTextBoxColumn
     Friend WithEvents ProjectName As DataGridViewTextBoxColumn
     Friend WithEvents DateEnt As DataGridViewTextBoxColumn
@@ -2555,14 +2579,6 @@ Partial Class frmProductsDevelopment
     Friend WithEvents cmdJiraTask As Button
     Friend WithEvents txtJiratasksearch As TextBox
     Friend WithEvents Panel5 As Panel
-    Friend WithEvents DateColumn As DataGridViewTextBoxColumn
-    Friend WithEvents PartNo As DataGridViewTextBoxColumn
-    Friend WithEvents CTPNo As DataGridViewTextBoxColumn
-    Friend WithEvents MFRNo As DataGridViewTextBoxColumn
-    Friend WithEvents VendorColumn As DataGridViewTextBoxColumn
-    Friend WithEvents VendorNameColumn As DataGridViewTextBoxColumn
-    Friend WithEvents StatusColumn As DataGridViewTextBoxColumn
-    Friend WithEvents JiraTaskColumn As DataGridViewLinkColumn
     Friend WithEvents Panel6 As Panel
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents TableLayoutPanel16 As TableLayoutPanel
@@ -2574,4 +2590,16 @@ Partial Class frmProductsDevelopment
     Friend WithEvents ContextMenuStrip2 As ContextMenuStrip
     Friend WithEvents AddNewProjectToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents AddNewPartToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents lblPrPech As Label
+    Friend WithEvents cmbuser2 As ComboBox
+    Friend WithEvents cmdPePechMore As Button
+    Friend WithEvents DateColumn As DataGridViewTextBoxColumn
+    Friend WithEvents PartNo As DataGridViewTextBoxColumn
+    Friend WithEvents CTPNo As DataGridViewTextBoxColumn
+    Friend WithEvents MFRNo As DataGridViewTextBoxColumn
+    Friend WithEvents VendorColumn As DataGridViewTextBoxColumn
+    Friend WithEvents VendorNameColumn As DataGridViewTextBoxColumn
+    Friend WithEvents StatusColumn As DataGridViewTextBoxColumn
+    Friend WithEvents JiraTaskColumn As DataGridViewLinkColumn
+    Friend WithEvents clPerson As DataGridViewTextBoxColumn
 End Class

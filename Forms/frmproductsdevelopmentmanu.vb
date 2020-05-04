@@ -18,7 +18,7 @@ Public Class frmproductsdevelopmentmanu
         Try
             If gnr.ConnSql.State = 1 Then
             Else
-                gnr.ConnSql.ConnectionString = gnr.strconnSQL
+                gnr.ConnSql.ConnectionString = gnr.SQLCon
                 gnr.ConnSql.Open()
             End If
 

@@ -287,4 +287,26 @@ Public Class frmPDevelopmentseecomments
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
+
+    Private Sub cmdprint_Click(sender As Object, e As EventArgs) Handles cmdprint.Click
+        Try
+            Dim code = frmProductsDevelopment.txtCode.Text
+            Dim partNo = Trim(UCase(frmProductsDevelopment.txtpartno.Text))
+
+            Dim dsPrintData = gnr.GetDataByCodAndPartProdAndComm2(code, partNo)
+            If dsPrintData IsNot Nothing Then
+                If dsPrintData.Tables(0).Rows.Count > 0 Then
+                    Dim sql = "SELECT PRDCMH.*,PRDCMD.* FROM PRDCMH INNER JOIN PRDCMD ON PRDCMH.PRDCCO = PRDCMD.PRDCCO WHERE PRDCMH.PRHCOD = " & Trim(code) & " AND PRDCMH.PRDPTN = '" & Trim(partNo) & "' ORDER BY  PRDCDA ASC,PRDCTI ASC"
+                    AxCrystalReport1.SQLQuery = sql
+                    AxCrystalReport1.ReportFileName = Trim(gnr.ReportsValue) & "\projectcomments.rpt"
+                    AxCrystalReport1.Connect = gnr.CrystalCon
+                    AxCrystalReport1.RetrieveDataFiles()
+                    AxCrystalReport1.PrintReport()
+                    AxCrystalReport1.WindowState = FormWindowState.Maximized
+                End If
+            End If
+        Catch ex As Exception
+            Dim pepe = ex.Message
+        End Try
+    End Sub
 End Class
