@@ -38,10 +38,11 @@ Partial Class MDIMain
         '
         'MenuStrip1
         '
+        Me.MenuStrip1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PurchasingToolStripMenuItem, Me.Test1ToolStripMenuItem, Me.Test2ToolStripMenuItem, Me.Test3ToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(800, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(800, 33)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -49,58 +50,60 @@ Partial Class MDIMain
         '
         Me.PurchasingToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ClaimsToolStripMenuItem, Me.ProductsDevelopmentToolStripMenuItem})
         Me.PurchasingToolStripMenuItem.Name = "PurchasingToolStripMenuItem"
-        Me.PurchasingToolStripMenuItem.Size = New System.Drawing.Size(78, 20)
+        Me.PurchasingToolStripMenuItem.Size = New System.Drawing.Size(114, 29)
         Me.PurchasingToolStripMenuItem.Text = "Purchasing"
         '
         'ClaimsToolStripMenuItem
         '
         Me.ClaimsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SupplierClaimsToolStripMenuItem, Me.CustomerClaimsToolStripMenuItem})
         Me.ClaimsToolStripMenuItem.Name = "ClaimsToolStripMenuItem"
-        Me.ClaimsToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.ClaimsToolStripMenuItem.Size = New System.Drawing.Size(296, 34)
         Me.ClaimsToolStripMenuItem.Text = "Claims"
         '
         'SupplierClaimsToolStripMenuItem
         '
         Me.SupplierClaimsToolStripMenuItem.Name = "SupplierClaimsToolStripMenuItem"
-        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(248, 34)
         Me.SupplierClaimsToolStripMenuItem.Text = "Supplier Claims"
         '
         'CustomerClaimsToolStripMenuItem
         '
         Me.CustomerClaimsToolStripMenuItem.Name = "CustomerClaimsToolStripMenuItem"
-        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(248, 34)
         Me.CustomerClaimsToolStripMenuItem.Text = "Customer Claims"
         '
         'ProductsDevelopmentToolStripMenuItem
         '
         Me.ProductsDevelopmentToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ProductsDevelopmentToolStripMenuItem1})
         Me.ProductsDevelopmentToolStripMenuItem.Name = "ProductsDevelopmentToolStripMenuItem"
-        Me.ProductsDevelopmentToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
+        Me.ProductsDevelopmentToolStripMenuItem.Size = New System.Drawing.Size(296, 34)
         Me.ProductsDevelopmentToolStripMenuItem.Text = "Products Development"
         '
         'ProductsDevelopmentToolStripMenuItem1
         '
         Me.ProductsDevelopmentToolStripMenuItem1.Name = "ProductsDevelopmentToolStripMenuItem1"
-        Me.ProductsDevelopmentToolStripMenuItem1.Size = New System.Drawing.Size(195, 22)
+        Me.ProductsDevelopmentToolStripMenuItem1.Size = New System.Drawing.Size(296, 34)
         Me.ProductsDevelopmentToolStripMenuItem1.Text = "Products Development"
         '
         'Test1ToolStripMenuItem
         '
         Me.Test1ToolStripMenuItem.Name = "Test1ToolStripMenuItem"
-        Me.Test1ToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
-        Me.Test1ToolStripMenuItem.Text = "Test1"
+        Me.Test1ToolStripMenuItem.Size = New System.Drawing.Size(110, 29)
+        Me.Test1ToolStripMenuItem.Text = "Load Excel"
         '
         'Test2ToolStripMenuItem
         '
         Me.Test2ToolStripMenuItem.Name = "Test2ToolStripMenuItem"
-        Me.Test2ToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
+        Me.Test2ToolStripMenuItem.Size = New System.Drawing.Size(68, 29)
         Me.Test2ToolStripMenuItem.Text = "Test2"
+        Me.Test2ToolStripMenuItem.Visible = False
         '
         'Test3ToolStripMenuItem
         '
         Me.Test3ToolStripMenuItem.Name = "Test3ToolStripMenuItem"
-        Me.Test3ToolStripMenuItem.Size = New System.Drawing.Size(45, 20)
+        Me.Test3ToolStripMenuItem.Size = New System.Drawing.Size(68, 29)
         Me.Test3ToolStripMenuItem.Text = "Test3"
+        Me.Test3ToolStripMenuItem.Visible = False
         '
         'MDIMain
         '

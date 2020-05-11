@@ -244,11 +244,51 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private UrlPartFiles As String
+    Public Property UrlPartFilesMethod() As String
+        Get
+            Return UrlPartFiles
+        End Get
+        Set(ByVal value As String)
+            UrlPartFiles = value
+        End Set
+    End Property
+
+    Private UrlPDevelopment As String
+    Public Property UrlPDevelopmentMethod() As String
+        Get
+            Return UrlPDevelopment
+        End Get
+        Set(ByVal value As String)
+            UrlPDevelopment = value
+        End Set
+    End Property
+
+    Private FlagProduction As String
+    Public Property FlagProductionMethod() As String
+        Get
+            Return FlagProduction
+        End Get
+        Set(ByVal value As String)
+            FlagProduction = value
+        End Set
+    End Property
+
+    Private UrlPathGeneral As String
+    Public Property UrlPathGeneralMethod() As String
+        Get
+            Return UrlPathGeneral
+        End Get
+        Set(ByVal value As String)
+            UrlPathGeneral = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
         ConString = ConfigurationManager.AppSettings("ConnectionString").ToString()
-        Pathgeneral = ConfigurationManager.AppSettings("pathgeneral").ToString()
+        Pathgeneral = ConfigurationManager.AppSettings("pathgeneralTest").ToString()
         Version = ConfigurationManager.AppSettings("Version").ToString()
         Company = ConfigurationManager.AppSettings("strCompany").ToString()
         Database = ConfigurationManager.AppSettings("strdatabase").ToString()
@@ -261,7 +301,17 @@ NotInheritable Class Gn1
         NOVASQLCRYSTALCon = ConfigurationManager.AppSettings("strcrystalconnSQLNOVA").ToString()
         ReportsValue = ConfigurationManager.AppSettings("printpath").ToString()
         JiraPathBaseValue = ConfigurationManager.AppSettings("urlPathBase").ToString()
+        UrlPartFiles = ConfigurationManager.AppSettings("urlPartFiles").ToString()
+        UrlPDevelopment = ConfigurationManager.AppSettings("urlPDevelopment").ToString()
+        FlagProduction = ConfigurationManager.AppSettings("flagProduction").ToString()
+        UrlPathGeneral = ConfigurationManager.AppSettings("urlPathGeneral").ToString()
     End Sub
+
+    <DllImport("user32.dll")>
+    Private Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal wMsg As Integer, ByVal wParam As Boolean, ByVal Param As IntPtr) As Integer
+    End Function
+
+    Private Const WM_SETREDRAW As Integer = 11
 
 
     <DllImport("IpHlpApi.dll")>
@@ -318,6 +368,21 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM PRDVLH WHERE PRHCOD = " & Trim(code)
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetExistByPRNAME(name As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLH WHERE PRNAME = " & Trim(name)
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -982,7 +1047,7 @@ NotInheritable Class Gn1
         Try
             Sql = "INSERT INTO PRDVLH(PRHCOD,CRUSER,CRDATE,PRDATE,PRINFO,PRNAME,PRSTAT,MOUSER,MODATE,PRPECH) VALUES 
             (" & projectno & ",'" & userid & "','" & Format(Now, "yyyy-MM-dd") & "','" & Format(dtValue.Value, "yyyy-MM-dd") & "',
-            '" & Trim(strInfo) & "', '" & Trim(strName) & "','" & Left(ddlStatus.Text, 1) & "','" & userid & "',
+            '" & Trim(strInfo) & "', '" & Trim(strName) & "','" & Left(ddlStatus.SelectedItem.ToString(), 1) & "','" & userid & "',
             '" & Format(Now, "yyyy-MM-dd") & "','" & Left(Trim(strUser), 10) & "')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
@@ -1555,6 +1620,15 @@ NotInheritable Class Gn1
 #End Region
 
 #Region "Utils"
+
+    Public Sub sendMessageOut(dgv As DataGridView, flag As Boolean)
+        Try
+            SendMessage(dgv.Handle, WM_SETREDRAW, flag, 0)
+        Catch ex As Exception
+            Dim pepe = ex.Message
+        End Try
+
+    End Sub
 
     Public Function sendEmail(toemails As String, Optional ByVal partNo As String = Nothing) As Integer
         Dim exMessage As String = " "
@@ -2295,6 +2369,25 @@ errhandler:
             Return Nothing
         End Try
     End Function
+    Public Function DeleteDataFromProdHead(code As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer
+
+        Try
+            Sql = "delete from prdvlh where prhcod = " & Trim(code)
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            If rsConfirm = 1 Then
+                Return rsConfirm
+            Else
+                Return -1
+            End If
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
     Public Function DeleteDataFromProdDet(code As String, partNo As String) As Integer
         Dim exMessage As String = " "
@@ -2592,6 +2685,21 @@ errhandler:
     End Function
 
 #End Region
+
+    Public Function getCell2(code As String) As DataSet
+        Dim exMessage As String = " "
+        Try
+            Dim ds As New DataSet()
+            ds.Locale = CultureInfo.InvariantCulture
+
+            Dim Sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS,PRDJIRA,PRDUSR FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
+            'get the query results
+            ds = FillGrid(Sql)
+            Return ds
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
 
     Public Function GetTestData(partNo As String) As Data.DataSet
         Dim exMessage As String = " "

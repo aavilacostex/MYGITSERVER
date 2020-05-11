@@ -109,7 +109,13 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>packages\Castle.Core.4.4.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="IBM.Data.DB2.iSeries, Version=12.0.0.0, Culture=neutral, PublicKeyToken=9cdb2ebfb1f93a26, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -123,6 +129,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Reflection.Context" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -146,10 +153,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\CrystalReport.vb" />
+    <Compile Include="Class\LikeSession.vb" />
+    <Compile Include="Class\LoadExcel.vb" />
+    <Compile Include="Class\Pagination.vb" />
+    <Compile Include="Class\Supergrid.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\frmChangeVendor.Designer.vb">
       <DependentUpon>frmChangeVendor.vb</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmChangeVendor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLoadExcel.Designer.vb">
+      <DependentUpon>frmLoadExcel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLoadExcel.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frmPDevelopmentseecomments.Designer.vb">
@@ -240,6 +259,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\frmChangeVendor.resx">
       <DependentUpon>frmChangeVendor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLoadExcel.resx">
+      <DependentUpon>frmLoadExcel.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPDevelopmentseecomments.resx">
       <DependentUpon>frmPDevelopmentseecomments.vb</DependentUpon>
@@ -369,6 +391,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Class\text_1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
