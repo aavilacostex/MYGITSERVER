@@ -52,16 +52,10 @@ Public Class frmProductsDevelopment
         ''TabControl1.ItemSize = New Size(0, 1)
         SSTab1.SizeMode = TabSizeMode.Fixed
 
-        'VScrollBar2.Height = 650
-        'VScrollBar2.Dock = DockStyle.Right
         TableLayoutPanel4.AutoScroll = True
         TableLayoutPanel4.AutoScrollPosition = New Point(0, TableLayoutPanel4.VerticalScroll.Maximum)
         TableLayoutPanel4.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
         TableLayoutPanel4.AutoScrollMinSize = New Drawing.Size(800, 0)
-
-        'TabPage2.AutoScroll = True
-        'TabPage2.AutoScrollPosition = New Point(0, TabPage2.VerticalScroll.Maximum)
-        'TabPage2.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
 
         TabPage3.AutoScroll = True
         TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
@@ -79,8 +73,6 @@ Public Class frmProductsDevelopment
         'TabPage2.Controls.Add(vScrollBar1)
 
         Me.WindowState = FormWindowState.Maximized
-
-
 
         cmdSave1.Enabled = False
 
@@ -142,6 +134,10 @@ Public Class frmProductsDevelopment
         'Dim toemailsww = prepareEmailsToSend(1)
         'Dim rsResult = gnr.sendEmail(toemailsww, txtpartno.Text)
 
+        userid = frmLogin.txtUserName.Text
+        If UCase(userid) = "AALZATE" Then
+            flagallow = 1
+        End If
 
         FillDDlUser() 'Fill user cmb
         FillDDlUser1()
@@ -191,11 +187,6 @@ Public Class frmProductsDevelopment
         flagdeve = 1
         flagnewpart = 1
 
-        userid = frmLogin.txtUserName.Text
-        If UCase(userid) = "AALZATE" Then
-            flagallow = 1
-        End If
-
         'AddHandler frmProductsDevelopment.dgvProjectDetails_CellContentClick, AddressOf dgvProjectDetails_CellContentClick
 
         ContextMenuStrip1.Visible = False
@@ -235,6 +226,7 @@ Public Class frmProductsDevelopment
             cmbuser1.DisplayMember = "FullValue"
             cmbuser1.ValueMember = "USUSER"
 
+            'cmbuser1.SelectedIndex = cmbuser.FindString(Trim(UCase(userid)))
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -992,7 +984,7 @@ Public Class frmProductsDevelopment
                         txtpartno.Text = RowDs.Item(ds.Tables(0).Columns("PRDPTN").Ordinal).ToString()
                         txtctpno.Text = RowDs.Item(ds.Tables(0).Columns("PRDCTP").Ordinal).ToString()
                         txtqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDQTY").Ordinal).ToString()
-                        txtmfr.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR").Ordinal).ToString()
+
                         txtmfrno.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR#").Ordinal).ToString()
                         txtsampleqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDSQTY").Ordinal).ToString()
                         'txtminqty.Text = RowDs.Item(ds.Tables(0).Columns("PQMIN").Ordinal).ToString()
@@ -1128,7 +1120,7 @@ Public Class frmProductsDevelopment
                                 txtpartno.Text = RowDs.Item(ds.Tables(0).Columns("PRDPTN").Ordinal).ToString()
                                 txtctpno.Text = RowDs.Item(ds.Tables(0).Columns("PRDCTP").Ordinal).ToString()
                                 txtqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDQTY").Ordinal).ToString()
-                                txtmfr.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR").Ordinal).ToString()
+
                                 txtmfrno.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR#").Ordinal).ToString()
                                 txtsampleqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDSQTY").Ordinal).ToString()
                                 'txtminqty.Text = RowDs.Item(ds.Tables(0).Columns("PQMIN").Ordinal).ToString()
@@ -1719,12 +1711,12 @@ Public Class frmProductsDevelopment
             dtTime5.CustomFormat = "yyyy/MM/dd/"
 
             Dim strCheck = gnr.checkFields(projectNo, txtpartno.Text, DTPicker2, userid, dtTime, userid, dtTime1, txtctpno.Text, txtqty.Text,
-                                                                txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                                                "", txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
                                                                 cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
                                                                 dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
             If String.IsNullOrEmpty(strCheck) Then
                 QueryDetailResult = gnr.InsertProductDetail(projectNo, txtpartno.Text, DTPicker2, userid, dtTime, userid, dtTime1, txtctpno.Text, txtqty.Text,
-                                    txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                    "", txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
                                     cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
                                     dtTime5, CInt(txtsampleqty.Text))
                 If QueryDetailResult <> 0 Then
@@ -1759,7 +1751,7 @@ Public Class frmProductsDevelopment
 
                 If txtvendorno.Text <> "" And projectNo <> 0 Then
                     QueryDetailResult = gnr.InsertProductDetail(projectNo, txtpartno.Text, DTPicker2, userid, dtTime, userid, dtTime1, txtctpno.Text, CInt(txtqty.Text),
-                                    txtmfr.Text, txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                    "", txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
                                     cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
                                     dtTime5, CInt(txtsampleqty.Text))
                 Else
@@ -2219,7 +2211,7 @@ Public Class frmProductsDevelopment
                         If flagustatus = 1 Then
                             Dim rsUpdProdDet = gnr.UpdateProductDetail1(partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, DTPicker5.Value, "", txtvendorno.Text, chkValue,
                                                                         DTPicker4.Value, txtsample.Text, txttcost.Text, cmbuser.SelectedValue, DTPicker2.Value, userid,
-                                                                        txtctpno.Text, txtsampleqty.Text, txtqty.Text, txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text,
+                                                                        txtctpno.Text, txtsampleqty.Text, txtqty.Text, "", txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text,
                                                                         DTPicker3.Value, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text, txtCode.Text, txtpartno.Text)
                             If rsUpdProdDet <> 0 Then
                                 MessageBox.Show("Ann error ocurred updating data in Product Detail database.", "CTP System", MessageBoxButtons.OK)
@@ -2227,7 +2219,7 @@ Public Class frmProductsDevelopment
                         Else
                             Dim rsUpdProdDet = gnr.UpdateProductDetail2(partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, DTPicker5.Value, txtvendorno.Text, chkValue,
                                                                        DTPicker4.Value, txtsample.Text, txttcost.Text, cmbuser.SelectedValue, DTPicker2.Value, userid,
-                                                                       txtctpno.Text, txtsampleqty.Text, txtqty.Text, txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text,
+                                                                       txtctpno.Text, txtsampleqty.Text, txtqty.Text, "", txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text,
                                                                        DTPicker3.Value, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text, txtpartno.Text)
                             If rsUpdProdDet <> 0 Then
                                 MessageBox.Show("Ann error ocurred updating data in Product Detail database.", "CTP System", MessageBoxButtons.OK)
@@ -2346,7 +2338,7 @@ Public Class frmProductsDevelopment
         Dim DtUseTime = New DateTimePicker()
         DtUseTime.Value = DateTime.Now
         Dim rsValidation = gnr.checkFields(txtCode.Text, txtpartno.Text, DTPicker2, userid, DtUseTime, userid, DtUseTime, txtctpno.Text, txtqty.Text,
-                                                                txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, DtUseTime, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                                                "", txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, DtUseTime, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
                                                                 cmbuser.SelectedValue, chknew, DtUseTime, txtsample.Text, txttcost.Text, txtvendorno.Text, 0, cmbminorcode.SelectedValue, txttoocost.Text, DtUseTime,
                                                                 DateTime.Now.ToShortDateString(), txtsampleqty.Text)
 
@@ -2876,7 +2868,7 @@ Public Class frmProductsDevelopment
                         txtsample.Text = "0"
                         txttcost.Text = "0"
                         txttoocost.Text = "0"
-                        txtmfr.Text = " "
+
                         txtsampleqty.Text = "0"
                         txtBenefits.Text = " "
                         txtainfo.Text = " "
@@ -3221,41 +3213,50 @@ Public Class frmProductsDevelopment
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
                 End If
                 ds = fillcelldetailOther(strwhere)
-                Dim code As String = ds.Tables(0).Rows(0).ItemArray(0).ToString()
-                ds1 = gnr.GetDataByPRHCOD(code)
 
-                Dim partNo As String = ds.Tables(0).Rows(0).ItemArray(1).ToString()
+                If ds IsNot Nothing Then
+                    If ds.Tables(0).Rows.Count > 0 Then
+                        Dim code As String = ds.Tables(0).Rows(0).ItemArray(0).ToString()
+                        ds1 = gnr.GetDataByPRHCOD(code)
 
-                txtCode.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(0).ToString())
-                txtname.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(3).ToString()) ' format date
-                TabPage2.Text = "Project: " + txtname.Text
+                        Dim partNo As String = ds.Tables(0).Rows(0).ItemArray(1).ToString()
 
-                Dim CleanDateString As String = Regex.Replace(ds1.Tables(0).Rows(0).ItemArray(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
-                'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
-                Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
-                DTPicker1.Value = dtChange.ToShortDateString()
+                        txtCode.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(0).ToString())
+                        txtname.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(3).ToString()) ' format date
+                        TabPage2.Text = "Project: " + txtname.Text
 
-                If cmbuser1.FindStringExact(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString())) Then
-                    cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString()))
-                End If
-                If cmbuser1.SelectedIndex = -1 Then
-                    cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
-                End If
-                If Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "I" Then
-                    cmbprstatus.SelectedIndex = 1
-                ElseIf Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "F" Then
-                    cmbprstatus.SelectedIndex = 2
+                        Dim CleanDateString As String = Regex.Replace(ds1.Tables(0).Rows(0).ItemArray(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
+                        'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
+                        Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
+                        DTPicker1.Value = dtChange.ToShortDateString()
+
+                        If cmbuser1.FindStringExact(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString())) Then
+                            cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString()))
+                        End If
+                        If cmbuser1.SelectedIndex = -1 Then
+                            cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
+                        End If
+                        If Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "I" Then
+                            cmbprstatus.SelectedIndex = 1
+                        ElseIf Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "F" Then
+                            cmbprstatus.SelectedIndex = 2
+                        Else
+                            cmbprstatus.SelectedIndex = 2
+                        End If
+
+                        fillcell2(code)
+
+                        fillTab3(code, partNo)
+
+                        SSTab1.SelectedIndex = 2
+
+                        cleanSearchTextBoxes(tt.Name)
+                    Else
+                        MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
+                    End If
                 Else
-                    cmbprstatus.SelectedIndex = 2
+                    MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
                 End If
-
-                fillcell2(code)
-
-                fillTab3(code, partNo)
-
-                SSTab1.SelectedIndex = 2
-
-                cleanSearchTextBoxes(tt.Name)
             End If
             Exit Sub
         Catch ex As Exception
@@ -4221,6 +4222,7 @@ Public Class frmProductsDevelopment
             Else
                 myTableLayout = Me.TableLayoutPanel4
                 SSTab1.TabPages(2).Text = ""
+                lstLayouts.Add(myTableLayout)
             End If
 
             For Each ttt In lstLayouts
@@ -4278,7 +4280,7 @@ Public Class frmProductsDevelopment
         txtctpno.Text = ""
         txtqty.Text = 0
         txtsampleqty.Text = 0
-        txtmfr.Text = ""
+
         txtmfrno.Text = ""
         txtunitcost.Text = 0
         txtminqty.Text = 0

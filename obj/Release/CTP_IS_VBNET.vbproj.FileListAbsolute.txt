@@ -1,16 +1,12 @@
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.exe.config
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.exe
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.pdb
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.exe.config
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\Castle.Core.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\IBM.Data.DB2.iSeries.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\System.Data.SqlClient.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\Castle.Core.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\IBM.Data.DB2.iSeries.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\System.Data.SqlClient.xml
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\Interop.Crystal.dll
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\AxInterop.Crystal.dll
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.vbprojAssemblyReference.cache
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\Interop.ADODB.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\Interop.ADOR.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\Interop.CRPEAuto.dll
