@@ -334,7 +334,7 @@ Public Class frmProductsDevelopment
             cmbPrpech.DataSource = dsUser.Tables(0)
             cmbPrpech.DisplayMember = "FullValue"
             cmbPrpech.ValueMember = "USUSER"
-
+            cmbPrpech.SelectedIndex = -1
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -473,7 +473,24 @@ Public Class frmProductsDevelopment
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
 
-            sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"   'DELETE BURNED REFERENCE
+            sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"
+            'If sql.Length() > 70 Then
+            '    Dim strValues As Array = strwhere.Split(" ")
+            '    Dim i = 0
+            '    Dim strResult As String = Nothing
+            '    For Each item As String In strValues
+            '        If i < 4 Then
+            '            strResult += item + " "
+            '            i += 1
+            '        Else
+            '            Exit For
+            '        End If
+            '    Next
+            '    strwhere = strResult
+            '    sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"
+            'Else
+            '    sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"
+            'End If
 
             'get the query results
 
@@ -508,11 +525,40 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
 
+
+                    'fill second tab if one record in datagrid
+                    If ds.Tables(0).Rows.Count = 1 Then
+
+                        If Not String.IsNullOrEmpty(txtsearchcode.Text) Then
+                            If GetAmountOfProjectReferences(txtsearchcode.Text) = 1 Then
+                                fillSecondTabUpp(txtsearchcode.Text)
+                                fillcell2(txtsearchcode.Text)
+                                'x = dgvName.Rows(yourRowIndex).Cells(yourColumnIndex).Value
+                                fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                                SSTab1.SelectedIndex = 2
+                            Else
+                                fillSecondTabUpp(txtsearchcode.Text)
+                                fillcell2(txtsearchcode.Text)
+                                SSTab1.SelectedIndex = 1
+                            End If
+                        Else
+                            Dim grvCode = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRHCOD").Ordinal).ToString()
+                            If GetAmountOfProjectReferences(grvCode) = 1 Then
+                                fillSecondTabUpp(grvCode)
+                                fillcell2(grvCode)
+                                fillTab3(grvCode, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                                SSTab1.SelectedIndex = 2
+                            Else
+                                fillSecondTabUpp(grvCode)
+                                fillcell2(grvCode)
+                                SSTab1.SelectedIndex = 1
+                            End If
+                        End If
+                    End If
+
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
                     LikeSession.dsDatagridview1 = ds
-
-                    'fillcell2(txtsearchcode.Text)
 
                 Else
                     DataGridView1.DataSource = Nothing
@@ -652,15 +698,31 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(7).DataPropertyName = "PRDJIRA"
 
                     'FILL GRID
-                    dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
-                    dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
+                    'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+                    'dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
                     'dgvProjectDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+
+
+                    'fill third tab if one record in datagrid
+                    'If ds.Tables(0).Rows.Count = 1 Then
+
+                    '    If Not String.IsNullOrEmpty(txtsearchcode.Text) Then
+                    '        fillSecondTabUpp(txtsearchcode.Text)
+                    '        fillcell2(txtsearchcode.Text)
+                    '    Else
+                    '        Dim grvCode = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRHCOD").Ordinal).ToString()
+                    '        fillSecondTabUpp(grvCode)
+                    '        fillcell2(grvCode)
+                    '    End If
+
+                    '    SSTab1.SelectedIndex = 1
+                    'End If
 
                     dgvProjectDetails.DataSource = ds.Tables(0)
                     LikeSession.dsDgvProjectDetails = ds
 
-                    dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-                    dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+                    'dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+                    'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
                     'dgvProjectDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
 
                 Else
@@ -703,15 +765,15 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Public Sub fillcell22(query As String)
+    Public Sub fillcell22(code As String)
         Dim exMessage As String = " "
         Try
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
 
-            'sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
+            sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
             'get the query results
-            ds = gnr.FillGrid(query)
+            ds = gnr.FillGrid(sql)
 
             If Not ds Is Nothing Then
 
@@ -773,7 +835,7 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub fillcelldetail(strwhere)
+    Private Sub fillcelldetail(strwhere As String, flag As Integer)
         Dim exMessage As String = " "
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
@@ -818,13 +880,17 @@ Public Class frmProductsDevelopment
                 Else
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
-                    Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                    If flag = 0 Then
+                        Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                    End If
                     Exit Sub
                 End If
             Else
                 DataGridView1.DataSource = Nothing
                 DataGridView1.Refresh()
-                Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                If flag = 0 Then
+                    Dim resultAlert As DialogResult = MessageBox.Show("There is not results for this search criteria. Please try again with other text!", "CTP System", MessageBoxButtons.OK)
+                End If
                 Exit Sub
             End If
         Catch ex As Exception
@@ -2995,7 +3061,6 @@ Public Class frmProductsDevelopment
 
     Private Sub cmdSearch_Click(Optional ByVal flag As Integer = 0)
         Dim exMessage As String = " "
-        'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
         tt = txtsearch
         Try
@@ -3006,9 +3071,11 @@ Public Class frmProductsDevelopment
                     strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
                 End If
+                'buildMixedQuery(strwhere, tt.Name, 1)
                 fillcell1(strwhere, flag)
-
                 cleanSearchTextBoxes(tt.Name)
+            Else
+                MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
             Exit Sub
         Catch ex As Exception
@@ -3034,19 +3101,15 @@ Public Class frmProductsDevelopment
         Try
 
             If Not String.IsNullOrEmpty(tt.Text) Then
-                If Not String.IsNullOrEmpty(tt1.SelectedValue) Then
-
-                    If flagallow = 1 Then
-                        strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(tt.Text) & " AND PRDVLD.PRDSTS = '" & Trim(tt1.SelectedValue) & "'"
-                    Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(tt.Text) & " AND PRDVLD.PRDSTS = '" & Trim(tt1.SelectedValue) & "'"
-                        'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
-                    End If
-
-                    fillcelldetail(strwhere)
+                If flagallow = 1 Then
+                    strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
                 Else
-                    MessageBox.Show("You must select a status to get results bounded with that vendor number.", "CTP System", MessageBoxButtons.OK)
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
                 End If
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcelldetail(strwhere)
+
             Else
                 MessageBox.Show("You must type a vendor number to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3139,11 +3202,11 @@ Public Class frmProductsDevelopment
                     'cleanSearchTextBoxes(tt.Name)
                 Else
                     'only the part has value
-                    fillcelldetail(strwhere)
-
-                    cleanSearchTextBoxes(tt.Name)
+                    buildMixedQuery(strwhere, tt.Name, 0)
+                    'fillcelldetail(strwhere)
+                    'cleanSearchTextBoxes(tt.Name)
                 End If
-            ElseIf String.IsNullOrEmpty(tt.Text) Then
+            Else
                 'the part has no value
                 MessageBox.Show("You must type a part number to find.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3183,9 +3246,11 @@ Public Class frmProductsDevelopment
                     strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
                 End If
-                fillcelldetail(strwhere)
-
-                cleanSearchTextBoxes(tt.Name)
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcelldetail(strwhere)
+                'cleanSearchTextBoxes(tt.Name)
+            Else
+                MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
             Exit Sub
         Catch ex As Exception
@@ -3257,6 +3322,8 @@ Public Class frmProductsDevelopment
                 Else
                     MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
                 End If
+            Else
+                MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
             Exit Sub
         Catch ex As Exception
@@ -3276,15 +3343,18 @@ Public Class frmProductsDevelopment
         tt = txtMfrNoSearch
         Try
             If Trim(tt.Text) <> "" Then
+
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
                     strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
                 End If
-                fillcelldetail(strwhere)
-
-                cleanSearchTextBoxes(tt.Name)
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcelldetail(strwhere)
+                'cleanSearchTextBoxes(tt.Name)
+            Else
+                MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
             Exit Sub
         Catch ex As Exception
@@ -3305,14 +3375,16 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE PRHCOD = " & Trim(tt.Text)
+                    strwhere = "WHERE PRHCOD = " & Trim(UCase(tt.Text))
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRHCOD = " & Trim(tt.Text)
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRHCOD = " & Trim(UCase(tt.Text))
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRHCOD = " & Trim(txtsearchcode.Text)
                 End If
+                'buildMixedQuery(strwhere, tt.Name, 1)
                 fillcell1(strwhere, flag)
-
                 cleanSearchTextBoxes(tt.Name)
+            Else
+                MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
             Exit Sub
         Catch ex As Exception
@@ -3336,19 +3408,15 @@ Public Class frmProductsDevelopment
         Try
 
             If Not String.IsNullOrEmpty(tt.SelectedValue) Then
-                If Not String.IsNullOrEmpty(tt1.Text) Then
-
-                    If flagallow = 1 Then
-                        strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(tt.SelectedValue) & "' AND PRDVLD.VMVNUM = " & tt1.Text
-                    Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(tt.SelectedValue) & "' AND PRDVLD.VMVNUM = " & tt1.Text
-                        'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-                    End If
-                    fillcelldetail(strwhere)
-
+                If flagallow = 1 Then
+                    strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                 Else
-                    MessageBox.Show("You must type a vendor number to get results.", "CTP System", MessageBoxButtons.OK)
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
+                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
                 End If
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcelldetail(strwhere)
+
             Else
                 MessageBox.Show("You must select a status value to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3383,14 +3451,16 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRPECH)) = '" & Trim(tt.SelectedValue) & "' "
+                    strwhere = "WHERE TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(tt.SelectedValue) & "' "
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
                 End If
-                fillcelldetail(strwhere)
-
-                cleanSearchTextBoxes(tt.Name)
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcelldetail(strwhere)
+                'cleanSearchTextBoxes(tt.Name)
+            Else
+                MessageBox.Show("You must select a person in charge value to get results.", "CTP System", MessageBoxButtons.OK)
             End If
             Exit Sub
         Catch ex As Exception
@@ -3398,6 +3468,240 @@ Public Class frmProductsDevelopment
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
+
+    Private Function buildMixedQuery(initialQuery As String, selectedField As String, flag As Integer) As String
+        Try
+            Dim myTableLayout As TableLayoutPanel
+            myTableLayout = Me.TableLayoutPanel1
+            Dim sql As String = initialQuery
+            Dim hasVal As New List(Of Object)
+            Dim selectedObj As Object = Nothing
+
+            For Each tt In myTableLayout.Controls
+                If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
+                    If tt.Text <> Nothing And tt.Name <> selectedField Then
+                        hasVal.Add(tt)
+                    ElseIf tt.Name = selectedField Then
+                        selectedObj = tt
+                    End If
+                    'If tt.Name <> valueSelectd Then
+                    '    tt.Text = ""
+                    'End If
+                End If
+            Next
+            sql += buildSearchQuerySintax(hasVal)
+            If flag = 1 Then
+                fillcell1(sql, 0)
+            Else
+                fillcelldetail(sql, 0)
+            End If
+            hasVal.Add(selectedObj)
+            cleanSearchTextBoxesComplex(hasVal)
+        Catch ex As Exception
+
+        End Try
+    End Function
+
+    'Private Function buildSearchQuerySintax(tt As Object) As String
+    Private Function buildSearchQuerySintax(lstSelected As List(Of Object)) As String
+        Dim exMessage As String = " "
+        Try
+            Dim dictionary As New Dictionary(Of String, String)
+            dictionary.Add("txtMfrNoSearch", "PRDMFR#")
+            dictionary.Add("txtsearchctp", "PRDCTP")
+            dictionary.Add("cmbstatus1", "PRDSTS")
+            dictionary.Add("cmbPrpech", "PRPECH")
+            dictionary.Add("txtsearchpart", "PRDPTN")
+            dictionary.Add("txtsearch1", "PRDVLD.VMVNUM")
+            dictionary.Add("txtJiratasksearch", "PRDJIRA")
+            dictionary.Add("txtsearchcode", "PRDVLD.PRHCOD")
+            dictionary.Add("txtsearch", "PRNAME")
+
+            Dim strwhere As String = Nothing
+            For Each tt As Object In lstSelected
+                For Each pair As KeyValuePair(Of String, String) In dictionary
+                    If tt.Name = pair.Key Then
+                        If flagallow = 1 Then
+                            If TypeOf tt Is Windows.Forms.TextBox Then
+                                If pair.Key = "txtsearch" Then
+                                    strwhere += " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                                Else
+                                    strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "
+                                End If
+
+                            Else
+                                strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+                            End If
+                        Else
+                            If TypeOf tt Is Windows.Forms.TextBox Then
+                                If pair.Key = "txtsearch" Then
+                                    strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                                Else
+                                    strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "
+                                End If
+                            Else
+                                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+                            End If
+                            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+                        End If
+                    End If
+                Next
+            Next
+
+            Return strwhere
+
+#Region "Maybe"
+
+            'Dim b
+            'For Each pair As KeyValuePair(Of String, String) In dictionary
+            '    If pair.Key = "txtMfrNoSearch" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+
+            '    ElseIf pair.Key = "txtsearchctp" Then
+
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+
+            '        End If
+            '    ElseIf pair.Key = "cmbstatus1" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+            '    ElseIf pair.Key = "cmbPrpech" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+            '    ElseIf pair.Key = "txtsearchpart" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+            '    ElseIf pair.Key = "txtsearch1" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+            '    ElseIf pair.Key = "txtJiratasksearch" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+            '    ElseIf pair.Key = "txtsearchcode" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+            '    ElseIf pair.Key = "txtsearch" Then
+            '        If flagallow = 1 Then
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '        Else
+            '            If TypeOf tt Is Windows.Forms.TextBox Then
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
+            '            Else
+            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
+            '            End If
+            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+            '        End If
+            '        'Eg Label1.Text = pair.value or Console.WriteLine(pair.value)
+            '    End If
+            'Next
+            'Dim c
+
+#End Region
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Function
 
     Private Sub cmdcomments_Click(sender As Object, e As EventArgs) Handles cmdcomments.Click
         gnr.seeaddprocomments = 5
@@ -3743,7 +4047,7 @@ Public Class frmProductsDevelopment
                 sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM 
                     WHERE PRHCOD = " & txtCode.Text & " " + strPartNo + strMfrNo + strCtpNo 'DELETE BURNED REFERENCE
 
-                fillcell22(sql)
+                'fillcell22(sql)
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -3989,6 +4293,77 @@ Public Class frmProductsDevelopment
 #End Region
 
 #Region "Utils"
+
+    Private Function GetAmountOfProjectReferences(code As String) As Integer
+        Dim ds As DataSet
+        Dim exMessage As String = " "
+        Try
+            sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS,PRDJIRA,PRDUSR FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
+            'get the query results
+            ds = gnr.FillGrid(sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    Return ds.Tables(0).Rows.Count
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Return 0
+        End Try
+    End Function
+
+    Private Sub fillSecondTabUpp(code As String)
+        Dim ds As DataSet
+        Dim exMessage As String = " "
+        Try
+            ds = gnr.GetDataByPRHCOD(code)
+            If ds.Tables(0).Rows.Count = 1 Then
+
+                SSTab1.SelectedTab = TabPage2
+                For Each RowDs In ds.Tables(0).Rows
+                    txtCode.Text = Trim(RowDs.Item(0).ToString())
+                    txtname.Text = Trim(RowDs.Item(3).ToString()) ' format date
+                    TabPage2.Text = "Project: " + txtname.Text
+
+                    Dim CleanDateString As String = Regex.Replace(RowDs.Item(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
+                    'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
+                    Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
+                    DTPicker1.Value = dtChange.ToShortDateString()
+
+                    If cmbuser1.FindStringExact(Trim(RowDs.Item(9).ToString())) Then
+                        cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(RowDs.Item(9).ToString()))
+                    End If
+
+                    If cmbuser1.SelectedIndex = -1 Then
+                        cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
+                    End If
+
+
+                    If Trim(RowDs.Item(4).ToString()) = "I" Then
+                        cmbprstatus.SelectedIndex = 1
+                    ElseIf Trim(RowDs.Item(4).ToString()) = "F" Then
+                        cmbprstatus.SelectedIndex = 2
+                    Else
+                        cmbprstatus.SelectedIndex = 2
+                    End If
+                    'Dim Test1 = RowDs.Item(1).ToString() get the value begans with 0 pos
+                    'Dim test2 = ds.Tables(0).Columns.Item(1).ColumnName  get the grid header
+                Next
+            Else
+                'message box warning
+            End If
+
+            'fill second grid process
+            'clean all other fields
+            flagdeve = 0
+            flagnewpart = 0
+            cmdnew2.Enabled = True
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
 
     Private Sub copyProjecFiles(strProjectNo As String)
         Try
@@ -4376,6 +4751,41 @@ Public Class frmProductsDevelopment
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
+
+    Private Sub cleanSearchTextBoxesComplex(selValues As List(Of Object))
+        Dim exMessage As String = " "
+        Try
+            Dim myTableLayout As TableLayoutPanel
+            myTableLayout = Me.TableLayoutPanel1
+
+            For Each tt In myTableLayout.Controls
+                If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
+                    'If tt.Name <> valueSelectd Then
+                    If Not isStringPresentInList(tt.Name, selValues) Then
+                        tt.Text = ""
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Function isStringPresentInList(compareStr As String, selValues As List(Of Object)) As Boolean
+        Dim exMessage As String = " "
+        Try
+            For Each item As Object In selValues
+                If item.Name = compareStr Then
+                    Return True
+                End If
+            Next
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Return False
+        End Try
+    End Function
 
     Sub ResizeTabs()
         Dim numTabs As Integer = SSTab1.TabCount
