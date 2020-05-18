@@ -4048,7 +4048,7 @@ Public Class frmProductsDevelopment
         Try
             If Trim(txtCode.Text) <> "" Then
                 If dgvProjectDetails.Rows.Count > 0 Then
-                    frmproductsdevelopmentmanu.Show()
+                    frmproductsdevelopmentmanu.ShowDialog()
                 End If
                 'actualizo el detalle
                 If SSTab1.SelectedIndex = 2 Then
@@ -4077,7 +4077,7 @@ Public Class frmProductsDevelopment
         Try
             If Trim(txtCode.Text) <> "" Then
                 If dgvProjectDetails.Rows.Count > 0 Then
-                    frmproductsdevelopmentunitcost.Show()
+                    frmproductsdevelopmentunitcost.ShowDialog()
                 End If
                 'actualizo el detalle
                 If SSTab1.SelectedIndex = 2 Then
@@ -4106,7 +4106,7 @@ Public Class frmProductsDevelopment
         Try
             If Trim(txtCode.Text) <> "" Then
                 If dgvProjectDetails.Rows.Count > 0 Then
-                    frmproductsdevelopmentstatus.Show()
+                    frmproductsdevelopmentstatus.ShowDialog()
                 End If
                 'actualizo el detalle
                 If SSTab1.SelectedIndex = 2 Then
@@ -4175,10 +4175,17 @@ Public Class frmProductsDevelopment
                     Dim Qry1 = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDMFR#"))) = Trim(UCase(txtMfrNoMore.Text)))
 
-                    If Qry1.Count > 0 Then
+                    If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
                         dgvProjectDetails.DataSource = Qry
                         dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        dgvProjectDetails.DataSource = Qry
+                        dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
                     Else
                         dgvProjectDetails.DataSource = Nothing
                         dgvProjectDetails.Refresh()
@@ -4221,10 +4228,17 @@ Public Class frmProductsDevelopment
                     Dim Qry1 = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDPTN"))) = Trim(UCase(txtPartNoMore.Text)))
 
-                    If Qry1.Count > 0 Then
+                    If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
                         dgvProjectDetails.DataSource = Qry
                         dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        dgvProjectDetails.DataSource = Qry
+                        dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
                     Else
                         dgvProjectDetails.DataSource = Nothing
                         dgvProjectDetails.Refresh()
@@ -4266,10 +4280,17 @@ Public Class frmProductsDevelopment
                     Dim Qry1 = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDCTP"))) = Trim(UCase(txtCtpNoMore.Text)))
 
-                    If Qry1.Count > 0 Then
+                    If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
                         dgvProjectDetails.DataSource = Qry
                         dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        dgvProjectDetails.DataSource = Qry
+                        dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
                     Else
                         dgvProjectDetails.DataSource = Nothing
                         dgvProjectDetails.Refresh()
@@ -4297,7 +4318,7 @@ Public Class frmProductsDevelopment
         Dim myName As String = myButton.Name
         cleanMoreBtns(myName)
         Try
-            If Not String.IsNullOrEmpty(cmbuser2.Text) Then
+            If Not String.IsNullOrEmpty(cmbuser2.Text) And cmbuser2.SelectedIndex <> 0 Then
 
                 dgvProjectDetails.DataSource = Nothing
                 dgvProjectDetails.Refresh()
@@ -4310,10 +4331,17 @@ Public Class frmProductsDevelopment
                     Dim Qry1 = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDUSR"))) = Trim(UCase(cmbuser2.SelectedValue)))
 
-                    If Qry1.Count > 0 Then
+                    If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
                         dgvProjectDetails.DataSource = Qry
                         dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        dgvProjectDetails.DataSource = Qry
+                        dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
                     Else
                         dgvProjectDetails.DataSource = Nothing
                         dgvProjectDetails.Refresh()
