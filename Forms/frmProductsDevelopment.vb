@@ -502,7 +502,7 @@ Public Class frmProductsDevelopment
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
                     DataGridView1.AutoGenerateColumns = False
-                    DataGridView1.ColumnCount = 5
+                    DataGridView1.ColumnCount = 6
 
                     'Add Columns
                     DataGridView1.Columns(0).Name = "ProjectNo"
@@ -524,6 +524,11 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).Name = "Status"
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+
+                    DataGridView1.Columns(5).Name = "hasDoc"
+                    DataGridView1.Columns(5).HeaderText = "Has Documents"
+                    DataGridView1.Columns(5).DataPropertyName = ""
+
 
 
                     'fill second tab if one record in datagrid
@@ -661,7 +666,7 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.DataSource = Nothing
                     dgvProjectDetails.Refresh()
                     dgvProjectDetails.AutoGenerateColumns = False
-                    dgvProjectDetails.ColumnCount = 8
+                    dgvProjectDetails.ColumnCount = 9
 
 
                     'Add Columns
@@ -696,6 +701,10 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(7).Name = "JiraTaskColumn"
                     dgvProjectDetails.Columns(7).HeaderText = "JiraTask"
                     dgvProjectDetails.Columns(7).DataPropertyName = "PRDJIRA"
+
+                    dgvProjectDetails.Columns(8).Name = "hasDoc2"
+                    dgvProjectDetails.Columns(8).HeaderText = "Has Documents?"
+                    dgvProjectDetails.Columns(8).DataPropertyName = ""
 
                     'FILL GRID
                     'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
@@ -812,6 +821,10 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(6).HeaderText = "Status"
                     dgvProjectDetails.Columns(6).DataPropertyName = "PRDSTS"
 
+                    dgvProjectDetails.Columns(8).Name = "hasDoc2"
+                    dgvProjectDetails.Columns(8).HeaderText = "Has Documents?"
+                    dgvProjectDetails.Columns(8).DataPropertyName = ""
+
                     'FILL GRID
                     dgvProjectDetails.DataSource = ds.Tables(0)
                     'dgvProjectDetails_DataBindingComplete(Nothing, Nothing)
@@ -874,6 +887,36 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).Name = "Status"
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+
+                    'fill second tab if one record in datagrid
+                    If ds.Tables(0).Rows.Count = 1 Then
+
+                        If Not String.IsNullOrEmpty(txtsearchcode.Text) Then
+                            If GetAmountOfProjectReferences(txtsearchcode.Text) = 1 Then
+                                fillSecondTabUpp(txtsearchcode.Text)
+                                fillcell2(txtsearchcode.Text)
+                                'x = dgvName.Rows(yourRowIndex).Cells(yourColumnIndex).Value
+                                fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                                SSTab1.SelectedIndex = 2
+                            Else
+                                fillSecondTabUpp(txtsearchcode.Text)
+                                fillcell2(txtsearchcode.Text)
+                                SSTab1.SelectedIndex = 1
+                            End If
+                        Else
+                            Dim grvCode = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRHCOD").Ordinal).ToString()
+                            If GetAmountOfProjectReferences(grvCode) = 1 Then
+                                fillSecondTabUpp(grvCode)
+                                fillcell2(grvCode)
+                                fillTab3(grvCode, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                                SSTab1.SelectedIndex = 2
+                            Else
+                                fillSecondTabUpp(grvCode)
+                                fillcell2(grvCode)
+                                SSTab1.SelectedIndex = 1
+                            End If
+                        End If
+                    End If
 
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
@@ -985,6 +1028,15 @@ Public Class frmProductsDevelopment
                     e.CellStyle.ForeColor = Color.Red
                     e.Value = "Finished"
                     'DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "Finished"
+                End If
+            End If
+        ElseIf e.ColumnIndex = 5 Then
+            If e.Value Is Nothing Then
+                Dim projectNo = DataGridView1.Rows(e.RowIndex).Cells("ProjectNo").Value
+                If checkIfDocsPresent(projectNo, 0) Then
+                    e.CellStyle.ForeColor = Color.Green
+                    'DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = checkIfDocsPresent(3221).ToString()
+                    e.Value = checkIfDocsPresent(3221, 0).ToString()
                 End If
             End If
         End If
@@ -1394,6 +1446,15 @@ Public Class frmProductsDevelopment
                 e.FormattingApplied = True
             Else
                 e.Value = ""
+            End If
+        ElseIf e.ColumnIndex = 8 Then
+            If Not String.IsNullOrEmpty(txtCode.Text) Then
+                Dim projectNo = txtCode.Text
+                Dim partNo = dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value.ToString()
+                Dim DicRefDocs = getReferenceDocuments(projectNo, partNo)
+                For Each pair As KeyValuePair(Of String, String) In DicRefDocs
+                    dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = pair.Value.ToString()
+                Next
             End If
         End If
     End Sub
@@ -3502,6 +3563,44 @@ Public Class frmProductsDevelopment
         End Try
     End Function
 
+    Private Function getReferenceDocuments(code As String, partNo As String) As Dictionary(Of String, String)
+        Dim exMessage As String = " "
+        Try
+            Dim dictionary As New Dictionary(Of String, String)
+            gnr.FolderPath = gnr.UrlPDevelopmentMethod
+            gnr.folderpathproject = gnr.FolderPath & Trim(code) & "\"
+            Dim hasDocs As Boolean = False
+
+            'If code IsNot Nothing Then
+            If partNo IsNot Nothing Then
+                'For Each item As DataRow In ds.Tables(0).Rows
+                gnr.folderpathvendor = gnr.folderpathproject & Trim(partNo.ToString()) & "\"
+                If Directory.Exists(gnr.folderpathvendor) Then
+                    If Not IsDirectoryEmpty(gnr.folderpathvendor) Then
+                        Dim lstPdfInside = Directory.GetFiles(gnr.folderpathvendor, "*.pdf", SearchOption.AllDirectories)
+                        If lstPdfInside IsNot Nothing Then
+                            If lstPdfInside.Count > 0 Then
+                                hasDocs = True
+                            End If
+                        End If
+                        dictionary.Add(partNo.ToString(), hasDocs.ToString())
+                    Else
+                        dictionary.Add(partNo.ToString(), hasDocs.ToString())
+                    End If
+                Else
+                    dictionary.Add(partNo.ToString(), hasDocs.ToString())
+                End If
+
+                'Next
+                Return dictionary
+            End If
+            'End If
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Function
+
     'Private Function buildSearchQuerySintax(tt As Object) As String
     Private Function buildSearchQuerySintax(lstSelected As List(Of Object)) As String
         Dim exMessage As String = " "
@@ -3549,7 +3648,6 @@ Public Class frmProductsDevelopment
             Next
 
             Return strwhere
-
 #Region "Maybe"
 
             'Dim b
@@ -4294,6 +4392,57 @@ Public Class frmProductsDevelopment
 
 #Region "Utils"
 
+    Public Function checkIfDocsPresent(code As String, flag As Integer) As Boolean
+        Dim exMessage As String = " "
+        Dim hasDocs As Boolean = False
+        Try
+            'Dim projectNo As String = "3221"
+            If Trim(code) <> "" Then
+                gnr.FolderPath = gnr.UrlPDevelopmentMethod
+                gnr.folderpathproject = gnr.FolderPath & Trim(code) & "\"
+
+                If flag = 0 Then
+                    'datagrid 1
+                    'gnr.folderpathproject = gnr.folderpathvendor & "\" & Trim(txtpartno.Text) & "\"
+                    If Directory.Exists(gnr.folderpathproject) Then
+                        If Not IsDirectoryEmpty(gnr.folderpathproject) Then
+                            Dim lstPdfInside = Directory.GetFiles(gnr.folderpathproject, "*.pdf", SearchOption.AllDirectories)
+                            'Dim files = Directory.EnumerateFiles(gnr.folderpathproject, "*.*", SearchOption.AllDirectories) _
+                            '.Where(Function(s) s >= s.EndsWith(".pdf", StringComparison.InvariantCultureIgnoreCase))
+
+                            'Dim files1 = Directory.GetFiles(gnr.folderpathproject, "*.*", SearchOption.AllDirectories) _
+                            '.Where(Function(s) s >= s.EndsWith(".pdf", StringComparison.InvariantCultureIgnoreCase))
+
+                            ' Dim files = Directory.EnumerateFiles(gnr.folderpathproject, "*.*", SearchOption.AllDirectories) _
+                            '.Where(Function(s) s >= s.EndsWith(".pdf", StringComparison.InvariantCultureIgnoreCase) Or s.EndsWith(".doc", StringComparison.InvariantCultureIgnoreCase) _
+                            'Or s.EndsWith(".docx", StringComparison.InvariantCultureIgnoreCase))
+                            If lstPdfInside IsNot Nothing Then
+                                If lstPdfInside.Count > 0 Then
+                                    hasDocs = True
+                                    Return hasDocs
+                                End If
+                            End If
+                            Return hasDocs
+                        End If
+                        'Else
+                        'test purpose
+                        'MessageBox.Show("There is not a directory in the seleted path.", "CTP System", MessageBoxButtons.OK)
+                    End If
+                End If
+            Else
+                MessageBox.Show("The Project Number must be filled.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Return hasDocs
+        End Try
+    End Function
+
+    Public Function IsDirectoryEmpty(path As String) As Boolean
+        Return Not Directory.EnumerateFileSystemEntries(path).Any()
+    End Function
+
     Private Function GetAmountOfProjectReferences(code As String) As Integer
         Dim ds As DataSet
         Dim exMessage As String = " "
@@ -4805,6 +4954,7 @@ Public Class frmProductsDevelopment
     Private Sub VScrollBar2_Scroll(sender As Object, e As ScrollEventArgs)
 
     End Sub
+
 
     'Private Sub cmdSplit_Click(sender As Object, e As EventArgs) Handles cmdSplit.Click
     '    Dim screenPoint As Point = cmdSplit.PointToScreen(New Point(cmdSplit.Left, cmdSplit.Bottom))
