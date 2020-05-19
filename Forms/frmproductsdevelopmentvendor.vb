@@ -130,6 +130,18 @@ Public Class frmproductsdevelopmentvendor
         End Try
     End Sub
 
+
+    Private Sub Datagridview1_CellBeginEdit(ByVal sender As Object, ByVal e As DataGridViewCellCancelEventArgs) _
+        Handles DataGridView1.CellBeginEdit
+        Try
+            Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+            LikeSession.flyingValue = value
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
     Private Sub Datagridview1_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
         Handles DataGridView1.CellContentClick
         Try
@@ -163,6 +175,8 @@ Public Class frmproductsdevelopmentvendor
                 Dim row As DataGridViewRow = DataGridView1.Rows(e.RowIndex)
                 row.Cells("checkBoxColumn").Value = Convert.ToBoolean(row.Cells("checkBoxColumn").EditedFormattedValue)
                 If Convert.ToBoolean(row.Cells("checkBoxColumn").Value) Then
+                    Dim value = DataGridView1(3, e.RowIndex).Value.ToString()
+                    LikeSession.flyingValue = value
                     DataGridView1(3, e.RowIndex).ReadOnly = False
                 Else
                     DataGridView1(3, e.RowIndex).ReadOnly = True
@@ -182,9 +196,15 @@ Public Class frmproductsdevelopmentvendor
                 Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
                 Dim inputText = DataGridView1.EditingControl.Text
                 If Not Regex.IsMatch(inputText, "^[0-9]{1,6}$") Then
+                    ' DataGridView1(e.ColumnIndex, e.RowIndex).Value = LikeSession.flyingValue
                     DataGridView1.CancelEdit()
                     DataGridView1.RefreshEdit()
                     MessageBox.Show("The Vendor Number must be changed for a numeric value!", "CTP System", MessageBoxButtons.OK)
+                ElseIf Not gnr.isVendorAccepted(inputText) Then
+                    'DataGridView1(e.ColumnIndex, e.RowIndex).Value = LikeSession.flyingValue
+                    DataGridView1.CancelEdit()
+                    DataGridView1.RefreshEdit()
+                    MessageBox.Show("Invalid Vendor Number.", "CTP System", MessageBoxButtons.OK)
                 Else
                     Dim result = cmdSave_custom(inputText)
                     If result = -1 Then

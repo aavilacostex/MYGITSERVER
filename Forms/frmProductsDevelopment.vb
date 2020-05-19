@@ -144,6 +144,7 @@ Public Class frmProductsDevelopment
         FillDDlUser2()
         FillDDLStatus()
         FillDDlMinorCode()
+        FillDDlMajorCode()
         FillDDlPrPech()
 
         cmbprstatus.Items.Add("-- Select Status --")
@@ -176,9 +177,11 @@ Public Class frmProductsDevelopment
         txtvendornamea.ReadOnly = True
         txtvendornoa.ReadOnly = True
         txtminor.ReadOnly = True
+        txtMajor.ReadOnly = True
         txtpartno.ReadOnly = True
         txtpartdescription.ReadOnly = True
         cmbminorcode.Enabled = False
+        cmbmajorcode.Enabled = False
 
         optCTP.Checked = True
         optVENDOR.Checked = False
@@ -395,6 +398,33 @@ Public Class frmProductsDevelopment
             cmbminorcode.DataSource = dsMinCodes.Tables(0)
             cmbminorcode.DisplayMember = "FullValue"
             cmbminorcode.ValueMember = "CNT03"
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub FillDDlMajorCode()
+        Dim exMessage As String = " "
+        Try
+            Dim dsMMajCodes = gnr.FillDDlMajorCode()
+
+            dsMMajCodes.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsMMajCodes.Tables(0).Rows.Count - 1
+                If dsMMajCodes.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsMMajCodes.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsMMajCodes.Tables(0).Rows(i).Item(3).ToString()
+                    'dsMinCodes = Trim(dsMinCodes.Tables(0).Rows(i).Item(0).ToString())
+                    dsMMajCodes.Tables(0).Rows(i).Item(5) = fllValueName
+                    'dsMinCodes.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+            cmbmajorcode.DataSource = dsMMajCodes.Tables(0)
+            cmbmajorcode.DisplayMember = "FullValue"
+            cmbmajorcode.ValueMember = "CNT03"
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -655,8 +685,11 @@ Public Class frmProductsDevelopment
         Try
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
+            sql = "SELECT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(PRDVLD.VMVNUM) as VMVNUM,
+                    Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLD 
+                    INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "
 
-            sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS,PRDJIRA,PRDUSR FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
+            'sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS,PRDJIRA,PRDUSR FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
             'get the query results
             ds = gnr.FillGrid(sql)
 
@@ -780,8 +813,8 @@ Public Class frmProductsDevelopment
             Dim ds As New DataSet()
             ds.Locale = CultureInfo.InvariantCulture
 
-            sql = "SELECT PRDDAT,PRDPTN,PRDCTP,PRDMFR#,PRDVLD.VMVNUM,VMNAME,PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "  'DELETE BURNED REFERENCE
-            'get the query results
+            sql = "SELECT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(PRDVLD.VMVNUM) as VMVNUM,Trim(VMNAME) as VMNAME,
+                    Trim(PRDSTS) as PRDSTS FROM PRDVLD INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "
             ds = gnr.FillGrid(sql)
 
             If Not ds Is Nothing Then
@@ -1340,6 +1373,8 @@ Public Class frmProductsDevelopment
 
             cmbminorcode.Enabled = False
             txtminor.Enabled = False
+            cmbmajorcode.Enabled = False
+            txtMajor.Enabled = False
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
@@ -2071,9 +2106,10 @@ Public Class frmProductsDevelopment
                     txtsearchcode.Text = Trim(txtCode.Text)
                     cmdsearchcode_Click(1)
                     Dim resultDone As DialogResult = MessageBox.Show("The project is ready to add parts.", "CTP System", MessageBoxButtons.OK)
-                    flagdeve = 0
-                    flagnewpart = 0
+                    'flagdeve = 0
+                    'flagnewpart = 0
                     requireValidation = 0
+                    'SSTab1.SelectedIndex = 2
                 End If
             Else 'modify
                 Dim Status2 As String = ""
@@ -2162,70 +2198,76 @@ Public Class frmProductsDevelopment
                             strVendorNo = ""
                         End If
 
-                        If dsProjectNoResult.Tables(0).Rows.Count = 1 Then
-                            If ((ProjectNo = strProjectNo) And (txtvendorno.Text = strVendorNo)) Then
-                                Dim resultAlert As DialogResult = MessageBox.Show("This part no. already exists in this project. :" & ProjectNo & " - " & txtname.Text & "", "CTP System", MessageBoxButtons.OK)
-                            Else
-                                Dim result As DialogResult = MessageBox.Show("This part no. already exists in project no. : " & strProjectNo & " - " & strProjectName & ". Do you want to create it?.", "CTP System", MessageBoxButtons.YesNo)
-                                If result = DialogResult.No Then
-                                    Exit Sub
-                                ElseIf result = DialogResult.Yes Then
-
-                                    InsertProductDetails(ProjectNo, partstoshow)
-                                    If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
-                                        'send email
-                                    End If
-
-                                    InsertProdWishList(userid, txtpartno.Text)
-
-                                    PoQotaFunction()
-
-                                    If cmbuser.SelectedValue <> "N/A " Then
-                                        ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
-                                    End If
-
-                                    Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
-                                    If resultMsgUser = DialogResult.Yes Then
-                                        'save files
-                                        copyProjecFiles(strProjectNo)
-                                    End If
-                                End If
-                            End If
-                        ElseIf dsProjectNoResult.Tables(0).Rows.Count > 1 Then
-                            For Each ttt As DataRow In dsProjectNoResult.Tables(0).Rows
-                                If ((txtCode.Text = ttt.ItemArray(0).ToString()) And
-                                        (txtvendorno.Text = ttt.ItemArray(2))) Then
-                                    Dim result1 As DialogResult = MessageBox.Show("This part no. already exists in this project. : " & txtCode.Text & " - " & Trim(txtname.Text) & " with the vendor: " & Trim(txtvendorname.Text), "CTP System", MessageBoxButtons.OK)
-                                    validation = 1
-                                    Exit Sub
-                                    'Exit For
+                        If dsProjectNoResult IsNot Nothing Then
+                            If dsProjectNoResult.Tables(0).Rows.Count = 1 Then
+                                If ((ProjectNo = strProjectNo) And (txtvendorno.Text = strVendorNo)) Then
+                                    Dim resultAlert As DialogResult = MessageBox.Show("This part no. already exists in this project. :" & ProjectNo & " - " & txtname.Text & "", "CTP System", MessageBoxButtons.OK)
                                 Else
-                                    codeTemp = ttt.ItemArray(0).ToString()
-                                    nameTemp = ttt.ItemArray(1).ToString()
+                                    Dim result As DialogResult = MessageBox.Show("This part no. already exists in project no. : " & strProjectNo & " - " & strProjectName & ". Do you want to create it?.", "CTP System", MessageBoxButtons.YesNo)
+                                    If result = DialogResult.No Then
+                                        Exit Sub
+                                    ElseIf result = DialogResult.Yes Then
+
+                                        InsertProductDetails(ProjectNo, partstoshow)
+                                        If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
+                                            'send email
+                                        End If
+
+                                        InsertProdWishList(userid, txtpartno.Text)
+
+                                        PoQotaFunction()
+
+                                        If cmbuser.SelectedValue <> "N/A " Then
+                                            ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
+                                        End If
+
+                                        Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
+                                        If resultMsgUser = DialogResult.Yes Then
+                                            'save files
+                                            copyProjecFiles(strProjectNo)
+                                        End If
+
+                                        MessageBox.Show("Reference Added Successfully.", "CTP System", MessageBoxButtons.OK)
+                                    End If
                                 End If
-                            Next
-                            If (Not String.IsNullOrEmpty(codeTemp) And Not String.IsNullOrEmpty(nameTemp)) And validation = 0 Then
-                                Dim result2 As DialogResult = MessageBox.Show("This part no. already exists in project no. : " & codeTemp & " - " & Trim(nameTemp) & ". Do you want to create it?.", "CTP System", MessageBoxButtons.YesNo)
-                                If result2 = DialogResult.No Then
-                                    Exit Sub
-                                ElseIf result2 = DialogResult.Yes Then
-                                    InsertProductDetails(ProjectNo, partstoshow)
-                                    If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
-                                        'send email
+                            ElseIf dsProjectNoResult.Tables(0).Rows.Count > 1 Then
+                                For Each ttt As DataRow In dsProjectNoResult.Tables(0).Rows
+                                    If ((txtCode.Text = ttt.ItemArray(0).ToString()) And
+                                            (txtvendorno.Text = ttt.ItemArray(2))) Then
+                                        Dim result1 As DialogResult = MessageBox.Show("This part no. already exists in this project. : " & txtCode.Text & " - " & Trim(txtname.Text) & " with the vendor: " & Trim(txtvendorname.Text), "CTP System", MessageBoxButtons.OK)
+                                        validation = 1
+                                        Exit Sub
+                                        'Exit For
+                                    Else
+                                        codeTemp = ttt.ItemArray(0).ToString()
+                                        nameTemp = ttt.ItemArray(1).ToString()
                                     End If
+                                Next
+                                If (Not String.IsNullOrEmpty(codeTemp) And Not String.IsNullOrEmpty(nameTemp)) And validation = 0 Then
+                                    Dim result2 As DialogResult = MessageBox.Show("This part no. already exists in project no. : " & codeTemp & " - " & Trim(nameTemp) & ". Do you want to create it?.", "CTP System", MessageBoxButtons.YesNo)
+                                    If result2 = DialogResult.No Then
+                                        Exit Sub
+                                    ElseIf result2 = DialogResult.Yes Then
+                                        InsertProductDetails(ProjectNo, partstoshow)
+                                        If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
+                                            'send email
+                                        End If
 
-                                    InsertProdWishList(userid, txtpartno.Text)
+                                        InsertProdWishList(userid, txtpartno.Text)
 
-                                    PoQotaFunction()
+                                        PoQotaFunction()
 
-                                    If cmbuser.SelectedValue <> "N/A " Then
-                                        ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
-                                    End If
+                                        If cmbuser.SelectedValue <> "N/A " Then
+                                            ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
+                                        End If
 
-                                    Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
-                                    If resultMsgUser = DialogResult.Yes Then
-                                        'save files
-                                        copyProjecFiles(strProjectNo)
+                                        Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
+                                        If resultMsgUser = DialogResult.Yes Then
+                                            'save files
+                                            copyProjecFiles(strProjectNo)
+                                        End If
+
+                                        MessageBox.Show("Reference Added Successfully.", "CTP System", MessageBoxButtons.OK)
                                     End If
                                 End If
                             End If
@@ -2241,6 +2283,8 @@ Public Class frmProductsDevelopment
                             If cmbuser.SelectedValue <> "N/A " Then
                                 ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                             End If
+
+                            MessageBox.Show("Reference Added Successfully.", "CTP System", MessageBoxButtons.OK)
                         End If
                     End If
                 Else 'update
@@ -2390,10 +2434,11 @@ Public Class frmProductsDevelopment
                                 'show message error
                             End If
                         End If
+                        MessageBox.Show("Reference Updated Successfully.", "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
                 txtsearchcode.Text = Trim(txtCode.Text)
-                cmdsearchcode_Click(1)
+                'cmdsearchcode_Click(1)
 
                 Dim dsGetProdDetByCodeAndExc = gnr.GetProdDetByCodeAndExc(txtCode.Text)
                 If Not dsGetProdDetByCodeAndExc Is Nothing Then
@@ -2403,12 +2448,16 @@ Public Class frmProductsDevelopment
                             Dim rsUpdProdDevHeader = gnr.UpdateProductDevHeader(txtCode.Text)
                             If rsUpdProdDevHeader <> 0 Then
                                 MessageBox.Show("Ann error ocurred updating data in Product Header datatable.", "CTP System", MessageBoxButtons.OK)
+                            Else
+                                If flagnewpart = 0 Then
+                                    Dim dspUpdMess As DialogResult = MessageBox.Show("Project Updated Succesfully.", "CTP System", MessageBoxButtons.OK)
+                                Else
+                                    Dim dspCreatMess As DialogResult = MessageBox.Show("Project Closed Succesfully.", "CTP System", MessageBoxButtons.OK)
+                                End If
                             End If
                         End If
                     End If
                 End If
-
-                Dim dspUpdMess As DialogResult = MessageBox.Show("Record updated", "CTP System", MessageBoxButtons.OK)
                 requireValidation = 0
             End If
 
@@ -2650,6 +2699,10 @@ Public Class frmProductsDevelopment
                                     cmbminorcode.SelectedIndex = cmbminorcode.FindString(Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC2").Ordinal).ToString()))
                                 End If
 
+                                If cmbmajorcode.FindStringExact(Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC1").Ordinal).ToString())) Then
+                                    cmbmajorcode.SelectedIndex = cmbmajorcode.FindString(Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC1").Ordinal).ToString()))
+                                End If
+
                                 If Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()) <> "" Then
                                     Dim dsGetVendorQuey = gnr.GetVendorQuey(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString())
                                     If Not dsGetVendorQuey Is Nothing Then
@@ -2731,6 +2784,8 @@ Public Class frmProductsDevelopment
                                 End If
                             Else
                                 chknew.Enabled = True
+                                MessageBox.Show("This part does not exists in our inventary. Please add to the inventary before trying to use.", "CTP System", MessageBoxButtons.OK)
+                                Exit Sub
                             End If
                         End If
 
@@ -3029,47 +3084,52 @@ Public Class frmProductsDevelopment
                 Dim dsGetVendorByVendorNo = gnr.GetVendorByVendorNo(vendorno)
                 If Not dsGetVendorByVendorNo Is Nothing Then
                     If (dsGetVendorByVendorNo.Tables(0).Rows.Count > 0) Then
-                        txtvendorno.Text = vendorno
-                        txtvendorname.Text = dsGetVendorByVendorNo.Tables(0).Rows(0).ItemArray(dsGetVendorByVendorNo.Tables(0).Columns("VMNAME").Ordinal).ToString()
-                        partstoshow = ""
+                        If gnr.isVendorAccepted(vendorno) Then
+                            txtvendorno.Text = vendorno
+                            txtvendorname.Text = dsGetVendorByVendorNo.Tables(0).Rows(0).ItemArray(dsGetVendorByVendorNo.Tables(0).Columns("VMNAME").Ordinal).ToString()
+                            partstoshow = ""
 
-                        optCTP.Checked = True
-                        optVENDOR.Checked = False
-                        optboth.Checked = False
-                        partstoshow = "1"
-                        Dim strQueryAdd As String = "WHERE PQVND = " & Trim(vendorno) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
-                        If flagnewpart = 0 And Trim(txtpartno.Text) <> "" Then
-                            Dim dsGetDataByVendorAndPartNo = gnr.GetDataByVendorAndPartNoDst(oldvendorno, txtpartno.Text)
-                            If Not dsGetDataByVendorAndPartNo Is Nothing Then
-                                If dsGetDataByVendorAndPartNo.Tables(0).Rows.Count > 0 Then
-                                    Dim rsUpdatePoQotaByVendorAndPart = gnr.UpdatePoQotaByVendorAndPart(vendorno, oldvendorno, txtpartno.Text,
-                                                                        dsGetDataByVendorAndPartNo.Tables(0).Rows(0).ItemArray(dsGetDataByVendorAndPartNo.Tables(0).Columns("PQSEQ").Ordinal).ToString())
-                                    If rsUpdatePoQotaByVendorAndPart <> 0 Then
-                                        MessageBox.Show("Ann error ocurred updating POQOTA datatable.", "CTP System", MessageBoxButtons.OK)
-                                    End If
-                                Else
-                                    Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
-                                    If Not String.IsNullOrEmpty(maxValue) Then
-                                        maxValue += 1
-                                    Else
-                                        Dim spacepoqota = "                               DEV"
-                                        Dim rsInsertNewPOQota = gnr.InsertNewPOQotaLess(txtpartno.Text, vendorno, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), "", DateTime.Now.Day.ToString(), "", spacepoqota, 0)
-                                        If rsInsertNewPOQota <> 0 Then
-                                            MessageBox.Show("Ann error ocurred inserting data in POQOTA.", "CTP System", MessageBoxButtons.OK)
+                            optCTP.Checked = True
+                            optVENDOR.Checked = False
+                            optboth.Checked = False
+                            partstoshow = "1"
+                            Dim strQueryAdd As String = "WHERE PQVND = " & Trim(vendorno) & " AND PQPTN = '" & Trim(UCase(txtpartno.Text)) & "'"
+                            If flagnewpart = 0 And Trim(txtpartno.Text) <> "" Then
+                                Dim dsGetDataByVendorAndPartNo = gnr.GetDataByVendorAndPartNoDst(oldvendorno, txtpartno.Text)
+                                If Not dsGetDataByVendorAndPartNo Is Nothing Then
+                                    If dsGetDataByVendorAndPartNo.Tables(0).Rows.Count > 0 Then
+                                        Dim rsUpdatePoQotaByVendorAndPart = gnr.UpdatePoQotaByVendorAndPart(vendorno, oldvendorno, txtpartno.Text,
+                                                                            dsGetDataByVendorAndPartNo.Tables(0).Rows(0).ItemArray(dsGetDataByVendorAndPartNo.Tables(0).Columns("PQSEQ").Ordinal).ToString())
+                                        If rsUpdatePoQotaByVendorAndPart <> 0 Then
+                                            MessageBox.Show("Ann error ocurred updating POQOTA datatable.", "CTP System", MessageBoxButtons.OK)
                                         End If
-                                        maxValue = 1 'preguntar duda
+                                    Else
+                                        Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd)
+                                        If Not String.IsNullOrEmpty(maxValue) Then
+                                            maxValue += 1
+                                        Else
+                                            Dim spacepoqota = "                               DEV"
+                                            Dim rsInsertNewPOQota = gnr.InsertNewPOQotaLess(txtpartno.Text, vendorno, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), "", DateTime.Now.Day.ToString(), "", spacepoqota, 0)
+                                            If rsInsertNewPOQota <> 0 Then
+                                                MessageBox.Show("Ann error ocurred inserting data in POQOTA.", "CTP System", MessageBoxButtons.OK)
+                                            End If
+                                            maxValue = 1 'preguntar duda
+                                        End If
+
                                     End If
-
+                                    Dim rsUpdProdDetVend = gnr.UpdateProdDetailVendor(partstoshow, vendorno, txtCode.Text, txtpartno.Text)
+                                    If rsUpdProdDetVend <> 0 Then
+                                        MessageBox.Show("Ann error ocurred updating data in Product Detail Datatable.", "CTP System", MessageBoxButtons.OK)
+                                    End If
+                                    fillcell2(txtCode.Text)
                                 End If
-                                Dim rsUpdProdDetVend = gnr.UpdateProdDetailVendor(partstoshow, vendorno, txtCode.Text, txtpartno.Text)
-                                If rsUpdProdDetVend <> 0 Then
-                                    MessageBox.Show("Ann error ocurred updating data in Product Detail Datatable.", "CTP System", MessageBoxButtons.OK)
-                                End If
-                                fillcell2(txtCode.Text)
+                                Dim result2 As DialogResult = MessageBox.Show("Vendor Changed.", "CTP System", MessageBoxButtons.OK)
                             End If
-                            Dim result2 As DialogResult = MessageBox.Show("Vendor Changed.", "CTP System", MessageBoxButtons.OK)
+                        Else
+                            txtvendorno.Text = ""
+                            txtvendorname.Text = ""
+                            MessageBox.Show("Not valid vendor.", "CTP System", MessageBoxButtons.OK)
                         End If
-
                     Else
                         Dim result3 As DialogResult = MessageBox.Show("Vendor not found.", "CTP System", MessageBoxButtons.OK)
                     End If
@@ -4714,7 +4774,7 @@ Public Class frmProductsDevelopment
                 If index = 1 Then
                     'txtCode.Text = " "
 
-                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And txt.Name <> "txtainfo")
+                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And txt.Name <> "txtCode" And txt.Name <> "txtainfo")
                     If empty.Any Then
                         methodResult = 1
                         'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
@@ -4788,7 +4848,7 @@ Public Class frmProductsDevelopment
                             tt.Text = ""
                         End If
                     ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
-                        If tt.name <> "cmbuser" Then
+                        If (tt.name <> "cmbuser") And (tt.name <> "cmbmajorcode") Then
                             tt.selectedIndex = 0
                         End If
                     ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then

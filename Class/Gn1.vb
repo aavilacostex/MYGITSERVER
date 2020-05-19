@@ -284,6 +284,26 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private VendorOEMCodeDenied As String
+    Public Property VendorOEMCodeDeniedMethod() As String
+        Get
+            Return VendorOEMCodeDenied
+        End Get
+        Set(ByVal value As String)
+            VendorOEMCodeDenied = value
+        End Set
+    End Property
+
+    Private VendorCodesDenied As String
+    Public Property VendorCodesDeniedMethod() As String
+        Get
+            Return VendorCodesDenied
+        End Get
+        Set(ByVal value As String)
+            VendorCodesDenied = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -305,6 +325,9 @@ NotInheritable Class Gn1
         UrlPDevelopment = ConfigurationManager.AppSettings("urlPDevelopment").ToString()
         FlagProduction = ConfigurationManager.AppSettings("flagProduction").ToString()
         UrlPathGeneral = ConfigurationManager.AppSettings("urlPathGeneral").ToString()
+        VendorOEMCodeDenied = ConfigurationManager.AppSettings("vendorOEMCodeDenied").ToString()
+        VendorCodesDenied = ConfigurationManager.AppSettings("vendorCodesDenied").ToString()
+
     End Sub
 
     <DllImport("user32.dll")>
@@ -360,6 +383,71 @@ NotInheritable Class Gn1
 
 
 #Region "Selects"
+
+    Public Function getVendorTypeByVendorNum(vendorNo As String) As String
+        Dim exMessage As String = " "
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+
+        Dim Sql = "select vmvtyp from vnmas where vmvnum = " & vendorNo & " "
+        Try
+            ds = FillGrid(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    Return ds.Tables(0).Rows(0).ItemArray(0).ToString()
+                Else
+                    Return Nothing
+                End If
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getOEMVendorCodes(cntrCode As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+
+        Dim Sql = "select CNTDE1 from cntrll where cnt01 = '" & cntrCode & "' "
+        Try
+            ds = FillGrid(Sql)
+            If ds IsNot Nothing Then
+                Return ds
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function isVendorAccepted(vendorNo As String) As Boolean
+        Dim exMessage As String = " "
+        Try
+            Dim vendorType = getVendorTypeByVendorNum(vendorNo)
+            Dim listDeniedCodes = VendorCodesDenied.Split(",")
+            Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x) x = vendorType)
+            If Not containsDenied Then
+                Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
+                Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
+                If Not containsOEM Then
+                    Return True
+                Else
+                    Return False
+                End If
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return False
+        End Try
+    End Function
 
     Public Function GetDataByPRHCOD(code As String) As Data.DataSet
         Dim exMessage As String = " "
@@ -1027,6 +1115,21 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1) "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function FillDDlMajorCode() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '110' ORDER BY TRIM(CNTDE1) "
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
