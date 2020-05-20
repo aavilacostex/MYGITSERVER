@@ -101,6 +101,16 @@ Partial Class frmProductsDevelopment
         Me.cmdSave2 = New System.Windows.Forms.Button()
         Me.cmdexit2 = New System.Windows.Forms.Button()
         Me.dgvProjectDetails = New System.Windows.Forms.DataGridView()
+        Me.DateColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CTPNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MFRNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VendorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VendorNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.JiraTaskColumn = New System.Windows.Forms.DataGridViewLinkColumn()
+        Me.hasDoc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clPerson = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -216,16 +226,6 @@ Partial Class frmProductsDevelopment
         Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AddNewProjectToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddNewPartToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DateColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CTPNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MFRNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VendorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VendorNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.JiraTaskColumn = New System.Windows.Forms.DataGridViewLinkColumn()
-        Me.hasDoc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clPerson = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SSTab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -1092,13 +1092,85 @@ Partial Class frmProductsDevelopment
         Me.dgvProjectDetails.Size = New System.Drawing.Size(810, 298)
         Me.dgvProjectDetails.TabIndex = 1
         '
+        'DateColumn
+        '
+        Me.DateColumn.HeaderText = "Date"
+        Me.DateColumn.MinimumWidth = 8
+        Me.DateColumn.Name = "DateColumn"
+        Me.DateColumn.ReadOnly = True
+        '
+        'PartNo
+        '
+        Me.PartNo.HeaderText = "Part#"
+        Me.PartNo.MinimumWidth = 8
+        Me.PartNo.Name = "PartNo"
+        Me.PartNo.ReadOnly = True
+        '
+        'CTPNo
+        '
+        Me.CTPNo.HeaderText = "CTP#"
+        Me.CTPNo.MinimumWidth = 8
+        Me.CTPNo.Name = "CTPNo"
+        Me.CTPNo.ReadOnly = True
+        '
+        'MFRNo
+        '
+        Me.MFRNo.HeaderText = "MFR#"
+        Me.MFRNo.MinimumWidth = 8
+        Me.MFRNo.Name = "MFRNo"
+        Me.MFRNo.ReadOnly = True
+        '
+        'VendorColumn
+        '
+        Me.VendorColumn.HeaderText = "Vendor"
+        Me.VendorColumn.MinimumWidth = 8
+        Me.VendorColumn.Name = "VendorColumn"
+        Me.VendorColumn.ReadOnly = True
+        '
+        'VendorNameColumn
+        '
+        Me.VendorNameColumn.HeaderText = "Vendor Name"
+        Me.VendorNameColumn.MinimumWidth = 8
+        Me.VendorNameColumn.Name = "VendorNameColumn"
+        Me.VendorNameColumn.ReadOnly = True
+        '
+        'StatusColumn
+        '
+        Me.StatusColumn.HeaderText = "Status"
+        Me.StatusColumn.MinimumWidth = 8
+        Me.StatusColumn.Name = "StatusColumn"
+        Me.StatusColumn.ReadOnly = True
+        '
+        'JiraTaskColumn
+        '
+        Me.JiraTaskColumn.HeaderText = "Jira Task"
+        Me.JiraTaskColumn.MinimumWidth = 8
+        Me.JiraTaskColumn.Name = "JiraTaskColumn"
+        Me.JiraTaskColumn.ReadOnly = True
+        Me.JiraTaskColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.JiraTaskColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'hasDoc2
+        '
+        Me.hasDoc2.HeaderText = "Has Documents?"
+        Me.hasDoc2.Name = "hasDoc2"
+        Me.hasDoc2.ReadOnly = True
+        '
+        'clPerson
+        '
+        Me.clPerson.HeaderText = "Person"
+        Me.clPerson.MinimumWidth = 8
+        Me.clPerson.Name = "clPerson"
+        Me.clPerson.ReadOnly = True
+        Me.clPerson.Visible = False
+        '
         'TableLayoutPanel3
         '
         Me.TableLayoutPanel3.ColumnCount = 4
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.64103!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 74.35897!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 113.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 114.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 2)
@@ -1191,14 +1263,14 @@ Partial Class frmProductsDevelopment
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(90, 3)
+        Me.txtCode.Location = New System.Drawing.Point(89, 3)
         Me.txtCode.Name = "txtCode"
         Me.txtCode.Size = New System.Drawing.Size(200, 20)
         Me.txtCode.TabIndex = 6
         '
         'txtname
         '
-        Me.txtname.Location = New System.Drawing.Point(90, 36)
+        Me.txtname.Location = New System.Drawing.Point(89, 36)
         Me.txtname.Name = "txtname"
         Me.txtname.Size = New System.Drawing.Size(200, 20)
         Me.txtname.TabIndex = 7
@@ -1206,7 +1278,7 @@ Partial Class frmProductsDevelopment
         'cmbprstatus
         '
         Me.cmbprstatus.FormattingEnabled = True
-        Me.cmbprstatus.Location = New System.Drawing.Point(90, 103)
+        Me.cmbprstatus.Location = New System.Drawing.Point(89, 103)
         Me.cmbprstatus.Name = "cmbprstatus"
         Me.cmbprstatus.Size = New System.Drawing.Size(200, 21)
         Me.cmbprstatus.TabIndex = 9
@@ -1214,14 +1286,14 @@ Partial Class frmProductsDevelopment
         'cmbuser1
         '
         Me.cmbuser1.FormattingEnabled = True
-        Me.cmbuser1.Location = New System.Drawing.Point(90, 136)
+        Me.cmbuser1.Location = New System.Drawing.Point(89, 136)
         Me.cmbuser1.Name = "cmbuser1"
         Me.cmbuser1.Size = New System.Drawing.Size(200, 21)
         Me.cmbuser1.TabIndex = 10
         '
         'txtainfo
         '
-        Me.txtainfo.Location = New System.Drawing.Point(90, 169)
+        Me.txtainfo.Location = New System.Drawing.Point(89, 169)
         Me.txtainfo.Multiline = True
         Me.txtainfo.Name = "txtainfo"
         Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -1231,7 +1303,7 @@ Partial Class frmProductsDevelopment
         'DTPicker1
         '
         Me.DTPicker1.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker1.Location = New System.Drawing.Point(90, 70)
+        Me.DTPicker1.Location = New System.Drawing.Point(89, 70)
         Me.DTPicker1.Name = "DTPicker1"
         Me.DTPicker1.Size = New System.Drawing.Size(200, 20)
         Me.DTPicker1.TabIndex = 12
@@ -2345,78 +2417,6 @@ Partial Class frmProductsDevelopment
         Me.AddNewPartToolStripMenuItem1.Name = "AddNewPartToolStripMenuItem1"
         Me.AddNewPartToolStripMenuItem1.Size = New System.Drawing.Size(163, 22)
         Me.AddNewPartToolStripMenuItem1.Text = "Add New Part"
-        '
-        'DateColumn
-        '
-        Me.DateColumn.HeaderText = "Date"
-        Me.DateColumn.MinimumWidth = 8
-        Me.DateColumn.Name = "DateColumn"
-        Me.DateColumn.ReadOnly = True
-        '
-        'PartNo
-        '
-        Me.PartNo.HeaderText = "Part#"
-        Me.PartNo.MinimumWidth = 8
-        Me.PartNo.Name = "PartNo"
-        Me.PartNo.ReadOnly = True
-        '
-        'CTPNo
-        '
-        Me.CTPNo.HeaderText = "CTP#"
-        Me.CTPNo.MinimumWidth = 8
-        Me.CTPNo.Name = "CTPNo"
-        Me.CTPNo.ReadOnly = True
-        '
-        'MFRNo
-        '
-        Me.MFRNo.HeaderText = "MFR#"
-        Me.MFRNo.MinimumWidth = 8
-        Me.MFRNo.Name = "MFRNo"
-        Me.MFRNo.ReadOnly = True
-        '
-        'VendorColumn
-        '
-        Me.VendorColumn.HeaderText = "Vendor"
-        Me.VendorColumn.MinimumWidth = 8
-        Me.VendorColumn.Name = "VendorColumn"
-        Me.VendorColumn.ReadOnly = True
-        '
-        'VendorNameColumn
-        '
-        Me.VendorNameColumn.HeaderText = "Vendor Name"
-        Me.VendorNameColumn.MinimumWidth = 8
-        Me.VendorNameColumn.Name = "VendorNameColumn"
-        Me.VendorNameColumn.ReadOnly = True
-        '
-        'StatusColumn
-        '
-        Me.StatusColumn.HeaderText = "Status"
-        Me.StatusColumn.MinimumWidth = 8
-        Me.StatusColumn.Name = "StatusColumn"
-        Me.StatusColumn.ReadOnly = True
-        '
-        'JiraTaskColumn
-        '
-        Me.JiraTaskColumn.HeaderText = "Jira Task"
-        Me.JiraTaskColumn.MinimumWidth = 8
-        Me.JiraTaskColumn.Name = "JiraTaskColumn"
-        Me.JiraTaskColumn.ReadOnly = True
-        Me.JiraTaskColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.JiraTaskColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'hasDoc2
-        '
-        Me.hasDoc2.HeaderText = "Has Documents?"
-        Me.hasDoc2.Name = "hasDoc2"
-        Me.hasDoc2.ReadOnly = True
-        '
-        'clPerson
-        '
-        Me.clPerson.HeaderText = "Person"
-        Me.clPerson.MinimumWidth = 8
-        Me.clPerson.Name = "clPerson"
-        Me.clPerson.ReadOnly = True
-        Me.clPerson.Visible = False
         '
         'frmProductsDevelopment
         '
