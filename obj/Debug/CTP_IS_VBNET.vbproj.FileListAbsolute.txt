@@ -37,3 +37,4 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmChangeVendor
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmLoadExcel.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Castle.Core.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Castle.Core.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.test.resources

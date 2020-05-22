@@ -524,7 +524,7 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function GetDataByVendorAndPartNoProdDesc(vendorNo As String, partNo As String) As Data.DataSet
+    Public Function GetDataByVendorAndPartNoProdDesc(partNo As String, vendorNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
         Dim ds As New DataSet()

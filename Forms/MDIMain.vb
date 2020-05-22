@@ -25,4 +25,8 @@ Public Class MDIMain
     Private Sub Test1ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Test1ToolStripMenuItem.Click
         frmLoadExcel.Show()
     End Sub
+
+    Private Sub Test2ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Test2ToolStripMenuItem.Click
+        test.Show()
+    End Sub
 End Class

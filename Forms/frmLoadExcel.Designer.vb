@@ -33,7 +33,6 @@ Partial Class frmLoadExcel
         Me.RadioButton2 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
-        Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.BindingNavigator1 = New System.Windows.Forms.BindingNavigator(Me.components)
         Me.BindingNavigatorAddNewItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel()
@@ -53,13 +52,6 @@ Partial Class frmLoadExcel
         Me.lblPerCharge = New System.Windows.Forms.Label()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.lblDesc = New System.Windows.Forms.Label()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.clPRHCOD = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clPRDPTN = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clPRDCTP = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clPRDMFR = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clVMVNUM = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clPRDSTS = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnInsert = New System.Windows.Forms.Button()
         Me.txtProjectNo = New System.Windows.Forms.TextBox()
         Me.txtProjectName = New System.Windows.Forms.TextBox()
@@ -73,14 +65,32 @@ Partial Class frmLoadExcel
         Me.dtProjectDate = New System.Windows.Forms.DateTimePicker()
         Me.cmbPerCharge = New System.Windows.Forms.ComboBox()
         Me.cmbStatus = New System.Windows.Forms.ComboBox()
+        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.DataGridView2 = New System.Windows.Forms.DataGridView()
+        Me.clPRDPTN2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clVMVNUM2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clError = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
+        Me.clPRHCOD = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clPRDPTN = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clPRDCTP = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clPRDMFR = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clVMVNUM = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clPRDSTS = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.BindingNavigator1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.BindingNavigator1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer1.Panel1.SuspendLayout()
+        Me.SplitContainer1.Panel2.SuspendLayout()
+        Me.SplitContainer1.SuspendLayout()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnSelect
@@ -213,7 +223,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
-        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(75, 35)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -259,7 +268,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.Controls.Add(Me.lblPerCharge, 0, 3)
         Me.TableLayoutPanel2.Controls.Add(Me.lblStatus, 2, 3)
         Me.TableLayoutPanel2.Controls.Add(Me.lblDesc, 0, 5)
-        Me.TableLayoutPanel2.Controls.Add(Me.DataGridView1, 0, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.btnInsert, 2, 9)
         Me.TableLayoutPanel2.Controls.Add(Me.txtProjectNo, 0, 2)
         Me.TableLayoutPanel2.Controls.Add(Me.txtProjectName, 1, 2)
@@ -273,6 +281,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.Controls.Add(Me.dtProjectDate, 2, 2)
         Me.TableLayoutPanel2.Controls.Add(Me.cmbPerCharge, 0, 4)
         Me.TableLayoutPanel2.Controls.Add(Me.cmbStatus, 2, 4)
+        Me.TableLayoutPanel2.Controls.Add(Me.SplitContainer1, 0, 8)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(13, 21)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 10
@@ -357,94 +366,6 @@ Partial Class frmLoadExcel
         Me.lblDesc.Size = New System.Drawing.Size(80, 15)
         Me.lblDesc.TabIndex = 8
         Me.lblDesc.Text = "Description"
-        '
-        'DataGridView1
-        '
-        Me.DataGridView1.AllowUserToAddRows = False
-        Me.DataGridView1.AllowUserToOrderColumns = True
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clPRHCOD, Me.clPRDPTN, Me.clPRDCTP, Me.clPRDMFR, Me.clVMVNUM, Me.clPRDSTS})
-        Me.TableLayoutPanel2.SetColumnSpan(Me.DataGridView1, 3)
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.Location = New System.Drawing.Point(3, 321)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.ReadOnly = True
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.DataGridView1.RowHeadersVisible = False
-        Me.DataGridView1.RowHeadersWidth = 62
-        Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.DataGridView1.Size = New System.Drawing.Size(769, 277)
-        Me.DataGridView1.TabIndex = 9
-        '
-        'clPRHCOD
-        '
-        Me.clPRHCOD.HeaderText = "Project No."
-        Me.clPRHCOD.MinimumWidth = 8
-        Me.clPRHCOD.Name = "clPRHCOD"
-        Me.clPRHCOD.ReadOnly = True
-        Me.clPRHCOD.Width = 150
-        '
-        'clPRDPTN
-        '
-        Me.clPRDPTN.HeaderText = "Part No."
-        Me.clPRDPTN.MinimumWidth = 8
-        Me.clPRDPTN.Name = "clPRDPTN"
-        Me.clPRDPTN.ReadOnly = True
-        Me.clPRDPTN.Width = 150
-        '
-        'clPRDCTP
-        '
-        Me.clPRDCTP.HeaderText = "CTP No."
-        Me.clPRDCTP.MinimumWidth = 8
-        Me.clPRDCTP.Name = "clPRDCTP"
-        Me.clPRDCTP.ReadOnly = True
-        Me.clPRDCTP.Width = 150
-        '
-        'clPRDMFR
-        '
-        Me.clPRDMFR.HeaderText = "Manufacturer No."
-        Me.clPRDMFR.MinimumWidth = 8
-        Me.clPRDMFR.Name = "clPRDMFR"
-        Me.clPRDMFR.ReadOnly = True
-        Me.clPRDMFR.Width = 150
-        '
-        'clVMVNUM
-        '
-        Me.clVMVNUM.HeaderText = "Vendor No."
-        Me.clVMVNUM.MinimumWidth = 8
-        Me.clVMVNUM.Name = "clVMVNUM"
-        Me.clVMVNUM.ReadOnly = True
-        Me.clVMVNUM.Width = 150
-        '
-        'clPRDSTS
-        '
-        Me.clPRDSTS.HeaderText = "Status"
-        Me.clPRDSTS.MinimumWidth = 8
-        Me.clPRDSTS.Name = "clPRDSTS"
-        Me.clPRDSTS.ReadOnly = True
-        Me.clPRDSTS.Width = 150
         '
         'btnInsert
         '
@@ -577,6 +498,151 @@ Partial Class frmLoadExcel
         Me.cmbStatus.Size = New System.Drawing.Size(231, 21)
         Me.cmbStatus.TabIndex = 26
         '
+        'SplitContainer1
+        '
+        Me.TableLayoutPanel2.SetColumnSpan(Me.SplitContainer1, 3)
+        Me.SplitContainer1.IsSplitterFixed = True
+        Me.SplitContainer1.Location = New System.Drawing.Point(3, 321)
+        Me.SplitContainer1.Name = "SplitContainer1"
+        Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
+        '
+        'SplitContainer1.Panel1
+        '
+        Me.SplitContainer1.Panel1.Controls.Add(Me.DataGridView1)
+        Me.SplitContainer1.Panel1MinSize = 60
+        '
+        'SplitContainer1.Panel2
+        '
+        Me.SplitContainer1.Panel2.Controls.Add(Me.DataGridView2)
+        Me.SplitContainer1.Panel2Collapsed = True
+        Me.SplitContainer1.Panel2MinSize = 60
+        Me.SplitContainer1.Size = New System.Drawing.Size(769, 277)
+        Me.SplitContainer1.SplitterDistance = 60
+        Me.SplitContainer1.TabIndex = 27
+        '
+        'DataGridView1
+        '
+        Me.DataGridView1.AllowUserToAddRows = False
+        Me.DataGridView1.AllowUserToOrderColumns = True
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clPRHCOD, Me.clPRDPTN, Me.clPRDCTP, Me.clPRDMFR, Me.clVMVNUM, Me.clPRDSTS})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
+        Me.DataGridView1.Location = New System.Drawing.Point(8, 8)
+        Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.ReadOnly = True
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
+        Me.DataGridView1.RowHeadersVisible = False
+        Me.DataGridView1.RowHeadersWidth = 62
+        Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.DataGridView1.Size = New System.Drawing.Size(758, 277)
+        Me.DataGridView1.TabIndex = 10
+        '
+        'DataGridView2
+        '
+        Me.DataGridView2.AllowUserToAddRows = False
+        Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clPRDPTN2, Me.clVMVNUM2, Me.clError})
+        Me.DataGridView2.Location = New System.Drawing.Point(4, 4)
+        Me.DataGridView2.Name = "DataGridView2"
+        Me.DataGridView2.RowHeadersVisible = False
+        Me.DataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.DataGridView2.Size = New System.Drawing.Size(762, 270)
+        Me.DataGridView2.TabIndex = 0
+        '
+        'clPRDPTN2
+        '
+        Me.clPRDPTN2.HeaderText = "Part Number"
+        Me.clPRDPTN2.Name = "clPRDPTN2"
+        Me.clPRDPTN2.Width = 150
+        '
+        'clVMVNUM2
+        '
+        Me.clVMVNUM2.HeaderText = "Vendor Number"
+        Me.clVMVNUM2.Name = "clVMVNUM2"
+        Me.clVMVNUM2.Width = 150
+        '
+        'clError
+        '
+        Me.clError.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clError.HeaderText = "Error Description"
+        Me.clError.Name = "clError"
+        '
+        'clPRHCOD
+        '
+        Me.clPRHCOD.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clPRHCOD.FillWeight = 85.27919!
+        Me.clPRHCOD.HeaderText = "Project No."
+        Me.clPRHCOD.MinimumWidth = 8
+        Me.clPRHCOD.Name = "clPRHCOD"
+        Me.clPRHCOD.ReadOnly = True
+        '
+        'clPRDPTN
+        '
+        Me.clPRDPTN.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clPRDPTN.FillWeight = 102.9442!
+        Me.clPRDPTN.HeaderText = "Part No."
+        Me.clPRDPTN.MinimumWidth = 8
+        Me.clPRDPTN.Name = "clPRDPTN"
+        Me.clPRDPTN.ReadOnly = True
+        '
+        'clPRDCTP
+        '
+        Me.clPRDCTP.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clPRDCTP.FillWeight = 102.9442!
+        Me.clPRDCTP.HeaderText = "CTP No."
+        Me.clPRDCTP.MinimumWidth = 8
+        Me.clPRDCTP.Name = "clPRDCTP"
+        Me.clPRDCTP.ReadOnly = True
+        '
+        'clPRDMFR
+        '
+        Me.clPRDMFR.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clPRDMFR.FillWeight = 102.9442!
+        Me.clPRDMFR.HeaderText = "Manufacturer No."
+        Me.clPRDMFR.MinimumWidth = 8
+        Me.clPRDMFR.Name = "clPRDMFR"
+        Me.clPRDMFR.ReadOnly = True
+        '
+        'clVMVNUM
+        '
+        Me.clVMVNUM.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clVMVNUM.FillWeight = 102.9442!
+        Me.clVMVNUM.HeaderText = "Vendor No."
+        Me.clVMVNUM.MinimumWidth = 8
+        Me.clVMVNUM.Name = "clVMVNUM"
+        Me.clVMVNUM.ReadOnly = True
+        '
+        'clPRDSTS
+        '
+        Me.clPRDSTS.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clPRDSTS.FillWeight = 102.9442!
+        Me.clPRDSTS.HeaderText = "Status"
+        Me.clPRDSTS.MinimumWidth = 8
+        Me.clPRDSTS.Name = "clPRDSTS"
+        Me.clPRDSTS.ReadOnly = True
+        '
         'frmLoadExcel
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -588,15 +654,20 @@ Partial Class frmLoadExcel
         Me.Text = "frmLoadExcel"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.BindingNavigator1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.BindingNavigator1.ResumeLayout(False)
         Me.BindingNavigator1.PerformLayout()
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
+        Me.SplitContainer1.Panel1.ResumeLayout(False)
+        Me.SplitContainer1.Panel2.ResumeLayout(False)
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.SplitContainer1.ResumeLayout(False)
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -627,14 +698,7 @@ Partial Class frmLoadExcel
     Friend WithEvents lblPerCharge As Label
     Friend WithEvents lblStatus As Label
     Friend WithEvents lblDesc As Label
-    Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents btnInsert As Button
-    Friend WithEvents clPRHCOD As DataGridViewTextBoxColumn
-    Friend WithEvents clPRDPTN As DataGridViewTextBoxColumn
-    Friend WithEvents clPRDCTP As DataGridViewTextBoxColumn
-    Friend WithEvents clPRDMFR As DataGridViewTextBoxColumn
-    Friend WithEvents clVMVNUM As DataGridViewTextBoxColumn
-    Friend WithEvents clPRDSTS As DataGridViewTextBoxColumn
     Friend WithEvents txtProjectNo As TextBox
     Friend WithEvents txtProjectName As TextBox
     Friend WithEvents txtDesc As TextBox
@@ -646,4 +710,16 @@ Partial Class frmLoadExcel
     Friend WithEvents dtProjectDate As DateTimePicker
     Friend WithEvents cmbPerCharge As ComboBox
     Friend WithEvents cmbStatus As ComboBox
+    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents DataGridView2 As DataGridView
+    Friend WithEvents clPRDPTN2 As DataGridViewTextBoxColumn
+    Friend WithEvents clVMVNUM2 As DataGridViewTextBoxColumn
+    Friend WithEvents clError As DataGridViewTextBoxColumn
+    Friend WithEvents clPRHCOD As DataGridViewTextBoxColumn
+    Friend WithEvents clPRDPTN As DataGridViewTextBoxColumn
+    Friend WithEvents clPRDCTP As DataGridViewTextBoxColumn
+    Friend WithEvents clPRDMFR As DataGridViewTextBoxColumn
+    Friend WithEvents clVMVNUM As DataGridViewTextBoxColumn
+    Friend WithEvents clPRDSTS As DataGridViewTextBoxColumn
 End Class
