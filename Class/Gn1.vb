@@ -430,13 +430,17 @@ NotInheritable Class Gn1
         Dim exMessage As String = " "
         Try
             Dim vendorType = getVendorTypeByVendorNum(vendorNo)
-            Dim listDeniedCodes = VendorCodesDenied.Split(",")
-            Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x) x = vendorType)
-            If Not containsDenied Then
-                Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
-                Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
-                If Not containsOEM Then
-                    Return True
+            If vendorType IsNot Nothing Then
+                Dim listDeniedCodes = VendorCodesDenied.Split(",")
+                Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x) x = vendorType)
+                If Not containsDenied Then
+                    Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
+                    Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
+                    If Not containsOEM Then
+                        Return True
+                    Else
+                        Return False
+                    End If
                 Else
                     Return False
                 End If
@@ -448,6 +452,12 @@ NotInheritable Class Gn1
             Return False
         End Try
     End Function
+
+    Public Function isPartInExistence(partNo As String) As Boolean
+        'check for part number inm imnsta, cater y komat
+        Return True
+    End Function
+
 
     Public Function GetDataByPRHCOD(code As String) As Data.DataSet
         Dim exMessage As String = " "
@@ -470,7 +480,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT * FROM PRDVLH WHERE PRNAME = " & Trim(name)
+            Sql = "SELECT PRHCOD FROM PRDVLH WHERE PRNAME = '" & Trim(name) & "' ORDER BY 1 DESC"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -530,7 +540,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "select * from prdvld where TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' and vmvnum = " & Trim(vendorNo)
+            Sql = "select * from prdvld where TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' and vmvnum = " & Trim(vendorNo) & " order by 1 desc"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -777,6 +787,31 @@ NotInheritable Class Gn1
             Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' order by cnt02"
             ds = GetDataFromDatabase(Sql)
             Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetAllStatusesReturn(strValue As String, strColumn As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        Dim Qry As New DataTable
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT cnt03, cntde1 FROM cntrll where cnt01 = 'DSI' order by cnt02"
+            ds = GetDataFromDatabase(Sql)
+
+            Dim Qry1 = ds.Tables(0).AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)(strColumn))) = Trim(UCase(strValue)))
+            If Qry1.Count > 0 Then
+                Qry = Qry1.CopyToDataTable
+                Dim result = Qry(0).Item("CNT03").ToString()
+                Return result
+            Else
+                Return Nothing
+            End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing

@@ -38,3 +38,13 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.frmLoadExcel.re
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Castle.Core.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Castle.Core.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.test.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.CoreCompileInputs.cache
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ClosedXML.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ExcelNumberFormat.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\System.IO.Packaging.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ClosedXML.pdb
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ClosedXML.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ExcelNumberFormat.xml

@@ -24,6 +24,12 @@ Public Class frmProductsDevelopment
     'Dim urlPathBase As String = "https://costex.atlassian.net/browse/"
     Dim pathpictureparts As String
 
+    Dim bs As BindingSource = New BindingSource()
+    Dim Tables = New BindingList(Of DataTable)()
+
+    Dim bs1 As BindingSource = New BindingSource()
+    Dim Tables1 = New BindingList(Of DataTable)()
+
     Public Event PositionChanged(sender As Object, e As EventArgs)
 
     Public Sub New()
@@ -52,10 +58,10 @@ Public Class frmProductsDevelopment
         ''TabControl1.ItemSize = New Size(0, 1)
         SSTab1.SizeMode = TabSizeMode.Fixed
 
-        TableLayoutPanel4.AutoScroll = True
-        TableLayoutPanel4.AutoScrollPosition = New Point(0, TableLayoutPanel4.VerticalScroll.Maximum)
-        TableLayoutPanel4.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
-        TableLayoutPanel4.AutoScrollMinSize = New Drawing.Size(800, 0)
+        'TableLayoutPanel4.AutoScroll = True
+        'TableLayoutPanel4.AutoScrollPosition = New Point(0, TableLayoutPanel4.VerticalScroll.Maximum)
+        'TableLayoutPanel4.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+        'TableLayoutPanel4.AutoScrollMinSize = New Drawing.Size(800, 0)
 
         TabPage3.AutoScroll = True
         TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
@@ -594,7 +600,9 @@ Public Class frmProductsDevelopment
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
                     LikeSession.dsDatagridview1 = ds
-
+                    If ds.Tables(0).Rows.Count > 10 Then
+                        toPaginate(DataGridView1)
+                    End If
                 Else
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
@@ -762,6 +770,9 @@ Public Class frmProductsDevelopment
 
                     dgvProjectDetails.DataSource = ds.Tables(0)
                     LikeSession.dsDgvProjectDetails = ds
+                    If ds.Tables(0).Rows.Count > 10 Then
+                        toPaginate(dgvProjectDetails)
+                    End If
 
                     'dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
                     'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
@@ -898,7 +909,7 @@ Public Class frmProductsDevelopment
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
                     DataGridView1.AutoGenerateColumns = False
-                    DataGridView1.ColumnCount = 5
+                    DataGridView1.ColumnCount = 6
 
                     'Add Columns
                     DataGridView1.Columns(0).Name = "ProjectNo"
@@ -920,6 +931,10 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).Name = "Status"
                     DataGridView1.Columns(4).HeaderText = "Status"
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
+
+                    DataGridView1.Columns(5).Name = "hasDoc"
+                    DataGridView1.Columns(5).HeaderText = "Has Documents"
+                    DataGridView1.Columns(5).DataPropertyName = ""
 
                     'fill second tab if one record in datagrid
                     If ds.Tables(0).Rows.Count = 1 Then
@@ -953,6 +968,10 @@ Public Class frmProductsDevelopment
 
                     'FILL GRID
                     DataGridView1.DataSource = ds.Tables(0)
+                    LikeSession.dsDatagridview1 = ds
+                    If ds.Tables(0).Rows.Count > 10 Then
+                        toPaginate(DataGridView1)
+                    End If
                 Else
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
@@ -1068,8 +1087,11 @@ Public Class frmProductsDevelopment
                 Dim projectNo = DataGridView1.Rows(e.RowIndex).Cells("ProjectNo").Value
                 If checkIfDocsPresent(projectNo, 0) Then
                     e.CellStyle.ForeColor = Color.Green
-                    'DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = checkIfDocsPresent(3221).ToString()
-                    e.Value = checkIfDocsPresent(3221, 0).ToString()
+                    DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = "Yes"
+                    'e.Value = checkIfDocsPresent(3221, 0).ToString()
+                Else
+                    e.CellStyle.ForeColor = Color.Red
+                    DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = "No"
                 End If
             End If
         End If
@@ -1488,10 +1510,82 @@ Public Class frmProductsDevelopment
                 Dim partNo = dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value.ToString()
                 Dim DicRefDocs = getReferenceDocuments(projectNo, partNo)
                 For Each pair As KeyValuePair(Of String, String) In DicRefDocs
-                    dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = pair.Value.ToString()
+                    If pair.Value.ToString() = "True" Then
+                        dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "Yes"
+                    Else
+                        dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "No"
+                    End If
+                    'dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = pair.Value.ToString()
                 Next
             End If
         End If
+    End Sub
+
+    Protected Sub toPaginate(dgv As DataGridView)
+        Dim exMessage As String = " "
+        Try
+            'dim tables as BindingList<DataTable>  = new BindingList<DataTable>()
+            Dim dtGrid As New DataTable
+            dtGrid = (DirectCast(dgv.DataSource, DataTable))
+
+            Dim counter As Integer = 0
+            Dim dt As DataTable = Nothing
+
+
+
+            If dgv.Name.ToString().Equals("DataGridView1") Then
+                For Each item As DataRow In dtGrid.Rows
+                    If counter = 0 Then
+                        dt = dtGrid.Clone()
+                        Tables.Add(dt)
+                    End If
+
+                    dt.Rows.Add(item.ItemArray)
+                    counter += 1
+
+                    If counter > 9 Then
+                        counter = 0
+                    End If
+                Next
+
+                BindingNavigator1.BindingSource = bs
+                bs.DataSource = Tables
+                AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
+                bs_PositionChanged(bs, Nothing)
+            Else
+                For Each item As DataRow In dtGrid.Rows
+                    If counter = 0 Then
+                        dt = dtGrid.Clone()
+                        Tables1.Add(dt)
+                    End If
+
+                    dt.Rows.Add(item.ItemArray)
+                    counter += 1
+
+                    If counter > 9 Then
+                        counter = 0
+                    End If
+                Next
+
+                BindingNavigator2.BindingSource = bs1
+                bs1.DataSource = Tables1
+                AddHandler bs1.PositionChanged, AddressOf bs1_PositionChanged
+                bs1_PositionChanged(bs1, Nothing)
+
+            End If
+
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+        DataGridView1.DataSource = Tables(bs.Position)
+    End Sub
+
+    Private Sub bs1_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+        dgvProjectDetails.DataSource = Tables1(bs1.Position)
     End Sub
 
 #End Region
@@ -4557,7 +4651,7 @@ Public Class frmProductsDevelopment
             ds = gnr.GetDataByPRHCOD(code)
             If ds.Tables(0).Rows.Count = 1 Then
 
-                SSTab1.SelectedTab = TabPage2
+                'SSTab1.SelectedTab = TabPage2
                 For Each RowDs In ds.Tables(0).Rows
                     txtCode.Text = Trim(RowDs.Item(0).ToString())
                     txtname.Text = Trim(RowDs.Item(3).ToString()) ' format date
@@ -5043,6 +5137,10 @@ Public Class frmProductsDevelopment
 
     End Sub
 
+    Private Sub BindingNavigator1_RefreshItems(sender As Object, e As EventArgs) Handles BindingNavigator1.RefreshItems
+
+    End Sub
+
 
     'Private Sub cmdSplit_Click(sender As Object, e As EventArgs) Handles cmdSplit.Click
     '    Dim screenPoint As Point = cmdSplit.PointToScreen(New Point(cmdSplit.Left, cmdSplit.Bottom))
@@ -5055,6 +5153,8 @@ Public Class frmProductsDevelopment
     'End Sub
 
 #End Region
+
+
 
     'Protected Sub OnRowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
     'Dim index As Integer = Convert.ToInt32(e.CommandArgument)
