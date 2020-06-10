@@ -9,4 +9,5 @@
     Public Shared gridEnable As Boolean = False
     Public Shared isPageLoad As Boolean = True
     Public Shared referencedExistence As String
+
 End Class

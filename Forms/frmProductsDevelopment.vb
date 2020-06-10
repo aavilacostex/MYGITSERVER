@@ -598,11 +598,12 @@ Public Class frmProductsDevelopment
                     End If
 
                     'FILL GRID
-                    DataGridView1.DataSource = ds.Tables(0)
+                    'DataGridView1.DataSource = ds.Tables(0)
                     LikeSession.dsDatagridview1 = ds
-                    If ds.Tables(0).Rows.Count > 10 Then
-                        toPaginate(DataGridView1)
-                    End If
+                    'If ds.Tables(0).Rows.Count > 10 Then
+                    toPaginateDs(DataGridView1, ds)
+                    'toPaginate(DataGridView1)
+                    'End If
                 Else
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
@@ -768,11 +769,12 @@ Public Class frmProductsDevelopment
                     '    SSTab1.SelectedIndex = 1
                     'End If
 
-                    dgvProjectDetails.DataSource = ds.Tables(0)
+                    'dgvProjectDetails.DataSource = ds.Tables(0)
                     LikeSession.dsDgvProjectDetails = ds
-                    If ds.Tables(0).Rows.Count > 10 Then
-                        toPaginate(dgvProjectDetails)
-                    End If
+                    'If ds.Tables(0).Rows.Count > 10 Then
+                    toPaginateDs(dgvProjectDetails, ds)
+                    'toPaginate(dgvProjectDetails)
+                    'End If
 
                     'dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
                     'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
@@ -967,10 +969,11 @@ Public Class frmProductsDevelopment
                     End If
 
                     'FILL GRID
-                    DataGridView1.DataSource = ds.Tables(0)
+                    'DataGridView1.DataSource = ds.Tables(0)
                     LikeSession.dsDatagridview1 = ds
                     If ds.Tables(0).Rows.Count > 10 Then
-                        toPaginate(DataGridView1)
+                        toPaginateDs(DataGridView1, ds)
+                        'toPaginate(DataGridView1)
                     End If
                 Else
                     DataGridView1.DataSource = Nothing
@@ -1521,6 +1524,73 @@ Public Class frmProductsDevelopment
         End If
     End Sub
 
+    Protected Sub toPaginateDs(dgv As DataGridView, ds As DataSet)
+        Dim exMessage As String = " "
+        Try
+
+            Dim dtGrid As New DataTable
+            dtGrid = ds.Tables(0)
+
+            Dim counter As Integer = 0
+            Dim dt As DataTable = Nothing
+
+            If dgv.Name.ToString().Equals("DataGridView1") Then
+
+                If Tables.Count > 0 Then
+                    Tables = New BindingList(Of DataTable)()
+                    bs.MoveFirst()
+                End If
+
+                For Each item As DataRow In dtGrid.Rows
+                    If counter = 0 Then
+                        dt = dtGrid.Clone()
+                        Tables.Add(dt)
+                    End If
+
+                    dt.Rows.Add(item.ItemArray)
+                    counter += 1
+
+                    If counter > 9 Then
+                        counter = 0
+                    End If
+                Next
+
+                BindingNavigator1.BindingSource = bs
+                bs.DataSource = Tables
+                AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
+                bs_PositionChanged(bs, Nothing)
+            Else
+                If Tables1.Count > 0 Then
+                    Tables1 = New BindingList(Of DataTable)()
+                    bs1.MoveFirst()
+                End If
+
+                For Each item As DataRow In dtGrid.Rows
+                    If counter = 0 Then
+                        dt = dtGrid.Clone()
+                        Tables1.Add(dt)
+                    End If
+
+                    dt.Rows.Add(item.ItemArray)
+                    counter += 1
+
+                    If counter > 9 Then
+                        counter = 0
+                    End If
+                Next
+
+                BindingNavigator2.BindingSource = bs1
+                bs1.DataSource = Tables1
+                AddHandler bs1.PositionChanged, AddressOf bs1_PositionChanged
+                bs1_PositionChanged(bs1, Nothing)
+
+            End If
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     Protected Sub toPaginate(dgv As DataGridView)
         Dim exMessage As String = " "
         Try
@@ -1530,8 +1600,6 @@ Public Class frmProductsDevelopment
 
             Dim counter As Integer = 0
             Dim dt As DataTable = Nothing
-
-
 
             If dgv.Name.ToString().Equals("DataGridView1") Then
                 For Each item As DataRow In dtGrid.Rows
@@ -1581,11 +1649,15 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+        'If DataGridView1.DataSource IsNot Nothing Then
         DataGridView1.DataSource = Tables(bs.Position)
+        'End If
     End Sub
 
     Private Sub bs1_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+        'If dgvProjectDetails.DataSource IsNot Nothing Then
         dgvProjectDetails.DataSource = Tables1(bs1.Position)
+        'End If
     End Sub
 
 #End Region
@@ -4321,22 +4393,30 @@ Public Class frmProductsDevelopment
                 dgvProjectDetails.DataSource = Nothing
                 dgvProjectDetails.Refresh()
 
-                dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
 
                 Dim dt As New DataTable
-                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim ds As New DataSet
+
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+
                 If dt IsNot Nothing Then
                     Dim Qry1 = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDMFR#"))) = Trim(UCase(txtMfrNoMore.Text)))
 
                     If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
                     ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
 
                         fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
                         SSTab1.SelectedIndex = 2
@@ -4372,11 +4452,13 @@ Public Class frmProductsDevelopment
                 dgvProjectDetails.DataSource = Nothing
                 dgvProjectDetails.Refresh()
 
-                dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
                 'fillcell2(txtCode.Text)
 
                 Dim dt As New DataTable
-                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim ds As New DataSet
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
 
                 If dt IsNot Nothing Then
                     Dim Qry1 = dt.AsEnumerable() _
@@ -4384,12 +4466,16 @@ Public Class frmProductsDevelopment
 
                     If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
                     ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
 
                         fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
                         SSTab1.SelectedIndex = 2
@@ -4426,22 +4512,30 @@ Public Class frmProductsDevelopment
                 dgvProjectDetails.DataSource = Nothing
                 dgvProjectDetails.Refresh()
 
-                dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
 
                 Dim dt As New DataTable
-                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim ds As New DataSet
+
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+
                 If dt IsNot Nothing Then
                     Dim Qry1 = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDCTP"))) = Trim(UCase(txtCtpNoMore.Text)))
 
                     If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
                     ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
 
                         fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
                         SSTab1.SelectedIndex = 2
@@ -4477,22 +4571,32 @@ Public Class frmProductsDevelopment
                 dgvProjectDetails.DataSource = Nothing
                 dgvProjectDetails.Refresh()
 
-                dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+                'toPaginateDs(dgvProjectDetails, ds)
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
 
                 Dim dt As New DataTable
-                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                Dim ds As New DataSet
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+
+
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+
                 If dt IsNot Nothing Then
                     Dim Qry1 = dt.AsEnumerable() _
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDUSR"))) = Trim(UCase(cmbuser2.SelectedValue)))
 
                     If Qry1.Count > 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
                     ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
                         Qry = Qry1.CopyToDataTable
-                        dgvProjectDetails.DataSource = Qry
-                        dgvProjectDetails.Refresh()
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
 
                         fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
                         SSTab1.SelectedIndex = 2
