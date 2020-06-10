@@ -50,157 +50,31 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub frmProductsDevelopment_load()
+        Dim exMessage As String = " "
+        Try
+            SetValues()
 
-
-        SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
-        SSTab1.Padding = New System.Drawing.Point(300, 10)
-        SSTab1.Appearance = TabAppearance.FlatButtons
-        ''TabControl1.ItemSize = New Size(0, 1)
-        SSTab1.SizeMode = TabSizeMode.Fixed
-
-        'TableLayoutPanel4.AutoScroll = True
-        'TableLayoutPanel4.AutoScrollPosition = New Point(0, TableLayoutPanel4.VerticalScroll.Maximum)
-        'TableLayoutPanel4.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
-        'TableLayoutPanel4.AutoScrollMinSize = New Drawing.Size(800, 0)
-
-        TabPage3.AutoScroll = True
-        TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
-        TabPage3.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
-        TabPage3.AutoScrollMinSize = New Drawing.Size(800, 0)
-
-        'Dim vScrollBar1 As ScrollBar = New VScrollBar()
-        'vScrollBar1.Dock = DockStyle.Right
-        'vScrollBar1.Dock = DockStyle.Right
-        'vScrollBar1.Padding = New Padding(0, 0, 0, 31)
-        'vScrollBar1.Margin = New Padding(6, 7, 6, 20)
-
-        'AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
-        ''vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
-        'TabPage2.Controls.Add(vScrollBar1)
-
-        Me.WindowState = FormWindowState.Maximized
-
-        cmdSave1.Enabled = False
-
-        Button8.Enabled = False
-        Button9.Enabled = False
-        Button10.Enabled = False
-        Button11.Enabled = False
-        Button15.Enabled = False
-        Button16.Enabled = False
-        Button17.Enabled = False
-        Button18.Enabled = False
-
-        cmdsearch.FlatStyle = FlatStyle.Flat
-        cmdsearchcode.FlatStyle = FlatStyle.Flat
-        cmdsearch1.FlatStyle = FlatStyle.Flat
-        cmdsearchpart.FlatStyle = FlatStyle.Flat
-        cmdsearchctp.FlatStyle = FlatStyle.Flat
-        cmdsearchstatus.FlatStyle = FlatStyle.Flat
-        cmdall.FlatStyle = FlatStyle.Flat
-        cmdJiraTask.FlatStyle = FlatStyle.Flat
-        cmdPrpech.FlatStyle = FlatStyle.Flat
-        cmdMfrNoSearch.FlatStyle = FlatStyle.Flat
-
-        DataGridView1.RowHeadersVisible = False
-        dgvProjectDetails.RowHeadersVisible = False
-
-        'Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
-        cmdnew1.ImageAlign = ContentAlignment.MiddleRight
-        cmdnew1.TextAlign = ContentAlignment.MiddleLeft
-
-        ' Button13.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\save.PNG")
-        cmdSave1.ImageAlign = ContentAlignment.MiddleRight
-        cmdSave1.TextAlign = ContentAlignment.MiddleLeft
-
-        'Button14.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\exit.PNG")
-        cmdexit1.ImageAlign = ContentAlignment.MiddleRight
-        cmdexit1.TextAlign = ContentAlignment.MiddleLeft
-
-        'Datepickers customization
-        DTPicker1.Format = DateTimePickerFormat.Custom
-        DTPicker1.CustomFormat = "MM/dd/yyyy"
-
-        DTPicker2.Format = DateTimePickerFormat.Custom
-        DTPicker2.CustomFormat = "MM/dd/yyyy"
-
-        DTPicker3.Format = DateTimePickerFormat.Custom
-        DTPicker3.CustomFormat = "MM/dd/yyyy"
-
-        DTPicker4.Format = DateTimePickerFormat.Custom
-        DTPicker4.CustomFormat = "MM/dd/yyyy"
-
-        'test purpose
-        'gnr.sendEmail()
-        'Dim dss = gnr.GetPOQotaData()
-        'dropdownlist default fill section
-        'Dim varvar = 1439
-        'Dim dstest = gnr.DeleteDataBynrojectNo(varvar)
-
-        'Dim toemailsww = prepareEmailsToSend(1)
-        'Dim rsResult = gnr.sendEmail(toemailsww, txtpartno.Text)
-
-        userid = frmLogin.txtUserName.Text
-        If UCase(userid) = "AALZATE" Then
-            flagallow = 1
-        End If
-
-        FillDDlUser() 'Fill user cmb
-        FillDDlUser1()
-        FillDDlUser2()
-        FillDDLStatus()
-        FillDDlMinorCode()
-        FillDDlMajorCode()
-        FillDDlPrPech()
-
-        cmbprstatus.Items.Add("-- Select Status --")
-        cmbprstatus.Items.Add("I - In Process")
-        cmbprstatus.Items.Add("F - Finished")
-        cmbprstatus.SelectedIndex = 1
-
-        Dim posValue As Integer = 0
-        For Each obj As DataRowView In cmbstatus.Items
-            Dim VarQuery = "E"
-            Dim VarCombo = Trim(obj.Item(2).ToString())
-            If VarQuery = VarCombo Then
-                cmbstatus.SelectedIndex = posValue
-                Exit For
-            Else
-                posValue += 1
+            userid = frmLogin.txtUserName.Text
+            If UCase(userid) = "AALZATE" Then
+                flagallow = 1
             End If
-        Next
 
-        'extra method
-        Panel1.Enabled = True
-        cmdSave1.Enabled = False
-        cmdexit1.Enabled = True
-        cmdnew1.Enabled = True
+            LoadCombos()
 
-        Panel4.Enabled = False
-        txtCode.Enabled = False
-        txtvendorno.ReadOnly = True
-        txtvendorname.ReadOnly = True
-        txtvendornamea.ReadOnly = True
-        txtvendornoa.ReadOnly = True
-        txtminor.ReadOnly = True
-        txtMajor.ReadOnly = True
-        txtpartno.ReadOnly = True
-        txtpartdescription.ReadOnly = True
-        cmbminorcode.Enabled = False
-        cmbmajorcode.Enabled = False
+            ResizeTabs()
 
-        optCTP.Checked = True
-        optVENDOR.Checked = False
-        optboth.Checked = False
+            'test purpose
+            'gnr.sendEmail()
+            'Dim dss = gnr.GetPOQotaData()
+            'dropdownlist default fill section
+            'Dim varvar = 1439
+            'Dim dstest = gnr.DeleteDataBynrojectNo(varvar)
 
-        flagdeve = 1
-        flagnewpart = 1
-
-        'AddHandler frmProductsDevelopment.dgvProjectDetails_CellContentClick, AddressOf dgvProjectDetails_CellContentClick
-
-        ContextMenuStrip1.Visible = False
-
-        ResizeTabs()
+            'Dim toemailsww = prepareEmailsToSend(1)
+            'Dim rsResult = gnr.sendEmail(toemailsww, txtpartno.Text)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
     End Sub
 
 #Region "Combobox load Region"
@@ -4677,6 +4551,130 @@ Public Class frmProductsDevelopment
 #End Region
 
 #Region "Utils"
+
+    Private Sub LoadCombos()
+        FillDDlUser() 'Fill user cmb
+        FillDDlUser1()
+        FillDDlUser2()
+        FillDDLStatus()
+        FillDDlMinorCode()
+        FillDDlMajorCode()
+        FillDDlPrPech()
+
+        cmbprstatus.Items.Add("-- Select Status --")
+        cmbprstatus.Items.Add("I - In Process")
+        cmbprstatus.Items.Add("F - Finished")
+        cmbprstatus.SelectedIndex = 1
+
+        Dim posValue As Integer = 0
+        For Each obj As DataRowView In cmbstatus.Items
+            Dim VarQuery = "E"
+            Dim VarCombo = Trim(obj.Item(2).ToString())
+            If VarQuery = VarCombo Then
+                cmbstatus.SelectedIndex = posValue
+                Exit For
+            Else
+                posValue += 1
+            End If
+        Next
+    End Sub
+
+    Private Sub SetValues()
+        SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
+        SSTab1.Padding = New System.Drawing.Point(300, 10)
+        SSTab1.Appearance = TabAppearance.FlatButtons
+        SSTab1.SizeMode = TabSizeMode.Fixed
+
+        TabPage3.AutoScroll = True
+        TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
+        TabPage3.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+        TabPage3.AutoScrollMinSize = New Drawing.Size(800, 0)
+
+        'AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
+        ''vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
+        'TabPage2.Controls.Add(vScrollBar1)
+        'AddHandler frmProductsDevelopment.dgvProjectDetails_CellContentClick, AddressOf dgvProjectDetails_CellContentClick
+
+        Me.WindowState = FormWindowState.Maximized
+
+        cmdSave1.Enabled = False
+
+        Button8.Enabled = False
+        Button9.Enabled = False
+        Button10.Enabled = False
+        Button11.Enabled = False
+        Button15.Enabled = False
+        Button16.Enabled = False
+        Button17.Enabled = False
+        Button18.Enabled = False
+
+        cmdsearch.FlatStyle = FlatStyle.Flat
+        cmdsearchcode.FlatStyle = FlatStyle.Flat
+        cmdsearch1.FlatStyle = FlatStyle.Flat
+        cmdsearchpart.FlatStyle = FlatStyle.Flat
+        cmdsearchctp.FlatStyle = FlatStyle.Flat
+        cmdsearchstatus.FlatStyle = FlatStyle.Flat
+        cmdall.FlatStyle = FlatStyle.Flat
+        cmdJiraTask.FlatStyle = FlatStyle.Flat
+        cmdPrpech.FlatStyle = FlatStyle.Flat
+        cmdMfrNoSearch.FlatStyle = FlatStyle.Flat
+
+        DataGridView1.RowHeadersVisible = False
+        dgvProjectDetails.RowHeadersVisible = False
+
+        'Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
+        cmdnew1.ImageAlign = ContentAlignment.MiddleRight
+        cmdnew1.TextAlign = ContentAlignment.MiddleLeft
+
+        ' Button13.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\save.PNG")
+        cmdSave1.ImageAlign = ContentAlignment.MiddleRight
+        cmdSave1.TextAlign = ContentAlignment.MiddleLeft
+
+        'Button14.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\exit.PNG")
+        cmdexit1.ImageAlign = ContentAlignment.MiddleRight
+        cmdexit1.TextAlign = ContentAlignment.MiddleLeft
+
+        'Datepickers customization
+        DTPicker1.Format = DateTimePickerFormat.Custom
+        DTPicker1.CustomFormat = "MM/dd/yyyy"
+
+        DTPicker2.Format = DateTimePickerFormat.Custom
+        DTPicker2.CustomFormat = "MM/dd/yyyy"
+
+        DTPicker3.Format = DateTimePickerFormat.Custom
+        DTPicker3.CustomFormat = "MM/dd/yyyy"
+
+        DTPicker4.Format = DateTimePickerFormat.Custom
+        DTPicker4.CustomFormat = "MM/dd/yyyy"
+
+        'extra method
+        Panel1.Enabled = True
+        cmdSave1.Enabled = False
+        cmdexit1.Enabled = True
+        cmdnew1.Enabled = True
+
+        Panel4.Enabled = False
+        txtCode.Enabled = False
+        txtvendorno.ReadOnly = True
+        txtvendorname.ReadOnly = True
+        txtvendornamea.ReadOnly = True
+        txtvendornoa.ReadOnly = True
+        txtminor.ReadOnly = True
+        txtMajor.ReadOnly = True
+        txtpartno.ReadOnly = True
+        txtpartdescription.ReadOnly = True
+        cmbminorcode.Enabled = False
+        cmbmajorcode.Enabled = False
+
+        optCTP.Checked = True
+        optVENDOR.Checked = False
+        optboth.Checked = False
+
+        flagdeve = 1
+        flagnewpart = 1
+
+        ContextMenuStrip1.Visible = False
+    End Sub
 
     Public Function checkIfDocsPresent(code As String, flag As Integer) As Boolean
         Dim exMessage As String = " "
