@@ -304,6 +304,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private VendorWhiteFlag As String
+    Public Property VendorWhiteFlagMethod() As String
+        Get
+            Return VendorWhiteFlag
+        End Get
+        Set(ByVal value As String)
+            VendorWhiteFlag = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -327,6 +337,7 @@ NotInheritable Class Gn1
         UrlPathGeneral = ConfigurationManager.AppSettings("urlPathGeneral").ToString()
         VendorOEMCodeDenied = ConfigurationManager.AppSettings("vendorOEMCodeDenied").ToString()
         VendorCodesDenied = ConfigurationManager.AppSettings("vendorCodesDenied").ToString()
+        VendorWhiteFlag = ConfigurationManager.AppSettings("itemCategories").ToString()
 
     End Sub
 
@@ -383,6 +394,84 @@ NotInheritable Class Gn1
 
 
 #Region "Selects"
+
+    Public Function GetPartInProdDesc(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRDPTN FROM PRDVLD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPartInDvinva(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select dvpart from dvinva where TRIM(dvpart) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPartInCater(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM CATER where TRIM(catptn) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPartInKomat(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM KOMAT where TRIM(koptno) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getItemCategoryByVendorAndPart(vendorNo As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+
+        Dim Sql = "SELECT * FROM PRDVLD WHERE VMVNUM = " & Trim(vendorNo) & " And trim(ucase(PRDPTN)) = '" & Trim(UCase(partNo)) & "'"
+        Try
+            ds = FillGrid(Sql)
+            If ds IsNot Nothing Then
+                Return ds
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Function
 
     Public Function getVendorTypeByVendorNum(vendorNo As String) As String
         Dim exMessage As String = " "
@@ -453,9 +542,36 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+
+
     Public Function isPartInExistence(partNo As String) As Boolean
         'check for part number inm imnsta, cater y komat
-        Return True
+        Dim ds1 = New DataSet()
+        Dim ds2 = New DataSet()
+        Dim ds3 = New DataSet()
+        Dim ds4 = New DataSet()
+        Dim exMessage As String = " "
+
+        Try
+            ds1 = GetPartInProdDesc(partNo)
+            If ds1 Is Nothing Then
+                ds2 = GetPartInDvinva(partNo)
+                If ds2 Is Nothing Then
+                    ds3 = GetPartInCater(partNo)
+                    If ds3 Is Nothing Then
+                        ds4 = GetPartInKomat(partNo)
+                        If ds4 Is Nothing Then
+                            Return False
+                        End If
+                    End If
+                End If
+            End If
+            Return True
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return False
+        End Try
+
     End Function
 
 

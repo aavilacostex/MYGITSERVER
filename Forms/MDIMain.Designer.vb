@@ -33,6 +33,7 @@ Partial Class MDIMain
         Me.Test1ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Test2ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Test3ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -131,4 +132,5 @@ Partial Class MDIMain
     Friend WithEvents Test1ToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Test2ToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Test3ToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
 End Class

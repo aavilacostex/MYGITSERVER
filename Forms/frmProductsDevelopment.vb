@@ -5,6 +5,7 @@ Imports System.Text.RegularExpressions
 Imports System.Web.UI.WebControls
 Imports outlook = Microsoft.Office.Interop.Outlook
 Imports System.Reflection
+Imports System.Threading
 
 Public Class frmProductsDevelopment
     Public flagdeve As Long '1 is new
@@ -46,12 +47,16 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        LoadCombos(sender, e)
         frmProductsDevelopment_load()
+
     End Sub
 
     Private Sub frmProductsDevelopment_load()
         Dim exMessage As String = " "
         Try
+            ResizeTabs()
             SetValues()
 
             userid = frmLogin.txtUserName.Text
@@ -59,9 +64,8 @@ Public Class frmProductsDevelopment
                 flagallow = 1
             End If
 
-            LoadCombos()
-
-            ResizeTabs()
+            FillDDLStatus1()
+            FillDDlPrPech()
 
             'test purpose
             'gnr.sendEmail()
@@ -76,6 +80,25 @@ Public Class frmProductsDevelopment
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
+
+#Region "Threads"
+
+    Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
+        Handles BackgroundWorker1.RunWorkerCompleted
+        Loading.Close()
+    End Sub
+
+    Private Sub backgroundWorker1_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
+        Handles BackgroundWorker1.DoWork
+        ExecuteCombos(sender, e)
+    End Sub
+
+    Private Sub backgroundWorker1_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
+        Handles BackgroundWorker1.ProgressChanged
+        'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
+    End Sub
+
+#End Region
 
 #Region "Combobox load Region"
 
@@ -247,11 +270,44 @@ Public Class frmProductsDevelopment
             cmbstatus.DisplayMember = "FullValue"
             cmbstatus.ValueMember = "CNT03"
 
+            'cmbstatus1.DataSource = dsStatuses.Tables(0)
+            'cmbstatus1.DisplayMember = "FullValue"
+            'cmbstatus1.ValueMember = "CNT03"
+
+            'cmbstatus1.SelectedIndex = -1
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub FillDDLStatus1()
+        Dim exMessage As String = " "
+        Dim CleanUser As String
+        Try
+            Dim dsStatuses = gnr.GetAllStatuses()
+
+            dsStatuses.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsStatuses.Tables(0).Rows.Count - 1
+                If dsStatuses.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(3).ToString()
+                    'CleanUser = Trim(dsStatuses.Tables(0).Rows(i).Item(0).ToString())
+                    dsStatuses.Tables(0).Rows(i).Item(5) = fllValueName
+                    'dsStatuses.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
             cmbstatus1.DataSource = dsStatuses.Tables(0)
             cmbstatus1.DisplayMember = "FullValue"
             cmbstatus1.ValueMember = "CNT03"
 
-            cmbstatus1.SelectedIndex = -1
+            'cmbstatus1.DataSource = dsStatuses.Tables(0)
+            'cmbstatus1.DisplayMember = "FullValue"
+            'cmbstatus1.ValueMember = "CNT03"
+
+            'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
@@ -2145,7 +2201,7 @@ Public Class frmProductsDevelopment
                     'SSTab1.tex = "Project No." & Trim(txtCode.Text)
                     txtsearchcode.Text = Trim(txtCode.Text)
                     cmdsearchcode_Click(1)
-                    Dim resultDone As DialogResult = MessageBox.Show("The project is ready to add parts.", "CTP System", MessageBoxButtons.OK)
+                    'Dim resultDone As DialogResult = MessageBox.Show("The project is ready to add parts.", "CTP System", MessageBoxButtons.OK)
                     'flagdeve = 0
                     'flagnewpart = 0
                     requireValidation = 0
@@ -2535,7 +2591,7 @@ Public Class frmProductsDevelopment
             save()
             If SSTab1.SelectedIndex = 1 Then
                 If flagnewpart = 1 Then
-                    Dim result1 As DialogResult = MessageBox.Show("Please proceed to the project tab to add parts?", "CTP System", MessageBoxButtons.OK)
+                    Dim result1 As DialogResult = MessageBox.Show("The project is ready to add parts. Please proceed to the project tab to add parts?", "CTP System", MessageBoxButtons.OK)
                     If result1 = DialogResult.OK Then
                         cmbuser.SelectedIndex = cmbuser1.SelectedIndex
                         SSTab1.SelectedTab = TabPage3
@@ -2724,6 +2780,7 @@ Public Class frmProductsDevelopment
                                 If (Not String.IsNullOrEmpty(codeTemp) And Not String.IsNullOrEmpty(nameTemp)) And validation = 0 Then
                                     Dim result2 As DialogResult = MessageBox.Show("This part no. already exists in project no. : " & codeTemp & " - " & Trim(nameTemp), "CTP System", MessageBoxButtons.OK)
                                 End If
+
                             End If
                         Else
                             MessageBox.Show("This part is not present in other projects. We are looking for it in the inventary.", "CTP System", MessageBoxButtons.OK)
@@ -3096,6 +3153,13 @@ Public Class frmProductsDevelopment
                         txtainfo.Text = " "
                         txtqty.Text = "0"
                         txtunitcostnew.Text = "0"
+
+                        'new item or new supplier
+                        chknew.Checked = False
+                        chkSupplier.Checked = False
+                        Dim setCheck = If(itemCategory(txtpartno.Text, txtvendorno.Text) = 2, chknew.Checked = True, chkSupplier.Checked = True)
+
+
 
                     End If
                 Else
@@ -3525,10 +3589,29 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub cmdsearchcode_Click(sender As Object, e As EventArgs) Handles cmdsearchcode.Click
-        cmdsearchcode_Click()
+        Dim exMessage As String = " "
+        Try
+            'BackgroundWorker1.RunWorkerAsync()
+            'Loading.Show()
+            'Loading.BringToFront()
+
+            cmdsearchcode_Click()
+
+            'Dim bgWorker = CType(sender, BackgroundWorker)
+            'For index = 0 To 10
+            '    bgWorker.ReportProgress(index)
+            '    Thread.Sleep(1000)
+            'Next
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
     End Sub
 
     Private Sub cmdsearchcode_Click(Optional ByVal flag As Integer = 0)
+
+        LikeSession.currentAction = "cmdsearchcode_Click"
+
         Dim exMessage As String = " "
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
@@ -4552,14 +4635,56 @@ Public Class frmProductsDevelopment
 
 #Region "Utils"
 
-    Private Sub LoadCombos()
+    Private Function itemCategory(partNo As String, vendorNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim result As Integer = -1
+        Try
+            If String.IsNullOrEmpty(partNo) Then
+                Return 2
+            Else
+                Dim listItemCat = gnr.VendorWhiteFlagMethod.Split(",")
+
+                Dim dsResult1 = gnr.getItemCategoryByVendorAndPart(vendorNo, partNo)
+                If dsResult1 IsNot Nothing Then
+                    If dsResult1.Tables(0).Rows.Count > 0 Then
+                        For Each item As String In listItemCat
+                            If Trim(item).Equals(Trim(vendorNo)) Then
+                                Return 2
+                            End If
+                        Next
+                        Return -1
+                    Else
+                        Return 2
+                    End If
+                Else
+                    Return 2
+                End If
+
+                Return result
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return result
+        End Try
+
+    End Function
+
+    Private Sub LoadCombos(Optional ByVal sender As Object = Nothing, Optional ByVal e As EventArgs = Nothing)
+
+        BackgroundWorker1.RunWorkerAsync()
+        Loading.ShowDialog()
+        Loading.BringToFront()
+
+    End Sub
+
+    Private Sub ExecuteCombos(Optional ByVal sender As Object = Nothing, Optional ByVal e As EventArgs = Nothing)
+
         FillDDlUser() 'Fill user cmb
         FillDDlUser1()
         FillDDlUser2()
         FillDDLStatus()
         FillDDlMinorCode()
         FillDDlMajorCode()
-        FillDDlPrPech()
 
         cmbprstatus.Items.Add("-- Select Status --")
         cmbprstatus.Items.Add("I - In Process")
@@ -4577,6 +4702,13 @@ Public Class frmProductsDevelopment
                 posValue += 1
             End If
         Next
+
+        Dim bgWorker = CType(sender, BackgroundWorker)
+        For index = 0 To 2
+            bgWorker.ReportProgress(index)
+            Thread.Sleep(1000)
+        Next
+
     End Sub
 
     Private Sub SetValues()
@@ -5179,6 +5311,7 @@ Public Class frmProductsDevelopment
                     End If
                 End If
             Next
+
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
