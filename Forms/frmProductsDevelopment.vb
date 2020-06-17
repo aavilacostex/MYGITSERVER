@@ -34,16 +34,9 @@ Public Class frmProductsDevelopment
     Public Event PositionChanged(sender As Object, e As EventArgs)
 
     Public Sub New()
-
-
-
         ' This call is required by the designer.
         InitializeComponent()
-
-
-
         ' Add any initialization after the InitializeComponent() call.
-
     End Sub
 
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -3284,7 +3277,48 @@ Public Class frmProductsDevelopment
         cmdSearch_Click()
     End Sub
 
-    Private Sub cmdSearch_Click(Optional ByVal flag As Integer = 0)
+    Private Sub txts__KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) _
+        Handles Me.KeyPress, cmdhidden.KeyPress, txtsearchpart.KeyPress, txtsearchctp.KeyPress, txtsearchcode.KeyPress, txtsearch1.KeyPress, txtsearch.KeyPress, txtMfrNoSearch.KeyPress, txtJiratasksearch.KeyPress, cmbstatus1.KeyPress, cmbPrpech.KeyPress
+        If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+            cmdhidden_Click(sender, Nothing)
+        End If
+    End Sub
+
+    Private Sub cmdhidden_Click(sender As Object, e As EventArgs) Handles cmdhidden.Click
+        Dim exMessage As String = " "
+        Dim controlSender As Object = Nothing
+        Dim isText As Boolean = True
+        Try
+            Dim cnt = DirectCast(sender, System.Windows.Forms.Control)
+            Dim sender_type = cnt.GetType().ToString()
+            If sender_type.Equals("System.Windows.Forms.TextBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.TextBox)
+            ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.ComboBox)
+                isText = False
+            Else
+                controlSender = Nothing
+            End If
+            Dim ctrl_name = If(controlSender IsNot Nothing, controlSender.Name, "")
+            If Not String.IsNullOrEmpty(ctrl_name) Then
+                Dim button_name = If(isText, ctrl_name.Replace("txt", "cmd"), ctrl_name.Replace("cmb", "cmd"))
+                Dim button_method = button_name & "_click"
+
+                CallByName(Me, button_method, CallType.Method, Nothing)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+
+#Region "First Tab Searching Methods"
+
+    Private Sub cmdSearch_Click(sender As Object, e As EventArgs) Handles cmdsearch.Click
+        cmdSearch_Click()
+    End Sub
+
+    Public Sub cmdSearch_Click(Optional ByVal flag As Integer = 0)
         Dim exMessage As String = " "
         Dim tt As Windows.Forms.TextBox
         tt = txtsearch
@@ -3314,7 +3348,7 @@ Public Class frmProductsDevelopment
         cmdsearch1_Click()
     End Sub
 
-    Private Sub cmdsearch1_Click()
+    Public Sub cmdsearch1_Click()
         Dim exMessage As String = " "
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
@@ -3361,7 +3395,7 @@ Public Class frmProductsDevelopment
         cmdSearchPart_Click()
     End Sub
 
-    Private Sub cmdSearchPart_Click()
+    Public Sub cmdSearchPart_Click()
         Dim exMessage As String = " "
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
@@ -3458,7 +3492,7 @@ Public Class frmProductsDevelopment
         cmdsearchctp_Click()
     End Sub
 
-    Private Sub cmdsearchctp_Click()
+    Public Sub cmdsearchctp_Click()
         Dim exMessage As String = " "
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
@@ -3484,11 +3518,11 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdJiraTask_Click_1(sender As Object, e As EventArgs) Handles cmdJiraTask.Click
-        cmdJiraTask_Click_1()
+    Private Sub cmdJiratasksearch_Click_1(sender As Object, e As EventArgs) Handles cmdJiratasksearch.Click
+        cmdJiratasksearch_Click_1()
     End Sub
 
-    Private Sub cmdJiraTask_Click_1()
+    Public Sub cmdJiratasksearch_Click_1()
         Dim exMessage As String = " "
         Dim tt As Windows.Forms.TextBox
         tt = txtJiratasksearch
@@ -3561,7 +3595,7 @@ Public Class frmProductsDevelopment
         cmdMfrNoSearch_Click()
     End Sub
 
-    Private Sub cmdMfrNoSearch_Click()
+    Public Sub cmdMfrNoSearch_Click()
         Dim exMessage As String = " "
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
@@ -3608,7 +3642,7 @@ Public Class frmProductsDevelopment
 
     End Sub
 
-    Private Sub cmdsearchcode_Click(Optional ByVal flag As Integer = 0)
+    Public Sub cmdsearchcode_Click(Optional ByVal flag As Integer = 0)
 
         LikeSession.currentAction = "cmdsearchcode_Click"
 
@@ -3637,12 +3671,12 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdsearchstatus_Click(sender As Object, e As EventArgs) Handles cmdsearchstatus.Click
+    Private Sub cmdstatus1_Click(sender As Object, e As EventArgs) Handles cmdstatus1.Click
         Dim b As System.Windows.Forms.Button = DirectCast(sender, System.Windows.Forms.Button)
-        cmdsearchstatus_Click()
+        cmdstatus1_Click()
     End Sub
 
-    Private Sub cmdsearchstatus_Click()
+    Public Sub cmdstatus1_Click()
         Dim exMessage As String = " "
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.ComboBox
@@ -3687,7 +3721,7 @@ Public Class frmProductsDevelopment
         cmdPrpech_Click()
     End Sub
 
-    Private Sub cmdPrpech_Click()
+    Public Sub cmdPrpech_Click()
         Dim exMessage As String = " "
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.ComboBox
@@ -3712,6 +3746,251 @@ Public Class frmProductsDevelopment
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
+
+
+#End Region
+
+#Region "Second Tab Search Filters"
+
+    Private Sub cmdMfrNoMore_Click(sender As Object, e As EventArgs) Handles cmdMfrNoMore.Click
+        Dim strAddMfrSentence As String = ""
+        strAddMfrSentence = " AND PRDMFR# = " ' & txtMfrNoMore.Text & '" 
+        Dim exMessage As String = " "
+        Dim Qry As New DataTable
+        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        Dim myName As String = myButton.Name
+        cleanMoreBtns(myName)
+        Try
+            If Not String.IsNullOrEmpty(txtMfrNoMore.Text) Then
+
+                dgvProjectDetails.DataSource = Nothing
+                dgvProjectDetails.Refresh()
+
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+
+                Dim dt As New DataTable
+                Dim ds As New DataSet
+
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+
+                If dt IsNot Nothing Then
+                    Dim Qry1 = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDMFR#"))) = Trim(UCase(txtMfrNoMore.Text)))
+
+                    If Qry1.Count > 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
+                    Else
+                        dgvProjectDetails.DataSource = Nothing
+                        dgvProjectDetails.Refresh()
+                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub cmdPartNoMore_Click(sender As Object, e As EventArgs) Handles cmdPartNoMore.Click
+        Dim exMessage As String = " "
+        Dim Qry As New DataTable
+        Dim dsProjectDetails = LikeSession.dsDgvProjectDetails
+
+        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        Dim myName As String = myButton.Name
+        cleanMoreBtns(myName)
+
+        Try
+            If Not String.IsNullOrEmpty(txtPartNoMore.Text) Then
+
+                dgvProjectDetails.DataSource = Nothing
+                dgvProjectDetails.Refresh()
+
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+                'fillcell2(txtCode.Text)
+
+                Dim dt As New DataTable
+                Dim ds As New DataSet
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+
+                If dt IsNot Nothing Then
+                    Dim Qry1 = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDPTN"))) = Trim(UCase(txtPartNoMore.Text)))
+
+                    If Qry1.Count > 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
+                    Else
+                        dgvProjectDetails.DataSource = Nothing
+                        dgvProjectDetails.Refresh()
+                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                fillcell2(txtCode.Text)
+            End If
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub cmdCtpNoMore_Click(sender As Object, e As EventArgs) Handles cmdCtpNoMore.Click
+        'Dim strAddCtpSentence As String = ""
+        'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
+        Dim Qry As New DataTable
+        Dim exMessage As String = " "
+
+        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        Dim myName As String = myButton.Name
+        cleanMoreBtns(myName)
+        Try
+            If Not String.IsNullOrEmpty(txtCtpNoMore.Text) Then
+
+                dgvProjectDetails.DataSource = Nothing
+                dgvProjectDetails.Refresh()
+
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+
+                Dim dt As New DataTable
+                Dim ds As New DataSet
+
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+
+                If dt IsNot Nothing Then
+                    Dim Qry1 = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDCTP"))) = Trim(UCase(txtCtpNoMore.Text)))
+
+                    If Qry1.Count > 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
+                    Else
+                        dgvProjectDetails.DataSource = Nothing
+                        dgvProjectDetails.Refresh()
+                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdcmbUser2.Click
+        'Dim strAddCtpSentence As String = ""
+        'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
+
+        Dim exMessage As String = " "
+        Dim Qry As New DataTable
+        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        Dim myName As String = myButton.Name
+        cleanMoreBtns(myName)
+        Try
+            If Not String.IsNullOrEmpty(cmbuser2.Text) And cmbuser2.SelectedIndex <> 0 Then
+
+                dgvProjectDetails.DataSource = Nothing
+                dgvProjectDetails.Refresh()
+
+                'toPaginateDs(dgvProjectDetails, ds)
+                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
+
+                Dim dt As New DataTable
+                Dim ds As New DataSet
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+
+
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+
+                If dt IsNot Nothing Then
+                    Dim Qry1 = dt.AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDUSR"))) = Trim(UCase(cmbuser2.SelectedValue)))
+
+                    If Qry1.Count > 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
+                        Qry = Qry1.CopyToDataTable
+                        ds.Tables.Add(Qry)
+                        toPaginateDs(dgvProjectDetails, ds)
+                        'dgvProjectDetails.DataSource = Qry
+                        'dgvProjectDetails.Refresh()
+
+                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
+                    Else
+                        dgvProjectDetails.DataSource = Nothing
+                        dgvProjectDetails.Refresh()
+                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                fillcell2(txtCode.Text)
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+#End Region
 
     Private Function buildMixedQuery(initialQuery As String, selectedField As String, flag As Integer) As String
         Try
@@ -4336,244 +4615,6 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdMfrNoMore_Click(sender As Object, e As EventArgs) Handles cmdMfrNoMore.Click
-        Dim strAddMfrSentence As String = ""
-        strAddMfrSentence = " AND PRDMFR# = " ' & txtMfrNoMore.Text & '" 
-        Dim exMessage As String = " "
-        Dim Qry As New DataTable
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
-        Try
-            If Not String.IsNullOrEmpty(txtMfrNoMore.Text) Then
-
-                dgvProjectDetails.DataSource = Nothing
-                dgvProjectDetails.Refresh()
-
-                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
-
-                Dim dt As New DataTable
-                Dim ds As New DataSet
-
-                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
-
-                If dt IsNot Nothing Then
-                    Dim Qry1 = dt.AsEnumerable() _
-                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDMFR#"))) = Trim(UCase(txtMfrNoMore.Text)))
-
-                    If Qry1.Count > 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-
-                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
-                        SSTab1.SelectedIndex = 2
-                    Else
-                        dgvProjectDetails.DataSource = Nothing
-                        dgvProjectDetails.Refresh()
-                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
-                    End If
-                Else
-                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
-                End If
-            Else
-                fillcell2(txtCode.Text)
-            End If
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
-        End Try
-    End Sub
-
-    Private Sub cmdPartNoMore_Click(sender As Object, e As EventArgs) Handles cmdPartNoMore.Click
-        Dim exMessage As String = " "
-        Dim Qry As New DataTable
-        Dim dsProjectDetails = LikeSession.dsDgvProjectDetails
-
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
-
-        Try
-            If Not String.IsNullOrEmpty(txtPartNoMore.Text) Then
-
-                dgvProjectDetails.DataSource = Nothing
-                dgvProjectDetails.Refresh()
-
-                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
-                'fillcell2(txtCode.Text)
-
-                Dim dt As New DataTable
-                Dim ds As New DataSet
-                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
-
-                If dt IsNot Nothing Then
-                    Dim Qry1 = dt.AsEnumerable() _
-                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDPTN"))) = Trim(UCase(txtPartNoMore.Text)))
-
-                    If Qry1.Count > 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-
-                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
-                        SSTab1.SelectedIndex = 2
-                    Else
-                        dgvProjectDetails.DataSource = Nothing
-                        dgvProjectDetails.Refresh()
-                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
-                    End If
-                Else
-                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
-                End If
-            Else
-                fillcell2(txtCode.Text)
-            End If
-
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
-        End Try
-    End Sub
-
-    Private Sub cmdCtpNoMore_Click(sender As Object, e As EventArgs) Handles cmdCtpNoMore.Click
-        'Dim strAddCtpSentence As String = ""
-        'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
-        Dim Qry As New DataTable
-        Dim exMessage As String = " "
-
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
-        Try
-            If Not String.IsNullOrEmpty(txtCtpNoMore.Text) Then
-
-                dgvProjectDetails.DataSource = Nothing
-                dgvProjectDetails.Refresh()
-
-                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
-
-                Dim dt As New DataTable
-                Dim ds As New DataSet
-
-                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
-
-                If dt IsNot Nothing Then
-                    Dim Qry1 = dt.AsEnumerable() _
-                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDCTP"))) = Trim(UCase(txtCtpNoMore.Text)))
-
-                    If Qry1.Count > 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-
-                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
-                        SSTab1.SelectedIndex = 2
-                    Else
-                        dgvProjectDetails.DataSource = Nothing
-                        dgvProjectDetails.Refresh()
-                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
-                    End If
-                Else
-                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
-                End If
-            Else
-                fillcell2(txtCode.Text)
-            End If
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
-        End Try
-    End Sub
-
-    Private Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdcmbUser2.Click
-        'Dim strAddCtpSentence As String = ""
-        'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
-
-        Dim exMessage As String = " "
-        Dim Qry As New DataTable
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
-        Try
-            If Not String.IsNullOrEmpty(cmbuser2.Text) And cmbuser2.SelectedIndex <> 0 Then
-
-                dgvProjectDetails.DataSource = Nothing
-                dgvProjectDetails.Refresh()
-
-                'toPaginateDs(dgvProjectDetails, ds)
-                'dgvProjectDetails.DataSource = LikeSession.dsDgvProjectDetails.Tables(0)
-
-                Dim dt As New DataTable
-                Dim ds As New DataSet
-                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-
-
-                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
-
-                If dt IsNot Nothing Then
-                    Dim Qry1 = dt.AsEnumerable() _
-                          .Where(Function(x) Trim(UCase(x.Field(Of String)("PRDUSR"))) = Trim(UCase(cmbuser2.SelectedValue)))
-
-                    If Qry1.Count > 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-                    ElseIf Qry1.Count > 0 And Qry1.Count = 1 Then
-                        Qry = Qry1.CopyToDataTable
-                        ds.Tables.Add(Qry)
-                        toPaginateDs(dgvProjectDetails, ds)
-                        'dgvProjectDetails.DataSource = Qry
-                        'dgvProjectDetails.Refresh()
-
-                        fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
-                        SSTab1.SelectedIndex = 2
-                    Else
-                        dgvProjectDetails.DataSource = Nothing
-                        dgvProjectDetails.Refresh()
-                        MessageBox.Show("There is not search matches for this criteria.", "CTP System", MessageBoxButtons.OK)
-                    End If
-                Else
-                    MessageBox.Show("There is an error loading data.", "CTP System", MessageBoxButtons.OK)
-                End If
-            Else
-                fillcell2(txtCode.Text)
-            End If
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
-        End Try
-    End Sub
-
     Private Sub cleanMoreBtns(controlName As String)
         Dim exMessage As String = " "
         Try
@@ -4745,9 +4786,9 @@ Public Class frmProductsDevelopment
         cmdsearch1.FlatStyle = FlatStyle.Flat
         cmdsearchpart.FlatStyle = FlatStyle.Flat
         cmdsearchctp.FlatStyle = FlatStyle.Flat
-        cmdsearchstatus.FlatStyle = FlatStyle.Flat
+        cmdstatus1.FlatStyle = FlatStyle.Flat
         cmdall.FlatStyle = FlatStyle.Flat
-        cmdJiraTask.FlatStyle = FlatStyle.Flat
+        cmdJiratasksearch.FlatStyle = FlatStyle.Flat
         cmdPrpech.FlatStyle = FlatStyle.Flat
         cmdMfrNoSearch.FlatStyle = FlatStyle.Flat
 

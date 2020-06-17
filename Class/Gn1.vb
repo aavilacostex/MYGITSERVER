@@ -543,7 +543,6 @@ NotInheritable Class Gn1
     End Function
 
 
-
     Public Function isPartInExistence(partNo As String) As Boolean
         'check for part number inm imnsta, cater y komat
         Dim ds1 = New DataSet()

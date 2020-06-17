@@ -37,4 +37,14 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.pdb
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\Interop.Crystal.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\AxInterop.Crystal.dll
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.vbprojAssemblyReference.cache
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\ClosedXML.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\DocumentFormat.OpenXml.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\ExcelNumberFormat.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\System.IO.Packaging.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\ClosedXML.pdb
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\ClosedXML.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\DocumentFormat.OpenXml.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\ExcelNumberFormat.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.Loading.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.test.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.vbproj.CoreCompileInputs.cache

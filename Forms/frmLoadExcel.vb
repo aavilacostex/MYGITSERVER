@@ -437,13 +437,6 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-    'Private Sub DataGridView2_CurrentCellDirtyStateChanged(ByVal sender As Object, e As EventArgs) _
-    '    Handles DataGridView2.CurrentCellDirtyStateChanged
-    '    If DataGridView2.IsCurrentCellDirty Then
-    '        DataGridView2.CommitEdit(DataGridViewDataErrorContexts.Commit)
-    '    End If
-    'End Sub
-
     Private Sub DataGridView2_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
     Handles DataGridView2.CellContentClick
         If e.ColumnIndex = 0 Then
@@ -1393,8 +1386,6 @@ Public Class frmLoadExcel
         DataGridView1.DataSource = Tables(bs.Position)
     End Sub
 
-
-
     Public Sub handleDataGridColumnsOnDemand(dgvHandle As DataGridView, listToChange As List(Of Integer), index As Integer, flag As Boolean)
         Dim exMessage As String = " "
         Try
@@ -1803,23 +1794,6 @@ Public Class frmLoadExcel
             Return strExt
         End Try
     End Function
-
-#End Region
-
-#Region "Grid other Process"
-
-    'Dim customGrid As New Supergrid()
-
-    'customGrid.PageSize = 5
-    'customGrid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-    'customGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-    'Dim dsData = gnr.getCell2("3221")
-
-    ''DataTable dt = DataProvider.ExecuteDt("select * from test order by col");
-    'customGrid.SetPagedDataSource(dsData.Tables(0), BindingNavigator1)
-
-    'Controls.Add(customGrid)
-    'customGrid.BringToFront()
 
 #End Region
 

@@ -131,22 +131,33 @@
         End If
     End Sub
 
-    Private Sub cmdok_KeyPress(KeyAscii As Integer)
-        If KeyAscii = 13 Then  ' The ENTER key.
-            SendKeys.Send("{tab}")
-            'SendKeys "{tab}"    ' Set the focus to the next control.
-            KeyAscii = 0        ' Ignore this key.
+    Private Sub cmdok_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles Me.KeyPress, cmdok.KeyPress
+        If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+            cmdok_Click()
+        End If
+
+        'If KeyAscii = 13 Then  ' The ENTER key.
+        '    SendKeys.Send("{tab}")
+        'SendKeys "{tab}"    ' Set the focus to the next control.
+        '    KeyAscii = 0        ' Ignore this key.
+        'End If
+    End Sub
+
+    Private Sub cmdcancel_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles Me.KeyPress, cmdcancel.KeyPress
+        If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+            cmdcancel_Click()
+        End If
+    End Sub
+
+    Private Sub txtpassword_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles Me.KeyPress, txtPassword.KeyPress
+        If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+            cmdok_Click()
         End If
     End Sub
 
 #End Region
 
 #Region "Control Events"
-
-    Private Sub txtPassword_TextChanged(sender As Object, e As EventArgs) Handles txtPassword.TextChanged
-        'txtPassword.SelectionStart = 0
-        'txtPassword.SelectionLength = Len(txtPassword.Text)
-    End Sub
 
     Private Sub cmdcancel_Click()
         Try
@@ -312,7 +323,7 @@
 #End Region
 
     Private Sub atoolbar(dkey)
-        On Error GoTo errhandler
+        'On Error GoTo errhandler
         'j = 1
         'For j = 1 To MDIMain.toolbar1.Buttons.Count
         '    If MDIMain.toolbar1.Buttons.Item(j).Key = dkey Then
@@ -320,8 +331,8 @@
         '        j = MDIMain.toolbar1.Buttons.Count + 1
         '    End If
         'Next j
-        Exit Sub
-errhandler:
+        'Exit Sub
+        'errhandler:
         'Call gotoerror("frmlogin", "atoolbar", Err.Number, Err.Description, Err.Source)
     End Sub
 
