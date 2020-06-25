@@ -3,17 +3,18 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Text.RegularExpressions
 Imports Microsoft.Office.Interop
+Imports ExcelTools = Microsoft.Office
 
 Imports Excel = Microsoft.Office.Interop.Excel
-Imports Microsoft.Office
 Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports System.ComponentModel
+Imports System.Reflection
 
 Public Class frmLoadExcel
 
-    Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'"
-    Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'"
+    Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
+    Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Dim gnr As Gn1 = New Gn1()
     Public userid As String
     Public flagallow As Integer
@@ -36,12 +37,17 @@ Public Class frmLoadExcel
                 flagallow = 1
             End If
 
+            cmdExcel.BackgroundImageLayout = ImageLayout.Stretch
+
             btnSuccess.Enabled = False
             btnInsert.Enabled = False
             btnCheck.Enabled = False
             btnSelect.Enabled = False
             dtProjectDate.Value = Now
             DataGridView1.ReadOnly = True
+            cmdExcel.Visible = False
+            SplitContainer1.Visible = False
+
             DataGridView2.Enabled = LikeSession.gridEnable
 
             cmbStatus.Items.Add("-- Select Status --")
@@ -67,9 +73,8 @@ Public Class frmLoadExcel
         Dim dtError As DataTable = New DataTable()
         Dim dtResult As DataTable = New DataTable()
         Dim errorMessagee As String
-        Dim message1 As String = "The part number is a required field to create a project reference."
-        Dim message2 As String = "The vendor number is a required field to create a project reference."
         Dim message3 As String = "This project reference for this part number and vendor already exist."
+        Dim message4 As String = "This Part is not in existence in our inventary."
         Dim aditionMessage As String = ""
         Try
             If dt IsNot Nothing Then
@@ -78,7 +83,7 @@ Public Class frmLoadExcel
                     Dim dictionary As New Dictionary(Of String, String)
                     'dictionary.Add("PRNAME", "Project Name")
                     dictionary.Add("PRDPTN", "Part Number")
-                    dictionary.Add("VMVNUM", "Vendor Number")
+                    'dictionary.Add("VMVNUM", "Vendor Number")
                     'Dim lstRequiredColumns As New List(Of String)({"PRNAME", "PRDPTN", "VMVNUM"})
                     For Each pair As KeyValuePair(Of String, String) In dictionary
                         If dt.Columns(pair.Key) Is Nothing Then
@@ -103,23 +108,24 @@ Public Class frmLoadExcel
                         Dim i = 0
                         Dim j = 0
                         For Each item As DataRow In dt.Rows
-                            If String.IsNullOrEmpty(item.ItemArray(dt.Columns("PRPECH").Ordinal).ToString()) Then
-                                item.Item(dt.Columns("PRPECH").Ordinal) = userid
-                            End If
-                            If String.IsNullOrEmpty(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()) Or
-                                String.IsNullOrEmpty(item.ItemArray(dt.Columns("VMVNUM").Ordinal).ToString()) Then
-                                dsError.Tables(0).ImportRow(item)
-                                errorMessagee = If(String.IsNullOrEmpty(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()), message1, message2)
-                                dsError.Tables(0).Rows(j).Item("ErrorDesc") = errorMessagee
-                                j += 1
-                            ElseIf checkIfPartAndVdrExist(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString(), item.ItemArray(dt.Columns("VMVNUM").Ordinal).ToString()) Then
+                            'If String.IsNullOrEmpty(item.ItemArray(dt.Columns("PRPECH").Ordinal).ToString()) Then
+                            '    item.Item(dt.Columns("PRPECH").Ordinal) = userid
+                            'End If
+                            If checkIfPartAndVdrExist(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString(), txtVendorNo.Text) Then
                                 dsError.Tables(0).ImportRow(item)
                                 errorMessagee = message3
                                 dsError.Tables(0).Rows(j).Item("ErrorDesc") = errorMessagee
                                 j += 1
                             Else
-                                dsResult.Tables(0).ImportRow(item)
-                                i += 1
+                                If gnr.isPartInExistence(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()) Then
+                                    dsResult.Tables(0).ImportRow(item)
+                                    i += 1
+                                Else
+                                    dsError.Tables(0).ImportRow(item)
+                                    errorMessagee = message4
+                                    dsError.Tables(0).Rows(j).Item("ErrorDesc") = errorMessagee
+                                    j += 1
+                                End If
                             End If
                         Next
 
@@ -130,15 +136,24 @@ Public Class frmLoadExcel
                             MessageBox.Show("Some project references has errors. You can check them by clicking in the Check Errors button.", "CTP System", MessageBoxButtons.OK)
                         End If
 
-                        If dsResult.Tables(0).Rows.Count > 0 Then
-                            fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
+                        If dsResult.Tables(0).Rows.Count = 0 And dsError.Tables(0).Rows.Count = 0 Then
+                            MessageBox.Show("There is not data to load. Please check the excel file that you uploaded.", "CTP System", MessageBoxButtons.OK)
                         Else
+                            If dsResult.Tables(0).Rows.Count > 0 Then
+                                fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
+                            End If
+
                             If dsError.Tables(0).Rows.Count > 0 Then
                                 fillcell1(dsError.Tables(0), 1, dsError.Namespace)
-                            Else
-                                'show error message
                             End If
                         End If
+
+                        If dsResult.Tables(0).Rows.Count > 0 Then
+                            setSplitContainerVisualization(1, False)
+                        Else
+                            setSplitContainerVisualization(2, False)
+                        End If
+
                     End If
                 Else
                     MessageBox.Show("Error reading excel data.", "CTP System", MessageBoxButtons.OK)
@@ -152,10 +167,45 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
+    Public Sub setSplitContainerVisualization(index As Integer, value As Boolean)
+        Dim exMessage As String = ""
+        Try
+            '"Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
+            'conStr = String.Format(Excel03ConString, filePath, "YES", 1)
+            SplitContainer1.Visible = Not value
+            SplitContainer1.Enabled = Not value
+            Dim buildedName = "Panel" & index & "Collapsed"
+            Dim buildNameReverse As String = Nothing
+            Dim pi As PropertyInfo = SplitContainer1.GetType().GetProperty(buildedName)
+            pi.SetValue(SplitContainer1, Convert.ChangeType(value, pi.PropertyType))
+            If index.Equals(1) Then
+                btnCheck.Enabled = Not value
+                btnSuccess.Enabled = value
+                DataGridView1.Visible = Not value
+                DataGridView1.Enabled = Not value
+                buildNameReverse = "Panel" & index + 1 & "Collapsed"
+                Dim pi2 As PropertyInfo = SplitContainer1.GetType().GetProperty(buildNameReverse)
+                pi2.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi2.PropertyType))
+            Else
+                btnCheck.Enabled = value
+                btnSuccess.Enabled = Not value
+                cmdExcel.Visible = Not value
+                cmdExcel.Enabled = Not value
+                DataGridView2.Visible = Not value
+                DataGridView2.Enabled = Not value
+                buildNameReverse = "Panel" & index - 1 & "Collapsed"
+                Dim pi1 As PropertyInfo = SplitContainer1.GetType().GetProperty(buildNameReverse)
+                pi1.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi1.PropertyType))
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     Private Sub txtProjectNo_TextChanged(sender As Object, e As EventArgs) Handles txtProjectNo.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) Then
+        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
             btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) Then
+        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
             btnSelect.Enabled = True
         Else
             btnSelect.Enabled = False
@@ -163,16 +213,28 @@ Public Class frmLoadExcel
     End Sub
 
     Private Sub txtProjectName_TextChanged(sender As Object, e As EventArgs) Handles txtProjectName.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) Then
+        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
             btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) Then
+        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
             btnSelect.Enabled = True
         Else
             btnSelect.Enabled = False
         End If
     End Sub
 
-    Private Sub fillcell1(dt As DataTable, flag As Integer, dsName As String)
+    Private Sub txtVendorNo_TextChanged_1(sender As Object, e As EventArgs) Handles txtVendorNo.TextChanged
+        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+        Else
+            btnSelect.Enabled = False
+        End If
+        btnValidVendor.Enabled = True
+        txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub fillcell1(dt As DataTable, flag As Integer, dsName As String, Optional ByVal stopPag As Boolean = False)
         Dim exMessage As String = " "
         Try
             If (dsName.Equals("dsResult") Or dsName.Equals("dsGrig1")) Then
@@ -180,7 +242,7 @@ Public Class frmLoadExcel
                 DataGridView1.DataSource = Nothing
                 DataGridView1.Refresh()
                 DataGridView1.AutoGenerateColumns = False
-                DataGridView1.ColumnCount = 6
+                DataGridView1.ColumnCount = 4
 
                 'Add Columns
                 DataGridView1.Columns(0).Name = "clPRHCOD"
@@ -191,21 +253,13 @@ Public Class frmLoadExcel
                 DataGridView1.Columns(1).HeaderText = "Part No."
                 DataGridView1.Columns(1).DataPropertyName = "PRDPTN"
 
-                DataGridView1.Columns(2).Name = "clPRDCTP"
-                DataGridView1.Columns(2).HeaderText = "CTP No."
-                DataGridView1.Columns(2).DataPropertyName = "PRDCTP"
+                DataGridView1.Columns(2).Name = "clVMVNUM"
+                DataGridView1.Columns(2).HeaderText = "Vendor No."
+                DataGridView1.Columns(2).DataPropertyName = "VMVNUM"
 
-                DataGridView1.Columns(3).Name = "clPRDMFR"
-                DataGridView1.Columns(3).HeaderText = "Manufacturer No."
-                DataGridView1.Columns(3).DataPropertyName = "PRDMFR#"
-
-                DataGridView1.Columns(4).Name = "clVMVNUM"
-                DataGridView1.Columns(4).HeaderText = "Vendor No."
-                DataGridView1.Columns(4).DataPropertyName = "VMVNUM"
-
-                DataGridView1.Columns(5).Name = "clPRDSTS"
-                DataGridView1.Columns(5).HeaderText = "Status"
-                DataGridView1.Columns(5).DataPropertyName = "PRDSTS"
+                DataGridView1.Columns(3).Name = "clPRDSTS"
+                DataGridView1.Columns(3).HeaderText = "Status"
+                DataGridView1.Columns(3).DataPropertyName = "PRDSTS"
 
                 'FILL GRID
                 DataGridView1.DataSource = dt
@@ -214,7 +268,6 @@ Public Class frmLoadExcel
                 btnInsert_Click(Nothing, Nothing)
                 'End If
                 DataGridView1.Refresh()
-
 
 #Region "Checkbox Column"
 
@@ -244,10 +297,23 @@ Public Class frmLoadExcel
 
 #End Region
 
-                SplitContainer1.Panel1Collapsed = False
-                SplitContainer1.Panel2Collapsed = True
+                If DataGridView1.Rows.Count > 0 And Not stopPag Then
+                    toPaginate(DataGridView1)
+
+                    '    SplitContainer1.Panel1Collapsed = False
+                    '    SplitContainer1.Panel2Collapsed = True
+
+                    '    btnCheck.Enabled = True
+                    '    btnSuccess.Enabled = False
+                    '    btnInsert.Enabled = True
+                    'Else
+                    '    SplitContainer1.Panel1Collapsed = True
+                    '    SplitContainer1.Panel2Collapsed = False
+                End If
 
             Else
+
+                Dim dsError = LikeSession.dsErrorSession
                 DataGridView2.DataSource = Nothing
                 DataGridView2.Refresh()
                 DataGridView2.AutoGenerateColumns = False
@@ -274,8 +340,27 @@ Public Class frmLoadExcel
                 DataGridView2.Columns(4).HeaderText = "Error Description"
                 DataGridView2.Columns(4).DataPropertyName = "ErrorDesc"
 
-                'FILL GRID
-                DataGridView2.DataSource = dt
+                If Not dt.Columns.Contains("VMVNUM") Then
+                    'Add vendor column
+                    Dim dtError = dt.Copy()
+                    dtError.Columns.Add("VMVNUM", GetType(Integer)).SetOrdinal(1)
+
+                    For Each dw1 As DataRow In dtError.Rows
+                        dw1.Item("VMVNUM") = Trim(txtVendorNo.Text)
+                    Next
+                    dtError.AcceptChanges()
+
+                    dsError.Tables.RemoveAt(0)
+                    dsError.Tables.Add(dtError)
+                    dsError.AcceptChanges()
+                    LikeSession.dsErrorSession = dsError
+
+                    'FILL GRID
+                    DataGridView2.DataSource = dsError.Tables(0)
+                Else
+                    'FILL GRID
+                    DataGridView2.DataSource = dt
+                End If
 
                 Dim cellAmount = DataGridView2.Rows(0).Cells.Count - 1
                 Dim numbers(cellAmount) As Integer
@@ -296,35 +381,31 @@ Public Class frmLoadExcel
                 Next
 
                 DataGridView2.Columns(cellAmount).ReadOnly = True
-
                 DataGridView2.Refresh()
 
                 'btnCheck_Click(Nothing, Nothing)
 
-                SplitContainer1.Panel2Collapsed = False
-                SplitContainer1.Panel1Collapsed = True
+                If DataGridView2.Rows.Count > 0 And Not stopPag Then
+                    toPaginate(DataGridView2)
+                    'DataGridView2.Enabled = True
+                    'DataGridView2.Visible = True
+                    'LikeSession.gridEnable = True
+
+                    '    SplitContainer1.Panel2Collapsed = False
+                    '    SplitContainer1.Panel1Collapsed = True
+
+                    '    btnCheck.Enabled = False
+                    '    btnSuccess.Enabled = True
+                    '    btnInsert.Enabled = False
+                    'Else
+                    '    SplitContainer1.Panel2Collapsed = True
+                    '    SplitContainer1.Panel1Collapsed = False
+                End If
             End If
 
-
-            btnCheck.Enabled = True
-            btnSuccess.Enabled = True
-
-            toPaginate(DataGridView1)
-
-            'cambiar mannana
-
-            'If flag = 0 And DataGridView2.Rows.Count > 0 Then
-            '    'btnInsert.Enabled = True
-            '    btnCheck.Enabled = True
-            '    btnSuccess.Enabled = False
-            'ElseIf (flag = 1 And DataGridView1.Rows.Count = 0) Or (flag = 0 And DataGridView2.Rows.Count = 0) Then
-            '    'btnInsert.Enabled = False
-            '    btnCheck.Enabled = False
-            '    btnSuccess.Enabled = False
-            'ElseIf flag = 1 And DataGridView1.Rows.Count > 0 Then
-            '    'btnInsert.Enabled = False
-            '    btnCheck.Enabled = False
-            '    btnSuccess.Enabled = True
+            'If DataGridView2.Rows.Count > 0 Or DataGridView1.Rows.Count > 0 Then
+            '    SplitContainer1.Visible = True
+            '    cmdExcel.Visible = True
             'End If
 
         Catch ex As Exception
@@ -355,9 +436,9 @@ Public Class frmLoadExcel
                 '    cell.Value = True
                 '    DataGridView1.Rows(e.RowIndex).Cells(0).ReadOnly = True
                 'End If
-            ElseIf e.ColumnIndex = 5 Then
-                Dim valueField = e.Value.ToString()
-                CurrentState = If(Not String.IsNullOrEmpty(valueField), e.Value.ToString, "E")
+            ElseIf e.ColumnIndex = 3 Then
+                'Dim valueField = e.Value.ToString()
+                CurrentState = If((e.Value IsNot Nothing), e.Value.ToString, "E")
                 NewState = buildStatusString(CurrentState)
                 If Not String.IsNullOrEmpty(NewState) Then
                     DataGridView1.Rows(e.RowIndex).Cells("clPRDSTS").Value = NewState
@@ -455,28 +536,31 @@ Public Class frmLoadExcel
         ElseIf e.ColumnIndex = 1 Then
             Dim partValue = DataGridView2.Rows(e.RowIndex).Cells(2).Value.ToString()
             Dim vendorValue = DataGridView2.Rows(e.RowIndex).Cells(3).Value.ToString()
-            If Not String.IsNullOrEmpty(partValue) And Not String.IsNullOrEmpty(vendorValue) Then
-                Dim vendorOk = gnr.isVendorAccepted(vendorValue)
+            If Not String.IsNullOrEmpty(partValue) Then
+                'And Not String.IsNullOrEmpty(vendorValue) Then
+                'Dim vendorOk = gnr.isVendorAccepted(vendorValue)
                 Dim partOk = gnr.isPartInExistence(partValue)
-                If (vendorOk) Then
-                    If partOk Then
-                        Dim myProjectNo = If(String.IsNullOrEmpty(txtProjectNo.Text), "", txtProjectNo.Text)
-                        If String.IsNullOrEmpty(myProjectNo) Then
-                            InsertOnDemand(partValue, vendorValue, e.RowIndex)
-                        Else
-                            InsertOnDemand(partValue, vendorValue, e.RowIndex, myProjectNo)
-                        End If
+                'If (vendorOk) Then
+                If partOk Then
+                    Dim myProjectNo = If(String.IsNullOrEmpty(txtProjectNo.Text), "", txtProjectNo.Text)
+                    If String.IsNullOrEmpty(myProjectNo) Then
+                        'InsertOnDemand(partValue, vendorValue, e.RowIndex)
+                        InsertOnDemand(partValue, txtVendorNo.Text, e.RowIndex)
                     Else
-                        DataGridView2.Rows(e.RowIndex).Cells(4).Value = "The Part Number is not available at this moment."
-                        MessageBox.Show("The Part Number is not available at this moment.", "CTP System", MessageBoxButtons.OK)
+                        'InsertOnDemand(partValue, vendorValue, e.RowIndex, myProjectNo)
+                        InsertOnDemand(partValue, txtVendorNo.Text, e.RowIndex)
                     End If
                 Else
-                    DataGridView2.Rows(e.RowIndex).Cells(4).Value = "The Vendor Number is not accepted as a valid vendor."
-                    MessageBox.Show("The Vendor Number is not accepted as a valid vendor.", "CTP System", MessageBoxButtons.OK)
+                    DataGridView2.Rows(e.RowIndex).Cells(4).Value = "The Part Number is not available at this moment."
+                    MessageBox.Show("The Part Number is not available at this moment.", "CTP System", MessageBoxButtons.OK)
                 End If
+                'Else
+                '    DataGridView2.Rows(e.RowIndex).Cells(4).Value = "The Vendor Number is not accepted as a valid vendor."
+                '    MessageBox.Show("The Vendor Number is not accepted as a valid vendor.", "CTP System", MessageBoxButtons.OK)
+                'End If
             Else
                 DataGridView2.Rows(e.RowIndex).Cells(4).Value = "There is an error in the input values that prevent the insert process."
-                MessageBox.Show("You must fill the value for the part and the vendor for this reference.", "CTP System", MessageBoxButtons.OK)
+                MessageBox.Show("You must fill the value for the part for this reference.", "CTP System", MessageBoxButtons.OK)
             End If
         Else
             'DataGridView1_DoubleClick(sender, e)
@@ -488,10 +572,10 @@ Public Class frmLoadExcel
         Dim exMessage As String = " "
         Try
             If e.RowIndex >= 0 Then
-                If e.ColumnIndex = 3 Then
+                If e.ColumnIndex = 2 Then
                     Dim inputText = If(DataGridView2.EditingControl IsNot Nothing, DataGridView2.EditingControl.Text, DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString())
                     'Dim inputText = DataGridView2.EditingControl.Text
-                    If Not String.IsNullOrEmpty(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) And gnr.isVendorAccepted(inputText) Then
+                    If Not String.IsNullOrEmpty(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) And gnr.isPartInExistence(inputText) Then
                         'DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = Nothing
                         DataGridView2.EndEdit()
                         LikeSession.acceptChanges = True
@@ -500,8 +584,8 @@ Public Class frmLoadExcel
                         DataGridView2.CancelEdit()
                         'DataGridView2.RefreshEdit()
                         If (Not String.IsNullOrEmpty(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString())) Then
-                            DataGridView2.Rows(e.RowIndex).Cells(4).Value = "The Vendor Number must match with an accepted vendor."
-                            MessageBox.Show("The Vendor Number must match with an accepted vendor.", "CTP System", MessageBoxButtons.OK)
+                            DataGridView2.Rows(e.RowIndex).Cells(4).Value = "The Part Number must have existences in stock."
+                            MessageBox.Show("The Part Number must have existences in stock..", "CTP System", MessageBoxButtons.OK)
                         End If
                         LikeSession.acceptChanges = True
                     End If
@@ -523,15 +607,15 @@ Public Class frmLoadExcel
         Dim exMessage As String = " "
         Try
             If e.RowIndex >= 0 Then
-                If e.ColumnIndex = 3 Then
+                If e.ColumnIndex = 2 Then
                     'Dim inputText = DataGridView2.EditingControl.Text
-                    If Not String.IsNullOrEmpty(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) And gnr.isVendorAccepted(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) Then
-                        DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = Nothing 'clear error description
+                    If Not String.IsNullOrEmpty(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) And gnr.isPartInExistence(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) Then
+                        DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex + 2).Value = Nothing 'clear error description
                         DataGridView2.EndEdit()
                         LikeSession.acceptChanges = True
-                    ElseIf Not String.IsNullOrEmpty(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) And Not gnr.isVendorAccepted(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) Then
+                    ElseIf Not String.IsNullOrEmpty(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) And Not gnr.isPartInExistence(DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString()) Then
                         DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = Nothing
-                        DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex + 1).Value = "The Vendor Number must match with an accepted vendor."
+                        DataGridView2.Rows(e.RowIndex).Cells(e.ColumnIndex + 2).Value = "The Part Number must have existences in stock."
                         DataGridView2.EndEdit()
                         LikeSession.acceptChanges = True
                     End If
@@ -576,15 +660,15 @@ Public Class frmLoadExcel
                     DataGridView2.RefreshEdit()
                     MessageBox.Show("The Part Number must be setted for a numeric value!", "CTP System", MessageBoxButtons.OK)
                 End If
-            ElseIf e.ColumnIndex = 3 Then
-                DataGridView2.CancelEdit()
-                DataGridView2.RefreshEdit()
-                Dim inputText = If(DataGridView2.EditingControl IsNot Nothing, DataGridView2.EditingControl.Text, DataGridView2(e.ColumnIndex, e.RowIndex).Value.ToString())
-                If Not String.IsNullOrEmpty(inputText) Then
-                    If Not Regex.IsMatch(inputText, "^[0-9]{1,6}$") Then
-                        MessageBox.Show("The Vendor Number must match with an accepted vendor!", "CTP System", MessageBoxButtons.OK)
-                    End If
-                End If
+                'ElseIf e.ColumnIndex = 3 Then
+                '    DataGridView2.CancelEdit()
+                '    DataGridView2.RefreshEdit()
+                '    Dim inputText = If(DataGridView2.EditingControl IsNot Nothing, DataGridView2.EditingControl.Text, DataGridView2(e.ColumnIndex, e.RowIndex).Value.ToString())
+                '    If Not String.IsNullOrEmpty(inputText) Then
+                '        If Not Regex.IsMatch(inputText, "^[0-9]{1,6}$") Then
+                '            MessageBox.Show("The Vendor Number must match with an accepted vendor!", "CTP System", MessageBoxButtons.OK)
+                '        End If
+                '    End If
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -602,18 +686,17 @@ Public Class frmLoadExcel
             Dim extension As String = Path.GetExtension(filePath)
             'Dim header As String = If(rbHeaderYes.Checked, "YES", "NO")
             Dim conStr As String, sheetName As String
-
             conStr = String.Empty
             Select Case extension
 
                 Case ".xls"
                     'Excel 97-03
-                    conStr = String.Format(Excel03ConString, filePath, "YES")
+                    conStr = String.Format(Excel03ConString, filePath, "YES", 1)
                     Exit Select
 
                 Case ".xlsx"
                     'Excel 07
-                    conStr = String.Format(Excel07ConString, filePath, "YES")
+                    conStr = String.Format(Excel07ConString, filePath, "YES", 1)
                     Exit Select
             End Select
 
@@ -638,11 +721,13 @@ Public Class frmLoadExcel
                 Using cmd As New OleDbCommand()
                     Using oda As New OleDbDataAdapter()
                         Dim dt As New DataTable()
+                        dt.Columns.Add("PRDPTN", GetType(String))
+                        dt.AcceptChanges()
                         cmd.CommandText = (Convert.ToString("SELECT * From [") & sheetName) + "]"
                         cmd.Connection = con
                         con.Open()
                         oda.SelectCommand = cmd
-                        oda.TableMappings.Add("Table", "Net-informations.com")
+                        'oda.TableMappings.Add("Table", "Net-informations.com")
                         oda.Fill(dt)
                         LikeSession.dsData = dt
                         fillData(dt)
@@ -655,10 +740,46 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-
 #End Region
 
 #Region "button methods"
+
+    'Private Sub txtVendorNo_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) _
+    '    Handles txtVendorNo.KeyPress
+    '    If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+    '        btnValidVendor_Click(sender, Nothing)
+    '    End If
+    'End Sub
+
+    Private Sub txtVendorNo_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
+        Handles txtVendorNo.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            btnValidVendor_Click(sender, Nothing)
+        End If
+    End Sub
+
+    Private Sub btnValidVendor_Click(sender As Object, e As EventArgs) Handles btnValidVendor.Click
+        Dim exMessage As String = " "
+        Try
+            Dim vendorNoValue = Trim(txtVendorNo.Text)
+
+            If Regex.IsMatch(vendorNoValue, "^[0-9]{1,6}$") Then
+                Dim validVendor = gnr.isVendorAccepted(vendorNoValue)
+                If Not validVendor Then
+                    txtVendorNo.Text = Nothing
+                Else
+                    txtVendorNo_TextChanged_1(Nothing, Nothing)
+                End If
+            Else
+                txtVendorNo.Text = Nothing
+                MessageBox.Show("The vendor number must have only numeric values and less than 6 characters.", "CTP System", MessageBoxButtons.OK)
+            End If
+            btnValidVendor.Enabled = False
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
 
     Private Sub btnSelect_Click(sender As Object, e As EventArgs) Handles btnSelect.Click
 
@@ -675,6 +796,7 @@ Public Class frmLoadExcel
         Dim Qry As New DataTable
         Dim arraySuccess As New List(Of Integer)
         Dim arrayError As New List(Of Integer)
+        Dim vendorNo = Trim(txtVendorNo.Text)
         Try
             If String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) Then
                 MessageBox.Show("The Project Name is a required field.", "CTP System", MessageBoxButtons.OK)
@@ -687,30 +809,31 @@ Public Class frmLoadExcel
             Dim dsResult = LikeSession.dsResultsSession
             If dsResult IsNot Nothing Then
                 If dsResult.Tables(0).Rows.Count <= 0 Then
+                    SplitContainer1.Panel2Collapsed = False
+                    SplitContainer1.Panel1Collapsed = True
                     MessageBox.Show("There is an error in the data.", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
+                Else
+                    dsResult.Tables(0).Columns.Add("VMVNUM", GetType(Integer))
+
+                    dsResult.Tables(0).Columns(0).DataType = GetType(String)
+
+                    dsResult.AcceptChanges()
+
+                    For Each dw As DataRow In dsResult.Tables(0).Rows
+                        dw.Item("VmVNUM") = vendorNo
+                    Next
                 End If
             Else
+                SplitContainer1.Panel2Collapsed = False
+                SplitContainer1.Panel1Collapsed = True
                 MessageBox.Show("There is an error in the data.", "CTP System", MessageBoxButtons.OK)
                 Exit Sub
             End If
 
-            'If DataGridView1.Controls.OfType(Of DataGridViewCheckBoxCell)().Any(Function(cb) cb.Value = True) Then
-            '    Dim pepe = 5
-            '    Dim perdo = 6
-            'End If
-
-            'Dim papa = DataGridView1.Controls.OfType(Of DataGridViewCheckBoxCell)().Count(Function(cbx) cbx.Value = True)
-
-
-
-            'Dim QryCheck = dt.AsEnumerable() _
-            '                                 .Where(Function(x) Trim(UCase(x.Field(Of Double)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
-            '                                 Trim(UCase(x.Field(Of Double)("PRDPTN"))) = Trim(UCase(partNo)))
-
             Dim queryResult As Integer = 0
             Dim ProjectNoCurrent
-            Dim projectPerCharge
+            Dim projectPerCharge As String = Nothing
             Dim existProject As Boolean
             If String.IsNullOrEmpty(txtProjectNo.Text) Then
                 Dim maxProjectNo = gnr.getmax("PRDVLH", "PRHCOD")
@@ -752,26 +875,42 @@ Public Class frmLoadExcel
                 For Each row As DataGridViewRow In DataGridView1.Rows
                     'save
                     Dim partNo = row.Cells("clPRDPTN").Value
-                    Dim vendorNo = row.Cells("clVMVNUM").Value
+                    'Dim vendorNo = row.Cells("clVMVNUM").Value
 
-                    'For Each tt As DataRow In dsResult.Tables(0).Rows
                     Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
-                                         .Where(Function(x) Trim(UCase(x.Field(Of Double)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
-                                         Trim(UCase(x.Field(Of Double)("PRDPTN"))) = Trim(UCase(partNo)))
+                                         .Where(Function(x) Trim(UCase(x.Field(Of Integer)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
+                                         Trim(UCase(x.Field(Of String)("PRDPTN"))).ToString() = Trim(UCase(partNo)))
 
                     If Qry1.Count > 0 Then
                         Qry = Qry1.CopyToDataTable
-                        Dim personInChargeValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()), userid, Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString())
+                        'Dim personInChargeValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()), userid, Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString())
+                        Dim personInChargeValue = userid
 
                         Dim rsInsert = InsertProductDetails(Qry, ProjectNoCurrent, personInChargeValue)
-                        If rsInsert > 0 Then
-                            'delete project no
-                            'Dim rsDelete = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
-                            'If rsDelete < 0 Then
-                            'error borrando
-                            'End If
-                            'countErrors += rsInsert
-                            'arrayError.Add(ProjectNoCurrent)
+
+                        'add to error dataset if insertion fails
+                        If rsInsert < 0 Then
+                            Dim dsError = LikeSession.dsErrorSession
+
+                            Dim dtError = dsError.Tables(0).Copy()
+                            dtError.Columns.Add("VMVNUM", GetType(Integer))
+
+                            For Each dw1 As DataRow In dtError.Rows
+                                dw1.Item("VMVNUM") = vendorNo
+                            Next
+
+                            Dim row1 As DataRow = dtError.NewRow()
+                            row1(0) = Qry.Rows(0).ItemArray(Qry.Columns("PRDPTN").Ordinal).ToString()
+                            row1(2) = Qry.Rows(0).ItemArray(Qry.Columns("VMVNUM").Ordinal).ToString()
+                            row1(1) = "Error inserting the project reference."
+
+                            dtError.Rows.Add(row1)
+                            dtError.AcceptChanges()
+
+                            dsError.Tables.RemoveAt(0)
+                            dsError.Tables.Add(dtError)
+                            dsError.AcceptChanges()
+                            LikeSession.dsErrorSession = dsError
                         Else
                             'right insertion
                             If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
@@ -785,19 +924,22 @@ Public Class frmLoadExcel
                             If cmbPerCharge.FindStringExact(Trim(projectPerCharge)) Then
                                 cmbPerCharge.SelectedIndex = cmbPerCharge.FindString(Trim(projectPerCharge))
                             End If
-
-
-                            arraySuccess.Add(ProjectNoCurrent)
+                            'arraySuccess.Add(ProjectNoCurrent)
                         End If
                         'countErrors += InsertProductDetails(Qry)
-
                     Else
                         btnSuccess.Enabled = False
                         MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
                     End If
-                    'Next
-
                 Next
+
+                Dim rsReferences = gnr.GetReferencesInProject(ProjectNoCurrent)
+                If rsReferences = 0 Then
+                    Dim rsDeletion = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
+                    If rsDeletion < 0 Then
+                        'error deleting go to dsError
+                    End If
+                End If
 #Region "not use"
 
                 '                    For Each tt As DataRow In dsResult.Tables(0).Rows
@@ -913,7 +1055,6 @@ Public Class frmLoadExcel
 #End Region
             End If
 
-
             If countErrors > 0 Then
                 MessageBox.Show("The insertion process finished with some fails inserting data.", "CTP System", MessageBoxButtons.OK)
             Else
@@ -962,11 +1103,12 @@ Public Class frmLoadExcel
             End If
 
             Dim queryResult As Integer = 0
+            Dim ProjectNoCurrent As Integer
 
             If String.IsNullOrEmpty(projectNo) Then
 
                 Dim maxProjectNo = gnr.getmax("PRDVLH", "PRHCOD")
-                Dim ProjectNoCurrent = CInt(maxProjectNo) + 1
+                ProjectNoCurrent = CInt(maxProjectNo) + 1
                 Dim projectPerCharge = If(cmbPerCharge.SelectedIndex = 0, userid, cmbPerCharge.SelectedValue)
 
                 Dim dsExistsProject = gnr.GetExistByPRNAME(txtProjectName.Text)
@@ -1016,9 +1158,10 @@ Public Class frmLoadExcel
                 'Dim partNo = row.Cells("clPRDPTN2").Value
                 'Dim vendorNo = row.Cells("clVMVNUM2").Value 
 
-                Dim personInChargeValue = If(String.IsNullOrEmpty(dsInsert.Tables(0).Rows(0).ItemArray(dsInsert.Tables(0).Columns("PRPECH").Ordinal).ToString()), userid, dsInsert.Tables(0).Rows(0).ItemArray(dsInsert.Tables(0).Columns("PRPECH").Ordinal).ToString())
+                Dim personInChargeValue = userid
+                'Dim personInChargeValue = If(String.IsNullOrEmpty(dsInsert.Tables(0).Rows(0).ItemArray(dsInsert.Tables(0).Columns("PRPECH").Ordinal).ToString()), userid, dsInsert.Tables(0).Rows(0).ItemArray(dsInsert.Tables(0).Columns("PRPECH").Ordinal).ToString())
 
-                Dim rsInsert = InsertProductDetails(dsInsert.Tables(0), projectNo, personInChargeValue)
+                Dim rsInsert = InsertProductDetails(dsInsert.Tables(0), ProjectNoCurrent, personInChargeValue)
                 If rsInsert > 0 Then
                     'delete project no
                     'Dim rsDelete = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
@@ -1035,13 +1178,27 @@ Public Class frmLoadExcel
                     Dim dtGrig2Ok = dtGrig2.Copy()
                     Dim dsGrig1 As New DataSet
                     Dim dsGrig2 As New DataSet
-                    dsGrig1.Tables.Add(dtGrig1Ok)
                     dsGrig2.Tables.Add(dtGrig2Ok)
                     dsGrig1.Namespace = "dsGrig1"
                     dsGrig2.Namespace = "dsGrig2"
 
-                    dsGrig1.Tables(0).ImportRow(dsGrig2.Tables(0).Rows(position))
-                    dsGrig1.AcceptChanges()
+
+                    If Not dtGrig1Ok.Columns.Contains("VMVNUM") Then
+                        dtGrig1Ok.Columns.Add("VMVNUM", GetType(Integer))
+                    End If
+
+                    If Not dtGrig1Ok.Columns.Contains("PRDSTS") Then
+                        dtGrig1Ok.Columns.Add("PRDSTS", GetType(String))
+                    End If
+
+                    Dim newRow As DataRow = dtGrig1Ok.NewRow
+                    newRow("PRDPTN") = dsGrig2.Tables(0).Rows(position).Item("PRDPTN").ToString()
+                    newRow("VMVNUM") = dsGrig2.Tables(0).Rows(position).Item("VMVNUM").ToString()
+                    newRow("PRDSTS") = "E"
+                    dtGrig1Ok.Rows.Add(newRow)
+                    dsGrig1.Tables.Add(dtGrig1Ok)
+                    'dsGrig1.AcceptChanges()
+                    'dsGrig1.Tables(0).ImportRow(dsGrig2.Tables(0).Rows(position))
 
                     dsGrig2.Tables(0).Rows.Remove(dsGrig2.Tables(0).Rows(position))
                     dsGrig2.AcceptChanges()
@@ -1050,7 +1207,7 @@ Public Class frmLoadExcel
                         dsGrig1.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
                     End If
 
-                    dsGrig1.Tables(0).Rows(dsGrig1.Tables(0).Rows.Count - 1).Item("PRHCOD") = projectNo
+                    dsGrig1.Tables(0).Rows(dsGrig1.Tables(0).Rows.Count - 1).Item("PRHCOD") = ProjectNoCurrent
                     dsGrig1.AcceptChanges()
 
                     LikeSession.dsResultsSession = dsGrig1
@@ -1210,9 +1367,10 @@ Public Class frmLoadExcel
         Dim exMessage As String = " "
         Try
             Dim dsValue = LikeSession.dsErrorSession
-            fillcell1(dsValue.Tables(0), 1, dsValue.Namespace)
-            btnSuccess.Enabled = True
-            btnCheck.Enabled = False
+            fillcell1(dsValue.Tables(0), 1, dsValue.Namespace, True)
+            setSplitContainerVisualization(2, False)
+            'btnSuccess.Enabled = True
+            'btnCheck.Enabled = False
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -1222,15 +1380,16 @@ Public Class frmLoadExcel
         Dim exMessage As String = " "
         Try
             Dim dsValue = LikeSession.dsResultsSession
-            fillcell1(dsValue.Tables(0), 0, dsValue.Namespace)
-            btnSuccess.Enabled = False
-            btnCheck.Enabled = True
+            fillcell1(dsValue.Tables(0), 0, dsValue.Namespace, True)
+            setSplitContainerVisualization(1, False)
+            'btnSuccess.Enabled = False
+            'btnCheck.Enabled = True
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
-    Private Sub cmdExcel_Click(sender As Object, e As EventArgs) Handles cmdExcel.Click
+    Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
         Dim exMessage As String = " "
         Try
             Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
@@ -1241,109 +1400,39 @@ Public Class frmLoadExcel
 
             Dim dt As New DataTable
             dt = (DirectCast(DataGridView2.DataSource, DataTable))
+            If dt IsNot Nothing Then
+                If dt.Rows.Count > 0 Then
+                    Dim fileExtension As String = Determine_OfficeVersion()
+                    If String.IsNullOrEmpty(fileExtension) Then
+                        Exit Sub
+                    End If
 
-            Dim fileExtension As String = Determine_OfficeVersion()
-            If String.IsNullOrEmpty(fileExtension) Then
-                Exit Sub
-            End If
+                    Dim fileName As String
+                    If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
+                        fileName = "Project number " & txtProjectNo.Text & " - " & DateTime.Now.ToString("d") & " - Errors." & fileExtension
+                    Else
+                        fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
+                    End If
 
-            Dim fileName As String
-            If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
-                fileName = "Project number " & txtProjectNo.Text & " - " & DateTime.Now.ToString("d") & " - Errors." & fileExtension
+                    Dim fullPath = folderPath & Convert.ToString(fileName)
+                    Using wb As New XLWorkbook()
+                        wb.Worksheets.Add(dt, "Project")
+                        wb.SaveAs(fullPath)
+                    End Using
+
+                    If File.Exists(fullPath) Then
+                        MessageBox.Show("The file was created successfully.", "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+                End If
             Else
-                fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
+                MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
             End If
-
-            Dim fullPath = folderPath & Convert.ToString(fileName)
-            Using wb As New XLWorkbook()
-                wb.Worksheets.Add(dt, "Project")
-                wb.SaveAs(fullPath)
-            End Using
-
-            If File.Exists(fullPath) Then
-                MessageBox.Show("The file was created successfully.", "CTP System", MessageBoxButtons.OK)
-            End If
-
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
-
-    'Private Sub HeaderCheckBox_Clicked(ByVal sender As Object, ByVal e As EventArgs)
-    '    'Necessary to end the edit mode of the Cell.
-    '    DataGridView1.EndEdit()
-
-    '    'Loop and check and uncheck all row CheckBoxes based on Header Cell CheckBox.
-    '    For Each row As DataGridViewRow In DataGridView1.Rows
-    '        Dim checkBox As DataGridViewCheckBoxCell = (TryCast(row.Cells(0), DataGridViewCheckBoxCell))
-
-    '        Dim myItem As CheckBox = CType(sender, CheckBox)
-    '        'If myItem.ena Then
-
-    '        'End If
-    '        If Not checkBox.ReadOnly Then
-    '            checkBox.Value = myItem.Checked
-    '            'DataGridView1.CurrentCell = Nothing
-    '        End If
-    '    Next
-    'End Sub
-
-    'Private Sub Datagridview1_CellBeginEdit(ByVal sender As Object, ByVal e As DataGridViewCellCancelEventArgs) _
-    '    Handles DataGridView1.CellBeginEdit
-    '    Try
-    '        'Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
-
-    '    Catch ex As Exception
-
-    '    End Try
-
-    'End Sub
-
-    'Private Sub Datagridview1_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
-    '    Handles DataGridView1.CellContentClick
-    '    Try
-    '        If e.ColumnIndex = 0 Then
-    '            'Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
-    '            'Dim inputText = DataGridView1.EditingControl.Text
-
-    '            'DataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit)
-    '            'If CBool(DataGridView1.CurrentCell.Value) = True Then
-    '            '    Dim ppe = ""
-    '            '    Dim calros = "1"
-
-    '            '    Dim ok = ppe & " - " & calros
-    '            'Else
-    '            '    Dim ppe = ""
-    '            '    Dim calros = "1"
-
-    '            '    Dim ok = ppe & " - " & calros
-    '            'End If
-    '        End If
-    '    Catch ex As Exception
-
-    '    End Try
-    'End Sub
-
-    'Private Sub DataGridView1_CellMouseUp(ByVal sender As Object, ByVal e As DataGridViewCellMouseEventArgs) _
-    '    Handles DataGridView1.CellMouseUp
-    '    Dim exMessage As String = " "
-    '    Try
-    '        If e.ColumnIndex = 0 Then
-    '            Dim row As DataGridViewRow = DataGridView1.Rows(e.RowIndex)
-    '            row.Cells(0).Value = Convert.ToBoolean(row.Cells(0).EditedFormattedValue)
-    '            If Convert.ToBoolean(row.Cells(0).Value) Then
-
-    '                DataGridView1(0, e.RowIndex).ReadOnly = True
-    '            Else
-    '                DataGridView1(0, e.RowIndex).ReadOnly = False
-    '            End If
-    '            'DataGridView1.CurrentCell = Nothing
-    '        End If
-    '    Catch ex As Exception
-    '        exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-    '    End Try
-
-    'End Sub
 
 #End Region
 
@@ -1446,142 +1535,93 @@ Public Class frmLoadExcel
             '                                                    txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
             '                                                    cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
             '                                                    dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
-            Dim strCheck = Nothing
-            If String.IsNullOrEmpty(strCheck) Then
+            'Dim strCheck = Nothing
+            'If String.IsNullOrEmpty(strCheck) Then
 
 #Region "Variable assign"
 
-                Dim projectNoValue = code
-                Dim PartNoValue = Qry.Rows(0).ItemArray(Qry.Columns("PRDPTN").Ordinal).ToString()
-                Dim CTPNoValue = Qry.Rows(0).ItemArray(Qry.Columns("PRDCTP").Ordinal).ToString()
-                Dim qtyValue = Qry.Rows(0).ItemArray(Qry.Columns("PRDQTY").Ordinal).ToString()
-                Dim MFRValue = ""
-                Dim MFRNoValue = Qry.Rows(0).ItemArray(Qry.Columns("PRDMFR#").Ordinal).ToString()
-                Dim unitcostValue = Qry.Rows(0).ItemArray(Qry.Columns("PRDCOS").Ordinal).ToString()
-                Dim unitcostVValue = Qry.Rows(0).ItemArray(Qry.Columns("PRDCON").Ordinal).ToString()
-                Dim vendorNoValue = Qry.Rows(0).ItemArray(Qry.Columns("VMVNUM").Ordinal).ToString()
-                'Dim statusValue2 = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString()),
-                '    "E", Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString())
-                Dim tempStatus = gnr.GetAllStatusesReturn(Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString(), "cntde1")
-                Dim statusValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString()),
-                    "E", If(String.IsNullOrEmpty(tempStatus), "E", tempStatus))
-                Dim chkControl = New CheckBox()
-                Dim chkValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDNEW").Ordinal).ToString()),
-                    "0", Qry.Rows(0).ItemArray(Qry.Columns("PRDNEW").Ordinal).ToString())
-                Dim chkSelection = If(chkValue = "0", Not chkControl.Checked, chkControl.Checked)
-                chkControl.Checked = chkSelection
+            Dim projectNoValue = code
+            Dim PartNoValue = Qry.Rows(0).ItemArray(Qry.Columns("PRDPTN").Ordinal).ToString()
+            Dim chkControl = New CheckBox()
 
-                'Dim poNoValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDPO#").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDPO#").Ordinal).ToString())
-                'Dim benefitsValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDBEN").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDBEN").Ordinal).ToString())
-                'Dim DetailsValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDINF").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDINF").Ordinal).ToString())
-                'Dim personChValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDUSR").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDUSR").Ordinal).ToString())
-                'Dim samplecostValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDSCO").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDSCO").Ordinal).ToString())
-                'Dim misccostValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDTTC").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDTTC").Ordinal).ToString())
-                'Dim minorcodeValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDMPC").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDMPC").Ordinal).ToString())
-                'Dim toolingcostValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDTCO").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDTCO").Ordinal).ToString())
-                'Dim sampleQtyValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDSQTY").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDSQTY").Ordinal).ToString())
-                'Dim optSelected = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDPTS").Ordinal).ToString()),
-                '    "", Qry.Rows(0).ItemArray(Qry.Columns("PRDPTS").Ordinal).ToString())
-                'partstoshow = displayPart(optSelected)
+#Region "Old Data"
+
+            'Dim vendorNoValue = If(Qry.Columns.Contains("VMVNUM"), Qry.Rows(0).ItemArray(Qry.Columns("VMVNUM").Ordinal).ToString(), Nothing)
+            'Dim CTPNoValue = If(Qry.Columns.Contains("PRDCTP"), Qry.Rows(0).ItemArray(Qry.Columns("PRDCTP").Ordinal).ToString(), Nothing)
+            'Dim qtyValue = If(Qry.Columns.Contains("PRDQTY"), Qry.Rows(0).ItemArray(Qry.Columns("PRDQTY").Ordinal).ToString(), 0)
+            'Dim MFRValue = ""
+            'Dim MFRNoValue = If(Qry.Columns.Contains("PRDMFR#"), Qry.Rows(0).ItemArray(Qry.Columns("PRDMFR#").Ordinal).ToString(), Nothing)
+            'Dim unitcostValue = If(Qry.Columns.Contains("PRDCOS"), Qry.Rows(0).ItemArray(Qry.Columns("PRDCOS").Ordinal).ToString(), 0)
+            'Dim unitcostVValue = If(Qry.Columns.Contains("PRDCON"), Qry.Rows(0).ItemArray(Qry.Columns("PRDCON").Ordinal).ToString(), 0)
+            'Dim chkControl = New CheckBox()
+            'Dim cnew = If(Qry.Columns.Contains("PRDNEW"), Qry.Rows(0).ItemArray(Qry.Columns("PRDNEW").Ordinal).ToString(), Nothing)
+            'Dim chkValue = If(String.IsNullOrEmpty(cnew),
+            '    "0", Qry.Rows(0).ItemArray(Qry.Columns("PRDNEW").Ordinal).ToString())
+            'Dim chkSelection = If(chkValue = "0", Not chkControl.Checked, chkControl.Checked)
+            'chkControl.Checked = chkSelection
+
+            ''Dim statusValue2 = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString()),
+            ''    "E", Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString())
+            'Dim sts = If(Qry.Columns.Contains("PRDSTS"), Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString(), Nothing)
+            'Dim tempStatus = gnr.GetAllStatusesReturn(sts, "cntde1")
+            'Dim statusValue = If(String.IsNullOrEmpty(sts),
+            '    "E", If(String.IsNullOrEmpty(tempStatus), "E", tempStatus))
+
+#End Region
 
 #End Region
 
 #Region "Set Date values"
 
-                dtTime.Value = Now 'PRDDAT
-                dtTime.CustomFormat = "yyyy/MM/dd/"
-                dtTime1.Value = Now 'CRDATE
-                dtTime1.CustomFormat = "yyyy/MM/dd/"
-                dtTime2.Value = Now 'MODATE
-                dtTime2.CustomFormat = "yyyy/MM/dd/"
-                dtTime3.Value = Now 'PODATE
-                dtTime3.CustomFormat = "yyyy/MM/dd/"
-                dtTime4.Value = Now 'PODATE
-                dtTime4.CustomFormat = "yyyy/MM/dd/"
-                dtTime5.Value = Now 'PODATE
-                dtTime5.CustomFormat = "yyyy/MM/dd/"
-                dtTime6.Value = Now 'PODATE
-                dtTime6.CustomFormat = "yyyy/MM/dd/"
+            dtTime.Value = Now 'PRDDAT
+            dtTime.CustomFormat = "yyyy/MM/dd/"
+            dtTime1.Value = Now 'CRDATE
+            dtTime1.CustomFormat = "yyyy/MM/dd/"
+            dtTime2.Value = Now 'MODATE
+            dtTime2.CustomFormat = "yyyy/MM/dd/"
+            dtTime3.Value = Now 'PODATE
+            dtTime3.CustomFormat = "yyyy/MM/dd/"
+            dtTime4.Value = Now 'PODATE
+            dtTime4.CustomFormat = "yyyy/MM/dd/"
+            dtTime5.Value = Now 'PODATE
+            dtTime5.CustomFormat = "yyyy/MM/dd/"
+            dtTime6.Value = Now 'PODATE
+            dtTime6.CustomFormat = "yyyy/MM/dd/"
 
-                'dtTime5.Value = New DateTime(1900, 1, 1)
+            'dtTime5.Value = New DateTime(1900, 1, 1)
 
 #End Region
 
-                'PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,
-                'PRDEDD, PRDSCO, PRDTTC, VMVNUM, PRDPTS, PRDMPC, PRDTCO, PRDERD, PRDPDA, PRDSQTY
+#Region "Guidance"
 
-                'QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
-                '                    userid, dtTime1, userid, dtTime2, CTPNoValue, qtyValue,
-                '                    MFRValue, MFRNoValue, unitcostValue, unitcostVValue,
-                '                    poNoValue, dtTime3, statusValue, benefitsValue,
-                '                    DetailsValue, personChValue, chkControl, dtTime4, samplecostValue,
-                '                    misccostValue, vendorNoValue, partstoshow, minorcodeValue, toolingcostValue, dtTime5,
-                '                    dtTime6, If(Not String.IsNullOrEmpty(sampleQtyValue), CInt(sampleQtyValue), 0))
+            'PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,
+            'PRDEDD, PRDSCO, PRDTTC, VMVNUM, PRDPTS, PRDMPC, PRDTCO, PRDERD, PRDPDA, PRDSQTY
 
-                QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
-                                    userid, dtTime1, userid, dtTime2, CTPNoValue, qtyValue,
-                                    MFRValue, MFRNoValue, unitcostValue, unitcostVValue,
-                                    "", dtTime3, statusValue, "",
+            'QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
+            '                    userid, dtTime1, userid, dtTime2, CTPNoValue, qtyValue,
+            '                    MFRValue, MFRNoValue, unitcostValue, unitcostVValue,
+            '                    poNoValue, dtTime3, statusValue, benefitsValue,
+            '                    DetailsValue, personChValue, chkControl, dtTime4, samplecostValue,
+            '                    misccostValue, vendorNoValue, partstoshow, minorcodeValue, toolingcostValue, dtTime5,
+            '                    dtTime6, If(Not String.IsNullOrEmpty(sampleQtyValue), CInt(sampleQtyValue), 0))
+
+#End Region
+
+            QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
+                                    userid, dtTime1, userid, dtTime2, "", 0,
+                                    "", "", 0, 0,
+                                    "", dtTime3, "E", "",
                                     "", personInCharge, chkControl, dtTime4, "0",
-                                    "0", vendorNoValue, "", "", "0", dtTime5,
+                                    "0", Trim(txtVendorNo.Text), "", "", "0", dtTime5,
                                     dtTime6, If(Not String.IsNullOrEmpty(""), CInt(""), "0"))
 
-                If QueryDetailResult < 0 Then
-                    MessageBox.Show("An error ocurred in the process.", "CTP System", MessageBoxButtons.OK)
-                    Return 1
-                Else
-                    Return 0
-                End If
-                'Else
-                '    Dim arrayCheck As New List(Of String)
-                'arrayCheck = strCheck.Split(",").ToList()
-                'For Each item As String In arrayCheck
-                '    If item = "Project Number" Then
-                '        'show error message must have data
-                '        Exit For
-                '    ElseIf item = "Quantity" Then
-                '        txtqty.Text = "0"
-                '    ElseIf item = "Unit Cost" Then
-                '        txtunitcost.Text = "0"
-                '    ElseIf item = "Unit Cost New" Then
-                '        txtunitcostnew.Text = "0"
-                '    ElseIf item = "Sample Cost" Then
-                '        txtsample.Text = "0"
-                '    ElseIf item = "Misc. Cost" Then
-                '        txttcost.Text = "0"
-                '    ElseIf item = "Vendor Number" Then
-                '        Exit For
-                '        'txtvendorno.Text = "0"  must have data
-                '    ElseIf item = "Tooling Cost" Then
-                '        txttoocost.Text = "0"
-                '    ElseIf item = "Sample Quantity" Then
-                '        txtsampleqty.Text = "0"
-                '    End If
-                'Next
-
-                'If txtvendorno.Text <> "" And projectNo <> 0 Then
-                '    QueryDetailResult = gnr.InsertProductDetail(projectNo, txtpartno.Text, DTPicker2, userid, dtTime, userid, dtTime1, txtctpno.Text, CInt(txtqty.Text),
-                '                    txtmfr.Text, txtmfrno.Text, CInt(txtunitcost.Text), CInt(txtunitcostnew.Text), txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                '                    cmbuser.SelectedValue, chknew, dtTime3, CInt(txtsample.Text), CInt(txttcost.Text), CInt(txtvendorno.Text), partstoshow, cmbminorcode.SelectedValue, CInt(txttoocost.Text), dtTime4,
-                '                    dtTime5, CInt(txtsampleqty.Text))
-                'Else
-                '    QueryDetailResult = -1
-                '    MessageBox.Show("The project number an d vendor number must have value.", "CTP System", MessageBoxButtons.OK)
-                'End If
-
-                'If QueryDetailResult < 0 Then
-                '    MessageBox.Show("Ann error ocurred inserting data in database.", "CTP System", MessageBoxButtons.OK)
-                'End If
+            If QueryDetailResult < 0 Then
+                MessageBox.Show("An error ocurred in the process.", "CTP System", MessageBoxButtons.OK)
+                Return 1
+            Else
+                Return 0
             End If
+            'End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
@@ -1798,6 +1838,83 @@ Public Class frmLoadExcel
 #End Region
 
 #Region "Not Used Now"
+
+
+    'Private Sub HeaderCheckBox_Clicked(ByVal sender As Object, ByVal e As EventArgs)
+    '    'Necessary to end the edit mode of the Cell.
+    '    DataGridView1.EndEdit()
+
+    '    'Loop and check and uncheck all row CheckBoxes based on Header Cell CheckBox.
+    '    For Each row As DataGridViewRow In DataGridView1.Rows
+    '        Dim checkBox As DataGridViewCheckBoxCell = (TryCast(row.Cells(0), DataGridViewCheckBoxCell))
+
+    '        Dim myItem As CheckBox = CType(sender, CheckBox)
+    '        'If myItem.ena Then
+
+    '        'End If
+    '        If Not checkBox.ReadOnly Then
+    '            checkBox.Value = myItem.Checked
+    '            'DataGridView1.CurrentCell = Nothing
+    '        End If
+    '    Next
+    'End Sub
+
+    'Private Sub Datagridview1_CellBeginEdit(ByVal sender As Object, ByVal e As DataGridViewCellCancelEventArgs) _
+    '    Handles DataGridView1.CellBeginEdit
+    '    Try
+    '        'Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+
+    '    Catch ex As Exception
+
+    '    End Try
+
+    'End Sub
+
+    'Private Sub Datagridview1_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+    '    Handles DataGridView1.CellContentClick
+    '    Try
+    '        If e.ColumnIndex = 0 Then
+    '            'Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+    '            'Dim inputText = DataGridView1.EditingControl.Text
+
+    '            'DataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit)
+    '            'If CBool(DataGridView1.CurrentCell.Value) = True Then
+    '            '    Dim ppe = ""
+    '            '    Dim calros = "1"
+
+    '            '    Dim ok = ppe & " - " & calros
+    '            'Else
+    '            '    Dim ppe = ""
+    '            '    Dim calros = "1"
+
+    '            '    Dim ok = ppe & " - " & calros
+    '            'End If
+    '        End If
+    '    Catch ex As Exception
+
+    '    End Try
+    'End Sub
+
+    'Private Sub DataGridView1_CellMouseUp(ByVal sender As Object, ByVal e As DataGridViewCellMouseEventArgs) _
+    '    Handles DataGridView1.CellMouseUp
+    '    Dim exMessage As String = " "
+    '    Try
+    '        If e.ColumnIndex = 0 Then
+    '            Dim row As DataGridViewRow = DataGridView1.Rows(e.RowIndex)
+    '            row.Cells(0).Value = Convert.ToBoolean(row.Cells(0).EditedFormattedValue)
+    '            If Convert.ToBoolean(row.Cells(0).Value) Then
+
+    '                DataGridView1(0, e.RowIndex).ReadOnly = True
+    '            Else
+    '                DataGridView1(0, e.RowIndex).ReadOnly = False
+    '            End If
+    '            'DataGridView1.CurrentCell = Nothing
+    '        End If
+    '    Catch ex As Exception
+    '        exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+    '    End Try
+
+    'End Sub
 
     'Private Sub Datagridview1_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
     '    Handles DataGridView1.CellContentClick

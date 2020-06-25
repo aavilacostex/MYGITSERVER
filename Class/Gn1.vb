@@ -395,6 +395,29 @@ NotInheritable Class Gn1
 
 #Region "Selects"
 
+    Public Function GetReferencesInProject(projectCode As Integer) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Dim amount As Integer = -1
+        Try
+
+            Sql = "Select Case COUNT(PRHCOD) FROM PRDVLD WHERE PRHCOD = " & projectCode
+            ds = GetDataFromDatabase(Sql)
+
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    amount = CInt(ds.Tables(0).Rows(0).ItemArray(0).ToString())
+                End If
+            End If
+            Return amount
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return amount
+        End Try
+    End Function
+
     Public Function GetPartInProdDesc(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -478,7 +501,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
 
-        Dim Sql = "select vmvtyp from vnmas where vmvnum = " & vendorNo & " "
+        Dim Sql = "select vmvtyp, vmname from vnmas where vmvnum = " & vendorNo & " "
         Try
             ds = FillGrid(Sql)
             If ds IsNot Nothing Then
@@ -487,6 +510,25 @@ NotInheritable Class Gn1
                 Else
                     Return Nothing
                 End If
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getVendorTypeByVendorNum(vendorNo As String, Optional ByVal flag As Integer = 0) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+
+        Dim Sql = "select vmvtyp, vmname from vnmas where vmvnum = " & vendorNo & " "
+        Try
+            ds = FillGrid(Sql)
+            If ds IsNot Nothing Then
+                Return ds
             Else
                 Return Nothing
             End If
@@ -518,30 +560,34 @@ NotInheritable Class Gn1
     Public Function isVendorAccepted(vendorNo As String) As Boolean
         Dim exMessage As String = " "
         Try
-            Dim vendorType = getVendorTypeByVendorNum(vendorNo)
-            If vendorType IsNot Nothing Then
+            'Dim vendorType = getVendorTypeByVendorNum(vendorNo)
+            Dim ds As DataSet = getVendorTypeByVendorNum(vendorNo, 0)
+            If ds IsNot Nothing Then
+                Dim vendorType = ds.Tables(0).Rows(0).ItemArray(0).ToString()
+                Dim vendorName = ds.Tables(0).Rows(0).ItemArray(1).ToString()
                 Dim listDeniedCodes = VendorCodesDenied.Split(",")
                 Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x) x = vendorType)
                 If Not containsDenied Then
                     Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
                     Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
                     If Not containsOEM Then
+                        frmLoadExcel.lblVendorDesc.Text = vendorName
+                        MessageBox.Show("The vendor " & RTrim(vendorName) & " is an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
                         Return True
                     Else
+                        MessageBox.Show("The vendor " & RTrim(vendorName) & " is not an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
                         Return False
                     End If
                 Else
+                    MessageBox.Show("The vendor " & RTrim(vendorName) & " is not an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
                     Return False
                 End If
-            Else
-                Return False
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             Return False
         End Try
     End Function
-
 
     Public Function isPartInExistence(partNo As String) As Boolean
         'check for part number inm imnsta, cater y komat
@@ -572,7 +618,6 @@ NotInheritable Class Gn1
         End Try
 
     End Function
-
 
     Public Function GetDataByPRHCOD(code As String) As Data.DataSet
         Dim exMessage As String = " "
@@ -1432,7 +1477,8 @@ NotInheritable Class Gn1
         Dim QueryResult As Integer = -1
         Try
             'dtValue6.Value = New DateTime(strDate)
-            Dim chkSelection As Integer = If(chkNew.Checked = False, 0, 1)
+            'Dim chkSelection1 As Integer = If(chkNew.Checked = False, 0, 1)
+            Dim chkSelection As Integer = If(getValueCheckTab3(vendorNo, partNo) = -1, 0, 1)
 
             Sql = "INSERT INTO PRDVLD(PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,
                                         PRDEDD,PRDSCO,PRDTTC,VMVNUM,PRDPTS,PRDMPC,PRDTCO,PRDERD,PRDPDA,PRDSQTY) 
@@ -1873,6 +1919,33 @@ NotInheritable Class Gn1
 #End Region
 
 #Region "Utils"
+
+    Public Function getValueCheckTab3(vendorNo As String, partno As String)
+        Dim exMessage As String = " "
+
+        Try
+            Dim listItemCat = VendorWhiteFlagMethod.Split(",")
+
+            Dim dsResult1 = getItemCategoryByVendorAndPart(vendorNo, partno)
+            If dsResult1 IsNot Nothing Then
+                If dsResult1.Tables(0).Rows.Count > 0 Then
+                    For Each item As String In listItemCat
+                        If Trim(item).Equals(Trim(vendorNo)) Then
+                            Return 1
+                        End If
+                    Next
+                    Return -1
+                Else
+                    Return 1
+                End If
+            Else
+                Return 1
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return -1
+        End Try
+    End Function
 
     Public Sub sendMessageOut(dgv As DataGridView, flag As Boolean)
         Try

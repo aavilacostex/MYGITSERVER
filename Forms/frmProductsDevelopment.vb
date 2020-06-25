@@ -36,6 +36,7 @@ Public Class frmProductsDevelopment
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
+        ' MsgBox("The application is terminating.")
         ' Add any initialization after the InitializeComponent() call.
     End Sub
 
@@ -60,6 +61,8 @@ Public Class frmProductsDevelopment
             FillDDLStatus1()
             FillDDlPrPech()
 
+
+            'testMethod()
             'test purpose
             'gnr.sendEmail()
             'Dim dss = gnr.GetPOQotaData()
@@ -72,6 +75,10 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
+    End Sub
+
+    Public Sub testMethod()
+
     End Sub
 
 #Region "Threads"
@@ -291,6 +298,16 @@ Public Class frmProductsDevelopment
                     'do something
                 End If
             Next
+
+            Dim newRow As DataRow = dsStatuses.Tables(0).NewRow
+            newRow("CNT01") = ""
+            newRow("CNT02") = ""
+            newRow("CNT03") = ""
+            newRow("CNTDE1") = ""
+            newRow("CNTDE2") = ""
+            newRow("FullValue") = ""
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsStatuses.Tables(0).Rows.InsertAt(newRow, 0)
 
             cmbstatus1.DataSource = dsStatuses.Tables(0)
             cmbstatus1.DisplayMember = "FullValue"
@@ -3150,10 +3167,10 @@ Public Class frmProductsDevelopment
                         'new item or new supplier
                         chknew.Checked = False
                         chkSupplier.Checked = False
-                        Dim setCheck = If(itemCategory(txtpartno.Text, txtvendorno.Text) = 2, chknew.Checked = True, chkSupplier.Checked = True)
-
-
-
+                        chknew.Checked = If(itemCategory(txtpartno.Text, txtvendorno.Text) = 2, True, False)
+                        If chknew.Checked Then
+                            chkSupplier.Checked = Not chknew.Checked
+                        End If
                     End If
                 Else
                     Dim result As DialogResult = MessageBox.Show("Enter Vendor.", "CTP System", MessageBoxButtons.OK)
@@ -4791,6 +4808,8 @@ Public Class frmProductsDevelopment
         cmdJiratasksearch.FlatStyle = FlatStyle.Flat
         cmdPrpech.FlatStyle = FlatStyle.Flat
         cmdMfrNoSearch.FlatStyle = FlatStyle.Flat
+        chknew.Enabled = False
+        chkSupplier.Enabled = False
 
         DataGridView1.RowHeadersVisible = False
         dgvProjectDetails.RowHeadersVisible = False
@@ -4838,6 +4857,7 @@ Public Class frmProductsDevelopment
         txtpartdescription.ReadOnly = True
         cmbminorcode.Enabled = False
         cmbmajorcode.Enabled = False
+        txtctpno.ReadOnly = True
 
         optCTP.Checked = True
         optVENDOR.Checked = False
@@ -5416,6 +5436,7 @@ Public Class frmProductsDevelopment
     Private Sub BindingNavigator1_RefreshItems(sender As Object, e As EventArgs) Handles BindingNavigator1.RefreshItems
 
     End Sub
+
 
 
     'Private Sub cmdSplit_Click(sender As Object, e As EventArgs) Handles cmdSplit.Click

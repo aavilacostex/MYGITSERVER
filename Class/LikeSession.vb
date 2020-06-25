@@ -10,4 +10,5 @@
     Public Shared isPageLoad As Boolean = True
     Public Shared referencedExistence As String
     Public Shared currentAction As String
+    Public Shared panelCollapseProp As Boolean
 End Class

@@ -134,8 +134,10 @@ Public Class frmproductsdevelopmentvendor
     Private Sub Datagridview1_CellBeginEdit(ByVal sender As Object, ByVal e As DataGridViewCellCancelEventArgs) _
         Handles DataGridView1.CellBeginEdit
         Try
-            Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
-            LikeSession.flyingValue = value
+            If DataGridView1(e.ColumnIndex, e.RowIndex).Value IsNot Nothing Then
+                Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+                LikeSession.flyingValue = value
+            End If
         Catch ex As Exception
 
         End Try
@@ -146,20 +148,22 @@ Public Class frmproductsdevelopmentvendor
         Handles DataGridView1.CellContentClick
         Try
             If e.ColumnIndex = 0 Then
-                Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
-                Dim inputText = DataGridView1.EditingControl.Text
+                If DataGridView1(e.ColumnIndex, e.RowIndex).Value IsNot Nothing Then
+                    Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+                    Dim inputText = If(DataGridView1.EditingControl IsNot Nothing, DataGridView1.EditingControl.Text, Nothing)
 
-                DataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit)
-                If CBool(DataGridView1.CurrentCell.Value) = True Then
-                    Dim ppe = ""
-                    Dim calros = "1"
+                    DataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit)
+                    If CBool(DataGridView1.CurrentCell.Value) = True Then
+                        Dim ppe = ""
+                        Dim calros = "1"
 
-                    Dim ok = ppe & " - " & calros
-                Else
-                    Dim ppe = ""
-                    Dim calros = "1"
+                        Dim ok = ppe & " - " & calros
+                    Else
+                        Dim ppe = ""
+                        Dim calros = "1"
 
-                    Dim ok = ppe & " - " & calros
+                        Dim ok = ppe & " - " & calros
+                    End If
                 End If
             End If
         Catch ex As Exception
@@ -194,7 +198,7 @@ Public Class frmproductsdevelopmentvendor
         Try
             If e.ColumnIndex = 3 Then
                 Dim value = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
-                Dim inputText = DataGridView1.EditingControl.Text
+                Dim inputText = If(DataGridView1.EditingControl IsNot Nothing, DataGridView1.EditingControl.Text, Nothing)
                 If Not Regex.IsMatch(inputText, "^[0-9]{1,6}$") Then
                     ' DataGridView1(e.ColumnIndex, e.RowIndex).Value = LikeSession.flyingValue
                     DataGridView1.CancelEdit()
