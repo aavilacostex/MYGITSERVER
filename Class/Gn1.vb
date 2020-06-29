@@ -403,7 +403,7 @@ NotInheritable Class Gn1
         Dim amount As Integer = -1
         Try
 
-            Sql = "Select Case COUNT(PRHCOD) FROM PRDVLD WHERE PRHCOD = " & projectCode
+            Sql = "Select COUNT(PRHCOD) FROM PRDVLD WHERE PRHCOD = " & projectCode
             ds = GetDataFromDatabase(Sql)
 
             If ds IsNot Nothing Then

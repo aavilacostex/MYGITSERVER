@@ -23,9 +23,9 @@ Public Class frmLoadExcel
     Private Const pageSize As Integer = 10
 
     Dim bs As BindingSource = New BindingSource()
+    Dim bs1 As BindingSource = New BindingSource()
     Dim Tables = New BindingList(Of DataTable)()
-
-
+    Dim Tables1 = New BindingList(Of DataTable)()
 
 #Region "Page Load"
 
@@ -118,8 +118,15 @@ Public Class frmLoadExcel
                                 j += 1
                             Else
                                 If gnr.isPartInExistence(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()) Then
-                                    dsResult.Tables(0).ImportRow(item)
-                                    i += 1
+                                    Dim checkDuplicates = From data In dsResult.Tables(0).AsEnumerable()
+                                                          Where Trim(UCase(data.Item("PRDPTN").ToString())) = Trim(UCase(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()))
+
+                                    If checkDuplicates IsNot Nothing Then
+                                        If Not checkDuplicates.Any() Then
+                                            dsResult.Tables(0).ImportRow(item)
+                                            i += 1
+                                        End If
+                                    End If
                                 Else
                                     dsError.Tables(0).ImportRow(item)
                                     errorMessagee = message4
@@ -183,6 +190,8 @@ Public Class frmLoadExcel
                 btnSuccess.Enabled = value
                 DataGridView1.Visible = Not value
                 DataGridView1.Enabled = Not value
+                cmdExcel.Visible = value
+                lblExcel.Visible = value
                 buildNameReverse = "Panel" & index + 1 & "Collapsed"
                 Dim pi2 As PropertyInfo = SplitContainer1.GetType().GetProperty(buildNameReverse)
                 pi2.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi2.PropertyType))
@@ -190,7 +199,8 @@ Public Class frmLoadExcel
                 btnCheck.Enabled = value
                 btnSuccess.Enabled = Not value
                 cmdExcel.Visible = Not value
-                cmdExcel.Enabled = Not value
+                lblExcel.Visible = Not value
+                'cmdExcel.Enabled = Not value
                 DataGridView2.Visible = Not value
                 DataGridView2.Enabled = Not value
                 buildNameReverse = "Panel" & index - 1 & "Collapsed"
@@ -265,7 +275,10 @@ Public Class frmLoadExcel
                 DataGridView1.DataSource = dt
 
                 'If String.IsNullOrEmpty(txtProjectNo.Text) Then
-                btnInsert_Click(Nothing, Nothing)
+                If flag.Equals(0) Then
+                    btnInsert_Click(Nothing, Nothing)
+                End If
+                'btnInsert_Click(Nothing, Nothing)
                 'End If
                 DataGridView1.Refresh()
 
@@ -299,20 +312,8 @@ Public Class frmLoadExcel
 
                 If DataGridView1.Rows.Count > 0 And Not stopPag Then
                     toPaginate(DataGridView1)
-
-                    '    SplitContainer1.Panel1Collapsed = False
-                    '    SplitContainer1.Panel2Collapsed = True
-
-                    '    btnCheck.Enabled = True
-                    '    btnSuccess.Enabled = False
-                    '    btnInsert.Enabled = True
-                    'Else
-                    '    SplitContainer1.Panel1Collapsed = True
-                    '    SplitContainer1.Panel2Collapsed = False
                 End If
-
             Else
-
                 Dim dsError = LikeSession.dsErrorSession
                 DataGridView2.DataSource = Nothing
                 DataGridView2.Refresh()
@@ -362,62 +363,47 @@ Public Class frmLoadExcel
                     DataGridView2.DataSource = dt
                 End If
 
-                Dim cellAmount = DataGridView2.Rows(0).Cells.Count - 1
-                Dim numbers(cellAmount) As Integer
-                Dim lstVal = New List(Of Integer)()
+                If DataGridView2.Rows.Count > 0 Then
+                    Dim cellAmount = DataGridView2.Rows(0).Cells.Count - 1
+                    Dim numbers(cellAmount) As Integer
+                    Dim lstVal = New List(Of Integer)()
 
-                For value As Integer = 0 To cellAmount
-                    lstVal.Add(value)
-                Next
-
-                For Each item As DataGridViewRow In DataGridView2.Rows
-                    For Each val As Integer In lstVal
-                        If Not (val.Equals(0) Or val.Equals(1)) Then
-                            If Not String.IsNullOrEmpty(item.Cells(val).Value.ToString()) Then
-                                item.Cells(val).ReadOnly = True
-                            End If
-                        End If
+                    For value As Integer = 0 To cellAmount
+                        lstVal.Add(value)
                     Next
-                Next
 
-                DataGridView2.Columns(cellAmount).ReadOnly = True
-                DataGridView2.Refresh()
+                    For Each item As DataGridViewRow In DataGridView2.Rows
+                        For Each val As Integer In lstVal
+                            If Not (val.Equals(0) Or val.Equals(1)) Then
+                                If Not String.IsNullOrEmpty(item.Cells(val).Value.ToString()) Then
+                                    item.Cells(val).ReadOnly = True
+                                End If
+                            End If
+                        Next
+                    Next
 
-                'btnCheck_Click(Nothing, Nothing)
+                    DataGridView2.Columns(cellAmount).ReadOnly = True
+                    DataGridView2.Refresh()
 
-                If DataGridView2.Rows.Count > 0 And Not stopPag Then
-                    toPaginate(DataGridView2)
-                    'DataGridView2.Enabled = True
-                    'DataGridView2.Visible = True
-                    'LikeSession.gridEnable = True
+                    'btnCheck_Click(Nothing, Nothing)
 
-                    '    SplitContainer1.Panel2Collapsed = False
-                    '    SplitContainer1.Panel1Collapsed = True
-
-                    '    btnCheck.Enabled = False
-                    '    btnSuccess.Enabled = True
-                    '    btnInsert.Enabled = False
-                    'Else
-                    '    SplitContainer1.Panel2Collapsed = True
-                    '    SplitContainer1.Panel1Collapsed = False
+                    If DataGridView2.Rows.Count > 0 And Not stopPag Then
+                        toPaginate1(DataGridView2)
+                    End If
                 End If
             End If
-
-            'If DataGridView2.Rows.Count > 0 Or DataGridView1.Rows.Count > 0 Then
-            '    SplitContainer1.Visible = True
-            '    cmdExcel.Visible = True
-            'End If
-
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
+            DataGridView2.DataSource = Nothing
+            DataGridView2.Refresh()
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
-    Private Sub DataGridView1_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
-        Handles DataGridView1.CellFormatting
+    Private Sub DataGridView1_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) Handles DataGridView1.CellFormatting
+
 
 
         Dim exMessage As String = " "
@@ -488,8 +474,8 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-    Private Sub DataGridView2_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
-        Handles DataGridView2.CellFormatting
+    Private Sub DataGridView2_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) Handles DataGridView2.CellFormatting
+
         Dim exMessage As String = " "
         Try
             If e.ColumnIndex = 0 Then
@@ -518,11 +504,11 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-    Private Sub DataGridView2_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
-    Handles DataGridView2.CellContentClick
+    Private Sub DataGridView2_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) Handles DataGridView2.CellContentClick
+
         If e.ColumnIndex = 0 Then
             DataGridView2.Rows(e.RowIndex).Cells(2).ReadOnly = False
-            DataGridView2.Rows(e.RowIndex).Cells(3).ReadOnly = False
+            'DataGridView2.Rows(e.RowIndex).Cells(3).ReadOnly = False
             Dim value = DataGridView2.Rows(e.RowIndex).Cells(0).FormattedValue
             If value.Equals("Edit") Then
                 DataGridView2.BeginEdit(True)
@@ -548,7 +534,7 @@ Public Class frmLoadExcel
                         InsertOnDemand(partValue, txtVendorNo.Text, e.RowIndex)
                     Else
                         'InsertOnDemand(partValue, vendorValue, e.RowIndex, myProjectNo)
-                        InsertOnDemand(partValue, txtVendorNo.Text, e.RowIndex)
+                        InsertOnDemand(partValue, txtVendorNo.Text, e.RowIndex, txtProjectNo.Text)
                     End If
                 Else
                     DataGridView2.Rows(e.RowIndex).Cells(4).Value = "The Part Number is not available at this moment."
@@ -567,8 +553,8 @@ Public Class frmLoadExcel
         End If
     End Sub
 
-    Private Sub DataGridView2_CellValueChanged(sender As Object, e As System.Windows.Forms.DataGridViewCellEventArgs) _
-        Handles DataGridView2.CellValueChanged
+    Private Sub DataGridView2_CellValueChanged(sender As Object, e As System.Windows.Forms.DataGridViewCellEventArgs) Handles DataGridView2.CellValueChanged
+
         Dim exMessage As String = " "
         Try
             If e.RowIndex >= 0 Then
@@ -602,8 +588,8 @@ Public Class frmLoadExcel
 
     End Sub
 
-    Private Sub DataGridView2_CellEndEdit(sender As Object, e As System.Windows.Forms.DataGridViewCellEventArgs) _
-        Handles DataGridView2.CellEndEdit
+    Private Sub DataGridView2_CellEndEdit(sender As Object, e As System.Windows.Forms.DataGridViewCellEventArgs) Handles DataGridView2.CellEndEdit
+
         Dim exMessage As String = " "
         Try
             If e.RowIndex >= 0 Then
@@ -628,8 +614,8 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-    Private Sub dataGridView2_CellBeginEdit(ByVal sender As Object, ByVal e As DataGridViewCellCancelEventArgs) _
-        Handles DataGridView2.CellBeginEdit
+    Private Sub dataGridView2_CellBeginEdit(ByVal sender As Object, ByVal e As DataGridViewCellCancelEventArgs) Handles DataGridView2.CellBeginEdit
+
 
         Dim exMessage As String = " "
         Try
@@ -648,8 +634,8 @@ Public Class frmLoadExcel
 
     End Sub
 
-    Private Sub DataGridView2_DataError(ByVal sender As Object, ByVal e As DataGridViewDataErrorEventArgs) _
-    Handles DataGridView2.DataError
+    Private Sub DataGridView2_DataError(ByVal sender As Object, ByVal e As DataGridViewDataErrorEventArgs) Handles DataGridView2.DataError
+
         Dim exMessage As String = " "
         Try
             If e.ColumnIndex = 2 Then
@@ -751,8 +737,8 @@ Public Class frmLoadExcel
     '    End If
     'End Sub
 
-    Private Sub txtVendorNo_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) _
-        Handles txtVendorNo.KeyDown
+    Private Sub txtVendorNo_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtVendorNo.KeyDown
+
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
             btnValidVendor_Click(sender, Nothing)
@@ -794,6 +780,7 @@ Public Class frmLoadExcel
         Dim exMessage As String = " "
         Dim countErrors As Integer = 0
         Dim Qry As New DataTable
+        Dim iterator As Integer = 0
         Dim arraySuccess As New List(Of Integer)
         Dim arrayError As New List(Of Integer)
         Dim vendorNo = Trim(txtVendorNo.Text)
@@ -866,8 +853,8 @@ Public Class frmLoadExcel
                     txtDesc.Text = Trim(item.ItemArray(ds.Tables(0).Columns("PRINFO").Ordinal).ToString())
                     dtProjectDate.Value = CDate(item.ItemArray(ds.Tables(0).Columns("PRDATE").Ordinal)).ToShortDateString()
                 Next
+                '?
             End If
-
 
             If queryResult < 0 Then
                 'error message insertion
@@ -917,8 +904,9 @@ Public Class frmLoadExcel
                                 dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
                             End If
 
-                            dsResult.Tables(0).Rows(0).Item("PRHCOD") = ProjectNoCurrent
+                            dsResult.Tables(0).Rows(iterator).Item("PRHCOD") = ProjectNoCurrent
                             dsResult.AcceptChanges()
+                            iterator += 1
 
                             txtProjectNo.Text = ProjectNoCurrent
                             If cmbPerCharge.FindStringExact(Trim(projectPerCharge)) Then
@@ -1096,6 +1084,9 @@ Public Class frmLoadExcel
         Dim arraySuccess As New List(Of Integer)
         Dim arrayError As New List(Of Integer)
         Try
+            'test grid
+            Dim dtest1 = (DirectCast(DataGridView1.DataSource, DataTable))
+            Dim dtest2 = (DirectCast(DataGridView2.DataSource, DataTable))
 
             If String.IsNullOrEmpty(txtProjectName.Text) Then
                 MessageBox.Show("The Project Name is a required field.", "CTP System", MessageBoxButtons.OK)
@@ -1125,7 +1116,8 @@ Public Class frmLoadExcel
                 Else
                     queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, dtProjectDate, txtDesc.Text, txtProjectName.Text, cmbStatus, projectPerCharge)
                 End If
-
+            Else
+                ProjectNoCurrent = CInt(projectNo)
             End If
 
             If queryResult < 0 Then
@@ -1172,16 +1164,32 @@ Public Class frmLoadExcel
                     arrayError.Add(projectNo)
                 Else
                     'right insertion
-                    Dim dtGrig1 = (DirectCast(DataGridView1.DataSource, DataTable))
-                    Dim dtGrig2 = (DirectCast(DataGridView2.DataSource, DataTable))
-                    Dim dtGrig1Ok = dtGrig1.Copy()
-                    Dim dtGrig2Ok = dtGrig2.Copy()
+                    Dim dtGrig1 As New DataTable
+                    Dim dtGrig2 As New DataTable
+                    Dim dtGrig1Ok As New DataTable
+                    Dim dtGrig2Ok As New DataTable
                     Dim dsGrig1 As New DataSet
                     Dim dsGrig2 As New DataSet
+
+                    If DataGridView1.DataSource Is Nothing Then
+                        dtGrig1 = (DirectCast(LikeSession.dsResultsSession.Tables(0), DataTable))
+                        dtGrig1Ok = dtGrig1.Clone()
+                    Else
+                        dtGrig1 = (DirectCast(DataGridView1.DataSource, DataTable))
+                        dtGrig1Ok = dtGrig1.Copy()
+                    End If
+
+                    If DataGridView2.DataSource Is Nothing Then
+                        dtGrig2 = (DirectCast(LikeSession.dsErrorSession.Tables(0), DataTable))
+                        dtGrig2Ok = dtGrig2.Clone()
+                    Else
+                        dtGrig2 = (DirectCast(DataGridView2.DataSource, DataTable))
+                        dtGrig2Ok = dtGrig2.Copy()
+                    End If
+
                     dsGrig2.Tables.Add(dtGrig2Ok)
                     dsGrig1.Namespace = "dsGrig1"
                     dsGrig2.Namespace = "dsGrig2"
-
 
                     If Not dtGrig1Ok.Columns.Contains("VMVNUM") Then
                         dtGrig1Ok.Columns.Add("VMVNUM", GetType(Integer))
@@ -1203,6 +1211,10 @@ Public Class frmLoadExcel
                     dsGrig2.Tables(0).Rows.Remove(dsGrig2.Tables(0).Rows(position))
                     dsGrig2.AcceptChanges()
 
+                    'DataGridView2.DataSource = dsGrig2
+                    'DataGridView2.Refresh()
+                    LikeSession.dsErrorSession = dsGrig2
+
                     If Not (dsGrig1.Tables(0).Columns.Contains("PRHCOD")) Then
                         dsGrig1.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
                     End If
@@ -1210,23 +1222,19 @@ Public Class frmLoadExcel
                     dsGrig1.Tables(0).Rows(dsGrig1.Tables(0).Rows.Count - 1).Item("PRHCOD") = ProjectNoCurrent
                     dsGrig1.AcceptChanges()
 
-                    LikeSession.dsResultsSession = dsGrig1
-                    LikeSession.dsErrorSession = dsGrig2
-                    fillcell1(dsGrig1.Tables(0), 0, dsGrig1.Namespace)
-
-                    'DataGridView1.DataSource = Nothing
-                    'DataGridView1.EndEdit()
-
                     'DataGridView1.DataSource = dsGrig1
                     'DataGridView1.Refresh()
-                    'LikeSession.dsResultsSession = dsGrig1
+                    LikeSession.dsResultsSession = dsGrig1
 
-                    'DataGridView2.DataSource = Nothing
-                    'DataGridView2.EndEdit()
+                    fillcell1(dsGrig1.Tables(0), 1, dsGrig1.Namespace, True)
+                    fillcell1(dsGrig2.Tables(0), 1, dsGrig2.Namespace, True)
 
-                    'DataGridView2.DataSource = dsGrig2
-                    'DataGridView2.Refresh()
-                    'LikeSession.dsErrorSession = dsGrig2
+                    refreshPagination(newRow("PRDPTN").ToString())
+
+                    bs.ResetBindings(False)
+                    bs1.ResetBindings(False)
+
+                    setSplitContainerVisualization(1, False)
 
                     'txtProjectNo.Text = projectNo
                     'If cmbPerCharge.FindStringExact(Trim(projectPerCharge)) Then
@@ -1234,8 +1242,12 @@ Public Class frmLoadExcel
                     'End If
 
                     arraySuccess.Add(projectNo)
-                End If
 
+                    If String.IsNullOrEmpty(txtProjectNo.Text) Then
+                        Dim rsReferences = gnr.GetReferencesInProject(ProjectNoCurrent)
+                        txtProjectNo.Text = If(rsReferences > 0, ProjectNoCurrent, Nothing)
+                    End If
+                End If
 #Region "not use"
 
                 '                    For Each tt As DataRow In dsResult.Tables(0).Rows
@@ -1465,7 +1477,78 @@ Public Class frmLoadExcel
             BindingNavigator1.BindingSource = bs
             bs.DataSource = Tables
             AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
+            'AddHandler bs.PositionChanged, AddressOf bs_PositionChanged1
+
             bs_PositionChanged(bs, Nothing)
+            'bs_PositionChanged1(bs, Nothing)
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Protected Sub toPaginate1(dgv As DataGridView)
+        Dim exMessage As String = " "
+        Try
+            'dim tables as BindingList<DataTable>  = new BindingList<DataTable>()
+            Dim dtGrid As New DataTable
+            dtGrid = (DirectCast(dgv.DataSource, DataTable))
+
+            Dim counter As Integer = 0
+            Dim dt As DataTable = Nothing
+
+            For Each item As DataRow In dtGrid.Rows
+                If counter = 0 Then
+                    dt = dtGrid.Clone()
+                    Tables1.Add(dt)
+                End If
+
+                dt.Rows.Add(item.ItemArray)
+                counter += 1
+
+                If counter > 9 Then
+                    counter = 0
+                End If
+            Next
+
+            BindingNavigator2.BindingSource = bs1
+            bs1.DataSource = Tables1
+            'AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
+            AddHandler bs1.PositionChanged, AddressOf bs_PositionChanged1
+
+            'bs_PositionChanged(bs, Nothing)
+            bs_PositionChanged1(bs1, Nothing)
+
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Sub refreshPagination(partNo As String)
+        Dim exMessage As String = Nothing
+        Try
+            Dim myTables = Tables1
+            Dim iterator As Integer = 0
+            Dim changeDone As Boolean = False
+            For Each dtInnerTable As DataTable In myTables
+                For Each item As DataRow In dtInnerTable.Rows
+                    Dim lookupValue = item("PRDPTN").ToString()
+                    If lookupValue.Equals(partNo) Then
+                        Dim rowToDelete = dtInnerTable.Rows(iterator)
+                        rowToDelete.Delete()
+                        dtInnerTable.AcceptChanges()
+                        changeDone = True
+                        Exit For
+                    End If
+                    iterator += 1
+                Next
+                If changeDone Then
+                    Exit For
+                End If
+            Next
+
+            Tables1 = myTables
+            Dim epep = Nothing
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -1473,6 +1556,10 @@ Public Class frmLoadExcel
 
     Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
         DataGridView1.DataSource = Tables(bs.Position)
+    End Sub
+
+    Private Sub bs_PositionChanged1(ByVal sender As Object, ByVal e As EventArgs)
+        DataGridView2.DataSource = Tables1(bs1.Position)
     End Sub
 
     Public Sub handleDataGridColumnsOnDemand(dgvHandle As DataGridView, listToChange As List(Of Integer), index As Integer, flag As Boolean)
@@ -1616,7 +1703,7 @@ Public Class frmLoadExcel
                                     dtTime6, If(Not String.IsNullOrEmpty(""), CInt(""), "0"))
 
             If QueryDetailResult < 0 Then
-                MessageBox.Show("An error ocurred in the process.", "CTP System", MessageBoxButtons.OK)
+                'MessageBox.Show("An error ocurred in the process.", "CTP System", MessageBoxButtons.OK)
                 Return 1
             Else
                 Return 0
@@ -1721,6 +1808,7 @@ Public Class frmLoadExcel
     Private Sub disableAfterInsert()
         Dim exMessage As String = " "
         Dim myTableLayout As TableLayoutPanel
+        Dim myTableLayout4 As TableLayoutPanel
         Try
             myTableLayout = Me.TableLayoutPanel2
             For Each tt In myTableLayout.Controls
@@ -1738,17 +1826,32 @@ Public Class frmLoadExcel
                     End If
                 ElseIf TypeOf tt Is Windows.Forms.SplitContainer Then
                     If tt.Name = "SplitContainer1" Then
-                        Dim dgv As DataGridView = tt.Panel1.Controls("dataGridView1")
-                        'dgv.ReadOnly = True
-                        For Each ttt As DataGridViewRow In dgv.Rows
-                            If ttt.Cells("clPRHCOD").ToString() IsNot Nothing Then
-                                Dim index = ttt.Index
-                                dgv.Rows(index).ReadOnly = True
-                                'ttt.ReadOnly = False
+                        Dim tlp As TableLayoutPanel = tt.Panel1.Controls("TableLayoutPanel6")
+                        For Each ttt In tlp.Controls
+                            If TypeOf ttt Is Windows.Forms.DataGridView Then
+                                Dim dgv As DataGridView = ttt
+                                'dgv.ReadOnly = True
+                                For Each t4 As DataGridViewRow In dgv.Rows
+                                    If t4.Cells("clPRHCOD").ToString() IsNot Nothing Then
+                                        Dim index = t4.Index
+                                        dgv.Rows(index).ReadOnly = True
+                                        'ttt.ReadOnly = False
+                                    End If
+                                Next
                             End If
                         Next
                     End If
                 End If
+
+                myTableLayout4 = Me.TableLayoutPanel4
+                For Each tt4 In myTableLayout4.Controls
+                    If TypeOf tt4 Is Windows.Forms.TextBox Then
+                        tt4.Enabled = False
+                    ElseIf TypeOf tt4 Is Windows.Forms.Button Then
+                        tt4.Enabled = False
+                    End If
+                Next
+
             Next
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
