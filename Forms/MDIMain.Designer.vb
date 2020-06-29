@@ -64,17 +64,18 @@ Partial Class MDIMain
         Me.ClaimsToolStripMenuItem.Name = "ClaimsToolStripMenuItem"
         Me.ClaimsToolStripMenuItem.Size = New System.Drawing.Size(195, 22)
         Me.ClaimsToolStripMenuItem.Text = "Claims"
+        Me.ClaimsToolStripMenuItem.Visible = False
         '
         'SupplierClaimsToolStripMenuItem
         '
         Me.SupplierClaimsToolStripMenuItem.Name = "SupplierClaimsToolStripMenuItem"
-        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.SupplierClaimsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SupplierClaimsToolStripMenuItem.Text = "Supplier Claims"
         '
         'CustomerClaimsToolStripMenuItem
         '
         Me.CustomerClaimsToolStripMenuItem.Name = "CustomerClaimsToolStripMenuItem"
-        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(165, 22)
+        Me.CustomerClaimsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.CustomerClaimsToolStripMenuItem.Text = "Customer Claims"
         '
         'ProductsDevelopmentToolStripMenuItem

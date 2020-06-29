@@ -441,6 +441,34 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function GetVendorInProject(projectCode As Integer) As List(Of Integer)
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Dim vendorNo As Integer = 0
+        Dim lstVendors = New List(Of Integer)()
+        Try
+            Sql = "Select DISTINCT VMVNUM FROM PRDVLD WHERE PRHCOD = " & projectCode
+            ds = GetDataFromDatabase(Sql)
+
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 And ds.Tables(0).Rows.Count < 2 Then
+                    vendorNo = CInt(ds.Tables(0).Rows(0).ItemArray(0).ToString())
+                    lstVendors.Add(vendorNo)
+                Else
+                    For Each dr As DataRow In ds.Tables(0).Rows
+                        lstVendors.Add(CInt(dr.ItemArray(0).ToString()))
+                    Next
+                End If
+            End If
+            Return lstVendors
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return lstVendors
+        End Try
+    End Function
+
     Public Function GetPartInProdDesc(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -1100,21 +1128,6 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM VNMAS WHERE TRIM(UCASE(VMNAME)) LIKE '" & Trim(UCase(vendorName)) & "%'"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetVendorByNumber(vendorNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM VNMAS WHERE VMVNUM = " & Trim(vendorNo)
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception

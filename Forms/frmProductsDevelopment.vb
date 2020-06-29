@@ -1660,6 +1660,7 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub AddNewPartToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles AddNewPartToolStripMenuItem1.Click
+        'tab 3
         Try
             Dim result As DialogResult = MessageBox.Show("Do you want to add a new part to the project?", "CTP System", MessageBoxButtons.YesNo)
             If result = DialogResult.Yes Then
@@ -1671,6 +1672,7 @@ Public Class frmProductsDevelopment
                 cmdunitcost.Enabled = False
                 cmdmpartno.Enabled = False
                 cmdcvendor.Enabled = False
+                setVendorValues()
                 'gotonew()
                 'frmProductsDevelopment_load()
             End If
@@ -1741,6 +1743,8 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub AddNewPartToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddNewPartToolStripMenuItem.Click
+        'tab 2
+        Dim exMessage As String = " "
         Try
             flagdeve = 0
             flagnewpart = 1
@@ -1750,10 +1754,11 @@ Public Class frmProductsDevelopment
             cmdunitcost.Enabled = False
             cmdmpartno.Enabled = False
             cmdcvendor.Enabled = False
+            setVendorValues()
             gotonew()
             SSTab1.SelectedIndex = 2
         Catch ex As Exception
-
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -2576,9 +2581,9 @@ Public Class frmProductsDevelopment
                         SSTab1.SelectedTab = TabPage2
                     Else
                         SSTab1.SelectedTab = TabPage3
-                        '
                     End If
                     cleanFormValues("TabPage3", 0)
+                    setVendorValues()
                 End If
             Else
                 fillcell1LastOne("")
@@ -4693,6 +4698,28 @@ Public Class frmProductsDevelopment
 
 #Region "Utils"
 
+    Private Sub setVendorValues()
+        Dim exMessage As String = " "
+        Try
+            Dim vendors = If(Not String.IsNullOrEmpty(txtCode.Text), gnr.GetVendorInProject(CInt(txtCode.Text)), Nothing)
+            If vendors.Count > 1 Then
+                MessageBox.Show("There is more than one vendor in this project.", "CTP System", MessageBoxButtons.OK)
+                txtvendornoa.Text = vendors(0)
+                txtvendorno.Text = txtvendornoa.Text
+                Dim dsVnd = gnr.GetVendorByVendorNo(txtvendornoa.Text)
+                txtvendornamea.Text = dsVnd.Tables(0).Rows(0).ItemArray(2).ToString()
+                txtvendorname.Text = txtvendornamea.Text
+            Else
+                txtvendornoa.Text = vendors(0)
+                txtvendorno.Text = txtvendornoa.Text
+                Dim dsVnd = gnr.GetVendorByVendorNo(txtvendornoa.Text)
+                txtvendornamea.Text = dsVnd.Tables(0).Rows(0).ItemArray(2).ToString()
+                txtvendorname.Text = txtvendornamea.Text
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
     Private Function itemCategory(partNo As String, vendorNo As String) As Integer
         Dim exMessage As String = " "
         Dim result As Integer = -1

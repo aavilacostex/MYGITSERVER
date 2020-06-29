@@ -40,7 +40,7 @@
                     End If
                 Next i
                 If Trim(txtCode.Text) > 0 Then
-                    Dim dsResult = gnr.GetVendorByNumber(txtCode.Text)
+                    Dim dsResult = gnr.GetVendorByVendorNo(txtCode.Text)
 
                     If dsResult IsNot Nothing Then
                         If dsResult.Tables(0).Rows.Count > 0 Then

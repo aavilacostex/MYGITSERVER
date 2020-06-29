@@ -21,7 +21,6 @@ Public Class MDIMain
         frmProductsDevelopment.Show()
         'Loading.Show()
         'Loading.BringToFront()
-
     End Sub
 
     Private Sub LoginToolStripMenuItem_Click(sender As Object, e As EventArgs)
