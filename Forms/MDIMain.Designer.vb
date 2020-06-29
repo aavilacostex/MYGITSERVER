@@ -22,6 +22,7 @@ Partial Class MDIMain
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MDIMain))
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.PurchasingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -34,7 +35,10 @@ Partial Class MDIMain
         Me.Test2ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Test3ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.MenuStrip1.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'MenuStrip1
@@ -97,6 +101,7 @@ Partial Class MDIMain
         Me.Test2ToolStripMenuItem.Name = "Test2ToolStripMenuItem"
         Me.Test2ToolStripMenuItem.Size = New System.Drawing.Size(39, 20)
         Me.Test2ToolStripMenuItem.Text = "Test"
+        Me.Test2ToolStripMenuItem.Visible = False
         '
         'Test3ToolStripMenuItem
         '
@@ -105,11 +110,26 @@ Partial Class MDIMain
         Me.Test3ToolStripMenuItem.Text = "Test3"
         Me.Test3ToolStripMenuItem.Visible = False
         '
+        'PictureBox1
+        '
+        Me.PictureBox1.Location = New System.Drawing.Point(280, 115)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(217, 173)
+        Me.PictureBox1.TabIndex = 1
+        Me.PictureBox1.TabStop = False
+        '
+        'ImageList1
+        '
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageList1.Images.SetKeyName(0, "40th-ctp-logo.png")
+        '
         'MDIMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MainMenuStrip = Me.MenuStrip1
@@ -117,6 +137,7 @@ Partial Class MDIMain
         Me.Text = "CTP INFORMATION SYSTEM"
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -133,4 +154,6 @@ Partial Class MDIMain
     Friend WithEvents Test2ToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Test3ToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents ImageList1 As ImageList
 End Class

@@ -280,6 +280,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Class\DataContainer.vb" />
+    <Compile Include="Resources\MyRecources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MyRecources.resx</DependentUpon>
+    </Compile>
     <Compile Include="test.Designer.vb">
       <DependentUpon>test.vb</DependentUpon>
     </Compile>
@@ -335,6 +340,11 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\MyRecources.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MyRecources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="test.resx">
       <DependentUpon>test.vb</DependentUpon>
@@ -431,6 +441,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Class\text_1.txt" />
+    <None Include="Resources\40th-ctp-logo.png" />
+    <EmbeddedResource Include="Images\40th-ctp-logo.png" />
+    <EmbeddedResource Include="Images\493-4936787_free-png-search-icon-magnifying-glass-icon-png.png" />
+    <EmbeddedResource Include="Images\avatar-ctp.PNG" />
+    <EmbeddedResource Include="Images\ctp-loader.gif" />
+    <EmbeddedResource Include="Images\doc.PNG" />
+    <EmbeddedResource Include="Images\download.jpg" />
+    <EmbeddedResource Include="Images\excel.png" />
+    <EmbeddedResource Include="Images\excel1.png" />
+    <EmbeddedResource Include="Images\exit.PNG" />
+    <EmbeddedResource Include="Images\print-icon.PNG" />
+    <EmbeddedResource Include="Images\save.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

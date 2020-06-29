@@ -2,11 +2,17 @@
 Imports System.Windows.Forms.DataFormats
 Imports System.Threading
 Imports System.ComponentModel
+Imports System.IO
 
 Public Class MDIMain
+
+    Dim gnr As Gn1 = New Gn1()
+    Dim pathpictureparts As String
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        BackgroundWorker1.WorkerReportsProgress = True
+        'BackgroundWorker1.WorkerReportsProgress = True
+        loadImage()
 
     End Sub
 
@@ -34,35 +40,31 @@ Public Class MDIMain
         test.Show()
     End Sub
 
-#Region "Threads"
+    Private Sub loadImage()
+        Dim exMessage As String = " "
+        Try
+            Dim pathPictures = gnr.UrlPathImgNewMethod
+            If Not Directory.Exists(pathPictures) Then
+                'looking into embeded resorces
+                Dim resource = GetType(MDIMain).Assembly.GetManifestResourceNames()
 
-    'Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
-    '    Handles BackgroundWorker1.RunWorkerCompleted
-    '    Loading.Close()
-    'End Sub
+                If GetType(MDIMain).Assembly.GetManifestResourceStream(resource(17)) IsNot Nothing Then
+                    PictureBox1.Image = New System.Drawing.Bitmap(GetType(MDIMain).Assembly.GetManifestResourceStream(resource(17)))
+                Else
+                    PictureBox1.Image = New System.Drawing.Bitmap(GetType(MDIMain).Assembly.GetManifestResourceStream(resource(27)))
+                End If
+            Else
+                pathpictureparts = gnr.PathStartImageMethod
+                pathpictureparts = If(File.Exists(pathpictureparts), pathpictureparts, pathPictures & "img_default_logo.jpg")
+                If pathpictureparts IsNot Nothing Then
+                    PictureBox1.Load(pathpictureparts)
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+        Exit Sub
+    End Sub
 
-    'Private Sub backgroundWorker1_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
-    '    Handles BackgroundWorker1.DoWork
-    '    Dim strMethodName = LikeSession.currentAction
-    '    'If strMethodName.Equals("cmdsearchcode_Click") Then
-    '    launchPDev(sender, e)
-    '    'End If
-    '    'LoadCombos(sender, e)
-    'End Sub
-
-    'Private Sub backgroundWorker1_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
-    '    Handles BackgroundWorker1.ProgressChanged
-    '    frmProductsDevelopment.txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
-    'End Sub
-
-    'Private Sub launchPDev(ByVal sender As Object, ByVal e As DoWorkEventArgs)
-
-    '    Dim bgWorker = CType(sender, BackgroundWorker)
-    '    For index = 0 To 10
-    '        bgWorker.ReportProgress(index)
-    '        Thread.Sleep(1000)
-    '    Next
-    'End Sub
-
-#End Region
 End Class

@@ -24,12 +24,12 @@ Partial Class frmProductsDevelopment
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmProductsDevelopment))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.SSTab1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
@@ -320,7 +320,7 @@ Partial Class frmProductsDevelopment
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(826, 588)
+        Me.TabPage1.Size = New System.Drawing.Size(826, 645)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Projects"
         '
@@ -768,35 +768,35 @@ Partial Class frmProductsDevelopment
         Me.DataGridView1.AllowUserToResizeColumns = False
         Me.DataGridView1.AllowUserToResizeRows = False
         Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle22
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ProjectNo, Me.ProjectName, Me.DateEnt, Me.PersonInCharge, Me.Status, Me.hasDoc})
         Me.TableLayoutPanel1.SetColumnSpan(Me.DataGridView1, 11)
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle23
         Me.DataGridView1.Location = New System.Drawing.Point(3, 153)
         Me.DataGridView1.Name = "DataGridView1"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle24
         Me.DataGridView1.RowHeadersVisible = False
         Me.DataGridView1.RowHeadersWidth = 62
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -907,6 +907,7 @@ Partial Class frmProductsDevelopment
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
+        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -1019,15 +1020,15 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel15.Controls.Add(Me.lblPrPech, 6, 0)
         Me.TableLayoutPanel15.Controls.Add(Me.cmbuser2, 6, 1)
         Me.TableLayoutPanel15.Controls.Add(Me.cmdcmbUser2, 7, 1)
-        Me.TableLayoutPanel15.Location = New System.Drawing.Point(15, 231)
+        Me.TableLayoutPanel15.Location = New System.Drawing.Point(16, 256)
         Me.TableLayoutPanel15.Name = "TableLayoutPanel15"
         Me.TableLayoutPanel15.RowCount = 5
-        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31.0!))
-        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 272.0!))
-        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43.0!))
-        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 11.0!))
-        Me.TableLayoutPanel15.Size = New System.Drawing.Size(810, 406)
+        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
+        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 258.0!))
+        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42.0!))
+        Me.TableLayoutPanel15.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
+        Me.TableLayoutPanel15.Size = New System.Drawing.Size(810, 383)
         Me.TableLayoutPanel15.TabIndex = 5
         '
         'BindingNavigator2
@@ -1039,14 +1040,14 @@ Partial Class frmProductsDevelopment
         Me.BindingNavigator2.Dock = System.Windows.Forms.DockStyle.None
         Me.BindingNavigator2.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.BindingNavigator2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BindingNavigatorMoveFirstItem1, Me.BindingNavigatorMovePreviousItem1, Me.BindingNavigatorSeparator3, Me.BindingNavigatorPositionItem1, Me.BindingNavigatorCountItem1, Me.BindingNavigatorSeparator4, Me.BindingNavigatorMoveNextItem1, Me.BindingNavigatorMoveLastItem1, Me.BindingNavigatorSeparator5, Me.BindingNavigatorAddNewItem1, Me.BindingNavigatorDeleteItem1})
-        Me.BindingNavigator2.Location = New System.Drawing.Point(306, 378)
+        Me.BindingNavigator2.Location = New System.Drawing.Point(306, 350)
         Me.BindingNavigator2.MoveFirstItem = Me.BindingNavigatorMoveFirstItem1
         Me.BindingNavigator2.MoveLastItem = Me.BindingNavigatorMoveLastItem1
         Me.BindingNavigator2.MoveNextItem = Me.BindingNavigatorMoveNextItem1
         Me.BindingNavigator2.MovePreviousItem = Me.BindingNavigatorMovePreviousItem1
         Me.BindingNavigator2.Name = "BindingNavigator2"
         Me.BindingNavigator2.PositionItem = Me.BindingNavigatorPositionItem1
-        Me.BindingNavigator2.Size = New System.Drawing.Size(229, 28)
+        Me.BindingNavigator2.Size = New System.Drawing.Size(229, 31)
         Me.BindingNavigator2.TabIndex = 6
         Me.BindingNavigator2.Text = "BindingNavigator2"
         '
@@ -1063,7 +1064,7 @@ Partial Class frmProductsDevelopment
         'BindingNavigatorCountItem1
         '
         Me.BindingNavigatorCountItem1.Name = "BindingNavigatorCountItem1"
-        Me.BindingNavigatorCountItem1.Size = New System.Drawing.Size(35, 25)
+        Me.BindingNavigatorCountItem1.Size = New System.Drawing.Size(35, 28)
         Me.BindingNavigatorCountItem1.Text = "of {0}"
         Me.BindingNavigatorCountItem1.ToolTipText = "Total number of items"
         '
@@ -1083,7 +1084,7 @@ Partial Class frmProductsDevelopment
         Me.BindingNavigatorMoveFirstItem1.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem1.Image"), System.Drawing.Image)
         Me.BindingNavigatorMoveFirstItem1.Name = "BindingNavigatorMoveFirstItem1"
         Me.BindingNavigatorMoveFirstItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveFirstItem1.Size = New System.Drawing.Size(28, 25)
+        Me.BindingNavigatorMoveFirstItem1.Size = New System.Drawing.Size(28, 28)
         Me.BindingNavigatorMoveFirstItem1.Text = "Move first"
         '
         'BindingNavigatorMovePreviousItem1
@@ -1092,18 +1093,19 @@ Partial Class frmProductsDevelopment
         Me.BindingNavigatorMovePreviousItem1.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem1.Image"), System.Drawing.Image)
         Me.BindingNavigatorMovePreviousItem1.Name = "BindingNavigatorMovePreviousItem1"
         Me.BindingNavigatorMovePreviousItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMovePreviousItem1.Size = New System.Drawing.Size(28, 25)
+        Me.BindingNavigatorMovePreviousItem1.Size = New System.Drawing.Size(28, 28)
         Me.BindingNavigatorMovePreviousItem1.Text = "Move previous"
         '
         'BindingNavigatorSeparator3
         '
         Me.BindingNavigatorSeparator3.Name = "BindingNavigatorSeparator3"
-        Me.BindingNavigatorSeparator3.Size = New System.Drawing.Size(6, 28)
+        Me.BindingNavigatorSeparator3.Size = New System.Drawing.Size(6, 31)
         '
         'BindingNavigatorPositionItem1
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
+        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"
@@ -1112,7 +1114,7 @@ Partial Class frmProductsDevelopment
         'BindingNavigatorSeparator4
         '
         Me.BindingNavigatorSeparator4.Name = "BindingNavigatorSeparator4"
-        Me.BindingNavigatorSeparator4.Size = New System.Drawing.Size(6, 28)
+        Me.BindingNavigatorSeparator4.Size = New System.Drawing.Size(6, 31)
         '
         'BindingNavigatorMoveNextItem1
         '
@@ -1120,7 +1122,7 @@ Partial Class frmProductsDevelopment
         Me.BindingNavigatorMoveNextItem1.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem1.Image"), System.Drawing.Image)
         Me.BindingNavigatorMoveNextItem1.Name = "BindingNavigatorMoveNextItem1"
         Me.BindingNavigatorMoveNextItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveNextItem1.Size = New System.Drawing.Size(28, 25)
+        Me.BindingNavigatorMoveNextItem1.Size = New System.Drawing.Size(28, 28)
         Me.BindingNavigatorMoveNextItem1.Text = "Move next"
         '
         'BindingNavigatorMoveLastItem1
@@ -1129,13 +1131,13 @@ Partial Class frmProductsDevelopment
         Me.BindingNavigatorMoveLastItem1.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem1.Image"), System.Drawing.Image)
         Me.BindingNavigatorMoveLastItem1.Name = "BindingNavigatorMoveLastItem1"
         Me.BindingNavigatorMoveLastItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveLastItem1.Size = New System.Drawing.Size(28, 25)
+        Me.BindingNavigatorMoveLastItem1.Size = New System.Drawing.Size(28, 28)
         Me.BindingNavigatorMoveLastItem1.Text = "Move last"
         '
         'BindingNavigatorSeparator5
         '
         Me.BindingNavigatorSeparator5.Name = "BindingNavigatorSeparator5"
-        Me.BindingNavigatorSeparator5.Size = New System.Drawing.Size(6, 28)
+        Me.BindingNavigatorSeparator5.Size = New System.Drawing.Size(6, 31)
         '
         'lblCtpNoMore
         '
@@ -1165,9 +1167,9 @@ Partial Class frmProductsDevelopment
         Me.Panel3.BackColor = System.Drawing.SystemColors.GrayText
         Me.TableLayoutPanel15.SetColumnSpan(Me.Panel3, 8)
         Me.Panel3.Controls.Add(Me.TableLayoutPanel12)
-        Me.Panel3.Location = New System.Drawing.Point(3, 338)
+        Me.Panel3.Location = New System.Drawing.Point(3, 311)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(802, 37)
+        Me.Panel3.Size = New System.Drawing.Size(802, 36)
         Me.Panel3.TabIndex = 4
         '
         'TableLayoutPanel12
@@ -1265,10 +1267,10 @@ Partial Class frmProductsDevelopment
         '
         'txtPartNoMore
         '
-        Me.txtPartNoMore.Location = New System.Drawing.Point(3, 35)
+        Me.txtPartNoMore.Location = New System.Drawing.Point(3, 23)
         Me.txtPartNoMore.Multiline = True
         Me.txtPartNoMore.Name = "txtPartNoMore"
-        Me.txtPartNoMore.Size = New System.Drawing.Size(114, 25)
+        Me.txtPartNoMore.Size = New System.Drawing.Size(114, 24)
         Me.txtPartNoMore.TabIndex = 4
         '
         'dgvProjectDetails
@@ -1278,43 +1280,43 @@ Partial Class frmProductsDevelopment
         Me.dgvProjectDetails.AllowUserToResizeColumns = False
         Me.dgvProjectDetails.AllowUserToResizeRows = False
         Me.dgvProjectDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvProjectDetails.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvProjectDetails.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle19
         Me.dgvProjectDetails.ColumnHeadersHeight = 21
         Me.dgvProjectDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvProjectDetails.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DateColumn, Me.PartNo, Me.CTPNo, Me.MFRNo, Me.VendorColumn, Me.VendorNameColumn, Me.StatusColumn, Me.JiraTaskColumn, Me.hasDoc2, Me.clPerson})
         Me.TableLayoutPanel15.SetColumnSpan(Me.dgvProjectDetails, 8)
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvProjectDetails.DefaultCellStyle = DataGridViewCellStyle5
-        Me.dgvProjectDetails.Location = New System.Drawing.Point(3, 66)
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvProjectDetails.DefaultCellStyle = DataGridViewCellStyle20
+        Me.dgvProjectDetails.Location = New System.Drawing.Point(3, 53)
         Me.dgvProjectDetails.Name = "dgvProjectDetails"
         Me.dgvProjectDetails.ReadOnly = True
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvProjectDetails.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvProjectDetails.RowHeadersDefaultCellStyle = DataGridViewCellStyle21
         Me.dgvProjectDetails.RowHeadersVisible = False
         Me.dgvProjectDetails.RowHeadersWidth = 62
         Me.dgvProjectDetails.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvProjectDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvProjectDetails.ShowCellToolTips = False
-        Me.dgvProjectDetails.Size = New System.Drawing.Size(802, 266)
+        Me.dgvProjectDetails.Size = New System.Drawing.Size(802, 252)
         Me.dgvProjectDetails.TabIndex = 1
         '
         'DateColumn
@@ -1391,26 +1393,26 @@ Partial Class frmProductsDevelopment
         '
         'txtCtpNoMore
         '
-        Me.txtCtpNoMore.Location = New System.Drawing.Point(188, 35)
+        Me.txtCtpNoMore.Location = New System.Drawing.Point(188, 23)
         Me.txtCtpNoMore.Multiline = True
         Me.txtCtpNoMore.Name = "txtCtpNoMore"
-        Me.txtCtpNoMore.Size = New System.Drawing.Size(114, 25)
+        Me.txtCtpNoMore.Size = New System.Drawing.Size(114, 24)
         Me.txtCtpNoMore.TabIndex = 5
         '
         'txtMfrNoMore
         '
-        Me.txtMfrNoMore.Location = New System.Drawing.Point(373, 35)
+        Me.txtMfrNoMore.Location = New System.Drawing.Point(373, 23)
         Me.txtMfrNoMore.Multiline = True
         Me.txtMfrNoMore.Name = "txtMfrNoMore"
-        Me.txtMfrNoMore.Size = New System.Drawing.Size(114, 25)
+        Me.txtMfrNoMore.Size = New System.Drawing.Size(114, 24)
         Me.txtMfrNoMore.TabIndex = 6
         '
         'cmdPartNoMore
         '
         Me.cmdPartNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdPartNoMore.Location = New System.Drawing.Point(124, 35)
+        Me.cmdPartNoMore.Location = New System.Drawing.Point(124, 23)
         Me.cmdPartNoMore.Name = "cmdPartNoMore"
-        Me.cmdPartNoMore.Size = New System.Drawing.Size(58, 25)
+        Me.cmdPartNoMore.Size = New System.Drawing.Size(58, 24)
         Me.cmdPartNoMore.TabIndex = 8
         Me.cmdPartNoMore.Text = "Search"
         Me.cmdPartNoMore.UseVisualStyleBackColor = True
@@ -1418,9 +1420,9 @@ Partial Class frmProductsDevelopment
         'cmdCtpNoMore
         '
         Me.cmdCtpNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdCtpNoMore.Location = New System.Drawing.Point(309, 35)
+        Me.cmdCtpNoMore.Location = New System.Drawing.Point(309, 23)
         Me.cmdCtpNoMore.Name = "cmdCtpNoMore"
-        Me.cmdCtpNoMore.Size = New System.Drawing.Size(58, 25)
+        Me.cmdCtpNoMore.Size = New System.Drawing.Size(58, 24)
         Me.cmdCtpNoMore.TabIndex = 9
         Me.cmdCtpNoMore.Text = "Search"
         Me.cmdCtpNoMore.UseVisualStyleBackColor = True
@@ -1428,9 +1430,9 @@ Partial Class frmProductsDevelopment
         'cmdMfrNoMore
         '
         Me.cmdMfrNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdMfrNoMore.Location = New System.Drawing.Point(494, 35)
+        Me.cmdMfrNoMore.Location = New System.Drawing.Point(494, 23)
         Me.cmdMfrNoMore.Name = "cmdMfrNoMore"
-        Me.cmdMfrNoMore.Size = New System.Drawing.Size(58, 25)
+        Me.cmdMfrNoMore.Size = New System.Drawing.Size(58, 24)
         Me.cmdMfrNoMore.TabIndex = 10
         Me.cmdMfrNoMore.Text = "Search"
         Me.cmdMfrNoMore.UseVisualStyleBackColor = True
@@ -1453,7 +1455,7 @@ Partial Class frmProductsDevelopment
         Me.lblPrPech.Location = New System.Drawing.Point(558, 4)
         Me.lblPrPech.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.lblPrPech.Name = "lblPrPech"
-        Me.lblPrPech.Size = New System.Drawing.Size(117, 20)
+        Me.lblPrPech.Size = New System.Drawing.Size(117, 16)
         Me.lblPrPech.TabIndex = 14
         Me.lblPrPech.Text = "Person in Charge"
         '
@@ -1461,7 +1463,7 @@ Partial Class frmProductsDevelopment
         '
         Me.cmbuser2.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbuser2.FormattingEnabled = True
-        Me.cmbuser2.Location = New System.Drawing.Point(558, 35)
+        Me.cmbuser2.Location = New System.Drawing.Point(558, 23)
         Me.cmbuser2.Name = "cmbuser2"
         Me.cmbuser2.Size = New System.Drawing.Size(178, 25)
         Me.cmbuser2.TabIndex = 15
@@ -1469,9 +1471,9 @@ Partial Class frmProductsDevelopment
         'cmdcmbUser2
         '
         Me.cmdcmbUser2.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdcmbUser2.Location = New System.Drawing.Point(744, 35)
+        Me.cmdcmbUser2.Location = New System.Drawing.Point(744, 23)
         Me.cmdcmbUser2.Name = "cmdcmbUser2"
-        Me.cmdcmbUser2.Size = New System.Drawing.Size(59, 25)
+        Me.cmdcmbUser2.Size = New System.Drawing.Size(59, 24)
         Me.cmdcmbUser2.TabIndex = 16
         Me.cmdcmbUser2.Text = "Search"
         Me.cmdcmbUser2.UseVisualStyleBackColor = True
@@ -1479,41 +1481,43 @@ Partial Class frmProductsDevelopment
         'TableLayoutPanel3
         '
         Me.TableLayoutPanel3.ColumnCount = 4
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30.06834!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 69.93166!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 237.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132.0!))
-        Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 1)
-        Me.TableLayoutPanel3.Controls.Add(Me.Label8, 0, 2)
-        Me.TableLayoutPanel3.Controls.Add(Me.Label9, 0, 3)
-        Me.TableLayoutPanel3.Controls.Add(Me.Label10, 0, 4)
-        Me.TableLayoutPanel3.Controls.Add(Me.Label11, 0, 5)
-        Me.TableLayoutPanel3.Controls.Add(Me.Label12, 0, 6)
-        Me.TableLayoutPanel3.Controls.Add(Me.txtCode, 1, 1)
-        Me.TableLayoutPanel3.Controls.Add(Me.txtname, 1, 2)
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.95966!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.04034!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 248.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 212.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.cmbprstatus, 1, 4)
-        Me.TableLayoutPanel3.Controls.Add(Me.cmbuser1, 1, 5)
-        Me.TableLayoutPanel3.Controls.Add(Me.txtainfo, 1, 6)
-        Me.TableLayoutPanel3.Controls.Add(Me.DTPicker1, 1, 3)
         Me.TableLayoutPanel3.Controls.Add(Me.Label41, 0, 0)
+        Me.TableLayoutPanel3.Controls.Add(Me.txtname, 2, 2)
+        Me.TableLayoutPanel3.Controls.Add(Me.txtCode, 1, 2)
+        Me.TableLayoutPanel3.Controls.Add(Me.Label7, 1, 1)
+        Me.TableLayoutPanel3.Controls.Add(Me.Label8, 2, 1)
+        Me.TableLayoutPanel3.Controls.Add(Me.DTPicker1, 2, 4)
+        Me.TableLayoutPanel3.Controls.Add(Me.Label9, 2, 3)
+        Me.TableLayoutPanel3.Controls.Add(Me.Label10, 1, 3)
+        Me.TableLayoutPanel3.Controls.Add(Me.cmbuser1, 1, 6)
+        Me.TableLayoutPanel3.Controls.Add(Me.Label11, 1, 5)
+        Me.TableLayoutPanel3.Controls.Add(Me.txtainfo, 1, 8)
+        Me.TableLayoutPanel3.Controls.Add(Me.Label12, 1, 7)
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(15, 6)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
-        Me.TableLayoutPanel3.RowCount = 7
+        Me.TableLayoutPanel3.RowCount = 9
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.43193!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.90141!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(808, 219)
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 19.0!))
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34.0!))
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(808, 244)
         Me.TableLayoutPanel3.TabIndex = 0
         '
         'Label7
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(3, 35)
+        Me.Label7.Location = New System.Drawing.Point(218, 35)
         Me.Label7.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(71, 13)
@@ -1524,7 +1528,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(3, 66)
+        Me.Label8.Location = New System.Drawing.Point(350, 35)
         Me.Label8.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(100, 13)
@@ -1535,7 +1539,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(3, 97)
+        Me.Label9.Location = New System.Drawing.Point(350, 88)
         Me.Label9.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(82, 13)
@@ -1546,7 +1550,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(3, 128)
+        Me.Label10.Location = New System.Drawing.Point(218, 88)
         Me.Label10.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(87, 13)
@@ -1557,7 +1561,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(3, 159)
+        Me.Label11.Location = New System.Drawing.Point(218, 141)
         Me.Label11.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(121, 13)
@@ -1568,7 +1572,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(3, 190)
+        Me.Label12.Location = New System.Drawing.Point(218, 194)
         Me.Label12.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(64, 13)
@@ -1577,55 +1581,56 @@ Partial Class frmProductsDevelopment
         '
         'txtCode
         '
-        Me.txtCode.Location = New System.Drawing.Point(135, 33)
+        Me.txtCode.Location = New System.Drawing.Point(218, 53)
         Me.txtCode.Multiline = True
         Me.txtCode.Name = "txtCode"
-        Me.txtCode.Size = New System.Drawing.Size(188, 25)
+        Me.txtCode.Size = New System.Drawing.Size(126, 24)
         Me.txtCode.TabIndex = 6
         '
         'txtname
         '
-        Me.txtname.Location = New System.Drawing.Point(135, 64)
+        Me.txtname.Location = New System.Drawing.Point(350, 53)
         Me.txtname.Multiline = True
         Me.txtname.Name = "txtname"
-        Me.txtname.Size = New System.Drawing.Size(188, 25)
+        Me.txtname.Size = New System.Drawing.Size(242, 24)
         Me.txtname.TabIndex = 7
         '
         'cmbprstatus
         '
         Me.cmbprstatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbprstatus.FormattingEnabled = True
-        Me.cmbprstatus.Location = New System.Drawing.Point(135, 126)
+        Me.cmbprstatus.Location = New System.Drawing.Point(218, 106)
         Me.cmbprstatus.Name = "cmbprstatus"
-        Me.cmbprstatus.Size = New System.Drawing.Size(188, 25)
+        Me.cmbprstatus.Size = New System.Drawing.Size(126, 25)
         Me.cmbprstatus.TabIndex = 9
         '
         'cmbuser1
         '
+        Me.TableLayoutPanel3.SetColumnSpan(Me.cmbuser1, 2)
         Me.cmbuser1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbuser1.FormattingEnabled = True
-        Me.cmbuser1.Location = New System.Drawing.Point(135, 157)
+        Me.cmbuser1.Location = New System.Drawing.Point(218, 159)
         Me.cmbuser1.Name = "cmbuser1"
-        Me.cmbuser1.Size = New System.Drawing.Size(188, 25)
+        Me.cmbuser1.Size = New System.Drawing.Size(374, 25)
         Me.cmbuser1.TabIndex = 10
         '
         'txtainfo
         '
-        Me.TableLayoutPanel3.SetColumnSpan(Me.txtainfo, 3)
-        Me.txtainfo.Location = New System.Drawing.Point(135, 188)
+        Me.TableLayoutPanel3.SetColumnSpan(Me.txtainfo, 2)
+        Me.txtainfo.Location = New System.Drawing.Point(218, 211)
         Me.txtainfo.Multiline = True
         Me.txtainfo.Name = "txtainfo"
         Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtainfo.Size = New System.Drawing.Size(300, 28)
+        Me.txtainfo.Size = New System.Drawing.Size(374, 30)
         Me.txtainfo.TabIndex = 11
         '
         'DTPicker1
         '
         Me.DTPicker1.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.DTPicker1.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker1.Location = New System.Drawing.Point(135, 95)
+        Me.DTPicker1.Location = New System.Drawing.Point(350, 106)
         Me.DTPicker1.Name = "DTPicker1"
-        Me.DTPicker1.Size = New System.Drawing.Size(188, 25)
+        Me.DTPicker1.Size = New System.Drawing.Size(242, 25)
         Me.DTPicker1.TabIndex = 12
         '
         'Label41
@@ -1646,7 +1651,7 @@ Partial Class frmProductsDevelopment
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(826, 653)
+        Me.TabPage3.Size = New System.Drawing.Size(826, 645)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
         '
@@ -1702,7 +1707,6 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.Controls.Add(Me.TableLayoutPanel11, 3, 15)
         Me.TableLayoutPanel4.Controls.Add(Me.Panel5, 4, 9)
         Me.TableLayoutPanel4.Controls.Add(Me.Panel6, 4, 14)
-        Me.TableLayoutPanel4.Controls.Add(Me.Panel4, 0, 18)
         Me.TableLayoutPanel4.Controls.Add(Me.Label32, 2, 11)
         Me.TableLayoutPanel4.Controls.Add(Me.txtmfrno, 1, 9)
         Me.TableLayoutPanel4.Controls.Add(Me.Label22, 0, 9)
@@ -1719,6 +1723,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.Controls.Add(Me.cmbmajorcode, 2, 6)
         Me.TableLayoutPanel4.Controls.Add(Me.chknew, 2, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.chkSupplier, 3, 0)
+        Me.TableLayoutPanel4.Controls.Add(Me.Panel4, 0, 18)
         Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
@@ -1738,10 +1743,10 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 49.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 41.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 11.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(820, 633)
         Me.TableLayoutPanel4.TabIndex = 0
@@ -1918,7 +1923,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.Location = New System.Drawing.Point(0, 509)
+        Me.Label29.Location = New System.Drawing.Point(0, 516)
         Me.Label29.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(53, 13)
@@ -2121,7 +2126,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.Location = New System.Drawing.Point(0, 551)
+        Me.Label30.Location = New System.Drawing.Point(0, 558)
         Me.Label30.Margin = New System.Windows.Forms.Padding(0, 5, 0, 0)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(69, 13)
@@ -2131,17 +2136,17 @@ Partial Class frmProductsDevelopment
         'txtcomm
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtcomm, 3)
-        Me.txtcomm.Location = New System.Drawing.Point(106, 549)
+        Me.txtcomm.Location = New System.Drawing.Point(106, 556)
         Me.txtcomm.Multiline = True
         Me.txtcomm.Name = "txtcomm"
         Me.txtcomm.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtcomm.Size = New System.Drawing.Size(401, 35)
+        Me.txtcomm.Size = New System.Drawing.Size(401, 34)
         Me.txtcomm.TabIndex = 42
         '
         'txtBenefits
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.txtBenefits, 3)
-        Me.txtBenefits.Location = New System.Drawing.Point(106, 507)
+        Me.txtBenefits.Location = New System.Drawing.Point(106, 514)
         Me.txtBenefits.Multiline = True
         Me.txtBenefits.Name = "txtBenefits"
         Me.txtBenefits.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -2215,9 +2220,9 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel10.Location = New System.Drawing.Point(239, 464)
         Me.TableLayoutPanel10.Name = "TableLayoutPanel10"
         Me.TableLayoutPanel10.RowCount = 2
-        Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel10.Size = New System.Drawing.Size(126, 37)
+        Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.63636!))
+        Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.36364!))
+        Me.TableLayoutPanel10.Size = New System.Drawing.Size(126, 44)
         Me.TableLayoutPanel10.TabIndex = 56
         '
         'Label34
@@ -2233,7 +2238,7 @@ Partial Class frmProductsDevelopment
         'DTPicker3
         '
         Me.DTPicker3.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker3.Location = New System.Drawing.Point(3, 21)
+        Me.DTPicker3.Location = New System.Drawing.Point(3, 20)
         Me.DTPicker3.Name = "DTPicker3"
         Me.DTPicker3.Size = New System.Drawing.Size(120, 20)
         Me.DTPicker3.TabIndex = 1
@@ -2247,9 +2252,9 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel11.Location = New System.Drawing.Point(371, 464)
         Me.TableLayoutPanel11.Name = "TableLayoutPanel11"
         Me.TableLayoutPanel11.RowCount = 2
-        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel11.Size = New System.Drawing.Size(136, 37)
+        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.63636!))
+        Me.TableLayoutPanel11.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.36364!))
+        Me.TableLayoutPanel11.Size = New System.Drawing.Size(136, 44)
         Me.TableLayoutPanel11.TabIndex = 57
         '
         'Label35
@@ -2265,7 +2270,7 @@ Partial Class frmProductsDevelopment
         'DTPicker4
         '
         Me.DTPicker4.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker4.Location = New System.Drawing.Point(3, 21)
+        Me.DTPicker4.Location = New System.Drawing.Point(3, 20)
         Me.DTPicker4.Name = "DTPicker4"
         Me.DTPicker4.Size = New System.Drawing.Size(130, 20)
         Me.DTPicker4.TabIndex = 1
@@ -2424,7 +2429,7 @@ Partial Class frmProductsDevelopment
         Me.Panel4.BackColor = System.Drawing.SystemColors.GrayText
         Me.TableLayoutPanel4.SetColumnSpan(Me.Panel4, 5)
         Me.Panel4.Controls.Add(Me.TableLayoutPanel13)
-        Me.Panel4.Location = New System.Drawing.Point(3, 590)
+        Me.Panel4.Location = New System.Drawing.Point(3, 596)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(812, 34)
         Me.Panel4.TabIndex = 4

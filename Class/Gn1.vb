@@ -314,6 +314,26 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private PathStartImage As String
+    Public Property PathStartImageMethod() As String
+        Get
+            Return PathStartImage
+        End Get
+        Set(ByVal value As String)
+            PathStartImage = value
+        End Set
+    End Property
+
+    Private UrlPathImgNew As String
+    Public Property UrlPathImgNewMethod() As String
+        Get
+            Return UrlPathImgNew
+        End Get
+        Set(ByVal value As String)
+            UrlPathImgNew = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -338,6 +358,9 @@ NotInheritable Class Gn1
         VendorOEMCodeDenied = ConfigurationManager.AppSettings("vendorOEMCodeDenied").ToString()
         VendorCodesDenied = ConfigurationManager.AppSettings("vendorCodesDenied").ToString()
         VendorWhiteFlag = ConfigurationManager.AppSettings("itemCategories").ToString()
+        PathStartImage = ConfigurationManager.AppSettings("urlPathStartImg").ToString()
+        UrlPathImgNew = ConfigurationManager.AppSettings("urlPathImgNew").ToString()
+
 
     End Sub
 
