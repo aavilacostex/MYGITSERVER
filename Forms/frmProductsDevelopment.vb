@@ -20,6 +20,7 @@ Public Class frmProductsDevelopment
     Dim partstoshow As String
     Dim toemails As String = ""
     Dim gnr As Gn1 = New Gn1()
+    Dim wm As WatermarkTextBox = New WatermarkTextBox()
     'Public Const PageSize = 10
     'Public Property TotalRecords() As Integer
     'Dim urlPathBase As String = "https://costex.atlassian.net/browse/"
@@ -54,13 +55,13 @@ Public Class frmProductsDevelopment
             SetValues()
 
             userid = frmLogin.txtUserName.Text
-            If UCase(userid) = "AALZATE" Then
+            If UCase(userid) = "AALZATE" Or UCase(userid) = "AAVILA" Then
                 flagallow = 1
             End If
 
             FillDDLStatus1()
             FillDDlPrPech()
-
+            FillDDlPrPech1()
 
             'testMethod()
             'test purpose
@@ -202,9 +203,60 @@ Public Class frmProductsDevelopment
             'dsUser.Tables(0).Rows.Add(newRow)
             dsUser.Tables(0).Rows.InsertAt(newRow, 0)
 
+            Dim newRow1 As DataRow = dsUser.Tables(0).NewRow
+            newRow1("USUSER") = ""
+            newRow1("USNAME") = ""
+            newRow1("FullValue") = ""
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsUser.Tables(0).Rows.InsertAt(newRow1, 0)
+
             cmbuser2.DataSource = dsUser.Tables(0)
             cmbuser2.DisplayMember = "FullValue"
             cmbuser2.ValueMember = "USUSER"
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub FillDDlPrPech1()
+        Dim exMessage As String = " "
+        Dim CleanUser As String
+        Try
+            Dim dsUser = gnr.FillDDLUser()
+
+            dsUser.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsUser.Tables(0).Rows.Count - 1
+                If dsUser.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsUser.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsUser.Tables(0).Rows(i).Item(1).ToString()
+                    CleanUser = Trim(dsUser.Tables(0).Rows(i).Item(0).ToString())
+                    dsUser.Tables(0).Rows(i).Item(2) = fllValueName
+                    dsUser.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+
+            Dim newRow As DataRow = dsUser.Tables(0).NewRow
+            newRow("USUSER") = "N/A"
+            newRow("USNAME") = "NO NAME"
+            newRow("FullValue") = "N/A -- NO NAME"
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsUser.Tables(0).Rows.InsertAt(newRow, 0)
+
+            Dim newRow1 As DataRow = dsUser.Tables(0).NewRow
+            newRow1("USUSER") = ""
+            newRow1("USNAME") = ""
+            newRow1("FullValue") = ""
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsUser.Tables(0).Rows.InsertAt(newRow1, 0)
+
+            cmbPrpech.DataSource = dsUser.Tables(0)
+            cmbPrpech.DisplayMember = "FullValue"
+            cmbPrpech.ValueMember = "USUSER"
+            cmbPrpech.SelectedIndex = -1
+
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
@@ -237,10 +289,17 @@ Public Class frmProductsDevelopment
             'dsUser.Tables(0).Rows.Add(newRow)
             dsUser.Tables(0).Rows.InsertAt(newRow, 0)
 
-            cmbPrpech.DataSource = dsUser.Tables(0)
-            cmbPrpech.DisplayMember = "FullValue"
-            cmbPrpech.ValueMember = "USUSER"
-            cmbPrpech.SelectedIndex = -1
+            Dim newRow1 As DataRow = dsUser.Tables(0).NewRow
+            newRow1("USUSER") = ""
+            newRow1("USNAME") = ""
+            newRow1("FullValue") = ""
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsUser.Tables(0).Rows.InsertAt(newRow1, 0)
+
+            MyComboBox1.DataSource = dsUser.Tables(0)
+            MyComboBox1.DisplayMember = "FullValue"
+            MyComboBox1.ValueMember = "USUSER"
+            MyComboBox1.SelectedIndex = -1
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -450,26 +509,8 @@ Public Class frmProductsDevelopment
             ds.Locale = CultureInfo.InvariantCulture
 
             sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"
-            'If sql.Length() > 70 Then
-            '    Dim strValues As Array = strwhere.Split(" ")
-            '    Dim i = 0
-            '    Dim strResult As String = Nothing
-            '    For Each item As String In strValues
-            '        If i < 4 Then
-            '            strResult += item + " "
-            '            i += 1
-            '        Else
-            '            Exit For
-            '        End If
-            '    Next
-            '    strwhere = strResult
-            '    sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"
-            'Else
-            '    sql = "SELECT * FROM PRDVLH " & strwhere & " ORDER BY PRDATE DESC"
-            'End If
 
             'get the query results
-
             ds = gnr.FillGrid(sql)
             If ds IsNot Nothing Then
 
@@ -506,7 +547,6 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(5).DataPropertyName = ""
 
 
-
                     'fill second tab if one record in datagrid
                     If ds.Tables(0).Rows.Count = 1 Then
 
@@ -538,12 +578,13 @@ Public Class frmProductsDevelopment
                     End If
 
                     'FILL GRID
-                    'DataGridView1.DataSource = ds.Tables(0)
                     LikeSession.dsDatagridview1 = ds
-                    'If ds.Tables(0).Rows.Count > 10 Then
-                    toPaginateDs(DataGridView1, ds)
-                    'toPaginate(DataGridView1)
-                    'End If
+                    If ds.Tables(0).Rows.Count > 10 Then
+                        toPaginateDs(DataGridView1, ds)
+                    Else
+                        DataGridView1.DataSource = ds.Tables(0)
+                        DataGridView1.Refresh()
+                    End If
                 Else
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
@@ -608,7 +649,14 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(4).DataPropertyName = "PRSTAT"
 
                     'FILL GRID
-                    DataGridView1.DataSource = ds.Tables(0)
+                    'DataGridView1.DataSource = ds.Tables(0)
+                    LikeSession.dsDatagridview1 = ds
+                    If ds.Tables(0).Rows.Count > 10 Then
+                        toPaginateDs(DataGridView1, ds)
+                    Else
+                        DataGridView1.DataSource = ds.Tables(0)
+                        DataGridView1.Refresh()
+                    End If
                 Else
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
@@ -711,10 +759,12 @@ Public Class frmProductsDevelopment
 
                     'dgvProjectDetails.DataSource = ds.Tables(0)
                     LikeSession.dsDgvProjectDetails = ds
-                    'If ds.Tables(0).Rows.Count > 10 Then
-                    toPaginateDs(dgvProjectDetails, ds)
-                    'toPaginate(dgvProjectDetails)
-                    'End If
+                    If ds.Tables(0).Rows.Count > 10 Then
+                        toPaginateDs(dgvProjectDetails, ds)
+                    Else
+                        dgvProjectDetails.DataSource = ds.Tables(0)
+                        dgvProjectDetails.Refresh()
+                    End If
 
                     'dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
                     'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
@@ -913,7 +963,9 @@ Public Class frmProductsDevelopment
                     LikeSession.dsDatagridview1 = ds
                     If ds.Tables(0).Rows.Count > 10 Then
                         toPaginateDs(DataGridView1, ds)
-                        'toPaginate(DataGridView1)
+                    Else
+                        DataGridView1.DataSource = ds.Tables(0)
+                        'DataGridView1.Refresh()
                     End If
                 Else
                     DataGridView1.DataSource = Nothing
@@ -1047,12 +1099,14 @@ Public Class frmProductsDevelopment
         Dim NewState As String = " "
 
         For Each row As DataGridViewRow In dgvProjectDetails.Rows
-            CurrentState = row.Cells(6).Value.ToString()
-            If CurrentState.Length <= 4 Then
-                NewState = gnr.GetProjectStatusDescription(CurrentState)
-                row.Cells(6).Value = NewState
-            Else
-                Exit For
+            CurrentState = If(row.Cells(6).Value IsNot Nothing, row.Cells(6).Value.ToString(), Nothing)
+            If CurrentState IsNot Nothing Then
+                If CurrentState.Length <= 4 Then
+                    NewState = gnr.GetProjectStatusDescription(CurrentState)
+                    row.Cells(6).Value = NewState
+                Else
+                    Exit For
+                End If
             End If
         Next
 
@@ -1423,19 +1477,19 @@ Public Class frmProductsDevelopment
 
     End Sub
 
-    'Private Sub dgvProjectDetails_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
-    'Handles dgvProjectDetails.CellContentClick
-    '    If e.ColumnIndex = 7 Then
-    '        Dim UrlAddress = gnr.JiraPathBaseValue + dgvProjectDetails(e.ColumnIndex, e.RowIndex).Value.ToString()
-    '        If System.Uri.IsWellFormedUriString(UrlAddress, UriKind.Absolute) Then
-    '            Process.Start(UrlAddress)
-    '        Else
-    '            MessageBox.Show("The formed url has error.", "CTP System", MessageBoxButtons.OK)
-    '        End If
-    '    Else
-    '        DataGridView1_DoubleClick(sender, e)
-    '    End If
-    'End Sub
+    Private Sub dgvProjectDetails_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
+    Handles dgvProjectDetails.CellContentClick
+        If e.ColumnIndex = 7 Then
+            Dim UrlAddress = gnr.JiraPathBaseValue + dgvProjectDetails(e.ColumnIndex, e.RowIndex).Value.ToString()
+            If System.Uri.IsWellFormedUriString(UrlAddress, UriKind.Absolute) Then
+                Process.Start(UrlAddress)
+            Else
+                MessageBox.Show("The formed url has error.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Else
+            DataGridView1_DoubleClick(sender, e)
+        End If
+    End Sub
 
     Private Sub dgvProjectDetails_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
     Handles dgvProjectDetails.CellFormatting
@@ -1450,16 +1504,18 @@ Public Class frmProductsDevelopment
         ElseIf e.ColumnIndex = 8 Then
             If Not String.IsNullOrEmpty(txtCode.Text) Then
                 Dim projectNo = txtCode.Text
-                Dim partNo = dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value.ToString()
+                Dim partNo = If(dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value IsNot Nothing, dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value.ToString(), Nothing)
                 Dim DicRefDocs = getReferenceDocuments(projectNo, partNo)
-                For Each pair As KeyValuePair(Of String, String) In DicRefDocs
-                    If pair.Value.ToString() = "True" Then
-                        dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "Yes"
-                    Else
-                        dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "No"
-                    End If
-                    'dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = pair.Value.ToString()
-                Next
+                If DicRefDocs IsNot Nothing Then
+                    For Each pair As KeyValuePair(Of String, String) In DicRefDocs
+                        If pair.Value.ToString() = "True" Then
+                            dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "Yes"
+                        Else
+                            dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "No"
+                        End If
+                        'dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = pair.Value.ToString()
+                    Next
+                End If
             End If
         End If
     End Sub
@@ -1618,23 +1674,54 @@ Public Class frmProductsDevelopment
         cmdSave2.Enabled = True
     End Sub
 
+    Private Sub txtpartno_TextChanged(sender As Object, e As EventArgs) Handles txtpartno.TextChanged
+        If Not String.IsNullOrEmpty(txtpartno.Text) Then
+            TabPage3.Name = "Part No. " & txtpartno.Text
+        End If
+    End Sub
+
+    Private Sub txtsearchcode_TextChanged(sender As Object, e As EventArgs) Handles txtsearchcode.TextChanged
+        txtsearchcode.Text = txtsearchcode.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub txtsearch_TextChanged(sender As Object, e As EventArgs) Handles txtsearch.TextChanged
+        txtsearch.Text = txtsearch.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub txtJiratasksearch_TextChanged(sender As Object, e As EventArgs) Handles txtJiratasksearch.TextChanged
+        txtJiratasksearch.Text = txtJiratasksearch.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub txtsearch1_TextChanged(sender As Object, e As EventArgs) Handles txtsearch1.TextChanged
+        txtsearch1.Text = txtsearch1.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub txtsearchpart_TextChanged(sender As Object, e As EventArgs) Handles txtsearchpart.TextChanged
+        txtsearchpart.Text = txtsearchpart.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub cmbPrpech_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbPrpech.SelectedIndexChanged
+        txtsearchcode.Text = txtsearchcode.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub cmbstatus1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbstatus1.SelectedIndexChanged
+        txtsearchcode.Text = txtsearchcode.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub txtsearchctp_TextChanged(sender As Object, e As EventArgs) Handles txtsearchctp.TextChanged
+        txtsearchctp.Text = txtsearchcode.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub txtMfrNoSearch_TextChanged(sender As Object, e As EventArgs) Handles txtMfrNoSearch.TextChanged
+        txtMfrNoSearch.Text = txtMfrNoSearch.Text.Replace(Environment.NewLine, "")
+    End Sub
+
 #End Region
 
 #Region "Button Events"
 
-    Private Sub cmdall_Click()
-        Try
-            strwhere = CustomStrWhereResult()
-            fillcell1(strwhere, 0)
-            Exit Sub
-        Catch ex As Exception
-            Call gnr.gotoerror("frmproductsdevelopment", "cmdall_click", Err.Number, Err.Description, Err.Source)
-            gnr.gotoerror("frmproductsdevelopment", "cmdall_click", ex.HResult, ex.Message + ". " + ex.ToString, ex.Source)
-        End Try
-    End Sub
-
-    Private Sub cmdall_Click(sender As Object, e As EventArgs) Handles cmdall.Click
-        cmdall_Click()
+    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+        cmdClearFilters_Click(sender, Nothing)
     End Sub
 
     Private Sub AddNewProjectToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles AddNewProjectToolStripMenuItem1.Click
@@ -3300,13 +3387,20 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub txts__KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) _
-        Handles Me.KeyPress, cmdhidden.KeyPress, txtsearchpart.KeyPress, txtsearchctp.KeyPress, txtsearchcode.KeyPress, txtsearch1.KeyPress, txtsearch.KeyPress, txtMfrNoSearch.KeyPress, txtJiratasksearch.KeyPress, cmbstatus1.KeyPress, cmbPrpech.KeyPress
+        Handles Me.KeyPress, txtsearchpart.KeyPress, txtsearchctp.KeyPress, txtsearchcode.KeyPress, txtsearch1.KeyPress, txtsearch.KeyPress, txtMfrNoSearch.KeyPress, txtJiratasksearch.KeyPress, cmbstatus1.KeyPress, cmbPrpech.KeyPress
         If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
             cmdhidden_Click(sender, Nothing)
         End If
     End Sub
 
-    Private Sub cmdhidden_Click(sender As Object, e As EventArgs) Handles cmdhidden.Click
+    Private Sub txts1__KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) _
+        Handles Me.KeyPress, txtPartNoMore.KeyPress, txtCtpNoMore.KeyPress, txtMfrNoMore.KeyPress, cmbuser2.KeyPress
+        If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
+            cmdhidden1_Click(sender, Nothing)
+        End If
+    End Sub
+
+    Private Sub cmdhidden1_Click(sender As Object, e As EventArgs)
         Dim exMessage As String = " "
         Dim controlSender As Object = Nothing
         Dim isText As Boolean = True
@@ -3323,18 +3417,97 @@ Public Class frmProductsDevelopment
             End If
             Dim ctrl_name = If(controlSender IsNot Nothing, controlSender.Name, "")
             If Not String.IsNullOrEmpty(ctrl_name) Then
-                Dim button_name = If(isText, ctrl_name.Replace("txt", "cmd"), ctrl_name.Replace("cmb", "cmd"))
-                Dim button_method = button_name & "_click"
 
-                CallByName(Me, button_method, CallType.Method, Nothing)
+                'Dim button_name = If(isText, ctrl_name.Replace("txt", "cmd"), ctrl_name.Replace("cmb", "cmd"))
+                'Dim button_method = button_name & "_click"
+                Dim button_method = "cmdall1_Click"
+                Dim selection(2) As Object
+                selection(0) = ctrl_name
+                selection(1) = isText
+                CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
+    Private Sub cmdhidden_Click(sender As Object, e As EventArgs)
+        Dim exMessage As String = " "
+        Dim controlSender As Object = Nothing
+        Dim isText As Boolean = True
+        Try
+            Dim cnt = DirectCast(sender, System.Windows.Forms.Control)
+            Dim sender_type = cnt.GetType().ToString()
+            If sender_type.Equals("System.Windows.Forms.TextBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.TextBox)
+            ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.ComboBox)
+                isText = False
+            Else
+                controlSender = Nothing
+            End If
+            Dim ctrl_name = If(controlSender IsNot Nothing, controlSender.Name, "")
+            If Not String.IsNullOrEmpty(ctrl_name) Then
+
+                'Dim button_name = If(isText, ctrl_name.Replace("txt", "cmd"), ctrl_name.Replace("cmb", "cmd"))
+                'Dim button_method = button_name & "_click"
+                Dim button_method = "cmdall_Click"
+                Dim selection(2) As Object
+                selection(0) = ctrl_name
+                selection(1) = isText
+                CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Sub cmdall1_Click(Optional control_name As Object = Nothing, Optional is_text As Object = Nothing)
+        Try
+            Dim button_name = If(is_text, control_name.Replace("txt", "cmd"), control_name.Replace("cmb", "cmd"))
+            Dim button_method = button_name & "_click"
+            CallByName(Me, button_method, CallType.Method, Nothing)
+            'strwhere = CustomStrWhereResult()
+            'fillcell1(strwhere, 0)
+            'Exit Sub
+        Catch ex As Exception
+
+            'Call gnr.gotoerror("frmproductsdevelopment", "cmdall_click", Err.Number, Err.Description, Err.Source)
+            'gnr.gotoerror("frmproductsdevelopment", "cmdall_click", ex.HResult, ex.Message + ". " + ex.ToString, ex.Source)
+        End Try
+    End Sub
+
+    Public Sub cmdall_Click(Optional control_name As Object = Nothing, Optional is_text As Object = Nothing)
+        Dim exMessage As String = " "
+        Try
+            Dim button_name = If(is_text, control_name.Replace("txt", "cmd"), control_name.Replace("cmb", "cmd"))
+            Dim button_method = button_name & "_click"
+            CallByName(Me, button_method, CallType.Method, Nothing)
+            'strwhere = CustomStrWhereResult()
+            'fillcell1(strwhere, 0)
+            'Exit Sub
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            'Call gnr.gotoerror("frmproductsdevelopment", "cmdall_click", Err.Number, Err.Description, Err.Source)
+            'gnr.gotoerror("frmproductsdevelopment", "cmdall_click", ex.HResult, ex.Message + ". " + ex.ToString, ex.Source)
+        End Try
+    End Sub
+
+    Private Sub cmdall_Click_1(sender As Object, e As EventArgs) Handles cmdall.Click
+        cmdall_Click()
+    End Sub
+
 
 #Region "First Tab Searching Methods"
+
+    Private Sub cmdClearFilters_Click(sender As Object, e As EventArgs) Handles cmdClearFilters.Click
+        Dim exMessage As String = " "
+        Try
+            onlyClearSearchesComplex()
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
 
     Private Sub cmdSearch_Click(sender As Object, e As EventArgs) Handles cmdsearch.Click
         cmdSearch_Click()
@@ -3352,9 +3525,9 @@ Public Class frmProductsDevelopment
                     strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
                 End If
-                'buildMixedQuery(strwhere, tt.Name, 1)
-                fillcell1(strwhere, flag)
-                cleanSearchTextBoxes(tt.Name)
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcell1(strwhere, flag)
+                'cleanSearchTextBoxes(tt.Name)
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3436,57 +3609,57 @@ Public Class frmProductsDevelopment
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
                 End If
 
-                If Not String.IsNullOrEmpty(tt1.Text) Then
-                    'project has value and part has value
-                    ds = fillcelldetailOther(strwhere)
-                    If ds IsNot Nothing Then
-                        If ds.Tables(0).Rows.Count > 0 Then
-                            Dim code As String = tt1.Text
-                            ds1 = gnr.GetDataByPRHCOD(code)
+                'If Not String.IsNullOrEmpty(tt1.Text) Then
+                '    'project has value and part has value
+                '    ds = fillcelldetailOther(strwhere)
+                '    If ds IsNot Nothing Then
+                '        If ds.Tables(0).Rows.Count > 0 Then
+                '            Dim code As String = tt1.Text
+                '            ds1 = gnr.GetDataByPRHCOD(code)
 
-                            Dim partNo As String = tt.Text
+                '            Dim partNo As String = tt.Text
 
-                            txtCode.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(0).ToString())
-                            txtname.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(3).ToString()) ' format date
-                            TabPage2.Text = "Project: " + txtname.Text
+                '            txtCode.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(0).ToString())
+                '            txtname.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(3).ToString()) ' format date
+                '            TabPage2.Text = "Project: " + txtname.Text
 
-                            Dim CleanDateString As String = Regex.Replace(ds1.Tables(0).Rows(0).ItemArray(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
-                            'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
-                            Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
-                            DTPicker1.Value = dtChange.ToShortDateString()
+                '            Dim CleanDateString As String = Regex.Replace(ds1.Tables(0).Rows(0).ItemArray(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
+                '            'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
+                '            Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
+                '            DTPicker1.Value = dtChange.ToShortDateString()
 
-                            If cmbuser1.FindStringExact(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString())) Then
-                                cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString()))
-                            End If
-                            If cmbuser1.SelectedIndex = -1 Then
-                                cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
-                            End If
-                            If Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "I" Then
-                                cmbprstatus.SelectedIndex = 1
-                            ElseIf Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "F" Then
-                                cmbprstatus.SelectedIndex = 2
-                            Else
-                                cmbprstatus.SelectedIndex = 2
-                            End If
+                '            If cmbuser1.FindStringExact(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString())) Then
+                '                cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString()))
+                '            End If
+                '            If cmbuser1.SelectedIndex = -1 Then
+                '                cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
+                '            End If
+                '            If Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "I" Then
+                '                cmbprstatus.SelectedIndex = 1
+                '            ElseIf Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "F" Then
+                '                cmbprstatus.SelectedIndex = 2
+                '            Else
+                '                cmbprstatus.SelectedIndex = 2
+                '            End If
 
-                            fillcell2(code)
+                '            fillcell2(code)
 
-                            fillTab3(code, partNo)
+                '            fillTab3(code, partNo)
 
-                            SSTab1.SelectedIndex = 2
-                        Else
-                            MessageBox.Show("There is not search results with this criteria.", "CTP System", MessageBoxButtons.OK)
-                        End If
-                    Else
-                        MessageBox.Show("There is not search results with this criteria.", "CTP System", MessageBoxButtons.OK)
-                    End If
-                    'cleanSearchTextBoxes(tt.Name)
-                Else
-                    'only the part has value
-                    buildMixedQuery(strwhere, tt.Name, 0)
-                    'fillcelldetail(strwhere)
-                    'cleanSearchTextBoxes(tt.Name)
-                End If
+                '            SSTab1.SelectedIndex = 2
+                '        Else
+                '            MessageBox.Show("There is not search results with this criteria.", "CTP System", MessageBoxButtons.OK)
+                '        End If
+                '    Else
+                '        MessageBox.Show("There is not search results with this criteria.", "CTP System", MessageBoxButtons.OK)
+                '    End If
+                '    'cleanSearchTextBoxes(tt.Name)
+                'Else
+                'only the part has value
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcelldetail(strwhere)
+                'cleanSearchTextBoxes(tt.Name)
+                'End If
             Else
                 'the part has no value
                 MessageBox.Show("You must type a part number to find.", "CTP System", MessageBoxButtons.OK)
@@ -3540,11 +3713,11 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdJiratasksearch_Click_1(sender As Object, e As EventArgs) Handles cmdJiratasksearch.Click
-        cmdJiratasksearch_Click_1()
+    Private Sub cmdJiratasksearch_Click(sender As Object, e As EventArgs) Handles cmdJiratasksearch.Click
+        cmdJiratasksearch_Click()
     End Sub
 
-    Public Sub cmdJiratasksearch_Click_1()
+    Public Sub cmdJiratasksearch_Click()
         Dim exMessage As String = " "
         Dim tt As Windows.Forms.TextBox
         tt = txtJiratasksearch
@@ -3558,51 +3731,52 @@ Public Class frmProductsDevelopment
                     strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
                 End If
-                ds = fillcelldetailOther(strwhere)
 
-                If ds IsNot Nothing Then
-                    If ds.Tables(0).Rows.Count > 0 Then
-                        Dim code As String = ds.Tables(0).Rows(0).ItemArray(0).ToString()
-                        ds1 = gnr.GetDataByPRHCOD(code)
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'ds = fillcelldetailOther(strwhere)
+                'If ds IsNot Nothing Then
+                '    If ds.Tables(0).Rows.Count > 0 Then
+                '        Dim code As String = ds.Tables(0).Rows(0).ItemArray(0).ToString()
+                '        ds1 = gnr.GetDataByPRHCOD(code)
 
-                        Dim partNo As String = ds.Tables(0).Rows(0).ItemArray(1).ToString()
+                '        Dim partNo As String = ds.Tables(0).Rows(0).ItemArray(1).ToString()
 
-                        txtCode.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(0).ToString())
-                        txtname.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(3).ToString()) ' format date
-                        TabPage2.Text = "Project: " + txtname.Text
+                '        txtCode.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(0).ToString())
+                '        txtname.Text = Trim(ds1.Tables(0).Rows(0).ItemArray(3).ToString()) ' format date
+                '        TabPage2.Text = "Project: " + txtname.Text
 
-                        Dim CleanDateString As String = Regex.Replace(ds1.Tables(0).Rows(0).ItemArray(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
-                        'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
-                        Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
-                        DTPicker1.Value = dtChange.ToShortDateString()
+                '        Dim CleanDateString As String = Regex.Replace(ds1.Tables(0).Rows(0).ItemArray(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
+                '        'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
+                '        Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
+                '        DTPicker1.Value = dtChange.ToShortDateString()
 
-                        If cmbuser1.FindStringExact(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString())) Then
-                            cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString()))
-                        End If
-                        If cmbuser1.SelectedIndex = -1 Then
-                            cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
-                        End If
-                        If Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "I" Then
-                            cmbprstatus.SelectedIndex = 1
-                        ElseIf Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "F" Then
-                            cmbprstatus.SelectedIndex = 2
-                        Else
-                            cmbprstatus.SelectedIndex = 2
-                        End If
+                '        If cmbuser1.FindStringExact(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString())) Then
+                '            cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(ds1.Tables(0).Rows(0).ItemArray(9).ToString()))
+                '        End If
+                '        If cmbuser1.SelectedIndex = -1 Then
+                '            cmbuser1.SelectedIndex = cmbuser1.Items.Count - 1
+                '        End If
+                '        If Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "I" Then
+                '            cmbprstatus.SelectedIndex = 1
+                '        ElseIf Trim(ds1.Tables(0).Rows(0).ItemArray(4).ToString()) = "F" Then
+                '            cmbprstatus.SelectedIndex = 2
+                '        Else
+                '            cmbprstatus.SelectedIndex = 2
+                '        End If
 
-                        fillcell2(code)
+                '        fillcell2(code)
 
-                        fillTab3(code, partNo)
+                '        fillTab3(code, partNo)
 
-                        SSTab1.SelectedIndex = 2
+                '        SSTab1.SelectedIndex = 2
 
-                        cleanSearchTextBoxes(tt.Name)
-                    Else
-                        MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
-                    End If
-                Else
-                    MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
-                End If
+                '        cleanSearchTextBoxes(tt.Name)
+                '    Else
+                '        MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
+                '    End If
+                'Else
+                '    MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
+                'End If
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3675,14 +3849,14 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE PRHCOD = " & Trim(UCase(tt.Text))
+                    strwhere = "WHERE PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRHCOD = " & Trim(UCase(tt.Text))
+                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRHCOD = " & Trim(txtsearchcode.Text)
                 End If
-                'buildMixedQuery(strwhere, tt.Name, 1)
-                fillcell1(strwhere, flag)
-                cleanSearchTextBoxes(tt.Name)
+                buildMixedQuery(strwhere, tt.Name, 0)
+                'fillcell1(strwhere, flag)
+                'cleanSearchTextBoxes(tt.Name)
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3774,14 +3948,18 @@ Public Class frmProductsDevelopment
 
 #Region "Second Tab Search Filters"
 
-    Private Sub cmdMfrNoMore_Click(sender As Object, e As EventArgs) Handles cmdMfrNoMore.Click
+    Public Sub cmdMfrNoMore_Click(sender As Object, e As EventArgs) Handles cmdMfrNoMore.Click
+        cmdMfrNoMore_Click()
+    End Sub
+
+    Public Sub cmdMfrNoMore_Click()
         Dim strAddMfrSentence As String = ""
         strAddMfrSentence = " AND PRDMFR# = " ' & txtMfrNoMore.Text & '" 
         Dim exMessage As String = " "
         Dim Qry As New DataTable
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
+        'Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        'Dim myName As String = myButton.Name
+        'cleanMoreBtns(myName)
         Try
             If Not String.IsNullOrEmpty(txtMfrNoMore.Text) Then
 
@@ -3832,14 +4010,18 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdPartNoMore_Click(sender As Object, e As EventArgs) Handles cmdPartNoMore.Click
+    Public Sub cmdPartNoMore_Click(sender As Object, e As EventArgs) Handles cmdPartNoMore.Click
+        cmdPartNoMore_Click()
+    End Sub
+
+    Public Sub cmdPartNoMore_Click()
         Dim exMessage As String = " "
         Dim Qry As New DataTable
         Dim dsProjectDetails = LikeSession.dsDgvProjectDetails
 
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
+        'Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        'Dim myName As String = myButton.Name
+        'cleanMoreBtns(myName)
 
         Try
             If Not String.IsNullOrEmpty(txtPartNoMore.Text) Then
@@ -3892,15 +4074,19 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdCtpNoMore_Click(sender As Object, e As EventArgs) Handles cmdCtpNoMore.Click
+    Public Sub cmdCtpNoMore_Click(sender As Object, e As EventArgs) Handles cmdCtpNoMore.Click
+        cmdCtpNoMore_Click()
+    End Sub
+
+    Public Sub cmdCtpNoMore_Click()
         'Dim strAddCtpSentence As String = ""
         'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
         Dim Qry As New DataTable
         Dim exMessage As String = " "
 
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
+        'Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        'Dim myName As String = myButton.Name
+        'cleanMoreBtns(myName)
         Try
             If Not String.IsNullOrEmpty(txtCtpNoMore.Text) Then
 
@@ -3951,15 +4137,20 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdcmbUser2.Click
+    Public Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdcmbUser2.Click
+        cmdPePechMore_Click()
+    End Sub
+
+    Public Sub cmdPePechMore_Click()
         'Dim strAddCtpSentence As String = ""
         'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
 
         Dim exMessage As String = " "
         Dim Qry As New DataTable
-        Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
-        Dim myName As String = myButton.Name
-        cleanMoreBtns(myName)
+
+        'Dim myButton As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
+        'Dim myName As String = myButton.Name
+        'cleanMoreBtns(myName)
         Try
             If Not String.IsNullOrEmpty(cmbuser2.Text) And cmbuser2.SelectedIndex <> 0 Then
 
@@ -4012,6 +4203,7 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+
 #End Region
 
     Private Function buildMixedQuery(initialQuery As String, selectedField As String, flag As Integer) As String
@@ -4041,11 +4233,33 @@ Public Class frmProductsDevelopment
                 fillcelldetail(sql, 0)
             End If
             hasVal.Add(selectedObj)
-            cleanSearchTextBoxesComplex(hasVal)
+            cleanSearchTextBoxesComplex(hasVal, False)
         Catch ex As Exception
 
         End Try
     End Function
+
+    Private Sub onlyClearSearchesComplex()
+        Dim exMessage As String = " "
+        Try
+            Dim myTableLayout As TableLayoutPanel
+            myTableLayout = Me.TableLayoutPanel1
+            Dim hasVal As New List(Of Object)
+            Dim selectedObj As Object = Nothing
+
+            For Each tt In myTableLayout.Controls
+                If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
+                    If tt.Text <> Nothing Then
+                        hasVal.Add(tt)
+                    End If
+                End If
+            Next
+            'hasVal.Add(selectedObj)
+            cleanSearchTextBoxesComplex(hasVal, True)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
 
     Private Function getReferenceDocuments(code As String, partNo As String) As Dictionary(Of String, String)
         Dim exMessage As String = " "
@@ -4720,6 +4934,7 @@ Public Class frmProductsDevelopment
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
+
     Private Function itemCategory(partNo As String, vendorNo As String) As Integer
         Dim exMessage As String = " "
         Dim result As Integer = -1
@@ -4802,10 +5017,13 @@ Public Class frmProductsDevelopment
         SSTab1.Appearance = TabAppearance.FlatButtons
         SSTab1.SizeMode = TabSizeMode.Fixed
 
+        TabPage3.Text = "Reference: "
         TabPage3.AutoScroll = True
         TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
         TabPage3.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
         TabPage3.AutoScrollMinSize = New Drawing.Size(800, 0)
+
+        TabPage2.Text = "Project: "
 
         'AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
         ''vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
@@ -4893,6 +5111,29 @@ Public Class frmProductsDevelopment
         flagdeve = 1
         flagnewpart = 1
 
+        'tab 1
+        txtsearch1.SetWaterMark("Vendor No.")
+        txtsearch.SetWatermark("Project Name")
+        txtJiratasksearch.SetWaterMark("Jira Task No.")
+        txtsearchpart.SetWaterMark("Part No.")
+        txtsearchctp.SetWatermark("CTP No.")
+        txtMfrNoSearch.SetWaterMark("Manufacturer No.")
+        txtsearchcode.SetWaterMark("Project No.")
+        cmbPrpech.SetWatermark("Person In Charge")
+
+        cmbstatus1.SetWatermark("Project Reference Status")
+        MyComboBox1.SetWatermark("test water")
+
+        'tab 2
+        txtPartNoMore.SetWatermark("Part No.")
+        txtCtpNoMore.SetWatermark("CTP No.")
+        txtMfrNoMore.SetWatermark("Manufacturer No.")
+        txtCode.SetWatermark("Project No.")
+        txtname.SetWatermark("Project Name")
+
+        cmbuser1.SetWatermark("Person In Charge")
+        cmbprstatus.SetWatermark("Project Status")
+        cmbuser2.SetWatermark("Person In Charge")
         ContextMenuStrip1.Visible = False
     End Sub
 
@@ -5376,16 +5617,6 @@ Public Class frmProductsDevelopment
         Return strwhere
     End Function
 
-    Private Sub txtpartno_TextChanged(sender As Object, e As EventArgs) Handles txtpartno.TextChanged
-        If Not String.IsNullOrEmpty(txtpartno.Text) Then
-            TabPage3.Name = "Part No. " & txtpartno.Text
-        End If
-    End Sub
-
-    Private Sub txtsearchcode_TextChanged(sender As Object, e As EventArgs) Handles txtsearchcode.TextChanged
-
-    End Sub
-
     Private Sub cleanSearchTextBoxes(valueSelectd As String)
         Dim exMessage As String = " "
         Try
@@ -5406,7 +5637,7 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub cleanSearchTextBoxesComplex(selValues As List(Of Object))
+    Private Sub cleanSearchTextBoxesComplex(selValues As List(Of Object), includedControl As Boolean)
         Dim exMessage As String = " "
         Try
             Dim myTableLayout As TableLayoutPanel
@@ -5415,8 +5646,14 @@ Public Class frmProductsDevelopment
             For Each tt In myTableLayout.Controls
                 If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
                     'If tt.Name <> valueSelectd Then
-                    If Not isStringPresentInList(tt.Name, selValues) Then
-                        tt.Text = ""
+                    If Not includedControl Then
+                        If Not isStringPresentInList(tt.Name, selValues) Then
+                            tt.Text = ""
+                        End If
+                    Else
+                        If isStringPresentInList(tt.Name, selValues) Then
+                            tt.Text = ""
+                        End If
                     End If
                 End If
             Next
@@ -5460,10 +5697,9 @@ Public Class frmProductsDevelopment
 
     End Sub
 
-    Private Sub BindingNavigator1_RefreshItems(sender As Object, e As EventArgs) Handles BindingNavigator1.RefreshItems
+    Private Sub BindingNavigator1_RefreshItems(sender As Object, e As EventArgs)
 
     End Sub
-
 
 
     'Private Sub cmdSplit_Click(sender As Object, e As EventArgs) Handles cmdSplit.Click
@@ -5477,8 +5713,6 @@ Public Class frmProductsDevelopment
     'End Sub
 
 #End Region
-
-
 
     'Protected Sub OnRowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
     'Dim index As Integer = Convert.ToInt32(e.CommandArgument)

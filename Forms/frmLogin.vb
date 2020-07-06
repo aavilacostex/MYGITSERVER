@@ -294,11 +294,11 @@
                             Call amenu()
 
                             If userid = "CARLOS" Or userid = "JDMERCADO" Or userid = "MVELEZ" Or userid = "KRODRIGUEZ" Or userid = "JDMIRA" Or userid = "HOLIVEROS" Or userid = "LARIAS" Or userid = "AAVILA" Then
-                                ConnSql.ConnectionString = gnr.SQLCon
-                                ConnSql.Open()
+                                'ConnSql.ConnectionString = gnr.SQLCon
+                                'ConnSql.Open()
 
-                                gnr.ConnSqlNOVA.ConnectionString = gnr.NOVASQLCon
-                                gnr.ConnSqlNOVA.Open()
+                                'gnr.ConnSqlNOVA.ConnectionString = gnr.NOVASQLCon
+                                'gnr.ConnSqlNOVA.Open()
                             End If
                         End If
                     End If
@@ -357,22 +357,43 @@
             errormark = 4
             Dim myMenu As MenuStrip
             If dsGetUserMenuByUserId IsNot Nothing Then
-                If dsGetUserMenuByUserId.Tables(0).Rows.Count > 0 Then
+                If dsGetUserMenuByUserId.Tables(0).Rows.Count > 0 And MDIMain.Controls.Count > 0 Then
                     errormark = 5
-                    myMenu = MDIMain.MenuStrip1
-                    For Each ttt As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
-                        For Each tt As ToolStripMenuItem In myMenu.Items
-                            If tt.Name = ttt.ItemArray(dsGetUserMenuByUserId.Tables(0).Columns("dmdimain").Ordinal) Then
+
+                    'version produccion
+                    For Each tt As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
+                        For Each ttt As Control In MDIMain.Controls
+                            If Trim(ttt.Name = tt.Item("DMDIMAIN")) Then
                                 errormark = 6
-                                If ttt.ItemArray(dsGetUserMenuByUserId.Tables(0).Columns("amenu").Ordinal) = 1 Then
+                                If tt.Item("AMENU") = 1 Then
                                     errormark = 7
-                                    tt.Enabled = True
+                                    ttt.Enabled = True
                                 Else
-                                    tt.Enabled = False
+                                    ttt.Enabled = False
                                 End If
+                                Exit For
                             End If
                         Next
                     Next
+
+
+
+
+                    'version simple de prueba
+                    'myMenu = MDIMain.MenuStrip1
+                    'For Each ttt As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
+                    '    For Each tt As ToolStripMenuItem In myMenu.Items
+                    '        If tt.Name = ttt.ItemArray(dsGetUserMenuByUserId.Tables(0).Columns("dmdimain").Ordinal) Then
+                    '            errormark = 6
+                    '            If ttt.ItemArray(dsGetUserMenuByUserId.Tables(0).Columns("amenu").Ordinal) = 1 Then
+                    '                errormark = 7
+                    '                tt.Enabled = True
+                    '            Else
+                    '                tt.Enabled = False
+                    '            End If
+                    '        End If
+                    '    Next
+                    'Next
                 End If
             End If
             Exit Sub

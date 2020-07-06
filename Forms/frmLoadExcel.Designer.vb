@@ -36,6 +36,7 @@ Partial Class frmLoadExcel
         Me.lblVendorDesc = New System.Windows.Forms.Label()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.cmdExcel = New System.Windows.Forms.Button()
+        Me.lblExcel = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
@@ -97,7 +98,6 @@ Partial Class frmLoadExcel
         Me.lblProjectNo = New System.Windows.Forms.Label()
         Me.lblVendorNo = New System.Windows.Forms.Label()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
-        Me.lblExcel = New System.Windows.Forms.Label()
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
@@ -203,6 +203,19 @@ Partial Class frmLoadExcel
         Me.cmdExcel.TabIndex = 29
         Me.cmdExcel.UseVisualStyleBackColor = True
         Me.cmdExcel.Visible = False
+        '
+        'lblExcel
+        '
+        Me.lblExcel.AutoSize = True
+        Me.lblExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.lblExcel.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblExcel.Location = New System.Drawing.Point(61, 15)
+        Me.lblExcel.Margin = New System.Windows.Forms.Padding(8, 15, 3, 0)
+        Me.lblExcel.Name = "lblExcel"
+        Me.lblExcel.Size = New System.Drawing.Size(165, 12)
+        Me.lblExcel.TabIndex = 30
+        Me.lblExcel.Text = "Print Errors to Excel Document."
+        Me.lblExcel.Visible = False
         '
         'SplitContainer1
         '
@@ -394,7 +407,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
-        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(75, 35)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -543,7 +555,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
-        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"
@@ -882,18 +893,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34.0!))
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(775, 647)
         Me.TableLayoutPanel2.TabIndex = 2
-        '
-        'lblExcel
-        '
-        Me.lblExcel.AutoSize = True
-        Me.lblExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.lblExcel.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblExcel.Location = New System.Drawing.Point(60, 15)
-        Me.lblExcel.Margin = New System.Windows.Forms.Padding(8, 15, 3, 0)
-        Me.lblExcel.Name = "lblExcel"
-        Me.lblExcel.Size = New System.Drawing.Size(165, 12)
-        Me.lblExcel.TabIndex = 30
-        Me.lblExcel.Text = "Print Errors to Excel Document."
         '
         'frmLoadExcel
         '

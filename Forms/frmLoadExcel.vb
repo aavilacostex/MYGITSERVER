@@ -6,6 +6,7 @@ Imports Microsoft.Office.Interop
 Imports ExcelTools = Microsoft.Office
 
 Imports Excel = Microsoft.Office.Interop.Excel
+
 Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports System.ComponentModel
@@ -801,7 +802,7 @@ Public Class frmLoadExcel
                     MessageBox.Show("There is an error in the data.", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
                 Else
-                    dsResult.Tables(0).Columns.Add("VMVNUM", GetType(Integer))
+                    dsResult.Tables(0).Columns.Add("VMVNUM", GetType(String))
 
                     dsResult.Tables(0).Columns(0).DataType = GetType(String)
 
@@ -865,7 +866,7 @@ Public Class frmLoadExcel
                     'Dim vendorNo = row.Cells("clVMVNUM").Value
 
                     Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
-                                         .Where(Function(x) Trim(UCase(x.Field(Of Integer)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
+                                         .Where(Function(x) Trim(UCase(x.Field(Of String)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
                                          Trim(UCase(x.Field(Of String)("PRDPTN"))).ToString() = Trim(UCase(partNo)))
 
                     If Qry1.Count > 0 Then
@@ -880,7 +881,7 @@ Public Class frmLoadExcel
                             Dim dsError = LikeSession.dsErrorSession
 
                             Dim dtError = dsError.Tables(0).Copy()
-                            dtError.Columns.Add("VMVNUM", GetType(Integer))
+                            dtError.Columns.Add("VMVNUM", GetType(String))
 
                             For Each dw1 As DataRow In dtError.Rows
                                 dw1.Item("VMVNUM") = vendorNo

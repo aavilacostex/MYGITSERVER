@@ -174,8 +174,18 @@
     <Compile Include="Class\CrystalReport.vb" />
     <Compile Include="Class\LikeSession.vb" />
     <Compile Include="Class\LoadExcel.vb" />
+    <Compile Include="Class\Module1.vb" />
     <Compile Include="Class\Pagination.vb" />
     <Compile Include="Class\Supergrid.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\MyComboBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\WatermarkTextBox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\WM_TExtbox.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\frmChangeVendor.Designer.vb">

@@ -1330,7 +1330,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT USUSER,USNAME FROM CSUSER WHERE USPTY8 = 'X' AND USPTY9 <> 'R' ORDER BY USNAME "
+            Sql = "select distinct A1.ususer, A1.usname from csuser A1 inner join prdvld A2 on A1.ususer = A2.prdusr WHERE USPTY8 = 'X' AND USPTY9 <> 'R' ORDER BY USNAME"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -2335,7 +2335,6 @@ errhandler:
         Dim stringCvtr As New cwbx.StringConverter
         Dim cwbcoPromptNever As New cwbx.cwbcoPromptModeEnum
 
-
         Dim wuser, wpass, wswvld
         Dim exMessage As String = " "
         Try
@@ -2349,7 +2348,7 @@ errhandler:
             as400.Define(server.DefaultSystem)
             as400.UserID = "INTRANET"
             as400.Password = "CTP6100"
-            as400.IPAddress = "172.0.0.21"
+            'as400.IPAddress = "172.0.0.21"
             as400.PromptMode = cwbcoPromptNever
             as400.Signon()
 
@@ -2362,25 +2361,23 @@ errhandler:
                 prog.LibraryName = "CTPINV"
                 prog.ProgramName = "PSWVLDR"
 
-
-
                 'Assign Values to Parameters
                 parms.Clear()
 
-                parms.Append("user", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
-                parms.Append("pass", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 20)
-                parms.Append("swvld", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 1)
+                parms.Append("USER", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
+                parms.Append("PASS", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 20)
+                parms.Append("SWVLD", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 1)
                 'parms.Append("out", cwbx.cwbrcParameterTypeEnum.cwbrcInout, 10)
 
                 stringCvtr.CodePage = 37
 
-                parms("user").Value = stringCvtr.ToBytes(wuser)
-                parms("pass").Value = stringCvtr.ToBytes(wpass)
-                parms("swvld").Value = stringCvtr.ToBytes(wswvld)
+                parms("USER").Value = stringCvtr.ToBytes(wuser)
+                parms("PASS").Value = stringCvtr.ToBytes(wpass)
+                parms("SWVLD").Value = stringCvtr.ToBytes(wswvld)
 
                 prog.Call(parms)
 
-                checkusr = stringCvtr.FromBytes(parms("swvld").Value)
+                checkusr = stringCvtr.FromBytes(parms("SWVLD").Value)
 
                 as400.Disconnect(cwbx.cwbcoServiceEnum.cwbcoServiceAll)
 
@@ -2388,7 +2385,6 @@ errhandler:
             Exit Function
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-
         End Try
 
     End Function
@@ -2415,7 +2411,7 @@ errhandler:
             as400.Define(server.DefaultSystem)
             as400.UserID = "INTRANET"
             as400.Password = "CTP6100"
-            as400.IPAddress = "172.0.0.21"
+            'as400.IPAddress = "172.0.0.21"
             as400.PromptMode = cwbcoPromptNever
             as400.Signon()
 
