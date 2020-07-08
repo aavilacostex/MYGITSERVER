@@ -11,6 +11,7 @@ Public Class frmProductsDevelopment
     Public flagdeve As Long '1 is new
     'Public filepicture As New clsReadWrite
     Public strwhere As String
+    Public strToUnion As String
     Public userid As String
     Public flagnewpart As Integer
     Public flagallow As Integer
@@ -54,8 +55,9 @@ Public Class frmProductsDevelopment
             ResizeTabs()
             SetValues()
 
-            userid = frmLogin.txtUserName.Text
-            If UCase(userid) = "AALZATE" Or UCase(userid) = "AAVILA" Then
+            'userid = frmLogin.txtUserName.Text
+            userid = "CTOBON"
+            If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
 
@@ -3517,15 +3519,25 @@ Public Class frmProductsDevelopment
         Dim exMessage As String = " "
         Dim tt As Windows.Forms.TextBox
         tt = txtsearch
+        Dim lstQueries = New List(Of String)()
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                    End If
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
                 End If
-                buildMixedQuery(strwhere, tt.Name, 0)
+
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
                 'fillcell1(strwhere, flag)
                 'cleanSearchTextBoxes(tt.Name)
             Else
@@ -3552,33 +3564,28 @@ Public Class frmProductsDevelopment
         tt1 = cmbstatus1
         Dim ds As New DataSet
         Dim ds1 As New DataSet
+        Dim lstQueries = New List(Of String)()
         Try
 
             If Not String.IsNullOrEmpty(tt.Text) Then
                 If flagallow = 1 Then
                     strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
-                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        'strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                        strwhere = "WHERE (PRPECH = 'CTOBON' OR PRDUSR = 'CTOBON') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                    End If
                 End If
-                buildMixedQuery(strwhere, tt.Name, 0)
-                'fillcelldetail(strwhere)
-
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
             Else
                 MessageBox.Show("You must type a vendor number to get results.", "CTP System", MessageBoxButtons.OK)
             End If
-
-            'If Trim(tt.Text) <> "" Then
-            '    If flagallow = 1 Then
-            '        strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(tt.Text)
-            '    Else
-            '        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(tt.Text)
-            '        'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRDVLD.VMVNUM = " & Trim(txtsearch1.Text)
-            '    End If
-            '    fillcelldetail(strwhere)
-
-
-            'End If
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -3599,15 +3606,25 @@ Public Class frmProductsDevelopment
         tt1 = txtsearchcode
         Dim ds As New DataSet
         Dim ds1 As New DataSet
+        Dim lstQueries = New List(Of String)()
         Try
             If Not String.IsNullOrEmpty(tt.Text) Then
 
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
+                    End If
+
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
                 End If
+
+#Region "Previous"
 
                 'If Not String.IsNullOrEmpty(tt1.Text) Then
                 '    'project has value and part has value
@@ -3655,27 +3672,21 @@ Public Class frmProductsDevelopment
                 '    End If
                 '    'cleanSearchTextBoxes(tt.Name)
                 'Else
-                'only the part has value
-                buildMixedQuery(strwhere, tt.Name, 0)
                 'fillcelldetail(strwhere)
                 'cleanSearchTextBoxes(tt.Name)
                 'End If
+
+#End Region
+
+                'only the part has value
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
+
             Else
                 'the part has no value
                 MessageBox.Show("You must type a part number to find.", "CTP System", MessageBoxButtons.OK)
             End If
-
-            'If Trim(tt.Text) <> "" Then
-            '    If flagallow = 1 Then
-            '        strwhere = "WHERE TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
-            '    Else
-            '        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
-            '        'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
-            '    End If
-            '    fillcelldetail(strwhere)
-
-            '    cleanSearchTextBoxes(tt.Name)
-            'End If
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -3692,17 +3703,25 @@ Public Class frmProductsDevelopment
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
         tt = txtsearchctp
+        Dim lstQueries = New List(Of String)()
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
+                    End If
+
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
                 End If
-                buildMixedQuery(strwhere, tt.Name, 0)
-                'fillcelldetail(strwhere)
-                'cleanSearchTextBoxes(tt.Name)
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3723,16 +3742,27 @@ Public Class frmProductsDevelopment
         tt = txtJiratasksearch
         Dim ds As New DataSet
         Dim ds1 As New DataSet
+        Dim lstQueries = New List(Of String)()
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
-                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
+                    End If
                 End If
 
-                buildMixedQuery(strwhere, tt.Name, 0)
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
+
+#Region "Previous"
+
                 'ds = fillcelldetailOther(strwhere)
                 'If ds IsNot Nothing Then
                 '    If ds.Tables(0).Rows.Count > 0 Then
@@ -3777,6 +3807,9 @@ Public Class frmProductsDevelopment
                 'Else
                 '    MessageBox.Show("There is no matches to your searching criteria.", "CTP System", MessageBoxButtons.OK)
                 'End If
+
+#End Region
+
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3796,18 +3829,24 @@ Public Class frmProductsDevelopment
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
         tt = txtMfrNoSearch
+        Dim lstQueries = New List(Of String)()
         Try
             If Trim(tt.Text) <> "" Then
 
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
-                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
+                    End If
                 End If
-                buildMixedQuery(strwhere, tt.Name, 0)
-                'fillcelldetail(strwhere)
-                'cleanSearchTextBoxes(tt.Name)
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3846,15 +3885,24 @@ Public Class frmProductsDevelopment
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.TextBox
         tt = txtsearchcode
+        Dim lstQueries = New List(Of String)()
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
                     strwhere = "WHERE PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
-                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND PRHCOD = " & Trim(txtsearchcode.Text)
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
+                    End If
                 End If
-                buildMixedQuery(strwhere, tt.Name, 0)
+
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
                 'fillcell1(strwhere, flag)
                 'cleanSearchTextBoxes(tt.Name)
             Else
@@ -3879,33 +3927,27 @@ Public Class frmProductsDevelopment
         Dim tt1 As Windows.Forms.TextBox
         tt = cmbstatus1
         tt1 = txtsearch1
+        Dim lstQueries = New List(Of String)()
         Try
 
             If Not String.IsNullOrEmpty(tt.SelectedValue) Then
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
-                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
+                    End If
                 End If
-                buildMixedQuery(strwhere, tt.Name, 0)
-                'fillcelldetail(strwhere)
-
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
             Else
                 MessageBox.Show("You must select a status value to get results.", "CTP System", MessageBoxButtons.OK)
             End If
-
-            'If Trim(tt.Text) <> "" Then
-            '    If flagallow = 1 Then
-            '        strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(tt.SelectedValue) & "' "
-            '    Else
-            '        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(tt.SelectedValue) & "' "
-            '        'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '    End If
-            '    fillcelldetail(strwhere)
-
-            'cleanSearchTextBoxes(tt.Name)
-            'End If
             Exit Sub
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -3922,17 +3964,23 @@ Public Class frmProductsDevelopment
         'userid = "LREDONDO"
         Dim tt As Windows.Forms.ComboBox
         tt = cmbPrpech
+        Dim lstQueries = New List(Of String)()
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
                     strwhere = "WHERE TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
-                    'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
+                    If gnr.checkPurcByUser(userid) <> -1 Then
+                        Dim purcValue = gnr.checkPurcByUser(userid)
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND PRDVLH.PRHCOD = " & Trim(UCase(tt.Text))
+                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    Else
+                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+                    End If
                 End If
-                buildMixedQuery(strwhere, tt.Name, 0)
-                'fillcelldetail(strwhere)
-                'cleanSearchTextBoxes(tt.Name)
+                lstQueries.Add(strwhere)
+                lstQueries.Add(strToUnion)
+                buildMixedQuery(lstQueries, tt.Name, 0)
             Else
                 MessageBox.Show("You must select a person in charge value to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -4206,11 +4254,11 @@ Public Class frmProductsDevelopment
 
 #End Region
 
-    Private Function buildMixedQuery(initialQuery As String, selectedField As String, flag As Integer) As String
+    Private Function buildMixedQuery(initialQuery As List(Of String), selectedField As String, flag As Integer) As String
         Try
             Dim myTableLayout As TableLayoutPanel
             myTableLayout = Me.TableLayoutPanel1
-            Dim sql As String = initialQuery
+            Dim sql As String = initialQuery(0)
             Dim hasVal As New List(Of Object)
             Dim selectedObj As Object = Nothing
 
@@ -4227,6 +4275,7 @@ Public Class frmProductsDevelopment
                 End If
             Next
             sql += buildSearchQuerySintax(hasVal)
+            sql += initialQuery(1)
             If flag = 1 Then
                 fillcell1(sql, 0)
             Else

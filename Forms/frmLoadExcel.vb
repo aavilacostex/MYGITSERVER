@@ -33,8 +33,8 @@ Public Class frmLoadExcel
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim exMessage As String = " "
         Try
-            userid = frmLogin.txtUserName.Text
-            If UCase(userid) = "AALZATE" Then
+            userid = Trim(UCase(frmLogin.txtUserName.Text))
+            If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
 
@@ -393,6 +393,7 @@ Public Class frmLoadExcel
                     End If
                 End If
             End If
+
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
@@ -718,6 +719,8 @@ Public Class frmLoadExcel
                         oda.Fill(dt)
                         LikeSession.dsData = dt
                         fillData(dt)
+                        'LoadThread()
+                        'ExecuteFillData(dt)
                         con.Close()
                     End Using
                 End Using
@@ -726,6 +729,29 @@ Public Class frmLoadExcel
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
+
+#End Region
+
+#Region "Threads"
+
+    'Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
+    '    Handles BackgroundWorker1.RunWorkerCompleted
+    '    LoadingExcel.Close()
+    'End Sub
+
+    'Private Sub backgroundWorker1_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
+    '    Handles BackgroundWorker1.DoWork
+    '    ExecuteFillData()
+    'End Sub
+
+    'Private Sub backgroundWorker1_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
+    '    Handles BackgroundWorker1.ProgressChanged
+    '    'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
+    'End Sub
+
+    'Private Sub ExecuteFillData(Optional dt As DataTable = Nothing)
+    '    fillData(dt)
+    'End Sub
 
 #End Region
 

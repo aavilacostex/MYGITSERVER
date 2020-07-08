@@ -11,4 +11,5 @@
     Public Shared referencedExistence As String
     Public Shared currentAction As String
     Public Shared panelCollapseProp As Boolean
+    Public Shared flagAccessAllow As Integer
 End Class

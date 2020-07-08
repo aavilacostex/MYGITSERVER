@@ -242,6 +242,12 @@
     <Compile Include="Forms\Loading.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\LoadingExcel.Designer.vb">
+      <DependentUpon>LoadingExcel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoadingExcel.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\MDIMain.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -329,6 +335,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Loading.resx">
       <DependentUpon>Loading.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoadingExcel.resx">
+      <DependentUpon>LoadingExcel.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MDIMain.resx">
       <DependentUpon>MDIMain.vb</DependentUpon>

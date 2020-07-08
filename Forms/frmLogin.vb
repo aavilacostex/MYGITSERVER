@@ -293,6 +293,9 @@
                             End If
                             Call amenu()
 
+                            Dim allowedAdminUser = gnr.getFlagAllow(Trim(UCase(txtUserName.Text)))
+                            LikeSession.flagAccessAllow = allowedAdminUser
+
                             If userid = "CARLOS" Or userid = "JDMERCADO" Or userid = "MVELEZ" Or userid = "KRODRIGUEZ" Or userid = "JDMIRA" Or userid = "HOLIVEROS" Or userid = "LARIAS" Or userid = "AAVILA" Then
                                 'ConnSql.ConnectionString = gnr.SQLCon
                                 'ConnSql.Open()

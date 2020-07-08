@@ -49,4 +49,4 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\DocumentFormat.OpenXml.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ExcelNumberFormat.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.Loading.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.MyRecources.resources
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.LoadingExcel.resources

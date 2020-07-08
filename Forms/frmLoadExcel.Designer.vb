@@ -24,18 +24,15 @@ Partial Class frmLoadExcel
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmLoadExcel))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
-        Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.txtVendorNo = New System.Windows.Forms.TextBox()
-        Me.btnValidVendor = New System.Windows.Forms.Button()
         Me.lblVendorDesc = New System.Windows.Forms.Label()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
-        Me.cmdExcel = New System.Windows.Forms.Button()
         Me.lblExcel = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
@@ -48,13 +45,9 @@ Partial Class frmLoadExcel
         Me.clPRDSTS = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BindingNavigator1 = New System.Windows.Forms.BindingNavigator(Me.components)
         Me.BindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel()
-        Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMovePreviousItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator = New System.Windows.Forms.ToolStripSeparator()
         Me.BindingNavigatorPositionItem = New System.Windows.Forms.ToolStripTextBox()
         Me.BindingNavigatorSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridView2 = New System.Windows.Forms.DataGridView()
@@ -65,13 +58,9 @@ Partial Class frmLoadExcel
         Me.clError = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BindingNavigator2 = New System.Windows.Forms.BindingNavigator(Me.components)
         Me.BindingNavigatorCountItem1 = New System.Windows.Forms.ToolStripLabel()
-        Me.BindingNavigatorMoveFirstItem1 = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMovePreviousItem1 = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.BindingNavigatorPositionItem1 = New System.Windows.Forms.ToolStripTextBox()
         Me.BindingNavigatorSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.BindingNavigatorMoveNextItem1 = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveLastItem1 = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.cmbStatus = New System.Windows.Forms.ComboBox()
         Me.cmbPerCharge = New System.Windows.Forms.ComboBox()
@@ -98,7 +87,18 @@ Partial Class frmLoadExcel
         Me.lblProjectNo = New System.Windows.Forms.Label()
         Me.lblVendorNo = New System.Windows.Forms.Label()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMovePreviousItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveFirstItem1 = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMovePreviousItem1 = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveNextItem1 = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveLastItem1 = New System.Windows.Forms.ToolStripButton()
+        Me.cmdExcel = New System.Windows.Forms.Button()
+        Me.btnValidVendor = New System.Windows.Forms.Button()
+        Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -117,6 +117,7 @@ Partial Class frmLoadExcel
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
+        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'OpenFileDialog1
@@ -155,18 +156,6 @@ Partial Class frmLoadExcel
         Me.txtVendorNo.Size = New System.Drawing.Size(190, 27)
         Me.txtVendorNo.TabIndex = 30
         '
-        'btnValidVendor
-        '
-        Me.btnValidVendor.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnValidVendor.ImageIndex = 1
-        Me.btnValidVendor.ImageList = Me.ImageList1
-        Me.btnValidVendor.Location = New System.Drawing.Point(199, 3)
-        Me.btnValidVendor.Name = "btnValidVendor"
-        Me.btnValidVendor.Size = New System.Drawing.Size(37, 27)
-        Me.btnValidVendor.TabIndex = 31
-        Me.btnValidVendor.Text = " "
-        Me.btnValidVendor.UseVisualStyleBackColor = True
-        '
         'lblVendorDesc
         '
         Me.TableLayoutPanel4.SetColumnSpan(Me.lblVendorDesc, 2)
@@ -192,17 +181,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel3.Size = New System.Drawing.Size(239, 42)
         Me.TableLayoutPanel3.TabIndex = 28
-        '
-        'cmdExcel
-        '
-        Me.cmdExcel.ImageIndex = 0
-        Me.cmdExcel.ImageList = Me.ImageList1
-        Me.cmdExcel.Location = New System.Drawing.Point(3, 3)
-        Me.cmdExcel.Name = "cmdExcel"
-        Me.cmdExcel.Size = New System.Drawing.Size(38, 36)
-        Me.cmdExcel.TabIndex = 29
-        Me.cmdExcel.UseVisualStyleBackColor = True
-        Me.cmdExcel.Visible = False
         '
         'lblExcel
         '
@@ -260,38 +238,38 @@ Partial Class frmLoadExcel
         '
         Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AllowUserToOrderColumns = True
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clPRHCOD, Me.clPRDPTN, Me.clPRDCTP, Me.clPRDMFR, Me.clVMVNUM, Me.clPRDSTS})
         Me.TableLayoutPanel6.SetColumnSpan(Me.DataGridView1, 3)
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter
         Me.DataGridView1.Location = New System.Drawing.Point(3, 3)
         Me.DataGridView1.MultiSelect = False
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridView1.RowHeadersVisible = False
         Me.DataGridView1.RowHeadersWidth = 62
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -380,24 +358,6 @@ Partial Class frmLoadExcel
         Me.BindingNavigatorCountItem.Text = "of {0}"
         Me.BindingNavigatorCountItem.ToolTipText = "Total number of items"
         '
-        'BindingNavigatorMoveFirstItem
-        '
-        Me.BindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveFirstItem.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveFirstItem.Name = "BindingNavigatorMoveFirstItem"
-        Me.BindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveFirstItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMoveFirstItem.Text = "Move first"
-        '
-        'BindingNavigatorMovePreviousItem
-        '
-        Me.BindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMovePreviousItem.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMovePreviousItem.Name = "BindingNavigatorMovePreviousItem"
-        Me.BindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMovePreviousItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMovePreviousItem.Text = "Move previous"
-        '
         'BindingNavigatorSeparator
         '
         Me.BindingNavigatorSeparator.Name = "BindingNavigatorSeparator"
@@ -407,6 +367,7 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
+        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(75, 35)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -416,24 +377,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorSeparator1.Name = "BindingNavigatorSeparator1"
         Me.BindingNavigatorSeparator1.Size = New System.Drawing.Size(6, 36)
-        '
-        'BindingNavigatorMoveNextItem
-        '
-        Me.BindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveNextItem.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveNextItem.Name = "BindingNavigatorMoveNextItem"
-        Me.BindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveNextItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMoveNextItem.Text = "Move next"
-        '
-        'BindingNavigatorMoveLastItem
-        '
-        Me.BindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveLastItem.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveLastItem.Name = "BindingNavigatorMoveLastItem"
-        Me.BindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveLastItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMoveLastItem.Text = "Move last"
         '
         'BindingNavigatorSeparator2
         '
@@ -528,24 +471,6 @@ Partial Class frmLoadExcel
         Me.BindingNavigatorCountItem1.Text = "of {0}"
         Me.BindingNavigatorCountItem1.ToolTipText = "Total number of items"
         '
-        'BindingNavigatorMoveFirstItem1
-        '
-        Me.BindingNavigatorMoveFirstItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveFirstItem1.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveFirstItem1.Name = "BindingNavigatorMoveFirstItem1"
-        Me.BindingNavigatorMoveFirstItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveFirstItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMoveFirstItem1.Text = "Move first"
-        '
-        'BindingNavigatorMovePreviousItem1
-        '
-        Me.BindingNavigatorMovePreviousItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMovePreviousItem1.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMovePreviousItem1.Name = "BindingNavigatorMovePreviousItem1"
-        Me.BindingNavigatorMovePreviousItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMovePreviousItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMovePreviousItem1.Text = "Move previous"
-        '
         'BindingNavigatorSeparator3
         '
         Me.BindingNavigatorSeparator3.Name = "BindingNavigatorSeparator3"
@@ -555,6 +480,7 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
+        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"
@@ -564,24 +490,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorSeparator4.Name = "BindingNavigatorSeparator4"
         Me.BindingNavigatorSeparator4.Size = New System.Drawing.Size(6, 31)
-        '
-        'BindingNavigatorMoveNextItem1
-        '
-        Me.BindingNavigatorMoveNextItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveNextItem1.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveNextItem1.Name = "BindingNavigatorMoveNextItem1"
-        Me.BindingNavigatorMoveNextItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveNextItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMoveNextItem1.Text = "Move next"
-        '
-        'BindingNavigatorMoveLastItem1
-        '
-        Me.BindingNavigatorMoveLastItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveLastItem1.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveLastItem1.Name = "BindingNavigatorMoveLastItem1"
-        Me.BindingNavigatorMoveLastItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveLastItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMoveLastItem1.Text = "Move last"
         '
         'BindingNavigatorSeparator5
         '
@@ -894,6 +802,105 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(775, 647)
         Me.TableLayoutPanel2.TabIndex = 2
         '
+        'BindingNavigatorMoveFirstItem
+        '
+        Me.BindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveFirstItem.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveFirstItem.Name = "BindingNavigatorMoveFirstItem"
+        Me.BindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveFirstItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMoveFirstItem.Text = "Move first"
+        '
+        'BindingNavigatorMovePreviousItem
+        '
+        Me.BindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMovePreviousItem.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMovePreviousItem.Name = "BindingNavigatorMovePreviousItem"
+        Me.BindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMovePreviousItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMovePreviousItem.Text = "Move previous"
+        '
+        'BindingNavigatorMoveNextItem
+        '
+        Me.BindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveNextItem.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveNextItem.Name = "BindingNavigatorMoveNextItem"
+        Me.BindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveNextItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMoveNextItem.Text = "Move next"
+        '
+        'BindingNavigatorMoveLastItem
+        '
+        Me.BindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveLastItem.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveLastItem.Name = "BindingNavigatorMoveLastItem"
+        Me.BindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveLastItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMoveLastItem.Text = "Move last"
+        '
+        'BindingNavigatorMoveFirstItem1
+        '
+        Me.BindingNavigatorMoveFirstItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveFirstItem1.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveFirstItem1.Name = "BindingNavigatorMoveFirstItem1"
+        Me.BindingNavigatorMoveFirstItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveFirstItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMoveFirstItem1.Text = "Move first"
+        '
+        'BindingNavigatorMovePreviousItem1
+        '
+        Me.BindingNavigatorMovePreviousItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMovePreviousItem1.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMovePreviousItem1.Name = "BindingNavigatorMovePreviousItem1"
+        Me.BindingNavigatorMovePreviousItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMovePreviousItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMovePreviousItem1.Text = "Move previous"
+        '
+        'BindingNavigatorMoveNextItem1
+        '
+        Me.BindingNavigatorMoveNextItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveNextItem1.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveNextItem1.Name = "BindingNavigatorMoveNextItem1"
+        Me.BindingNavigatorMoveNextItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveNextItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMoveNextItem1.Text = "Move next"
+        '
+        'BindingNavigatorMoveLastItem1
+        '
+        Me.BindingNavigatorMoveLastItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveLastItem1.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveLastItem1.Name = "BindingNavigatorMoveLastItem1"
+        Me.BindingNavigatorMoveLastItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveLastItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMoveLastItem1.Text = "Move last"
+        '
+        'cmdExcel
+        '
+        Me.cmdExcel.ImageIndex = 0
+        Me.cmdExcel.ImageList = Me.ImageList1
+        Me.cmdExcel.Location = New System.Drawing.Point(3, 3)
+        Me.cmdExcel.Name = "cmdExcel"
+        Me.cmdExcel.Size = New System.Drawing.Size(38, 36)
+        Me.cmdExcel.TabIndex = 29
+        Me.cmdExcel.UseVisualStyleBackColor = True
+        Me.cmdExcel.Visible = False
+        '
+        'btnValidVendor
+        '
+        Me.btnValidVendor.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnValidVendor.ImageIndex = 1
+        Me.btnValidVendor.ImageList = Me.ImageList1
+        Me.btnValidVendor.Location = New System.Drawing.Point(199, 3)
+        Me.btnValidVendor.Name = "btnValidVendor"
+        Me.btnValidVendor.Size = New System.Drawing.Size(37, 27)
+        Me.btnValidVendor.TabIndex = 31
+        Me.btnValidVendor.Text = " "
+        Me.btnValidVendor.UseVisualStyleBackColor = True
+        '
+        'BackgroundWorker1
+        '
+        Me.BackgroundWorker1.WorkerReportsProgress = True
+        '
         'frmLoadExcel
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -902,7 +909,6 @@ Partial Class frmLoadExcel
         Me.Controls.Add(Me.TableLayoutPanel2)
         Me.Name = "frmLoadExcel"
         Me.Text = "frmLoadExcel"
-        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout()
         Me.TableLayoutPanel3.ResumeLayout(False)
@@ -928,6 +934,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout()
+        CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1002,4 +1009,5 @@ Partial Class frmLoadExcel
     Friend WithEvents clVMVNUM2 As DataGridViewTextBoxColumn
     Friend WithEvents clError As DataGridViewTextBoxColumn
     Friend WithEvents lblExcel As Label
+    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
 End Class
