@@ -727,6 +727,23 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function GetDataByPRHCODInDetails(code As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(PRDVLD.VMVNUM) as VMVNUM,
+                    Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLD 
+                    INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetExistByPRNAME(name As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -2390,7 +2407,7 @@ errhandler:
             as400.Define(server.DefaultSystem)
             as400.UserID = "INTRANET"
             as400.Password = "CTP6100"
-            'as400.IPAddress = "172.0.0.21"
+            'as400.IPAddress = "SVR400"
             as400.PromptMode = cwbcoPromptNever
             as400.Signon()
 
@@ -2507,6 +2524,8 @@ errhandler:
         End Try
 
     End Sub
+
+
 
     Public Function FillGrid(query As String) As Data.DataSet
         Dim exMessage As String = " "

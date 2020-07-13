@@ -12,4 +12,5 @@
     Public Shared currentAction As String
     Public Shared panelCollapseProp As Boolean
     Public Shared flagAccessAllow As Integer
+    Public Shared searchControls As List(Of Object)
 End Class

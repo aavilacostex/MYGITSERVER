@@ -44,7 +44,7 @@ Public Class frmLoadExcel
             btnInsert.Enabled = False
             btnCheck.Enabled = False
             btnSelect.Enabled = False
-            dtProjectDate.Value = Now
+            'dtProjectDate.Value = Now
             DataGridView1.ReadOnly = True
             cmdExcel.Visible = False
             SplitContainer1.Visible = False
@@ -56,6 +56,15 @@ Public Class frmLoadExcel
             cmbStatus.Items.Add("F - Finished")
             cmbStatus.SelectedIndex = 1
             FillDDlUser1()
+
+            txtProjectNo.SetWatermark("Project Number")
+            txtProjectName.SetWatermark("Project Name")
+            txtVendorNo.SetWatermark("Vendor Number")
+            txtDesc.SetWatermark("Description")
+
+            cmbStatus.SetWatermark("Project Status")
+            cmbPerCharge.SetWatermark("Person In Charge")
+
 
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
