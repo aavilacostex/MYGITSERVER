@@ -152,6 +152,7 @@
     Private Sub txtpassword_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles Me.KeyPress, txtPassword.KeyPress
         If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
             cmdok_Click()
+            txtPassword.Text = txtPassword.Text.Replace(Environment.NewLine, "")
         End If
     End Sub
 
@@ -309,7 +310,7 @@
                     Dim rsMessageInvalid As DialogResult = MessageBox.Show("Invalid Password, try again!", "CTP System", MessageBoxButtons.OK)
                     'MsgBox("Invalid Password, try again!", vbOKOnly + vbInformation, "CTP System")
                     'txtPassword.SetFocus
-                    SendKeys.Send("{Home}+{End}")
+                    'SendKeys.Send("{Home}+{End}")
                 End If
             End If
             Exit Sub

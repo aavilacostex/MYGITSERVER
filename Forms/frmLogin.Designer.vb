@@ -124,7 +124,6 @@ Partial Class frmLogin
         Me.txtPassword.Location = New System.Drawing.Point(88, 108)
         Me.txtPassword.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
         Me.txtPassword.MaxLength = 14
-        Me.txtPassword.Multiline = True
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)
         Me.txtPassword.Size = New System.Drawing.Size(130, 20)
