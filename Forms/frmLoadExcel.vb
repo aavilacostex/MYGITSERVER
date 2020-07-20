@@ -11,6 +11,7 @@ Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports System.ComponentModel
 Imports System.Reflection
+'Dim ac As New Autocomplete__module()
 
 Public Class frmLoadExcel
 
@@ -64,6 +65,39 @@ Public Class frmLoadExcel
 
             cmbStatus.SetWatermark("Project Status")
             cmbPerCharge.SetWatermark("Person In Charge")
+
+            'Autocomplete__module.create_textAutocomplete(txtVendorName)
+            'Autocomplete__module.create_ddlAutocomplete(ComboBox1)
+
+            ComboBox1.AutoCompleteMode = AutoCompleteMode.Append
+            ComboBox1.DropDownStyle = ComboBoxStyle.DropDown
+            ComboBox1.AutoCompleteSource = AutoCompleteSource.ListItems
+
+            'Then Set ComboBox AutoComplete properties
+            Dim ds = gnr.getVendorNoAndNameByNameDS()
+            'Dim ds1 = gnr.getVendorsAccepted(ds)
+            Dim bs = New BindingSource()
+            bs.DataSource = ds.Tables(0)
+            Dim dataview = New DataView(ds.Tables(0))
+            Dim myTable As DataTable = dataview.ToTable(False, "VMNAME", "VMVNUM")
+
+
+            Dim newRow As DataRow = myTable.NewRow
+            newRow("VMNAME") = ""
+            newRow("VMVNUM") = -1
+            'dsUser.Tables(0).Rows.Add(newRow)
+            myTable.Rows.InsertAt(newRow, 0)
+
+            With ComboBox1
+                .DisplayMember = "VMNAME"
+                .ValueMember = "VMVNUM"
+                .DataSource = myTable
+                .DropDownStyle = ComboBoxStyle.DropDown
+                .AutoCompleteMode = AutoCompleteMode.SuggestAppend
+                .AutoCompleteSource = AutoCompleteSource.ListItems
+            End With
+
+
 
 
         Catch ex As Exception
@@ -242,6 +276,25 @@ Public Class frmLoadExcel
         End If
     End Sub
 
+    Private Sub txtVendorName_TextChanged(sender As Object, e As EventArgs)
+
+        'Dim result = gnr.getVendorNoAndNameByNameLike(txtVendorName.Text)
+        'Dim strValue = txtVendorName.Text
+        'Dim DataCollection As New AutoCompleteStringCollection()
+        'Dim collection = gnr.getVendorNoAndNameByName()
+        'txtVendorName.AutoCompleteCustomSource = collection
+
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged, ComboBox1.TextChanged
+        'Dim result = gnr.getVendorNoAndNameByNameLike(txtVendorName.Text)
+        'ComboBox1.DataSource = result
+        'ComboBox1.Refresh()
+        If ComboBox1.SelectedValue IsNot Nothing Then
+            txtVendorNo.Text = ComboBox1.SelectedValue.ToString()
+        End If
+    End Sub
+
     Private Sub txtVendorNo_TextChanged_1(sender As Object, e As EventArgs) Handles txtVendorNo.TextChanged
         If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
             btnSelect.Enabled = True
@@ -252,6 +305,10 @@ Public Class frmLoadExcel
         End If
         btnValidVendor.Enabled = True
         txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
+
+        If txtVendorNo.Text = "-1" Then
+            txtVendorNo.Text = ""
+        End If
     End Sub
 
     Private Sub fillcell1(dt As DataTable, flag As Integer, dsName As String, Optional ByVal stopPag As Boolean = False)
@@ -789,12 +846,17 @@ Public Class frmLoadExcel
             If Regex.IsMatch(vendorNoValue, "^[0-9]{1,6}$") Then
                 Dim validVendor = gnr.isVendorAccepted(vendorNoValue)
                 If Not validVendor Then
+                    lblVendorDesc.Text = txtVendorNo.Text & ": It is not a valid vendor number."
                     txtVendorNo.Text = Nothing
+                    ComboBox1.SelectedIndex = -1
                 Else
                     txtVendorNo_TextChanged_1(Nothing, Nothing)
+                    ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
                 End If
             Else
                 txtVendorNo.Text = Nothing
+                lblVendorDesc.Text = Nothing
+                ComboBox1.SelectedIndex = -1
                 MessageBox.Show("The vendor number must have only numeric values and less than 6 characters.", "CTP System", MessageBoxButtons.OK)
             End If
             btnValidVendor.Enabled = False

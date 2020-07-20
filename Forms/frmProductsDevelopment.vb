@@ -22,6 +22,7 @@ Public Class frmProductsDevelopment
     Dim toemails As String = ""
     Dim gnr As Gn1 = New Gn1()
     Dim wm As WatermarkTextBox = New WatermarkTextBox()
+
     'Public Const PageSize = 10
     'Public Property TotalRecords() As Integer
     'Dim urlPathBase As String = "https://costex.atlassian.net/browse/"
@@ -56,7 +57,7 @@ Public Class frmProductsDevelopment
             SetValues()
 
             userid = frmLogin.txtUserName.Text
-            userid = "CTOBON"
+            'userid = "CTOBON"
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
@@ -894,7 +895,7 @@ Public Class frmProductsDevelopment
         ds1.Locale = CultureInfo.InvariantCulture
 
         Try
-            sql = "SELECT distinct(A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY A1.PRDATE DESC"
+            sql = "SELECT distinct(A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY 3 DESC"
 
             ds = gnr.FillGrid(sql)
 
@@ -953,7 +954,7 @@ Public Class frmProductsDevelopment
                                     If ds1.Tables(0).Rows.Count >= 2 Then
                                         SSTab1.SelectedIndex = 1
                                     ElseIf ds1.Tables(0).Rows.Count > 0 Then
-                                        Dim projectNo = ds1.Tables(0).Rows(0).ItemArray(0).ToString()
+                                        Dim ProjectNo = ds1.Tables(0).Rows(0).ItemArray(0).ToString()
                                         Dim partNo = ds1.Tables(0).Rows(0).ItemArray(1).ToString()
                                         fillTab3(projectNo, partNo)
                                         SSTab1.SelectedIndex = 2
@@ -970,7 +971,9 @@ Public Class frmProductsDevelopment
                             Else
                                 fillSecondTabUpp(grvCode)
                                 fillcell2(grvCode)
+                                SSTab1.SelectedIndex = 1
 
+                                'AQUI REVISAR EN CASO DE purc EL UNION FALLA 
                                 Dim sql1 = "SELECT A2.* FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY A1.PRDATE DESC"
                                 ds1 = gnr.FillGrid(sql1)
 
@@ -1761,7 +1764,7 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub txtsearchctp_TextChanged(sender As Object, e As EventArgs) Handles txtsearchctp.TextChanged
-        txtsearchctp.Text = txtsearchcode.Text.Replace(Environment.NewLine, "")
+        txtsearchctp.Text = txtsearchctp.Text.Replace(Environment.NewLine, "")
     End Sub
 
     Private Sub txtMfrNoSearch_TextChanged(sender As Object, e As EventArgs) Handles txtMfrNoSearch.TextChanged
@@ -3453,37 +3456,6 @@ Public Class frmProductsDevelopment
         End If
     End Sub
 
-    Private Sub cmdhidden1_Click(sender As Object, e As EventArgs)
-        Dim exMessage As String = " "
-        Dim controlSender As Object = Nothing
-        Dim isText As Boolean = True
-        Try
-            Dim cnt = DirectCast(sender, System.Windows.Forms.Control)
-            Dim sender_type = cnt.GetType().ToString()
-            If sender_type.Equals("System.Windows.Forms.TextBox") Then
-                controlSender = DirectCast(sender, System.Windows.Forms.TextBox)
-            ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
-                controlSender = DirectCast(sender, System.Windows.Forms.ComboBox)
-                isText = False
-            Else
-                controlSender = Nothing
-            End If
-            Dim ctrl_name = If(controlSender IsNot Nothing, controlSender.Name, "")
-            If Not String.IsNullOrEmpty(ctrl_name) Then
-
-                'Dim button_name = If(isText, ctrl_name.Replace("txt", "cmd"), ctrl_name.Replace("cmb", "cmd"))
-                'Dim button_method = button_name & "_click"
-                Dim button_method = "cmdall1_Click"
-                Dim selection(2) As Object
-                selection(0) = ctrl_name
-                selection(1) = isText
-                CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
-            End If
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
     Private Sub cmdhidden_Click(sender As Object, e As EventArgs)
         Dim exMessage As String = " "
         Dim controlSender As Object = Nothing
@@ -3508,25 +3480,12 @@ Public Class frmProductsDevelopment
                 Dim selection(2) As Object
                 selection(0) = ctrl_name
                 selection(1) = isText
+                DataGridView1.Visible = True
+                dgvProjectDetails.Visible = True
                 CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Public Sub cmdall1_Click(Optional control_name As Object = Nothing, Optional is_text As Object = Nothing)
-        Try
-            Dim button_name = If(is_text, control_name.Replace("txt", "cmd"), control_name.Replace("cmb", "cmd"))
-            Dim button_method = button_name & "_click"
-            CallByName(Me, button_method, CallType.Method, Nothing)
-            'strwhere = CustomStrWhereResult()
-            'fillcell1(strwhere, 0)
-            'Exit Sub
-        Catch ex As Exception
-
-            'Call gnr.gotoerror("frmproductsdevelopment", "cmdall_click", Err.Number, Err.Description, Err.Source)
-            'gnr.gotoerror("frmproductsdevelopment", "cmdall_click", ex.HResult, ex.Message + ". " + ex.ToString, ex.Source)
         End Try
     End Sub
 
@@ -3542,13 +3501,9 @@ Public Class frmProductsDevelopment
             End If
             button_method = button_name & "_click"
             CallByName(Me, button_method, CallType.Method, Nothing)
-            'strwhere = CustomStrWhereResult()
-            'fillcell1(strwhere, 0)
-            'Exit Sub
+
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-            'Call gnr.gotoerror("frmproductsdevelopment", "cmdall_click", Err.Number, Err.Description, Err.Source)
-            'gnr.gotoerror("frmproductsdevelopment", "cmdall_click", ex.HResult, ex.Message + ". " + ex.ToString, ex.Source)
         End Try
     End Sub
 
@@ -3564,6 +3519,7 @@ Public Class frmProductsDevelopment
         Dim exMessage As String = " "
         Try
             onlyClearSearchesComplex()
+            cleanDataSources()
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -3604,7 +3560,6 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-
     Public Sub cmdSearch_Click(Optional ByVal flag As Integer = 0)
         Dim exMessage As String = " "
         Dim tt As Windows.Forms.TextBox
@@ -3613,14 +3568,14 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                    strwhere = " WHERE TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                     End If
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
                 End If
@@ -3659,15 +3614,15 @@ Public Class frmProductsDevelopment
 
             If Not String.IsNullOrEmpty(tt.Text) Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                    strwhere = " WHERE A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
                         'strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
-                        strwhere = "WHERE (PRPECH = 'CTOBON' OR PRDUSR = 'CTOBON') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
-                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND PRDVLD.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
                     End If
                 End If
                 lstQueries.Add(strwhere)
@@ -3701,14 +3656,14 @@ Public Class frmProductsDevelopment
             If Not String.IsNullOrEmpty(tt.Text) Then
 
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
+                    strwhere = " WHERE TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(tt.Text)) & "' "
                     End If
 
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDPTN)) = '" & Trim(UCase(txtsearchpart.Text)) & "' "
@@ -3797,14 +3752,14 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
+                    strwhere = " WHERE TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                     End If
 
                     'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(txtsearchctp.Text)) & "' "
@@ -3836,14 +3791,14 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
+                    strwhere = " WHERE TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                     End If
                 End If
 
@@ -3924,14 +3879,14 @@ Public Class frmProductsDevelopment
             If Trim(tt.Text) <> "" Then
 
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
+                    strwhere = " WHERE TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND  TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                     End If
                 End If
                 lstQueries.Add(strwhere)
@@ -3979,14 +3934,14 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE A1.PRHCOD = " & Trim(UCase(tt.Text))
+                    strwhere = " WHERE A1.PRHCOD = " & Trim(UCase(tt.Text))
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND A1.PRHCOD = " & Trim(UCase(tt.Text)) & ""
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
                     End If
                 End If
 
@@ -4022,14 +3977,14 @@ Public Class frmProductsDevelopment
 
             If Not String.IsNullOrEmpty(tt.SelectedValue) Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
+                    strwhere = " WHERE TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                     End If
                 End If
                 lstQueries.Add(strwhere)
@@ -4058,14 +4013,14 @@ Public Class frmProductsDevelopment
         Try
             If Trim(tt.Text) <> "" Then
                 If flagallow = 1 Then
-                    strwhere = "WHERE TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+                    strwhere = " WHERE TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
                 Else
                     If gnr.checkPurcByUser(userid) <> -1 Then
                         Dim purcValue = gnr.checkPurcByUser(userid)
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
-                        strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+                        strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                     Else
-                        strwhere = "WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+                        strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
                     End If
                 End If
                 lstQueries.Add(strwhere)
@@ -4275,11 +4230,12 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Public Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdcmbUser2.Click
-        cmdPePechMore_Click()
+    Public Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmduser2.Click
+        cmduser2_click()
+        'cmdPePechMore_Click()
     End Sub
 
-    Public Sub cmdPePechMore_Click()
+    Public Sub cmduser2_click()
         'Dim strAddCtpSentence As String = ""
         'strAddCtpSentence = " AND PRDCTP = " ' & txtCtpNoMore.Text & '" 
 
@@ -4341,6 +4297,64 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Private Sub cmdhidden1_Click(sender As Object, e As EventArgs)
+        Dim exMessage As String = " "
+        Dim controlSender As Object = Nothing
+        Dim isText As Boolean = True
+        Try
+            Dim cnt = DirectCast(sender, System.Windows.Forms.Control)
+            Dim sender_type = cnt.GetType().ToString()
+            If sender_type.Equals("System.Windows.Forms.TextBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.TextBox)
+            ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.ComboBox)
+                isText = False
+            Else
+                controlSender = Nothing
+            End If
+            Dim ctrl_name = If(controlSender IsNot Nothing, controlSender.Name, "")
+            If Not String.IsNullOrEmpty(ctrl_name) Then
+
+                'Dim button_name = If(isText, ctrl_name.Replace("txt", "cmd"), ctrl_name.Replace("cmb", "cmd"))
+                'Dim button_method = button_name & "_click"
+                Dim button_method = "cmdall1_Click"
+                Dim selection(2) As Object
+                selection(0) = ctrl_name
+                selection(1) = isText
+                CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Sub cmdall12_Click(Optional ByVal flag As Integer = 0)
+        Dim Qry As New DataTable
+        Dim exMessage As String = " "
+        Try
+            'aqui va validacion de busqueda a traves del boton en segundo tab
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Public Sub cmdall1_Click_1(Optional control_name As Object = Nothing, Optional is_text As Object = Nothing)
+        Dim exMessage As String = " "
+        Try
+            Dim button_name = If(is_text, control_name.Replace("txt", "cmd"), control_name.Replace("cmb", "cmd"))
+            Dim button_method = button_name & "_click"
+            CallByName(Me, button_method, CallType.Method, Nothing)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub cmdAll1_Click(sender As Object, e As EventArgs) Handles cmdAll1.Click
+        Dim b As System.Windows.Forms.Button = DirectCast(sender, System.Windows.Forms.Button)
+        cmdall1_Click_1(b.Name & 2, Nothing)
+    End Sub
+
 
 #End Region
 
@@ -4365,6 +4379,8 @@ Public Class frmProductsDevelopment
                 End If
             Next
             LikeSession.searchControls = hasVal
+            bs.DataSource = Nothing
+            bs1.DataSource = Nothing
             sql += buildSearchQuerySintax(hasVal)
             sql += initialQuery(1)
             If flag = 1 Then
@@ -5051,6 +5067,19 @@ Public Class frmProductsDevelopment
 #End Region
 
 #Region "Utils"
+
+    Private Sub cleanDataSources()
+        bs.DataSource = Nothing
+        bs1.DataSource = Nothing
+        DataGridView1.DataSource = Nothing
+        'DataGridView1.DataSource.Clear()
+        DataGridView1.Refresh()
+        dgvProjectDetails.DataSource = Nothing
+        'dgvProjectDetails.DataSource.Clear()
+        dgvProjectDetails.Refresh()
+        DataGridView1.Visible = False
+        dgvProjectDetails.Visible = False
+    End Sub
 
     Private Sub setVendorValues()
         Dim exMessage As String = " "

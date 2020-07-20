@@ -418,6 +418,82 @@ NotInheritable Class Gn1
 
 #Region "Selects"
 
+    Public Function getVendorNoAndNameByNameDS() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT VMVNUM, VMNAME, VMVTYP FROM VNMAS WHERE VMVTYP NOT IN (" & VendorCodesDenied & ") 
+                   AND VMVNUM NOT IN (SELECT CNTDE1 FROM CNTRLL WHERE CNT01 IN (" & VendorOEMCodeDenied & "))
+                   ORDER BY VMNAME"
+            ds = GetDataFromDatabase(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    Return ds
+                End If
+            End If
+            Return Nothing
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getVendorNoAndNameByName() As AutoCompleteStringCollection
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        'Dim rsValue As Integer = -1
+        Dim lstCollection As AutoCompleteStringCollection = New AutoCompleteStringCollection()
+        Try
+            'Sql = "SELECT VMVNUM, VMNAME FROM VNMAS WHERE VMNAME LIKE '%" & Replace(Trim(UCase(vendorName)), "'", "") & "%' "
+            Sql = "SELECT VMVNUM, VMNAME FROM VNMAS ORDER BY VMVNUM, VMNAME ASC"
+            ds = GetDataFromDatabase(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+
+                    For Each row As DataRow In ds.Tables(0).Rows
+                        lstCollection.Add(row(0).ToString())
+                    Next
+                    Return lstCollection
+                End If
+            End If
+            Return Nothing
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getVendorNoAndNameByNameLike(vendorName As String) As AutoCompleteStringCollection
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        'Dim rsValue As Integer = -1
+        Dim lstCollection As AutoCompleteStringCollection = New AutoCompleteStringCollection()
+        Try
+            Sql = "SELECT VMNAME FROM VNMAS WHERE VMNAME LIKE '%" & Replace(Trim(UCase(vendorName)), "'", "") & "%' "
+            'Sql = "SELECT VMVNUM, VMNAME FROM VNMAS ORDER BY VMVNUM, VMNAME ASC"
+            ds = GetDataFromDatabase(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+
+                    For Each row As DataRow In ds.Tables(0).Rows
+                        lstCollection.Add(row(0).ToString())
+                    Next
+                    Return lstCollection
+                End If
+            End If
+            Return Nothing
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function checkPurcByUser(userid As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
@@ -636,13 +712,59 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
 
-        Dim Sql = "select CNTDE1 from cntrll where cnt01 = '" & cntrCode & "' "
+        Dim Sql = "select CNTDE1 from cntrll where cnt01 = " & cntrCode & " "
         Try
             ds = FillGrid(Sql)
             If ds IsNot Nothing Then
                 Return ds
             Else
                 Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function getVendorsAccepted(ds As DataSet) As DataSet
+        Dim exMessage As String = " "
+        Try
+            Dim dsRsult = New DataSet()
+            Dim dtRsult = New DataTable()
+            dtRsult.Columns.Add("VMVNUM", GetType(Integer))
+            dtRsult.Columns.Add("VMNAME", GetType(String))
+            dtRsult.Columns.Add("vmvtyp", GetType(String))
+            dsRsult.Tables.Add(dtRsult)
+
+            If ds IsNot Nothing Then
+
+                For Each dw As DataRow In ds.Tables(0).Rows
+
+                    Dim vendorType = dw.ItemArray(2).ToString()
+                    Dim vendorName = dw.ItemArray(1).ToString()
+                    Dim vendorNo = dw.ItemArray(0).ToString()
+                    Dim listDeniedCodes = VendorCodesDenied.Split(",")
+                    Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x) x = vendorType)
+                    If Not containsDenied Then
+                        Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
+                        Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
+                        If Not containsOEM Then
+
+                            Dim newRow As DataRow = dsRsult.Tables(0).NewRow
+                            newRow("VMVNUM") = vendorNo
+                            newRow("VMNAME") = vendorName
+                            newRow("vmvtyp") = vendorType
+                            dsRsult.Tables(0).Rows.Add(newRow)
+
+                            'mustDelete = True
+                            'ds.Tables(0).Rows.RemoveAt(i)
+                            'frmLoadExcel.lblVendorDesc.Text = vendorName
+                            'MessageBox.Show("The vendor " & RTrim(vendorName) & " is an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
+                            'Return True
+                        End If
+                    End If
+                Next
+                Return dsRsult
             End If
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -2654,9 +2776,12 @@ errhandler:
                 ds.Locale = CultureInfo.InvariantCulture
 
                 ObjConn.Open()
+
                 Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
                 dataAdapter = New Odbc.OdbcDataAdapter(cmd)
                 dataAdapter.Fill(ds)
+
+                ObjConn.Close()
 
                 If ds.Tables(0).Rows.Count > 0 Then
                     Return ds
@@ -2681,9 +2806,12 @@ errhandler:
                 ds.Locale = CultureInfo.InvariantCulture
 
                 ObjConn.Open()
+
                 Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
                 dataAdapter = New Odbc.OdbcDataAdapter(cmd)
                 dataAdapter.Fill(ds)
+
+                ObjConn.Close()
 
                 Dim index = ds.Tables(0).Columns(columnToChange).Ordinal
                 If ds.Tables(0).Rows.Count > 0 Then
@@ -2734,9 +2862,12 @@ errhandler:
                 ds.Locale = CultureInfo.InvariantCulture
 
                 ObjConn.Open()
+
                 Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
                 dataAdapter = New Odbc.OdbcDataAdapter(cmd)
                 dataAdapter.Fill(ds)
+
+                ObjConn.Close()
             End Using
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -2753,9 +2884,13 @@ errhandler:
                 ds.Locale = CultureInfo.InvariantCulture
                 Dim rows As Integer
 
-                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
                 ObjConn.Open()
+
+                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
                 rows = cmd.ExecuteNonQuery()
+
+                ObjConn.Close()
+
                 Return rows
             End Using
         Catch ex As Exception

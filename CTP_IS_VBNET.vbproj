@@ -171,6 +171,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\Autocomplete _module.vb" />
+    <Compile Include="Class\btntextox.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Class\CrystalReport.vb" />
     <Compile Include="Class\LikeSession.vb" />
     <Compile Include="Class\LoadExcel.vb" />
