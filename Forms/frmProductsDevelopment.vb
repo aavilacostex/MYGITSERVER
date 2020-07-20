@@ -1701,13 +1701,17 @@ Public Class frmProductsDevelopment
 
     Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
         'If DataGridView1.DataSource IsNot Nothing Then
-        DataGridView1.DataSource = Tables(bs.Position)
+        If bs.Position <> -1 Then
+            DataGridView1.DataSource = Tables(bs.Position)
+        End If
         'End If
     End Sub
 
     Private Sub bs1_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
         'If dgvProjectDetails.DataSource IsNot Nothing Then
-        dgvProjectDetails.DataSource = Tables1(bs1.Position)
+        If bs1.Position <> -1 Then
+            dgvProjectDetails.DataSource = Tables1(bs1.Position)
+        End If
         'End If
     End Sub
 
