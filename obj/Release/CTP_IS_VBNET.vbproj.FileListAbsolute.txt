@@ -49,3 +49,5 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.Loading.resou
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.test.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.vbproj.CoreCompileInputs.cache
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.MyRecources.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.vbprojAssemblyReference.cache
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.LoadingExcel.resources
