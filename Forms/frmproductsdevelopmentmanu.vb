@@ -30,7 +30,7 @@ Public Class frmproductsdevelopmentmanu
 
             userid = frmLogin.txtUserName.Text
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -102,7 +102,7 @@ Public Class frmproductsdevelopmentmanu
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -155,7 +155,7 @@ Public Class frmproductsdevelopmentmanu
                 MessageBox.Show("No records to update.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 

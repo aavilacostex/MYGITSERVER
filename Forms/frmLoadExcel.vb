@@ -34,7 +34,8 @@ Public Class frmLoadExcel
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim exMessage As String = " "
         Try
-            userid = Trim(UCase(frmLogin.txtUserName.Text))
+            'userid = Trim(UCase(frmLogin.txtUserName.Text))
+            userid = "CMONTILVA"
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
@@ -101,7 +102,7 @@ Public Class frmLoadExcel
 
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -213,7 +214,7 @@ Public Class frmLoadExcel
                 MessageBox.Show("Error reading excel data.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -228,7 +229,7 @@ Public Class frmLoadExcel
             Dim buildedName = "Panel" & index & "Collapsed"
             Dim buildNameReverse As String = Nothing
             Dim pi As PropertyInfo = SplitContainer1.GetType().GetProperty(buildedName)
-            pi.SetValue(SplitContainer1, Convert.ChangeType(value, pi.PropertyType))
+            pi.SetValue(SplitContainer1, Convert.ChangeType(value, pi.PropertyType), Nothing)
             If index.Equals(1) Then
                 btnCheck.Enabled = Not value
                 btnSuccess.Enabled = value
@@ -238,7 +239,7 @@ Public Class frmLoadExcel
                 lblExcel.Visible = value
                 buildNameReverse = "Panel" & index + 1 & "Collapsed"
                 Dim pi2 As PropertyInfo = SplitContainer1.GetType().GetProperty(buildNameReverse)
-                pi2.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi2.PropertyType))
+                pi2.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi2.PropertyType), Nothing)
             Else
                 btnCheck.Enabled = value
                 btnSuccess.Enabled = Not value
@@ -249,10 +250,10 @@ Public Class frmLoadExcel
                 DataGridView2.Enabled = Not value
                 buildNameReverse = "Panel" & index - 1 & "Collapsed"
                 Dim pi1 As PropertyInfo = SplitContainer1.GetType().GetProperty(buildNameReverse)
-                pi1.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi1.PropertyType))
+                pi1.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi1.PropertyType), Nothing)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -465,7 +466,7 @@ Public Class frmLoadExcel
             DataGridView1.Refresh()
             DataGridView2.DataSource = Nothing
             DataGridView2.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -501,7 +502,7 @@ Public Class frmLoadExcel
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -537,7 +538,7 @@ Public Class frmLoadExcel
 
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -568,7 +569,7 @@ Public Class frmLoadExcel
                 e.FormattingApplied = True
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -651,7 +652,7 @@ Public Class frmLoadExcel
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
 
     End Sub
@@ -678,7 +679,7 @@ Public Class frmLoadExcel
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -697,7 +698,7 @@ Public Class frmLoadExcel
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
 
     End Sub
@@ -725,7 +726,7 @@ Public Class frmLoadExcel
                 '    End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -792,7 +793,7 @@ Public Class frmLoadExcel
                 End Using
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -861,7 +862,7 @@ Public Class frmLoadExcel
             End If
             btnValidVendor.Enabled = False
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1171,7 +1172,7 @@ Public Class frmLoadExcel
             'lblMessage.Text = arraySuccess.Count & ": Records Inserted Successfully."
             'lblMessage.Visible = True
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1469,7 +1470,7 @@ Public Class frmLoadExcel
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1482,7 +1483,7 @@ Public Class frmLoadExcel
             'btnSuccess.Enabled = True
             'btnCheck.Enabled = False
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1495,53 +1496,53 @@ Public Class frmLoadExcel
             'btnSuccess.Enabled = False
             'btnCheck.Enabled = True
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
     Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
-        Dim exMessage As String = " "
-        Try
-            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            Dim folderPath As String = userPath & "\PD-Bulk-Errors\"
-            If Not Directory.Exists(folderPath) Then
-                Directory.CreateDirectory(folderPath)
-            End If
+        'Dim exMessage As String = " "
+        'Try
+        '    Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        '    Dim folderPath As String = userPath & "\PD-Bulk-Errors\"
+        '    If Not Directory.Exists(folderPath) Then
+        '        Directory.CreateDirectory(folderPath)
+        '    End If
 
-            Dim dt As New DataTable
-            dt = (DirectCast(DataGridView2.DataSource, DataTable))
-            If dt IsNot Nothing Then
-                If dt.Rows.Count > 0 Then
-                    Dim fileExtension As String = Determine_OfficeVersion()
-                    If String.IsNullOrEmpty(fileExtension) Then
-                        Exit Sub
-                    End If
+        '    Dim dt As New DataTable
+        '    dt = (DirectCast(DataGridView2.DataSource, DataTable))
+        '    If dt IsNot Nothing Then
+        '        If dt.Rows.Count > 0 Then
+        '            Dim fileExtension As String = Determine_OfficeVersion()
+        '            If String.IsNullOrEmpty(fileExtension) Then
+        '                Exit Sub
+        '            End If
 
-                    Dim fileName As String
-                    If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
-                        fileName = "Project number " & txtProjectNo.Text & " - " & DateTime.Now.ToString("d") & " - Errors." & fileExtension
-                    Else
-                        fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
-                    End If
+        '            Dim fileName As String
+        '            If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
+        '                fileName = "Project number " & txtProjectNo.Text & " - " & DateTime.Now.ToString("d") & " - Errors." & fileExtension
+        '            Else
+        '                fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
+        '            End If
 
-                    Dim fullPath = folderPath & Convert.ToString(fileName)
-                    Using wb As New XLWorkbook()
-                        wb.Worksheets.Add(dt, "Project")
-                        wb.SaveAs(fullPath)
-                    End Using
+        '            Dim fullPath = folderPath & Convert.ToString(fileName)
+        '            Using wb As New XLWorkbook()
+        '                wb.Worksheets.Add(dt, "Project")
+        '                wb.SaveAs(fullPath)
+        '            End Using
 
-                    If File.Exists(fullPath) Then
-                        MessageBox.Show("The file was created successfully.", "CTP System", MessageBoxButtons.OK)
-                    End If
-                Else
-                    MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
-                End If
-            Else
-                MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
-            End If
-        Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
-        End Try
+        '            If File.Exists(fullPath) Then
+        '                MessageBox.Show("The file was created successfully.", "CTP System", MessageBoxButtons.OK)
+        '            End If
+        '        Else
+        '            MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+        '        End If
+        '    Else
+        '        MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+        '    End If
+        'Catch ex As Exception
+        '    exMessage = ex.Message + ". " + ex.ToString
+        'End Try
     End Sub
 
 #End Region
@@ -1581,7 +1582,7 @@ Public Class frmLoadExcel
             'bs_PositionChanged1(bs, Nothing)
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1618,7 +1619,7 @@ Public Class frmLoadExcel
             bs_PositionChanged1(bs1, Nothing)
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1648,7 +1649,7 @@ Public Class frmLoadExcel
             Tables1 = myTables
             Dim epep = Nothing
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1667,7 +1668,7 @@ Public Class frmLoadExcel
                 dgvHandle.Rows(index).Cells(item).ReadOnly = flag
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1678,7 +1679,7 @@ Public Class frmLoadExcel
                 handleDataRow.Cells(item).ReadOnly = flag
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1698,7 +1699,7 @@ Public Class frmLoadExcel
                 Return False
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return rsReturn
         End Try
     End Function
@@ -1808,7 +1809,7 @@ Public Class frmLoadExcel
             End If
             'End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return 1
         End Try
@@ -1867,7 +1868,7 @@ Public Class frmLoadExcel
             DataGridView2.Refresh()
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
@@ -1898,7 +1899,7 @@ Public Class frmLoadExcel
                 Exit Function
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1952,7 +1953,7 @@ Public Class frmLoadExcel
 
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -2031,7 +2032,7 @@ Public Class frmLoadExcel
                 Return strExt
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return strExt
         End Try
     End Function
@@ -2112,7 +2113,7 @@ Public Class frmLoadExcel
     '            'DataGridView1.CurrentCell = Nothing
     '        End If
     '    Catch ex As Exception
-    '        exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+    '        exMessage = ex.Message + ". " + ex.ToString
     '    End Try
 
     'End Sub
@@ -2158,7 +2159,7 @@ Public Class frmLoadExcel
     '            End If
     '        End If
     '    Catch ex As Exception
-    '        exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+    '        exMessage = ex.Message + ". " + ex.ToString
     '    End Try
 
     'End Sub
@@ -2214,7 +2215,7 @@ Public Class frmLoadExcel
     '        'txtDesc.Text = dt.Rows(0).ItemArray(4).ToString()
 
     '    Catch ex As Exception
-    '        exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+    '        exMessage = ex.Message + ". " + ex.ToString
     '        MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
     '    End Try
     'End Sub

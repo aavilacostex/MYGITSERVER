@@ -334,6 +334,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private authUser As String
+    Public Property AuthorizatedUser() As String
+        Get
+            Return authUser
+        End Get
+        Set(ByVal value As String)
+            authUser = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -360,7 +370,7 @@ NotInheritable Class Gn1
         VendorWhiteFlag = ConfigurationManager.AppSettings("itemCategories").ToString()
         PathStartImage = ConfigurationManager.AppSettings("urlPathStartImg").ToString()
         UrlPathImgNew = ConfigurationManager.AppSettings("urlPathImgNew").ToString()
-
+        AuthorizatedUser = ConfigurationManager.AppSettings("authUser").ToString()
 
     End Sub
 
@@ -435,7 +445,7 @@ NotInheritable Class Gn1
             End If
             Return Nothing
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -462,7 +472,7 @@ NotInheritable Class Gn1
             End If
             Return Nothing
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -489,7 +499,7 @@ NotInheritable Class Gn1
             End If
             Return Nothing
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -510,7 +520,7 @@ NotInheritable Class Gn1
             End If
             Return rsValue
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return rsValue
         End Try
     End Function
@@ -531,7 +541,7 @@ NotInheritable Class Gn1
             End If
             Return rsValue
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return rsValue
         End Try
     End Function
@@ -554,7 +564,7 @@ NotInheritable Class Gn1
             End If
             Return amount
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return amount
         End Try
     End Function
@@ -582,7 +592,7 @@ NotInheritable Class Gn1
             End If
             Return lstVendors
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return lstVendors
         End Try
     End Function
@@ -597,7 +607,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -612,7 +622,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -627,7 +637,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -642,7 +652,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -661,7 +671,7 @@ NotInheritable Class Gn1
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Function
 
@@ -683,7 +693,7 @@ NotInheritable Class Gn1
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -702,7 +712,7 @@ NotInheritable Class Gn1
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -721,7 +731,7 @@ NotInheritable Class Gn1
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -767,7 +777,7 @@ NotInheritable Class Gn1
                 Return dsRsult
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -799,7 +809,7 @@ NotInheritable Class Gn1
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return False
         End Try
     End Function
@@ -828,7 +838,7 @@ NotInheritable Class Gn1
             End If
             Return True
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return False
         End Try
 
@@ -844,7 +854,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -861,7 +871,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -876,7 +886,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -891,7 +901,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -906,7 +916,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -921,7 +931,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -936,7 +946,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -951,7 +961,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -966,7 +976,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -981,7 +991,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -996,7 +1006,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1011,7 +1021,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1026,7 +1036,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1041,7 +1051,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1056,7 +1066,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1071,7 +1081,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1086,7 +1096,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1101,7 +1111,7 @@ NotInheritable Class Gn1
             strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
             Return strDescrption
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1116,7 +1126,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1131,7 +1141,7 @@ NotInheritable Class Gn1
             strDescrption = GetSingleDataFromDatabase(Sql, columnToChange)
             Return strDescrption
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1146,7 +1156,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1165,7 +1175,7 @@ NotInheritable Class Gn1
             End If
             Return JiraPath
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1180,7 +1190,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1205,7 +1215,7 @@ NotInheritable Class Gn1
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1221,7 +1231,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1236,7 +1246,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1252,7 +1262,7 @@ NotInheritable Class Gn1
             ProjectDescStatus = GetSingleDataFromDatabase(Sql, columnToChange)
             Return Trim(ProjectDescStatus)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1267,7 +1277,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1282,7 +1292,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1297,7 +1307,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            exMessage = ex.Message + ". " + ex.ToString()
             Return Nothing
         End Try
     End Function
@@ -1312,7 +1322,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            exMessage = ex.Message + ". " + ex.ToString()
             Return Nothing
         End Try
     End Function
@@ -1327,7 +1337,7 @@ NotInheritable Class Gn1
             TcpPartNo = GetSingleDataFromDatabase(Sql, columnToChange)
             Return Trim(TcpPartNo)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            exMessage = ex.Message + ". " + ex.ToString()
             Return Nothing
         End Try
     End Function
@@ -1342,7 +1352,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1357,7 +1367,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1372,7 +1382,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1387,7 +1397,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1403,7 +1413,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            exMessage = ex.Message + ". " + ex.ToString()
             Return Nothing
         End Try
     End Function
@@ -1418,7 +1428,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1433,7 +1443,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1450,7 +1460,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1470,7 +1480,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1485,7 +1495,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            exMessage = ex.Message + ". " + ex.ToString()
             Return Nothing
         End Try
     End Function
@@ -1500,7 +1510,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1515,7 +1525,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1530,7 +1540,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1545,7 +1555,7 @@ NotInheritable Class Gn1
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -1567,7 +1577,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1583,7 +1593,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1599,7 +1609,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1614,7 +1624,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1629,7 +1639,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1646,7 +1656,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1663,7 +1673,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1680,7 +1690,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1711,7 +1721,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1736,7 +1746,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1753,7 +1763,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1768,7 +1778,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1793,7 +1803,7 @@ NotInheritable Class Gn1
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1816,7 +1826,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1832,7 +1842,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1847,7 +1857,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1862,7 +1872,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1877,7 +1887,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1895,7 +1905,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1910,7 +1920,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1924,7 +1934,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1952,7 +1962,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1975,7 +1985,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -1990,7 +2000,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2005,7 +2015,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2019,7 +2029,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2033,7 +2043,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2047,7 +2057,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2062,7 +2072,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2077,7 +2087,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2092,7 +2102,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2106,7 +2116,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2120,7 +2130,7 @@ NotInheritable Class Gn1
             QueryResult = UpdateDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return QueryResult
         End Try
     End Function
@@ -2159,7 +2169,7 @@ NotInheritable Class Gn1
                 Return 1
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return -1
         End Try
     End Function
@@ -2211,7 +2221,7 @@ NotInheritable Class Gn1
             OutlookMessage.Send() 'must be uncommented to send emails
             Return rsResult = 1
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show("Mail could Not be sent") 'if you dont want this message, simply delete this line 
             Return rsResult = -1
         Finally
@@ -2310,7 +2320,7 @@ NotInheritable Class Gn1
                 End Using
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2329,7 +2339,7 @@ NotInheritable Class Gn1
                 End Using
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2358,7 +2368,7 @@ NotInheritable Class Gn1
             Next
             GetIpAddrTable = IpAddrs
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
 
     End Function
@@ -2481,7 +2491,7 @@ NotInheritable Class Gn1
                 End If
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
 
     End Function
@@ -2565,7 +2575,7 @@ errhandler:
             End If
             Exit Function
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
 
     End Function
@@ -2671,7 +2681,8 @@ errhandler:
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
     End Function
@@ -2732,7 +2743,7 @@ errhandler:
             ProcessProperties.WindowStyle = ProcessWindowStyle.Maximized
             Dim myProcess As Process = Process.Start(ProcessProperties)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -2754,7 +2765,7 @@ errhandler:
             End Select
             Return fileNameOk
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return fileNameOk
         End Try
     End Function
@@ -2791,7 +2802,7 @@ errhandler:
                 End If
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2826,7 +2837,7 @@ errhandler:
                 End If
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2847,7 +2858,7 @@ errhandler:
                 Return result
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return result
         End Try
     End Function
@@ -2870,7 +2881,7 @@ errhandler:
                 ObjConn.Close()
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2894,7 +2905,7 @@ errhandler:
                 Return rows
             End Using
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2919,7 +2930,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2938,7 +2949,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2958,7 +2969,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2978,7 +2989,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -2998,7 +3009,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -3018,7 +3029,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -3040,7 +3051,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -3063,7 +3074,7 @@ errhandler:
             End If
             Return rsConfirm
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -3177,7 +3188,7 @@ errhandler:
             End Using
             Return rsResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return rsResult
         Finally
 
@@ -3202,7 +3213,7 @@ errhandler:
             End Using
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return dsResult
         Finally
 
@@ -3233,7 +3244,7 @@ errhandler:
             '    Return Nothing
             'End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -3265,7 +3276,7 @@ errhandler:
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function

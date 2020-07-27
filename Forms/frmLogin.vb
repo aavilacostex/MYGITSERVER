@@ -106,7 +106,7 @@
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -320,7 +320,7 @@
                 'MsgBox("Connection to NOVATIME failed!", vbOKOnly + vbInformation, "CTP System")
             End If
             Exit Sub
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -341,6 +341,10 @@
     End Sub
 
     Private Sub frmLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim args As String() = Environment.GetCommandLineArgs()
+        Dim pepe = String.Join(".", args)
+        MessageBox.Show(pepe, "CTP System", MessageBoxButtons.OK)
+
         Form_Load()
     End Sub
 
@@ -402,7 +406,7 @@
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 

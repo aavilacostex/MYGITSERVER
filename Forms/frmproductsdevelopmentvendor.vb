@@ -36,7 +36,7 @@ Public Class frmproductsdevelopmentvendor
             CType(Me.DataGridView1.Columns(3), DataGridViewTextBoxColumn).MaxInputLength = 6
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -108,7 +108,7 @@ Public Class frmproductsdevelopmentvendor
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -126,7 +126,7 @@ Public Class frmproductsdevelopmentvendor
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -187,7 +187,7 @@ Public Class frmproductsdevelopmentvendor
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
 
     End Sub
@@ -219,7 +219,7 @@ Public Class frmproductsdevelopmentvendor
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
 
     End Sub
@@ -254,7 +254,7 @@ Public Class frmproductsdevelopmentvendor
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return result
         End Try
 
@@ -329,7 +329,7 @@ Public Class frmproductsdevelopmentvendor
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 

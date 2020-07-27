@@ -30,7 +30,7 @@
 
             userid = frmLogin.txtUserName.Text
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -57,7 +57,7 @@
             cmbstatus.ValueMember = "CNT03"
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -182,7 +182,7 @@
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -325,7 +325,7 @@
                 MessageBox.Show("No records to update.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -402,7 +402,7 @@
 
             Return toemailsok
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -422,7 +422,7 @@
             End If
             Return toemailss
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -442,7 +442,7 @@
             End If
             Return toemailss
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -456,7 +456,7 @@
             days = difference.TotalDays
             Return days
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return days
         End Try
 
