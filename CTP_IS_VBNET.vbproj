@@ -175,6 +175,7 @@
     <Compile Include="Class\btntextox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Class\ConvertXml.vb" />
     <Compile Include="Class\CrystalReport.vb" />
     <Compile Include="Class\LikeSession.vb" />
     <Compile Include="Class\LoadExcel.vb" />

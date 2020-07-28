@@ -11,6 +11,8 @@ Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports System.ComponentModel
 Imports System.Reflection
+Imports System.Xml.Schema
+Imports System.Xml
 'Dim ac As New Autocomplete__module()
 
 Public Class frmLoadExcel
@@ -18,6 +20,7 @@ Public Class frmLoadExcel
     Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Dim gnr As Gn1 = New Gn1()
+    Dim xmlConvertClass As ConvertXml = New ConvertXml()
     Public userid As String
     Public flagallow As Integer
 
@@ -28,6 +31,8 @@ Public Class frmLoadExcel
     Dim bs1 As BindingSource = New BindingSource()
     Dim Tables = New BindingList(Of DataTable)()
     Dim Tables1 = New BindingList(Of DataTable)()
+    Dim errors As Boolean = False
+    Dim schemaErrorDesc As String = Nothing
 
 #Region "Page Load"
 
@@ -108,6 +113,63 @@ Public Class frmLoadExcel
 #End Region
 
 #Region "Gridview,  dropdowns and textboxes methods"
+
+    Public Function xlsDataSchemaValidation(dt As DataTable) As Boolean
+        Dim exMessage As String = " "
+        Dim blResult As Boolean = False
+        Try
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim rsPath As String = userPath & "\Excel_validation\"
+            If Not Directory.Exists(rsPath) Then
+                Directory.CreateDirectory(rsPath)
+                'copiar archivo xsd del server
+            End If
+
+            Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath & "Input.xml", "MainNode")
+            If result Then
+                blResult = validationSchema(rsPath)
+                Return blResult
+            End If
+            'Dim rsPath = New Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return blResult
+        End Try
+    End Function
+
+    Public Function validationSchema(rsPath As String) As Boolean
+        Dim exMessage As String = " "
+        Dim blResult As Boolean = False
+        Try
+            Dim schema As XmlSchemaSet = New XmlSchemaSet()
+            schema.Add("", rsPath + "xsdSchema.xsd")
+            Dim rd As XmlReader = XmlReader.Create(rsPath + "Input.xml")
+            Dim doc As XDocument = XDocument.Load(rd)
+            doc.Validate(schema, AddressOf XSDErrors)
+            Dim outMessage As String = Nothing
+            outMessage = If(errors, "Not Validated. " & schemaErrorDesc, "Validated")
+
+            blResult = If(outMessage.Equals("Validated"), True, False)
+            Return blResult
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Function
+
+    Private Sub XSDErrors(ByVal o As Object, ByVal e As ValidationEventArgs)
+        Dim exMessage As String = " "
+        Try
+            Dim Type As XmlSeverityType = XmlSeverityType.Warning
+            If [Enum].TryParse(Of XmlSeverityType)("Error", Type) Then
+                If (Type = XmlSeverityType.Error) Then
+                    errors = True
+                    schemaErrorDesc = e.Message
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
 
     Private Sub fillData(dt As DataTable)
         Dim exMessage As String = " "
@@ -733,8 +795,73 @@ Public Class frmLoadExcel
 
 #Region "Excel process"
 
+    'Private Function GetTableDataXl(sender As Object, e As System.ComponentModel.CancelEventArgs) As DataTable
+    '    Dim exMessage As String = " "
+    '    Dim dt = New DataTable()
+    '    Try
+    '        Dim filePath As String = OpenFileDialog1.FileName
+    '        Dim extension As String = Path.GetExtension(filePath)
+    '        'Dim header As String = If(rbHeaderYes.Checked, "YES", "NO")
+    '        Dim conStr As String, sheetName As String
+    '        conStr = String.Empty
+    '        Select Case extension
+
+    '            Case ".xls"
+    '                'Excel 97-03
+    '                conStr = String.Format(Excel03ConString, filePath, "YES", 1)
+    '                Exit Select
+
+    '            Case ".xlsx"
+    '                'Excel 07
+    '                conStr = String.Format(Excel07ConString, filePath, "YES", 1)
+    '                Exit Select
+    '        End Select
+
+    '        If String.IsNullOrEmpty(conStr) Then
+    '            MessageBox.Show("File not valid. You must upload only excel files.", "CTP System", MessageBoxButtons.OK)
+    '            Exit Sub
+    '        End If
+
+    '        'Get the name of the First Sheet.
+    '        Using con As New OleDbConnection(conStr)
+    '            Using cmd As New OleDbCommand()
+    '                cmd.Connection = con
+    '                con.Open()
+    '                Dim dtExcelSchema As DataTable = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
+    '                sheetName = dtExcelSchema.Rows(0)("TABLE_NAME").ToString()
+    '                con.Close()
+    '            End Using
+    '        End Using
+
+    '        'Read Data from the First Sheet.
+    '        Using con As New OleDbConnection(conStr)
+    '            Using cmd As New OleDbCommand()
+    '                Using oda As New OleDbDataAdapter()
+    '                    Dim dt As New DataTable()
+    '                    dt.Columns.Add("PRDPTN", GetType(String))
+    '                    dt.AcceptChanges()
+    '                    cmd.CommandText = (Convert.ToString("SELECT * From [") & sheetName) + "]"
+    '                    cmd.Connection = con
+    '                    con.Open()
+    '                    oda.SelectCommand = cmd
+    '                    'oda.TableMappings.Add("Table", "Net-informations.com")
+    '                    oda.Fill(dt)
+    '                    LikeSession.dsData = dt
+    '                    fillData(dt)
+    '                    'LoadThread()
+    '                    'ExecuteFillData(dt)
+    '                    con.Close()
+    '                End Using
+    '            End Using
+    '        End Using
+    '    Catch ex As Exception
+    '        exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+    '    End Try
+    'End Function
+
     Private Sub openFileDialog1_FileOk(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles OpenFileDialog1.FileOk
         Dim exMessage As String = " "
+        Dim dt As New DataTable()
         Try
             Dim filePath As String = OpenFileDialog1.FileName
             Dim extension As String = Path.GetExtension(filePath)
@@ -764,33 +891,54 @@ Public Class frmLoadExcel
                 Using cmd As New OleDbCommand()
                     cmd.Connection = con
                     con.Open()
-                    Dim dtExcelSchema As DataTable = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
-                    sheetName = dtExcelSchema.Rows(0)("TABLE_NAME").ToString()
-                    con.Close()
-                End Using
-            End Using
 
-            'Read Data from the First Sheet.
-            Using con As New OleDbConnection(conStr)
-                Using cmd As New OleDbCommand()
+                    Dim dtSheetname As DataTable = New DataTable()
+
+                    Dim cmd1 As OleDbCommand = Nothing
+                    dtSheetname = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
                     Using oda As New OleDbDataAdapter()
-                        Dim dt As New DataTable()
-                        dt.Columns.Add("PRDPTN", GetType(String))
-                        dt.AcceptChanges()
-                        cmd.CommandText = (Convert.ToString("SELECT * From [") & sheetName) + "]"
-                        cmd.Connection = con
-                        con.Open()
-                        oda.SelectCommand = cmd
-                        'oda.TableMappings.Add("Table", "Net-informations.com")
-                        oda.Fill(dt)
-                        LikeSession.dsData = dt
-                        fillData(dt)
-                        'LoadThread()
-                        'ExecuteFillData(dt)
+                        For Each dw As DataRow In dtSheetname.Rows
+
+                            Dim query1 As String = "SELECT count(*) FROM [" + dw("TABLE_NAME").ToString() + "]"
+                            cmd.CommandText = query1
+                            cmd1 = New OleDbCommand(cmd.CommandText, con)
+                            If (CInt(cmd1.ExecuteScalar()) > 0) Then
+                                Dim query As String = "SELECT * FROM [" + dw("TABLE_NAME").ToString() + "]"
+                                Dim data As OleDbDataAdapter = New OleDbDataAdapter(query, con)
+                                data.Fill(dt)
+                            End If
+                        Next
                         con.Close()
                     End Using
                 End Using
             End Using
+            'Dim dtExcelSchema As DataTable = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
+            'sheetName = dtExcelSchema.Rows(0)("TABLE_NAME").ToString()
+
+
+
+            'Read Data from the First Sheet.
+
+
+            'Dim dt As New DataTable()
+            'dt.Columns.Add("PRDPTN", GetType(String))
+            'dt.AcceptChanges()
+            'cmd.CommandText = (Convert.ToString("SELECT * From [") & sheetName) + "]"
+            'cmd.Connection = con
+            'con.Open()
+            'oda.SelectCommand = cmd
+            'oda.TableMappings.Add("Table", "Net-informations.com")
+            'oda.Fill(dt)
+            LikeSession.dsData = dt
+
+            Dim validate = xlsDataSchemaValidation(dt)
+            If validate Then
+                fillData(dt)
+            Else
+                MessageBox.Show("File not valid.", "CTP System", MessageBoxButtons.OK)
+            End If
+            'LoadThread()
+            'ExecuteFillData(dt)
         Catch ex As Exception
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try

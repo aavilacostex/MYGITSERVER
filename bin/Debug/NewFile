@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<tbl_MainNode>
+  <MainNode>
+    <PRDPTN>2255640</PRDPTN>
+    <PRDDAT>5/20/2019 12:00:00 AM</PRDDAT>
+    <PRDCTP />
+    <PRDQTY>0</PRDQTY>
+    <PRDMFR#>CTP29966571</PRDMFR#>
+    <PRDCOS>50</PRDCOS>
+    <PRDCON>0</PRDCON>
+    <PRDSTS />
+    <PRDNEW>0</PRDNEW>
+    <VMVNUM>889912</VMVNUM>
+    <MJ CODE>01</MJ CODE>
+    <PRPECH />
+  </MainNode>
+  <MainNode>
+    <PRDPTN />
+    <PRDDAT>5/20/2019 12:00:00 AM</PRDDAT>
+    <PRDCTP />
+    <PRDQTY>0</PRDQTY>
+    <PRDMFR#>CTP29966571</PRDMFR#>
+    <PRDCOS>50</PRDCOS>
+    <PRDCON>0</PRDCON>
+    <PRDSTS />
+    <PRDNEW>0</PRDNEW>
+    <VMVNUM>263559</VMVNUM>
+    <MJ CODE>01</MJ CODE>
+    <PRPECH>aavila</PRPECH>
+  </MainNode>
+  <MainNode>
+    <PRDPTN>1722997</PRDPTN>
+    <PRDDAT>5/20/2019 12:00:00 AM</PRDDAT>
+    <PRDCTP />
+    <PRDQTY>0</PRDQTY>
+    <PRDMFR#>CTP29966571</PRDMFR#>
+    <PRDCOS>50</PRDCOS>
+    <PRDCON>0</PRDCON>
+    <PRDSTS>Q</PRDSTS>
+    <PRDNEW>0</PRDNEW>
+    <VMVNUM>120138</VMVNUM>
+    <MJ CODE>01</MJ CODE>
+    <PRPECH />
+  </MainNode>
+  <MainNode>
+    <PRDPTN>cable14b</PRDPTN>
+    <PRDDAT>5/20/2019 12:00:00 AM</PRDDAT>
+    <PRDCTP />
+    <PRDQTY>0</PRDQTY>
+    <PRDMFR#>CTP29966571</PRDMFR#>
+    <PRDCOS>50</PRDCOS>
+    <PRDCON>0</PRDCON>
+    <PRDSTS />
+    <PRDNEW>0</PRDNEW>
+    <VMVNUM>889912</VMVNUM>
+    <MJ CODE>03</MJ CODE>
+    <PRPECH>ctobon</PRPECH>
+  </MainNode>
+  <MainNode>
+    <PRDPTN>1288945</PRDPTN>
+    <PRDDAT>5/20/2019 12:00:00 AM</PRDDAT>
+    <PRDCTP />
+    <PRDQTY>0</PRDQTY>
+    <PRDMFR#>CTP29966571</PRDMFR#>
+    <PRDCOS>50</PRDCOS>
+    <PRDCON>0</PRDCON>
+    <PRDSTS>A</PRDSTS>
+    <PRDNEW>0</PRDNEW>
+    <VMVNUM />
+    <MJ CODE>03</MJ CODE>
+    <PRPECH />
+  </MainNode>
+</tbl_MainNode>
