@@ -47,33 +47,35 @@ Public Class frmProductsDevelopment
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim exMessage As String = " "
         Try
+            frmProductsDevelopment_load()
 
-            If CInt(gnr.FlagProductionMethod).Equals(1) Then
-                Dim args As String() = Environment.GetCommandLineArgs()
-                Dim argumentsJoined = String.Join(".", args)
+            'If CInt(gnr.FlagProductionMethod).Equals(1) Then
+            '    Dim args As String() = Environment.GetCommandLineArgs()
+            '    Dim argumentsJoined = String.Join(".", args)
 
-                Dim arrayArgs As String() = argumentsJoined.Split(".")
-                Dim user = UCase(arrayArgs(2).ToString().Replace(",", ""))
-                'MessageBox.Show(user, "CTP System", MessageBoxButtons.OK)
-                If gnr.AuthorizatedUser.Equals("All") Then
-                    LoadCombos(sender, e)
-                    frmProductsDevelopment_load()
-                Else
-                    Dim result = CheckCredentials(user)
-                    If Not result Then
-                        MessageBox.Show("Operation Error", "CTP System", MessageBoxButtons.OK)
-                        Exit Sub
-                    Else
-                        If UCase(user).Equals(UCase(gnr.AuthorizatedUser)) Then
-                            LoadCombos(sender, e)
-                            frmProductsDevelopment_load()
-                        End If
-                    End If
-                End If
-            Else
-                LoadCombos(sender, e)
-                frmProductsDevelopment_load()
-            End If
+            '    Dim arrayArgs As String() = argumentsJoined.Split(".")
+            '    Dim user = UCase(arrayArgs(2).ToString().Replace(",", ""))
+            '    'MessageBox.Show(user, "CTP Sytems", MessageBoxButtons.OK)
+            '    If gnr.AuthorizatedUser.Equals("All") Then
+            '        LoadCombos(sender, e)
+            '        frmProductsDevelopment_load()
+            '    Else
+            '        Dim result = CheckCredentials(user)
+            '        If Not result Then
+            '            MessageBox.Show("Operation Error", "CTP System", MessageBoxButtons.OK)
+            '            Exit Sub
+            '        Else
+            '            If UCase(user).Equals(UCase(gnr.AuthorizatedUser)) Then
+            '                MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
+            '                LoadCombos(sender, e)
+            '                frmProductsDevelopment_load()
+            '            End If
+            '        End If
+            '    End If
+            'Else
+            '    LoadCombos(sender, e)
+            '    frmProductsDevelopment_load()
+            'End If
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
