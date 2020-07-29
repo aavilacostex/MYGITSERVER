@@ -142,7 +142,7 @@ Public Class frmLoadExcel
         Dim blResult As Boolean = False
         Try
             Dim schema As XmlSchemaSet = New XmlSchemaSet()
-            schema.Add("", rsPath + "xsdSchema.xsd")
+            schema.Add("", gnr.UrlPathXsdFileMethod)
             Dim rd As XmlReader = XmlReader.Create(rsPath + "Input.xml")
             Dim doc As XDocument = XDocument.Load(rd)
             doc.Validate(schema, AddressOf XSDErrors)
