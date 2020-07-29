@@ -32,10 +32,16 @@ Public Class frmLoadExcel
 #Region "Page Load"
 
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        frmLoadExcel_Load()
+    End Sub
+
+    Private Sub frmLoadExcel_Load()
         Dim exMessage As String = " "
         Try
             'userid = Trim(UCase(frmLogin.txtUserName.Text))
-            userid = "CMONTILVA"
+            userid = LikeSession.retrieveUser
+            lblUsrLog.Text += userid
+            'userid = "CMONTILVA"
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
@@ -97,9 +103,6 @@ Public Class frmLoadExcel
                 .AutoCompleteMode = AutoCompleteMode.SuggestAppend
                 .AutoCompleteSource = AutoCompleteSource.ListItems
             End With
-
-
-
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString

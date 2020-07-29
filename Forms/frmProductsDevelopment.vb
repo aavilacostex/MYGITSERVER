@@ -47,6 +47,7 @@ Public Class frmProductsDevelopment
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim exMessage As String = " "
         Try
+            LoadCombos(sender, e)
             frmProductsDevelopment_load()
 
             'If CInt(gnr.FlagProductionMethod).Equals(1) Then
@@ -83,14 +84,15 @@ Public Class frmProductsDevelopment
 
     End Sub
 
-    Private Sub frmProductsDevelopment_load()
+    Private Sub frmProductsDevelopment_load(Optional ByVal user As String = Nothing)
         Dim exMessage As String = " "
         Try
+            userid = LikeSession.retrieveUser
             ResizeTabs()
-            SetValues()
+            SetValues(userid)
 
             'userid = frmLogin.txtUserName.Text
-            userid = "CMONTILVA"
+            'userid = "CMONTILVA"
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
@@ -5366,7 +5368,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
     End Sub
 
-    Private Sub SetValues()
+    Private Sub SetValues(Optional ByVal curUser As String = Nothing)
+
         SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
         SSTab1.Padding = New System.Drawing.Point(300, 10)
         SSTab1.Appearance = TabAppearance.FlatButtons
@@ -5379,6 +5382,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         TabPage3.AutoScrollMinSize = New Drawing.Size(800, 0)
 
         TabPage2.Text = "Project: "
+        logUser.Text += curUser
 
         'AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
         ''vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
@@ -5467,13 +5471,13 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         flagnewpart = 1
 
         'tab 1
-        txtsearch1.SetWaterMark("Vendor No.")
+        txtsearch1.SetWatermark("Vendor No.")
         txtsearch.SetWatermark("Project Name")
-        txtJiratasksearch.SetWaterMark("Jira Task No.")
-        txtsearchpart.SetWaterMark("Part No.")
+        txtJiratasksearch.SetWatermark("Jira Task No.")
+        txtsearchpart.SetWatermark("Part No.")
         txtsearchctp.SetWatermark("CTP No.")
-        txtMfrNoSearch.SetWaterMark("Manufacturer No.")
-        txtsearchcode.SetWaterMark("Project No.")
+        txtMfrNoSearch.SetWatermark("Manufacturer No.")
+        txtsearchcode.SetWatermark("Project No.")
         cmbPrpech.SetWatermark("Person In Charge")
 
         cmbstatus1.SetWatermark("Project Reference Status")

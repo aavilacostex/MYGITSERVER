@@ -14,24 +14,30 @@ Public Class MDIMain
 
         'BackgroundWorker1.WorkerReportsProgress = TrueIf CInt(gnr.FlagProductionMethod).Equals(1) Then
 
-        loadImage()
+        'loadImage()
+        Dim user As String = Nothing
+        Dim optionSelection As String = Nothing
 
         If CInt(gnr.FlagProductionMethod).Equals(1) Then
             Dim args As String() = Environment.GetCommandLineArgs()
             Dim argumentsJoined = String.Join(".", args)
 
             Dim arrayArgs As String() = argumentsJoined.Split(".")
-            Dim optionSelection = UCase(arrayArgs(2).ToString().Replace(",", ""))
-            Dim user = UCase(arrayArgs(3).ToString().Replace(",", ""))
-            MessageBox.Show(optionSelection & " - " & user, "CTP Sytems", MessageBoxButtons.OK)
+            optionSelection = UCase(arrayArgs(3).ToString().Replace(",", ""))
+            user = UCase(arrayArgs(2).ToString().Replace(",", ""))
+            LikeSession.retrieveUser = user
+            'MessageBox.Show(optionSelection & " - " & user, "CTP Sytems", MessageBoxButtons.OK)
 
             If optionSelection.Equals("OPT1") Then
+                'MessageBox.Show(optionSelection, "CTP Sytems", MessageBoxButtons.OK)
                 If gnr.AuthorizatedUser.Equals("All") Then
+                    'MessageBox.Show(gnr.AuthorizatedUser, "CTP Sytems", MessageBoxButtons.OK)
                     'LoadCombos(sender, e)
                     'frmProductsDevelopment_load()
-                    MyBase.Hide()
+                    'MyBase.Hide()
                     frmProductsDevelopment.Show()
                 Else
+                    'MessageBox.Show(user, "CTP Sytems", MessageBoxButtons.OK)
                     Dim result = CheckCredentials(user)
                     If Not result Then
                         MessageBox.Show("Operation Error", "CTP System", MessageBoxButtons.OK)
@@ -41,16 +47,17 @@ Public Class MDIMain
                             MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
                             'LoadCombos(sender, e)
                             'frmProductsDevelopment_load()
-                            MyBase.Hide()
+                            'MyBase.Hide()
                             frmProductsDevelopment.Show()
                         End If
                     End If
                 End If
             ElseIf optionSelection.Equals("OPT2") Then
+                'MessageBox.Show(optionSelection, "CTP Sytems", MessageBoxButtons.OK)
                 If gnr.AuthorizatedUser.Equals("All") Then
                     'LoadCombos(sender, e)
                     'frmProductsDevelopment_load()
-                    MyBase.Hide()
+                    'MyBase.Hide()
                     frmLoadExcel.Show()
                 Else
                     Dim result = CheckCredentials(user)
@@ -62,11 +69,13 @@ Public Class MDIMain
                             MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
                             'LoadCombos(sender, e)
                             'frmProductsDevelopment_load()
-                            MyBase.Hide()
+                            'MyBase.Hide()
                             frmLoadExcel.Show()
                         End If
                     End If
                 End If
+            Else
+                MessageBox.Show("OPT3", "CTP Sytems", MessageBoxButtons.OK)
             End If
         End If
     End Sub
