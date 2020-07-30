@@ -11,6 +11,8 @@ Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports System.ComponentModel
 Imports System.Reflection
+Imports System.Xml.Schema
+Imports System.Xml
 'Dim ac As New Autocomplete__module()
 
 Public Class frmLoadExcel
@@ -18,8 +20,12 @@ Public Class frmLoadExcel
     Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Dim gnr As Gn1 = New Gn1()
+    Dim xmlConvertClass As ConvertXml = New ConvertXml()
     Public userid As String
     Public flagallow As Integer
+    Dim errors As Boolean = False
+    Dim schemaErrorDesc As String = Nothing
+
 
     Private Const totalRecords As Integer = 43
     Private Const pageSize As Integer = 10
@@ -117,62 +123,62 @@ Public Class frmLoadExcel
 
 #Region "Gridview,  dropdowns and textboxes methods"
 
-    'Public Function xlsDataSchemaValidation(dt As DataTable) As Boolean
-    '    Dim exMessage As String = " "
-    '    Dim blResult As Boolean = False
-    '    Try
-    '        Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-    '        Dim rsPath As String = userPath & "\Excel_validation\"
-    '        If Not Directory.Exists(rsPath) Then
-    '            Directory.CreateDirectory(rsPath)
-    '            'copiar archivo xsd del server
-    '        End If
+    Public Function xlsDataSchemaValidation(dt As DataTable) As Boolean
+        Dim exMessage As String = " "
+        Dim blResult As Boolean = False
+        Try
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim rsPath As String = userPath & "\Excel_validation\"
+            If Not Directory.Exists(rsPath) Then
+                Directory.CreateDirectory(rsPath)
+                'copiar archivo xsd del server
+            End If
 
-    '        Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath & "Input.xml", "MainNode")
-    '        If result Then
-    '            blResult = validationSchema(rsPath)
-    '            Return blResult
-    '        End If
-    '        'Dim rsPath = New Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath
-    '    Catch ex As Exception
-    '        exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-    '        Return blResult
-    '    End Try
-    'End Function
+            Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath & "Input.xml", "MainNode")
+            If result Then
+                blResult = validationSchema(rsPath)
+                Return blResult
+            End If
+            'Dim rsPath = New Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return blResult
+        End Try
+    End Function
 
-    'Public Function validationSchema(rsPath As String) As Boolean
-    '    Dim exMessage As String = " "
-    '    Dim blResult As Boolean = False
-    '    Try
-    '        Dim schema As XmlSchemaSet = New XmlSchemaSet()
-    '        schema.Add("", gnr.UrlPathXsdFileMethod)
-    '        Dim rd As XmlReader = XmlReader.Create(rsPath + "Input.xml")
-    '        Dim doc As XDocument = XDocument.Load(rd)
-    '        doc.Validate(schema, AddressOf XSDErrors)
-    '        Dim outMessage As String = Nothing
-    '        outMessage = If(errors, "Not Validated. " & schemaErrorDesc, "Validated")
+    Public Function validationSchema(rsPath As String) As Boolean
+        Dim exMessage As String = " "
+        Dim blResult As Boolean = False
+        Try
+            Dim schema As XmlSchemaSet = New XmlSchemaSet()
+            schema.Add("", gnr.UrlPathXsdFileMethod)
+            Dim rd As XmlReader = XmlReader.Create(rsPath + "Input.xml")
+            Dim doc As XDocument = XDocument.Load(rd)
+            doc.Validate(schema, AddressOf XSDErrors)
+            Dim outMessage As String = Nothing
+            outMessage = If(errors, "Not Validated. " & schemaErrorDesc, "Validated")
 
-    '        blResult = If(outMessage.Equals("Validated"), True, False)
-    '        Return blResult
-    '    Catch ex As Exception
-    '        exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-    '    End Try
-    'End Function
+            blResult = If(outMessage.Equals("Validated"), True, False)
+            Return blResult
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Function
 
-    'Private Sub XSDErrors(ByVal o As Object, ByVal e As ValidationEventArgs)
-    '    Dim exMessage As String = " "
-    '    Try
-    '        Dim Type As XmlSeverityType = XmlSeverityType.Warning
-    '        If [Enum].TryParse(Of XmlSeverityType)("Error", Type) Then
-    '            If (Type = XmlSeverityType.Error) Then
-    '                errors = True
-    '                schemaErrorDesc = e.Message
-    '            End If
-    '        End If
-    '    Catch ex As Exception
-    '        exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-    '    End Try
-    'End Sub
+    Private Sub XSDErrors(ByVal o As Object, ByVal e As ValidationEventArgs)
+        Dim exMessage As String = " "
+        Try
+            Dim Type As XmlSeverityType = XmlSeverityType.Warning
+            If [Enum].TryParse(Of XmlSeverityType)("Error", Type) Then
+                If (Type = XmlSeverityType.Error) Then
+                    errors = True
+                    schemaErrorDesc = e.Message
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
 
     Private Sub fillData(dt As DataTable)
         Dim exMessage As String = " "
@@ -848,8 +854,13 @@ Public Class frmLoadExcel
                         oda.SelectCommand = cmd
                         'oda.TableMappings.Add("Table", "Net-informations.com")
                         oda.Fill(dt)
-                        LikeSession.dsData = dt
-                        fillData(dt)
+
+                        Dim result = xlsDataSchemaValidation(dt)
+                        If result Then
+                            LikeSession.dsData = dt
+                            fillData(dt)
+                        End If
+
                         'LoadThread()
                         'ExecuteFillData(dt)
                         con.Close()
