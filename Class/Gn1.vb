@@ -344,6 +344,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private UrlPathXsdFile As String
+    Public Property UrlPathXsdFileMethod() As String
+        Get
+            Return UrlPathXsdFile
+        End Get
+        Set(ByVal value As String)
+            UrlPathXsdFile = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -371,6 +381,8 @@ NotInheritable Class Gn1
         PathStartImage = ConfigurationManager.AppSettings("urlPathStartImg").ToString()
         UrlPathImgNew = ConfigurationManager.AppSettings("urlPathImgNew").ToString()
         AuthorizatedUser = ConfigurationManager.AppSettings("authUser").ToString()
+        UrlPathXsdFile = ConfigurationManager.AppSettings("urlPathXsdFile").ToString()
+
 
     End Sub
 

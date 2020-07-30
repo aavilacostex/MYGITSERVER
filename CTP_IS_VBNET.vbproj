@@ -191,6 +191,7 @@
     <Compile Include="Class\WM_TExtbox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Class\xmlClassConverter.vb" />
     <Compile Include="Forms\frmChangeVendor.Designer.vb">
       <DependentUpon>frmChangeVendor.vb</DependentUpon>
     </Compile>
