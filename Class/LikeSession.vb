@@ -13,4 +13,5 @@
     Public Shared panelCollapseProp As Boolean
     Public Shared flagAccessAllow As Integer
     Public Shared searchControls As List(Of Object)
+    Public Shared retrieveUser As String
 End Class
