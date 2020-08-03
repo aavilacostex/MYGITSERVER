@@ -15,7 +15,7 @@ Public Class frmProductsDevelopment
     Public strToUnionTab2 As String
     Public userid As String
     Public flagnewpart As Integer
-    Public flagallow As Integer
+    Public flagallow As Integer = 0
     Public puragent As Integer
     Dim sql As String
     Dim requireValidation As Integer = 0
@@ -952,6 +952,9 @@ Public Class frmProductsDevelopment
                     DataGridView1.Columns(5).Name = "hasDoc"
                     DataGridView1.Columns(5).HeaderText = "Has Documents"
                     DataGridView1.Columns(5).DataPropertyName = ""
+
+                    cleanFormValues("TabPage2", 0)
+                    cleanFormValues("TabPage3", 1)
 
                     'fill second tab if one record in datagrid
                     If ds.Tables(0).Rows.Count = 1 Then
@@ -5489,6 +5492,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         flagdeve = 1
         flagnewpart = 1
 
+        logUser.Text += userid
+
         'tab 1
         txtsearch1.SetWatermark("Vendor No.")
         txtsearch.SetWatermark("Project Name")
@@ -5863,12 +5868,12 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             ElseIf tab = "TabPage2" Then
                 myTableLayout = Me.TableLayoutPanel3
                 myTableLayout1 = Me.TableLayoutPanel15
-                SSTab1.TabPages(1).Text = ""
+                SSTab1.TabPages(1).Text = "Project: "
                 lstLayouts.Add(myTableLayout)
                 lstLayouts.Add(myTableLayout1)
             Else
                 myTableLayout = Me.TableLayoutPanel4
-                SSTab1.TabPages(2).Text = ""
+                SSTab1.TabPages(2).Text = "Reference: "
                 lstLayouts.Add(myTableLayout)
             End If
 
