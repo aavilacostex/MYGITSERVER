@@ -45,9 +45,9 @@ Public Class frmLoadExcel
         Dim exMessage As String = " "
         Try
             'userid = Trim(UCase(frmLogin.txtUserName.Text))
-            userid = LikeSession.retrieveUser
-            'lblUsrLog.Text += userid
-            'userid = "CMONTILVA"
+            'userid = LikeSession.retrieveUser
+            lblUsrLog.Text += userid
+            userid = "CMONTILVA"
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
