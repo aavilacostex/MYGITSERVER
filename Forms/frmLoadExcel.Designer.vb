@@ -971,6 +971,7 @@ Partial Class frmLoadExcel
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
         Me.TableLayoutPanel6.ResumeLayout(False)
+        Me.TableLayoutPanel6.PerformLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.BindingNavigator1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.BindingNavigator1.ResumeLayout(False)

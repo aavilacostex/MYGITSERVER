@@ -95,6 +95,8 @@ Public Class frmProductsDevelopment
             'userid = "CMONTILVA"
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
+            Else
+                cmbPrpech.Enabled = False
             End If
 
             FillDDLStatus1()
@@ -774,27 +776,6 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(8).HeaderText = "Has Documents?"
                     dgvProjectDetails.Columns(8).DataPropertyName = ""
 
-                    'FILL GRID
-                    'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
-                    'dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-                    'dgvProjectDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-
-
-                    'fill third tab if one record in datagrid
-                    'If ds.Tables(0).Rows.Count = 1 Then
-
-                    '    If Not String.IsNullOrEmpty(txtsearchcode.Text) Then
-                    '        fillSecondTabUpp(txtsearchcode.Text)
-                    '        fillcell2(txtsearchcode.Text)
-                    '    Else
-                    '        Dim grvCode = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRHCOD").Ordinal).ToString()
-                    '        fillSecondTabUpp(grvCode)
-                    '        fillcell2(grvCode)
-                    '    End If
-
-                    '    SSTab1.SelectedIndex = 1
-                    'End If
-
                     'dgvProjectDetails.DataSource = ds.Tables(0)
                     LikeSession.dsDgvProjectDetails = ds
                     If ds.Tables(0).Rows.Count > 10 Then
@@ -804,9 +785,12 @@ Public Class frmProductsDevelopment
                         dgvProjectDetails.Refresh()
                     End If
 
-                    'dgvProjectDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-                    'dgvProjectDetails.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-                    'dgvProjectDetails.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+                    'fill third tab if one record in datagrid
+                    If ds.Tables(0).Rows.Count = 1 Then
+                        fillTab3(code, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                        SSTab1.SelectedIndex = 2
+                    End If
+
 
                 Else
                     If SSTab1.SelectedIndex = 0 Then
@@ -1013,7 +997,7 @@ Public Class frmProductsDevelopment
                             Else
                                 fillSecondTabUpp(grvCode)
                                 fillcell2(grvCode, newstrExtraTab2)
-                                SSTab1.SelectedIndex = 1
+                                'SSTab1.SelectedIndex = 1
 
                                 'AQUI REVISAR EN CASO DE purc EL UNION FALLA 
                                 'Dim sql1 = "SELECT A2.* FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY A1.PRDATE DESC"
@@ -2230,7 +2214,7 @@ Public Class frmProductsDevelopment
                     MessageBox.Show("The project number an d vendor number must have value.", "CTP System", MessageBoxButtons.OK)
                 End If
 
-                If QueryDetailResult <0 Then
+                If QueryDetailResult < 0 Then
                     MessageBox.Show("Ann error ocurred inserting data in database.", "CTP System", MessageBoxButtons.OK)
                 End If
             End If
@@ -2652,10 +2636,10 @@ Public Class frmProductsDevelopment
                                 End If
                                 'paso de receiving of first production a rejected y esto implica cambio de vendor asignado
                                 If (Trim(cmbstatus.SelectedValue) = "R ") And (dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "RP") Then
-                                        Dim flagchangevendor = 1
+                                    Dim flagchangevendor = 1
                                     frmChangeVendor.ShowDialog()
                                 End If
-                                    If Trim(Status2) = "Closed Successfully" Then
+                                If Trim(Status2) = "Closed Successfully" Then
                                     toemails = prepareEmailsToSend(1)
                                     Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
                                     If rsResult < 0 Then
@@ -4507,14 +4491,17 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             LikeSession.searchControls = hasVal
             bs.DataSource = Nothing
             bs1.DataSource = Nothing
-            Dim DynamicQuery = buildSearchQuerySintax(hasVal, 1)
-            sql += DynamicQuery
+            Dim outputQuery = buildSearchQuerySintax(hasVal, 1)
+            Dim IQ1 = initialQuery(1)
+            Dim IQ2 = initialQuery(2)
 
-            Dim txtTemp1 = initialQuery(1) + DynamicQuery
-            initialQuery(1) = sql + txtTemp1
+            sql += outputQuery
+            IQ1 += outputQuery
+            IQ2 += outputQuery
+            initialQuery(1) = IQ1
 
-            Dim txtTemp2 = initialQuery(2) + DynamicQuery
-            initialQuery(2) = sql + txtTemp2
+            'Dim txtTemp = initialQuery(2)
+            initialQuery(2) = sql + IQ2
 
             sql = initialQuery(1)
             If flag = 1 Then
@@ -4654,6 +4641,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Else
                             If TypeOf tt Is Windows.Forms.TextBox Then
                                 If pair.Key = "txtsearch" Then
+                                    'strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                                     strwhere += " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                                 Else
                                     strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "

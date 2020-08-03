@@ -81,9 +81,11 @@ Public Class frmLoadExcel
             'Autocomplete__module.create_textAutocomplete(txtVendorName)
             'Autocomplete__module.create_ddlAutocomplete(ComboBox1)
 
-            ComboBox1.AutoCompleteMode = AutoCompleteMode.Append
-            ComboBox1.DropDownStyle = ComboBoxStyle.DropDown
-            ComboBox1.AutoCompleteSource = AutoCompleteSource.ListItems
+            'ComboBox1.AutoCompleteMode = AutoCompleteMode.Append
+            'ComboBox1.DropDownStyle = ComboBoxStyle.DropDown
+            'ComboBox1.AutoCompleteSource = AutoCompleteSource.ListItems
+
+
 
             'Then Set ComboBox AutoComplete properties
             Dim ds = gnr.getVendorNoAndNameByNameDS()
@@ -108,6 +110,8 @@ Public Class frmLoadExcel
                 .AutoCompleteMode = AutoCompleteMode.SuggestAppend
                 .AutoCompleteSource = AutoCompleteSource.ListItems
             End With
+
+            ComboBox1.SetWatermark("Vendor Name")
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
