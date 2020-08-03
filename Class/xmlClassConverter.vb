@@ -7,6 +7,7 @@ Public Class xmlClassConverter
 
         Dim i As Integer = 0
         Dim IsCreated As Boolean = False
+        Dim exMessage As String = Nothing
         Try
             Dim writer As XmlTextWriter = New XmlTextWriter(path, System.Text.Encoding.UTF8)
             writer.WriteStartDocument(True)
@@ -23,8 +24,9 @@ Public Class xmlClassConverter
                     writer.WriteStartElement(item)
                     writer.WriteString(dw.ItemArray(i).ToString())
                     writer.WriteEndElement()
+                    i += 1
                 Next
-                i += 1
+                i = 0
             Next
 
             writer.WriteEndElement()
@@ -36,7 +38,7 @@ Public Class xmlClassConverter
             End If
 
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
 
         Return IsCreated

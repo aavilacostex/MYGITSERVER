@@ -12,8 +12,6 @@ Public Class MDIMain
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        'BackgroundWorker1.WorkerReportsProgress = TrueIf CInt(gnr.FlagProductionMethod).Equals(1) Then
-
         'loadImage()
         Dim user As String = Nothing
         Dim optionSelection As String = Nothing
@@ -26,7 +24,7 @@ Public Class MDIMain
             optionSelection = UCase(arrayArgs(3).ToString().Replace(",", ""))
             user = UCase(arrayArgs(2).ToString().Replace(",", ""))
             LikeSession.retrieveUser = user
-            'MessageBox.Show(optionSelection & " - " & user, "CTP Sytems", MessageBoxButtons.OK)
+            MessageBox.Show(optionSelection & " - " & user, "CTP Sytems", MessageBoxButtons.OK)
 
             If optionSelection.Equals("OPT1") Then
                 'MessageBox.Show(optionSelection, "CTP Sytems", MessageBoxButtons.OK)

@@ -849,8 +849,13 @@ Public Class frmLoadExcel
                         oda.SelectCommand = cmd
                         'oda.TableMappings.Add("Table", "Net-informations.com")
                         oda.Fill(dt)
-                        LikeSession.dsData = dt
-                        fillData(dt)
+
+                        Dim result = xlsDataSchemaValidation(dt)
+                        If result Then
+                            LikeSession.dsData = dt
+                            fillData(dt)
+                        End If
+
                         'LoadThread()
                         'ExecuteFillData(dt)
                         con.Close()
