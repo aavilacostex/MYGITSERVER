@@ -14,4 +14,5 @@
     Public Shared flagAccessAllow As Integer
     Public Shared searchControls As List(Of Object)
     Public Shared retrieveUser As String
+    Public Shared focussedControl As Control
 End Class

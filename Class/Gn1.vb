@@ -791,13 +791,13 @@ NotInheritable Class Gn1
                 Dim vendorType = ds.Tables(0).Rows(0).ItemArray(0).ToString()
                 Dim vendorName = ds.Tables(0).Rows(0).ItemArray(1).ToString()
                 Dim listDeniedCodes = VendorCodesDenied.Split(",")
-                Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x) x = vendorType)
+                Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x As String) x = "'" & vendorType & "'")
                 If Not containsDenied Then
                     Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
                     Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
                     If Not containsOEM Then
                         frmLoadExcel.lblVendorDesc.Text = vendorName
-                        MessageBox.Show("The vendor " & RTrim(vendorName) & " is an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
+                        'MessageBox.Show("The vendor " & RTrim(vendorName) & " is an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
                         Return True
                     Else
                         MessageBox.Show("The vendor " & RTrim(vendorName) & " is not an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
