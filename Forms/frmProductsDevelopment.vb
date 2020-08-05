@@ -96,8 +96,12 @@ Public Class frmProductsDevelopment
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             Else
-                cmbPrpech.Enabled = False
+                cmbPrpech.Visible = False
+                cmddelete.Visible = False
             End If
+
+            ResizeTabs()
+            SetValues()
 
             FillDDLStatus1()
             FillDDlPrPech()
@@ -915,7 +919,6 @@ Public Class frmProductsDevelopment
 
         Try
             sql = "SELECT distinct(A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY 3 DESC"
-            'MessageBox.Show(sql, "CTP System", MessageBoxButtons.OK)
 
             ds = gnr.FillGrid(sql)
 
@@ -1635,6 +1638,7 @@ Public Class frmProductsDevelopment
 
             If dgv.Name.ToString().Equals("DataGridView1") Then
 
+                DataGridView1.Visible = True
                 If Tables.Count > 0 Then
                     Tables = New BindingList(Of DataTable)()
                     bs.MoveFirst()
@@ -1659,6 +1663,7 @@ Public Class frmProductsDevelopment
                 AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
                 bs_PositionChanged(bs, Nothing)
             Else
+                dgvProjectDetails.Visible = True
                 If Tables1.Count > 0 Then
                     Tables1 = New BindingList(Of DataTable)()
                     bs1.MoveFirst()
@@ -1701,6 +1706,7 @@ Public Class frmProductsDevelopment
             Dim dt As DataTable = Nothing
 
             If dgv.Name.ToString().Equals("DataGridView1") Then
+                dgvProjectDetails.Visible = True
                 For Each item As DataRow In dtGrid.Rows
                     If counter = 0 Then
                         dt = dtGrid.Clone()
@@ -1720,6 +1726,7 @@ Public Class frmProductsDevelopment
                 AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
                 bs_PositionChanged(bs, Nothing)
             Else
+                dgvProjectDetails.Visible = True
                 For Each item As DataRow In dtGrid.Rows
                     If counter = 0 Then
                         dt = dtGrid.Clone()
@@ -1821,6 +1828,36 @@ Public Class frmProductsDevelopment
 
     Private Sub txtMfrNoSearch_TextChanged(sender As Object, e As EventArgs) Handles txtMfrNoSearch.TextChanged
         txtMfrNoSearch.Text = txtMfrNoSearch.Text.Replace(Environment.NewLine, "")
+    End Sub
+
+    Private Sub TextBox_Focus(ByVal sender As System.Object, ByVal e As System.EventArgs) _
+        Handles txtsearch.GotFocus, txtsearch1.GotFocus, txtsearchcode.GotFocus, txtsearchctp.GotFocus, txtsearchpart.GotFocus,
+        txtMfrNoSearch.GotFocus, txtJiratasksearch.GotFocus
+        Dim currTextBox As System.Windows.Forms.TextBox = sender
+        Dim castedTextBox As Control = Nothing
+        If currTextBox.Equals(txtsearch) Then
+            castedTextBox = DirectCast(txtsearch, Control)
+            LikeSession.focussedControl = castedTextBox
+        ElseIf currTextBox.Equals(txtsearch1) Then
+            castedTextBox = DirectCast(txtsearch1, Control)
+            LikeSession.focussedControl = txtsearch1
+        ElseIf currTextBox.Equals(txtsearchcode) Then
+            castedTextBox = DirectCast(txtsearchcode, Control)
+            LikeSession.focussedControl = txtsearchcode
+        ElseIf currTextBox.Equals(txtsearchctp) Then
+            castedTextBox = DirectCast(txtsearchctp, Control)
+            LikeSession.focussedControl = txtsearchctp
+        ElseIf currTextBox.Equals(txtsearchpart) Then
+            castedTextBox = DirectCast(txtsearchpart, Control)
+            LikeSession.focussedControl = txtsearchpart
+        ElseIf currTextBox.Equals(txtMfrNoSearch) Then
+            castedTextBox = DirectCast(txtMfrNoSearch, Control)
+            LikeSession.focussedControl = txtMfrNoSearch
+        ElseIf currTextBox.Equals(txtJiratasksearch) Then
+            castedTextBox = DirectCast(txtJiratasksearch, Control)
+            LikeSession.focussedControl = txtJiratasksearch
+        End If
+
     End Sub
 
 #End Region
@@ -3375,6 +3412,11 @@ Public Class frmProductsDevelopment
                         'If chknew.Checked Then
                         '    chkSupplier.Checked = Not chknew.Checked
                         'End If
+                    Else
+                        cmdfiles.Visible = False
+                        cmdcomments.Visible = False
+                        cmdseecomments.Visible = False
+                        cmdseefiles.Visible = False
                     End If
                 Else
                     Dim result As DialogResult = MessageBox.Show("Enter Vendor.", "CTP System", MessageBoxButtons.OK)
@@ -3576,6 +3618,7 @@ Public Class frmProductsDevelopment
         Try
             onlyClearSearchesComplex()
             cleanDataSources()
+            LikeSession.focussedControl = Nothing
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
         End Try
@@ -3598,36 +3641,136 @@ Public Class frmProductsDevelopment
 
     Public Sub cmdall2_Click(Optional ByVal flag As Integer = 0)
         Dim exMessage As String = " "
-        Dim tt As Windows.Forms.TextBox
-        tt = txtsearch
+        Dim genericObj As Object = Nothing
+        'Dim tt As Windows.Forms.TextBox
+        'Dim cm As Windows.Forms.ComboBox
+        Dim controlSender As Object = Nothing
+        Dim isText As Boolean = True
+        'tt = txtsearch
         Dim lstQueries = New List(Of String)()
         Try
+
+            'Dim cnt = FindFocussedControl(Me)
+            Dim cnt = LikeSession.focussedControl
+            If cnt IsNot Nothing Then
+                Dim sender_type = cnt.GetType().ToString()
+                If sender_type.Equals("System.Windows.Forms.TextBox") Then
+                    controlSender = DirectCast(cnt, System.Windows.Forms.TextBox)
+                ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
+                    controlSender = DirectCast(cnt, System.Windows.Forms.ComboBox)
+                    isText = False
+                Else
+                    controlSender = Nothing
+                End If
+                Dim ctrl_name = If(controlSender IsNot Nothing, controlSender.Name, "")
+
+                If Not String.IsNullOrEmpty(ctrl_name) Then
+
+                    'Dim button_name = If(isText, ctrl_name.Replace("txt", "cmd"), ctrl_name.Replace("cmb", "cmd"))
+                    'Dim button_method = button_name & "_click"
+                    Dim button_method = "cmdall_Click"
+                    Dim selection(2) As Object
+                    selection(0) = ctrl_name
+                    selection(1) = isText
+                    DataGridView1.Visible = True
+                    dgvProjectDetails.Visible = True
+                    CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
+                End If
+            Else
+                cmdSearchAll_Click()
+            End If
+
+
+
+
+            'If isText Then
+            '    genericObj = DirectCast(cnt, System.Windows.Forms.TextBox)
+            'Else
+            '    genericObj = DirectCast(cnt, System.Windows.Forms.ComboBox)
+            'End If
+
             'If Trim(tt.Text) <> "" Then
+            '            If flagallow = 1 Then
+            '                strwhere = buildMixedQuery(lstQueries, genericObj.Name, 0, True, True)
+            '            Else
+            '                If gnr.checkPurcByUser(userid) <> -1 Then
+            '                    Dim purcValue = gnr.checkPurcByUser(userid)
+            '                    strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "'))"
+            '                    strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+            '                    strToUnionTab2 = "UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
+            'Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+            '                Else
+            '                    strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "'))"
+            '                End If
+            '            End If
+            'Else
+            '    MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
+            'End If
+
+            'lstQueries.Add(strwhere)
+            'lstQueries.Add(strToUnion)
+            'lstQueries.Add(strToUnionTab2)
+            'buildMixedQuery(lstQueries, genericObj.Name, 0, True)
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Public Sub cmdSearchAll_Click(Optional ByVal flag As Integer = 0)
+        Dim exMessage As String = " "
+        Dim lstQueries = New List(Of String)()
+        Dim sql As String = Nothing
+        Try
+
             If flagallow = 1 Then
                 strwhere = ""
             Else
                 If gnr.checkPurcByUser(userid) <> -1 Then
                     Dim purcValue = gnr.checkPurcByUser(userid)
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "'))"
-                    strToUnion = "UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+                    strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') "
+                    strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & ""
                     strToUnionTab2 = "UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue
+Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " "
                 Else
-                    strwhere = "WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "'))"
+                    strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') "
                 End If
+                'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(txtsearch.Text)), "'", "") & "%'"
             End If
-            'Else
-            '    MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
-            'End If
 
             lstQueries.Add(strwhere)
             lstQueries.Add(strToUnion)
             lstQueries.Add(strToUnionTab2)
-            buildMixedQuery(lstQueries, tt.Name, 0)
+
+            sql = lstQueries(0)
+            Dim IQ1 = lstQueries(1)
+            Dim IQ2 = lstQueries(2)
+
+            'sql += outputQuery
+            'IQ1 += outputQuery
+            'IQ2 += outputQuery
+            'lstQueries(1) = IQ1
+
+            'Dim txtTemp = initialQuery(2)
+            lstQueries(2) = sql + IQ2
+
+            sql += lstQueries(1)
+            If flag = 1 Then
+                fillcell1(sql, 0)
+            Else
+                fillcelldetail(sql, 0, lstQueries(2))
+            End If
+
+            'buildMixedQuery(lstQueries, Nothing, 0)
+            'fillcell1(strwhere, flag)
+            'cleanSearchTextBoxes(tt.Name)
+
+            Exit Sub
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
+        'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
     End Sub
 
     Public Sub cmdSearch_Click(Optional ByVal flag As Integer = 0)
@@ -3644,11 +3787,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Dim purcValue = gnr.checkPurcByUser(userid)
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
-<<<<<<< HEAD
-                        strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-=======
                         strToUnionTab2 = "UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
->>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
 Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
@@ -4488,7 +4627,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         End Try
     End Function
 
-    Private Function buildMixedQuery(initialQuery As List(Of String), selectedField As String, flag As Integer) As String
+    Private Function buildMixedQuery(initialQuery As List(Of String), selectedField As String, flag As Integer, Optional ByVal btnSelect As Boolean = Nothing, Optional ByVal flagBtn As Boolean = Nothing) As String
+        Dim exMessage As String = " "
         Try
             Dim myTableLayout As TableLayoutPanel
             myTableLayout = Me.TableLayoutPanel1
@@ -4496,55 +4636,80 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Dim hasVal As New List(Of Object)
             Dim selectedObj As Object = Nothing
 
-            For Each tt In myTableLayout.Controls
-                If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
-                    If tt.Text <> Nothing And tt.Name <> selectedField Then
-                        hasVal.Add(tt)
-                    ElseIf tt.Name = selectedField Then
-                        selectedObj = tt
+            If Not btnSelect Then
+                For Each tt In myTableLayout.Controls
+                    If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
+                        If tt.Text <> Nothing And tt.Name <> selectedField Then
+                            hasVal.Add(tt)
+                        ElseIf tt.Name = selectedField Then
+                            selectedObj = tt
+                        End If
+                        'If tt.Name <> valueSelectd Then
+                        '    tt.Text = ""
+                        'End If
                     End If
-                    'If tt.Name <> valueSelectd Then
-                    '    tt.Text = ""
-                    'End If
+                Next
+            Else
+                If Not flagBtn Then
+                    For Each tt In myTableLayout.Controls
+                        If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
+                            If tt.Text <> Nothing Then
+                                hasVal.Add(tt)
+                            ElseIf tt.Name = selectedField Then
+                                selectedObj = tt
+                            End If
+                            'If tt.Name <> valueSelectd Then
+                            '    tt.Text = ""
+                            'End If
+                        End If
+                    Next
+                Else
+                    For Each tt In myTableLayout.Controls
+                        If TypeOf tt Is Windows.Forms.TextBox Or TypeOf tt Is Windows.Forms.ComboBox Then
+                            If tt.Name = selectedField Then
+                                hasVal.Add(tt)
+                                selectedObj = tt
+                            End If
+                            'If tt.Name <> valueSelectd Then
+                            '    tt.Text = ""
+                            'End If
+                        End If
+                    Next
                 End If
-            Next
+            End If
+
             LikeSession.searchControls = hasVal
             bs.DataSource = Nothing
             bs1.DataSource = Nothing
-<<<<<<< HEAD
-            Dim DynamicQuery = buildSearchQuerySintax(hasVal, 1)
-            sql += DynamicQuery
-
-            Dim txtTemp1 = initialQuery(1) + DynamicQuery
-            initialQuery(1) = sql + txtTemp1
-=======
             Dim outputQuery = buildSearchQuerySintax(hasVal, 1)
-            Dim IQ1 = initialQuery(1)
-            Dim IQ2 = initialQuery(2)
 
-            sql += outputQuery
-            IQ1 += outputQuery
-            IQ2 += outputQuery
-            initialQuery(1) = IQ1
-
-            'Dim txtTemp = initialQuery(2)
-            initialQuery(2) = sql + IQ2
->>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
-
-            Dim txtTemp2 = initialQuery(2) + DynamicQuery
-            initialQuery(2) = sql + txtTemp2
-
-            sql = initialQuery(1)
-            If flag = 1 Then
-                fillcell1(sql, 0)
+            If btnSelect And flagBtn Then
+                Return outputQuery
             Else
-                'MessageBox.Show(sql, "CTP System", MessageBoxButtons.OK)
-                fillcelldetail(sql, 0, initialQuery(2))
-            End If
-            hasVal.Add(selectedObj)
-            cleanSearchTextBoxesComplex(hasVal, False)
-        Catch ex As Exception
+                Dim IQ1 = initialQuery(1)
+                Dim IQ2 = initialQuery(2)
 
+                sql += outputQuery
+                IQ1 += outputQuery
+                IQ2 += outputQuery
+                initialQuery(1) = IQ1
+
+                'Dim txtTemp = initialQuery(2)
+                initialQuery(2) = sql + IQ2
+
+                sql += initialQuery(1)
+                If flag = 1 Then
+                    fillcell1(sql, 0)
+                Else
+                    fillcelldetail(sql, 0, initialQuery(2))
+                End If
+                hasVal.Add(selectedObj)
+                cleanSearchTextBoxesComplex(hasVal, False)
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
         End Try
     End Function
 
@@ -4672,22 +4837,19 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Else
                             If TypeOf tt Is Windows.Forms.TextBox Then
                                 If pair.Key = "txtsearch" Then
-<<<<<<< HEAD
-=======
                                     'strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
->>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
                                     strwhere += " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                                 Else
-                                    strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "
-                                End If
-                            Else
-                                strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.SelectedValue)) & "' "
-                            End If
+            strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "
+            End If
+            Else
+            strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+            End If
                             'AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "')
                             'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
                         End If
-                    End If
-                Next
+            End If
+            Next
             Next
 
             Return strwhere
@@ -5256,6 +5418,21 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 #End Region
 
 #Region "Utils"
+
+    Public Function FindFocussedControl(ByVal ctr As Control) As Control
+        Dim exMessage As String = Nothing
+        Try
+            Dim container As ContainerControl = TryCast(ctr, ContainerControl)
+            Do While (container IsNot Nothing)
+                ctr = container.ActiveControl
+                container = TryCast(ctr, ContainerControl)
+            Loop
+            Return ctr
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
     Private Function CheckCredentials(user As String) As Boolean
         Dim exMessage As String = " "
@@ -5893,6 +6070,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         End If
                     ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
                         tt.Value = DateTime.Now
+                    ElseIf TypeOf tt Is Windows.Forms.PictureBox Then
+                        tt.Image = Nothing
                     End If
                 Next
             Next
