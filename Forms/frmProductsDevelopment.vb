@@ -1009,7 +1009,7 @@ Public Class frmProductsDevelopment
                                 'Dim sql1 = "SELECT A2.* FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY A1.PRDATE DESC"
                                 'ds1 = gnr.FillGrid(sql1)
 
-<<<<<<< HEAD
+
                                 Dim dtGrid As New DataTable
                                 dtGrid = (DirectCast(dgvProjectDetails.DataSource, DataTable))
                                 If dtGrid IsNot Nothing Then
@@ -1024,7 +1024,7 @@ Public Class frmProductsDevelopment
                                         SSTab1.SelectedIndex = 2
                                     End If
                                 End If
-=======
+
                                 'If ds1 IsNot Nothing Then
                                 '    If ds1.Tables(0).Rows.Count >= 2 Then
                                 '        SSTab1.SelectedIndex = 1
@@ -1035,7 +1035,7 @@ Public Class frmProductsDevelopment
                                 '        SSTab1.SelectedIndex = 2
                                 '    End If
                                 'End If
->>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
+
                             End If
                         End If
                     Else
@@ -3712,7 +3712,7 @@ Public Class frmProductsDevelopment
             'lstQueries.Add(strToUnionTab2)
             'buildMixedQuery(lstQueries, genericObj.Name, 0, True)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4708,7 +4708,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -4840,16 +4840,16 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                                     'strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                                     strwhere += " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                                 Else
-            strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "
-            End If
-            Else
-            strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.SelectedValue)) & "' "
-            End If
+                                    strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "
+                                End If
+                            Else
+                                strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.SelectedValue)) & "' "
+                            End If
                             'AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "')
                             'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
                         End If
-            End If
-            Next
+                    End If
+                Next
             Next
 
             Return strwhere
