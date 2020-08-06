@@ -4333,7 +4333,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         End Try
     End Sub
 
-    Public Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmduser2.Click
+    Public Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdUser2.Click
         cmduser2_click()
         'cmdPePechMore_Click()
     End Sub
