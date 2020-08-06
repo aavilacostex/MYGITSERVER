@@ -1003,6 +1003,7 @@ Public Class frmProductsDevelopment
                                 'Dim sql1 = "SELECT A2.* FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY A1.PRDATE DESC"
                                 'ds1 = gnr.FillGrid(sql1)
 
+<<<<<<< HEAD
                                 Dim dtGrid As New DataTable
                                 dtGrid = (DirectCast(dgvProjectDetails.DataSource, DataTable))
                                 If dtGrid IsNot Nothing Then
@@ -1017,6 +1018,18 @@ Public Class frmProductsDevelopment
                                         SSTab1.SelectedIndex = 2
                                     End If
                                 End If
+=======
+                                'If ds1 IsNot Nothing Then
+                                '    If ds1.Tables(0).Rows.Count >= 2 Then
+                                '        SSTab1.SelectedIndex = 1
+                                '    ElseIf ds1.Tables(0).Rows.Count > 0 Then
+                                '        Dim projectNo = ds1.Tables(0).Rows(0).ItemArray(0).ToString()
+                                '        Dim partNo = ds1.Tables(0).Rows(0).ItemArray(1).ToString()
+                                '        fillTab3(projectNo, partNo)
+                                '        SSTab1.SelectedIndex = 2
+                                '    End If
+                                'End If
+>>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
                             End If
                         End If
                     Else
@@ -3628,7 +3641,11 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Dim purcValue = gnr.checkPurcByUser(userid)
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+<<<<<<< HEAD
                         strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
+=======
+                        strToUnionTab2 = "UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
+>>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
 Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
@@ -4491,6 +4508,13 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             LikeSession.searchControls = hasVal
             bs.DataSource = Nothing
             bs1.DataSource = Nothing
+<<<<<<< HEAD
+            Dim DynamicQuery = buildSearchQuerySintax(hasVal, 1)
+            sql += DynamicQuery
+
+            Dim txtTemp1 = initialQuery(1) + DynamicQuery
+            initialQuery(1) = sql + txtTemp1
+=======
             Dim outputQuery = buildSearchQuerySintax(hasVal, 1)
             Dim IQ1 = initialQuery(1)
             Dim IQ2 = initialQuery(2)
@@ -4502,6 +4526,10 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
             'Dim txtTemp = initialQuery(2)
             initialQuery(2) = sql + IQ2
+>>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
+
+            Dim txtTemp2 = initialQuery(2) + DynamicQuery
+            initialQuery(2) = sql + txtTemp2
 
             sql = initialQuery(1)
             If flag = 1 Then
@@ -4641,7 +4669,10 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Else
                             If TypeOf tt Is Windows.Forms.TextBox Then
                                 If pair.Key = "txtsearch" Then
+<<<<<<< HEAD
+=======
                                     'strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
+>>>>>>> fcd4123... corregido filtros de busqueda para PS con todos los campos seleccionados en grid 1 y grid 2. Adicion de proceso de direccionamiento desde grid dos a tres.
                                     strwhere += " AND TRIM(UCASE(PRNAME)) LIKE '%" & Replace(Trim(UCase(tt.Text)), "'", "") & "%'"
                                 Else
                                     strwhere += " AND TRIM(UCASE(" & pair.Value & ")) = '" & Trim(UCase(tt.Text)) & "' "
