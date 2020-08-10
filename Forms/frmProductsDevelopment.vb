@@ -6,6 +6,7 @@ Imports System.Web.UI.WebControls
 Imports outlook = Microsoft.Office.Interop.Outlook
 Imports System.Reflection
 Imports System.Threading
+Imports System.Runtime.InteropServices
 
 Public Class frmProductsDevelopment
     Public flagdeve As Long '1 is new
@@ -23,6 +24,7 @@ Public Class frmProductsDevelopment
     Dim toemails As String = ""
     Dim gnr As Gn1 = New Gn1()
     Dim wm As WatermarkTextBox = New WatermarkTextBox()
+    Dim bt As ButtonTextBox = New ButtonTextBox()
 
     'Public Const PageSize = 10
     'Public Property TotalRecords() As Integer
@@ -40,6 +42,8 @@ Public Class frmProductsDevelopment
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
+
+
         ' MsgBox("The application is terminating.")
         ' Add any initialization after the InitializeComponent() call.
     End Sub
@@ -63,12 +67,26 @@ Public Class frmProductsDevelopment
                 cmddelete.Visible = False
             End If
 
+
+            'Dim btn As System.Windows.Forms.Button = New System.Windows.Forms.Button()
+            'btn.Size = New Size(25, txtsearchcode.ClientSize.Height + 2)
+            'btn.Location = New Point(txtsearchcode.ClientSize.Width - btn.Width - 1, -1)
+            'btn.FlatStyle = FlatStyle.Flat
+            'btn.Cursor = Cursors.Default
+            ''btn.Image = System.Windows.Forms.image Image. FromFile("C:\ansoft\Soljica\texture\tone.png")
+            'btn.FlatAppearance.BorderSize = 0
+            'txtsearchcode.Controls.Add(btn)
+            'SendMessage(txtsearchcode.Handle, &HD3, CType(2, IntPtr), CType((btn.Width << 16), IntPtr))
+
             ResizeTabs()
             SetValues()
+
 
             FillDDLStatus1()
             FillDDlPrPech()
             FillDDlPrPech1()
+
+
 
             'testMethod()
             'test purpose
@@ -84,6 +102,10 @@ Public Class frmProductsDevelopment
             exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
+
+    <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
+    Private Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As IntPtr
+    End Function
 
     Public Sub testMethod()
 
@@ -2208,7 +2230,7 @@ Public Class frmProductsDevelopment
                     MessageBox.Show("The project number an d vendor number must have value.", "CTP System", MessageBoxButtons.OK)
                 End If
 
-                If QueryDetailResult <0 Then
+                If QueryDetailResult < 0 Then
                     MessageBox.Show("Ann error ocurred inserting data in database.", "CTP System", MessageBoxButtons.OK)
                 End If
             End If
@@ -2630,10 +2652,10 @@ Public Class frmProductsDevelopment
                                 End If
                                 'paso de receiving of first production a rejected y esto implica cambio de vendor asignado
                                 If (Trim(cmbstatus.SelectedValue) = "R ") And (dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "RP") Then
-                                        Dim flagchangevendor = 1
+                                    Dim flagchangevendor = 1
                                     frmChangeVendor.ShowDialog()
                                 End If
-                                    If Trim(Status2) = "Closed Successfully" Then
+                                If Trim(Status2) = "Closed Successfully" Then
                                     toemails = prepareEmailsToSend(1)
                                     Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
                                     If rsResult < 0 Then
@@ -4412,7 +4434,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         End Try
     End Sub
 
-    Public Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmduser2.Click
+    Public Sub cmdPePechMore_Click(sender As Object, e As EventArgs) Handles cmdUser2.Click
         cmduser2_click()
         'cmdPePechMore_Click()
     End Sub
@@ -5587,18 +5609,22 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         logUser.Text += userid
 
+        txtsearchcode.SetBtnTexbox(ImageList1)
+
         'tab 1
-        txtsearch1.SetWaterMark("Vendor No.")
+        txtsearch1.SetWatermark("Vendor No.")
         txtsearch.SetWatermark("Project Name")
-        txtJiratasksearch.SetWaterMark("Jira Task No.")
-        txtsearchpart.SetWaterMark("Part No.")
+        txtJiratasksearch.SetWatermark("Jira Task No.")
+        txtsearchpart.SetWatermark("Part No.")
         txtsearchctp.SetWatermark("CTP No.")
-        txtMfrNoSearch.SetWaterMark("Manufacturer No.")
-        txtsearchcode.SetWaterMark("Project No.")
+        txtMfrNoSearch.SetWatermark("Manufacturer No.")
+        txtsearchcode.SetWatermark("Project No.")
         cmbPrpech.SetWatermark("Person In Charge")
 
         cmbstatus1.SetWatermark("Project Reference Status")
         MyComboBox1.SetWatermark("test water")
+
+
 
         'tab 2
         txtPartNoMore.SetWatermark("Part No.")

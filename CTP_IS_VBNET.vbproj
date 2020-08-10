@@ -172,7 +172,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class\Autocomplete _module.vb" />
+    <Compile Include="Class\Autocomplete-Textbox.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Class\btntextox.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\ButtonTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Class\ConvertXml.vb" />

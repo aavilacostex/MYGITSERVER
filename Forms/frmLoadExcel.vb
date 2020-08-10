@@ -114,6 +114,19 @@ Public Class frmLoadExcel
 
             ComboBox1.SetWatermark("Vendor Name")
 
+            Dim myList As String() = New String(myTable.Rows.Count) {}
+            Dim i As Integer = 0
+            For Each item As DataRow In myTable.Rows
+                If Not item("VMNAME").ToString().Equals("") Then
+                    If item("VMNAME").ToString() IsNot Nothing Then
+                        myList(i) = item("VMNAME").ToString()
+                        i += 1
+                    End If
+                End If
+            Next
+
+            ac1.Values = myList
+
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
         End Try
@@ -361,6 +374,12 @@ Public Class frmLoadExcel
         'Dim result = gnr.getVendorNoAndNameByNameLike(txtVendorName.Text)
         'ComboBox1.DataSource = result
         'ComboBox1.Refresh()
+        'If ComboBox1.SelectedText IsNot Nothing Then
+        '    ac1.Text = ComboBox1.Text
+        '    ac1.Focus()
+        '    SendKeys.Send("{ENTER}")
+        'End If
+
         If ComboBox1.SelectedValue IsNot Nothing Then
             txtVendorNo.Text = ComboBox1.SelectedValue.ToString()
         End If

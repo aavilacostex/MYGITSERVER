@@ -26,4 +26,22 @@ Public Module TextBoxExtensions
         SendMessage(New HandleRef(ctl, ctl.Handle), msg, retainOnFocus, text)
     End Sub
 
+    <DebuggerStepThrough()>
+    <Runtime.CompilerServices.Extension()>
+    Public Sub SetBtnTexbox(ByVal ctl As Control, ByVal ctlImg As ImageList, Optional ByVal text As String = Nothing)
+        Dim btn As System.Windows.Forms.Button = New System.Windows.Forms.Button()
+        btn.Size = New Size(25, ctl.ClientSize.Height + 2)
+        btn.Location = New Point(ctl.ClientSize.Width - btn.Width - 1, -1)
+        btn.FlatStyle = FlatStyle.Flat
+        btn.Cursor = Cursors.Default
+        'btn.Image = System.Windows.Forms.image Image. FromFile("C:\ansoft\Soljica\texture\tone.png")
+        btn.Image = ctlImg.Images(0)
+        btn.FlatAppearance.BorderSize = 0
+        ctl.Controls.Add(btn)
+
+        SendMessage(New HandleRef(ctl, ctl.Handle), &HD3, CType(2, IntPtr), CType((btn.Width << 16), IntPtr))
+
+        SetWatermark(ctl, text)
+    End Sub
+
 End Module
