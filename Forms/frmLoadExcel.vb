@@ -79,14 +79,7 @@ Public Class frmLoadExcel
             cmbStatus.SetWatermark("Project Status")
             cmbPerCharge.SetWatermark("Person In Charge")
 
-            'Autocomplete__module.create_textAutocomplete(txtVendorName)
-            'Autocomplete__module.create_ddlAutocomplete(ComboBox1)
-
-            'ComboBox1.AutoCompleteMode = AutoCompleteMode.Append
-            'ComboBox1.DropDownStyle = ComboBoxStyle.DropDown
-            'ComboBox1.AutoCompleteSource = AutoCompleteSource.ListItems
-
-
+            ac1.SetWatermark("Vendor Name")
 
             'Then Set ComboBox AutoComplete properties
             Dim ds = gnr.getVendorNoAndNameByNameDS()
@@ -95,24 +88,24 @@ Public Class frmLoadExcel
             bs.DataSource = ds.Tables(0)
             Dim dataview = New DataView(ds.Tables(0))
             Dim myTable As DataTable = dataview.ToTable(False, "VMNAME", "VMVNUM")
+            ComboBox1.DataSource = myTable
+            ComboBox1.DisplayMember = "VMNAME"
+            ComboBox1.ValueMember = "VMVNUM"
 
+            'Dim newRow As DataRow = myTable.NewRow
+            'newRow("VMNAME") = ""
+            'newRow("VMVNUM") = -1
+            ''dsUser.Tables(0).Rows.Add(newRow)
+            'myTable.Rows.InsertAt(newRow, 0)
 
-            Dim newRow As DataRow = myTable.NewRow
-            newRow("VMNAME") = ""
-            newRow("VMVNUM") = -1
-            'dsUser.Tables(0).Rows.Add(newRow)
-            myTable.Rows.InsertAt(newRow, 0)
-
-            With ComboBox1
-                .DisplayMember = "VMNAME"
-                .ValueMember = "VMVNUM"
-                .DataSource = myTable
-                .DropDownStyle = ComboBoxStyle.DropDown
-                .AutoCompleteMode = AutoCompleteMode.SuggestAppend
-                .AutoCompleteSource = AutoCompleteSource.ListItems
-            End With
-
-            ComboBox1.SetWatermark("Vendor Name")
+            'With ComboBox1
+            '    .DisplayMember = "VMNAME"
+            '    .ValueMember = "VMVNUM"
+            '    .DataSource = myTable
+            '    .DropDownStyle = ComboBoxStyle.DropDown
+            '    .AutoCompleteMode = AutoCompleteMode.SuggestAppend
+            '    .AutoCompleteSource = AutoCompleteSource.ListItems
+            'End With
 
             Dim myList As String() = New String(myTable.Rows.Count) {}
             Dim i As Integer = 0
@@ -127,6 +120,16 @@ Public Class frmLoadExcel
 
             ac1.Values = myList
 
+            'If (Not String.IsNullOrEmpty(ComboBox1.Text) Or (ComboBox2.SelectedIndex <> -1)) Then
+            '    With ComboBox2
+            '        .DisplayMember = "VMNAME"
+            '        .ValueMember = "VMVNUM"
+            '        .DataSource = DirectCast(ComboBox2.DataSource, DataTable)
+            '        .DropDownStyle = ComboBoxStyle.DropDown
+            '        .AutoCompleteMode = AutoCompleteMode.SuggestAppend
+            '        .AutoCompleteSource = AutoCompleteSource.ListItems
+            '    End With
+            'End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
         End Try
@@ -135,6 +138,51 @@ Public Class frmLoadExcel
 #End Region
 
 #Region "Gridview,  dropdowns and textboxes methods"
+
+    Private Function fromListboxToDatatable(lst As ListBox, Optional dtBase As DataTable = Nothing) As DataTable
+        Dim exMessage As String = Nothing
+        Try
+            Dim dt As DataTable = New DataTable()
+            If lst.Items.Count > 0 Then
+                dt = dtBase.Clone()
+                Dim x As Integer = 0
+                Dim vndCode As String = Nothing
+                For Each item As String In lst.Items
+                    vndCode = If(Integer.TryParse(utilDT(item, dtBase), x), CInt(utilDT(item, dtBase)), 0)
+                    If vndCode IsNot Nothing Then
+                        Dim row = dt.NewRow()
+                        row("VMNAME") = item
+                        row("VMVNUM") = vndCode
+                        dt.Rows.Add(row)
+                    End If
+                Next
+                dt.AcceptChanges()
+            End If
+            Return dt
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function utilDT(value As String, dtvalues As DataTable) As String
+        Dim exMessage As String = Nothing
+        Dim code As String = Nothing
+        Try
+            If value IsNot Nothing And dtvalues IsNot Nothing Then
+                For Each item As DataRow In dtvalues.Rows
+                    If item.ItemArray(0).ToString().Equals(value) Then
+                        code = item.ItemArray(1).ToString()
+                        Exit For
+                    End If
+                Next
+            End If
+            Return code
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
     Public Function xlsDataSchemaValidation(dt As DataTable) As Boolean
         Dim exMessage As String = " "
@@ -2130,6 +2178,10 @@ Public Class frmLoadExcel
             Return strExt
         End Try
     End Function
+
+    Private Sub ac1_TextChanged(sender As Object, e As EventArgs)
+
+    End Sub
 
 #End Region
 
