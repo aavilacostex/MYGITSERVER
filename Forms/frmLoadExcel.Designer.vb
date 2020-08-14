@@ -430,6 +430,7 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
+        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(75, 35)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -613,6 +614,7 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
+        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"

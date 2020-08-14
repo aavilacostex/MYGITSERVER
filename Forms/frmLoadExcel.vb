@@ -1,18 +1,13 @@
-﻿Imports System.Data.OleDb
+﻿Imports System.ComponentModel
+Imports System.Data.OleDb
 Imports System.Globalization
 Imports System.IO
-Imports System.Text.RegularExpressions
-Imports Microsoft.Office.Interop
-Imports ExcelTools = Microsoft.Office
-
-Imports Excel = Microsoft.Office.Interop.Excel
-
-Imports ClosedXML.Excel
-Imports Microsoft.Win32
-Imports System.ComponentModel
 Imports System.Reflection
-Imports System.Xml.Schema
+Imports System.Text.RegularExpressions
 Imports System.Xml
+Imports System.Xml.Schema
+Imports Microsoft.Win32
+Imports Excel = Microsoft.Office.Interop.Excel
 'Dim ac As New Autocomplete__module()
 
 Public Class frmLoadExcel
@@ -92,6 +87,8 @@ Public Class frmLoadExcel
             ComboBox1.DisplayMember = "VMNAME"
             ComboBox1.ValueMember = "VMVNUM"
 
+            txtVendorNo.Text = ""
+
             'Dim newRow As DataRow = myTable.NewRow
             'newRow("VMNAME") = ""
             'newRow("VMVNUM") = -1
@@ -164,6 +161,8 @@ Public Class frmLoadExcel
             Return Nothing
         End Try
     End Function
+
+    'Private function fromDataTableToList() As List(Of
 
     Private Function utilDT(value As String, dtvalues As DataTable) As String
         Dim exMessage As String = Nothing
@@ -331,6 +330,9 @@ Public Class frmLoadExcel
                             End If
                         End If
 
+                        btnSuccess.Enabled = If(dsResult.Tables(0).Rows.Count > 0, True, False)
+                        btnCheck.Enabled = If(dsError.Tables(0).Rows.Count > 0, True, False)
+
                         If dsResult.Tables(0).Rows.Count > 0 Then
                             setSplitContainerVisualization(1, False)
                         Else
@@ -363,7 +365,7 @@ Public Class frmLoadExcel
             pi.SetValue(SplitContainer1, Convert.ChangeType(value, pi.PropertyType), Nothing)
             If index.Equals(1) Then
                 btnCheck.Enabled = Not value
-                btnSuccess.Enabled = value
+                'btnSuccess.Enabled = value
                 DataGridView1.Visible = Not value
                 DataGridView1.Enabled = Not value
                 cmdExcel.Visible = value
@@ -373,7 +375,7 @@ Public Class frmLoadExcel
                 pi2.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi2.PropertyType), Nothing)
             Else
                 btnCheck.Enabled = value
-                btnSuccess.Enabled = Not value
+                'btnSuccess.Enabled = Not value
                 cmdExcel.Visible = Not value
                 lblExcel.Visible = Not value
                 'cmdExcel.Enabled = Not value
@@ -419,18 +421,22 @@ Public Class frmLoadExcel
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged, ComboBox1.TextChanged
-        'Dim result = gnr.getVendorNoAndNameByNameLike(txtVendorName.Text)
-        'ComboBox1.DataSource = result
-        'ComboBox1.Refresh()
-        'If ComboBox1.SelectedText IsNot Nothing Then
-        '    ac1.Text = ComboBox1.Text
-        '    ac1.Focus()
-        '    SendKeys.Send("{ENTER}")
-        'End If
-
         If ComboBox1.SelectedValue IsNot Nothing Then
             txtVendorNo.Text = ComboBox1.SelectedValue.ToString()
         End If
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+        Dim exMessage As String = Nothing
+        Try
+            If ComboBox2.SelectedValue IsNot Nothing And ComboBox2.SelectedIndex <> 0 Then
+                txtVendorNo.Text = ComboBox2.SelectedValue.ToString()
+                lblVendorDesc.Text = ComboBox2.GetItemText(ComboBox2.SelectedItem)
+                'ac1.Text = lblVendorDesc.Text
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
     End Sub
 
     Private Sub txtVendorNo_TextChanged_1(sender As Object, e As EventArgs) Handles txtVendorNo.TextChanged
@@ -442,10 +448,21 @@ Public Class frmLoadExcel
             btnSelect.Enabled = False
         End If
         btnValidVendor.Enabled = True
+
+        'txtVendorNo.Text = If(txtVendorNo.Text IsNot Nothing Or txtVendorNo.Text <> "", txtVendorNo.Text.Replace(Environment.NewLine, ""), " ")
         txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
+        'If (Regex.IsMatch(txtVendorNo.Text, "^[0-9]{1,6}$") And gnr.isVendorAccepted(txtVendorNo.Text)) Then
+        'ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
+        'If ComboBox1.SelectedIndex > 0 Then
+        '    ac1.Text = lblVendorDesc.Text
+        'End If
+        'End If
 
         If txtVendorNo.Text = "-1" Then
-            txtVendorNo.Text = ""
+            Dim selIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
+            Dim curSel As DataRowView = ComboBox1.Items(selIndex)
+            txtVendorNo.Text = curSel.Row.ItemArray(1).ToString()
+            lblVendorDesc.Text = curSel.Row.ItemArray(0).ToString()
         End If
     End Sub
 
@@ -992,9 +1009,31 @@ Public Class frmLoadExcel
                     lblVendorDesc.Text = txtVendorNo.Text & ": It is not a valid vendor number."
                     txtVendorNo.Text = Nothing
                     ComboBox1.SelectedIndex = -1
+                    ac1.Text = Nothing
+                    ComboBox2.DataSource = Nothing
                 Else
                     txtVendorNo_TextChanged_1(Nothing, Nothing)
-                    ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
+
+                    Dim dtHandle = DirectCast(ComboBox1.DataSource, DataTable)
+
+                    If dtHandle IsNot Nothing Then
+                        ComboBox2.DataSource = dtHandle
+                        ComboBox2.DisplayMember = "VMNAME"
+                        ComboBox2.ValueMember = "VMVNUM"
+
+                        Dim selIndex = ComboBox2.FindStringExact(lblVendorDesc.Text)
+                        ComboBox2.SelectedIndex = If(selIndex <> -1, selIndex, 0)
+                    End If
+
+                    'Dim setCombo = If(ComboBox2.DataSource IsNot Nothing, True, False)
+                    'If setCombo Then
+                    '    ComboBox2.SelectedIndex = 0
+                    'End If
+
+                    'If ComboBox1.SelectedIndex > 0 Then
+                    '    ac1.Text = lblVendorDesc.Text
+                    'End If
+
                 End If
             Else
                 txtVendorNo.Text = Nothing

@@ -55,12 +55,12 @@
                     End If
                     Exit Select
                 Case Keys.Down
-                    If (_listBox.Visible Or _listBox.Items.Count > 0) And (_listBox.SelectedIndex < _listBox.Items.Count - 1) Then
+                    If (_listBox.Visible  Or _listBox.Items.Count > 0) And (_listBox.SelectedIndex < _listBox.Items.Count - 1) Then
                         _listBox.SelectedIndex += 1
                     End If
                     Exit Select
                 Case Keys.Up
-                    If (_listBox.Visible Or _listBox.Items.Count > 0) And (_listBox.SelectedIndex > 0) Then
+                    If (_listBox.Visible) And (_listBox.SelectedIndex > 0) Then
                         _listBox.SelectedIndex -= 1
                     End If
                     Exit Select
@@ -133,13 +133,31 @@
 
                     Dim dtBase = DirectCast(frmLoadExcel.ComboBox1.DataSource, DataTable)
                     Dim dtCmb = fromListboxToDatatable(_listBox, dtBase)
+
+                    Dim newRow As DataRow = dtCmb.NewRow
+                    newRow("VMNAME") = ""
+                    newRow("VMVNUM") = -1
+                    'dsUser.Tables(0).Rows.Add(newRow)
+                    dtCmb.Rows.InsertAt(newRow, 0)
+
                     frmLoadExcel.ComboBox2.DataSource = dtCmb
                     frmLoadExcel.ComboBox2.DisplayMember = "VMNAME"
                     frmLoadExcel.ComboBox2.ValueMember = "VMVNUM"
+
+                    frmLoadExcel.ComboBox2.SelectedIndex = 1
+                    'frmLoadExcel.lblVendorDesc.Text = Nothing
                 Else
+                    _listBox.Items.Clear()
+                    frmLoadExcel.ComboBox2.DataSource = Nothing
+                    frmLoadExcel.txtVendorNo.Text = Nothing
+                    frmLoadExcel.lblVendorDesc.Text = Nothing
                     ResetListBox()
                 End If
             Else
+                _listBox.Items.Clear()
+                frmLoadExcel.ComboBox2.DataSource = Nothing
+                frmLoadExcel.txtVendorNo.Text = Nothing
+                frmLoadExcel.lblVendorDesc.Text = Nothing
                 ResetListBox()
             End If
         Catch ex As Exception
