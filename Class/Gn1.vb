@@ -2657,8 +2657,6 @@ errhandler:
 
     End Sub
 
-
-
     Public Function FillGrid(query As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim PageSize As Integer = 5

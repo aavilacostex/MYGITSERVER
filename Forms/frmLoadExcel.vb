@@ -183,9 +183,10 @@ Public Class frmLoadExcel
         End Try
     End Function
 
-    Public Function xlsDataSchemaValidation(dt As DataTable) As Boolean
+    Public Function xlsDataSchemaValidation(dt As DataTable) As String
         Dim exMessage As String = " "
-        Dim blResult As Boolean = False
+        'Dim blResult As Boolean = False
+        Dim strResult As String = Nothing
         Try
             Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             Dim rsPath As String = userPath & "\Excel_validation\"
@@ -196,17 +197,22 @@ Public Class frmLoadExcel
 
             Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath & "Input.xml", "MainNode")
             If result Then
-                blResult = validationSchema(rsPath)
-                Return blResult
+                'blResult = If(String.IsNullOrEmpty(validationSchema(rsPath)), True, False)
+                'Return blResult
+                strResult = validationSchema(rsPath)
+            Else
+                strResult = "No XML Data."
             End If
             'Dim rsPath = New Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return blResult
+            strResult = exMessage
+            'Return blResult
         End Try
+        Return strResult
     End Function
 
-    Public Function validationSchema(rsPath As String) As Boolean
+    Public Function validationSchema(rsPath As String) As String
         Dim exMessage As String = " "
         Dim blResult As Boolean = False
         Try
@@ -216,12 +222,13 @@ Public Class frmLoadExcel
             Dim doc As XDocument = XDocument.Load(rd)
             doc.Validate(schema, AddressOf XSDErrors)
             Dim outMessage As String = Nothing
-            outMessage = If(errors, "Not Validated. " & schemaErrorDesc, "Validated")
+            outMessage = If(errors, "Not Validated. " & schemaErrorDesc, "")
 
-            blResult = If(outMessage.Equals("Validated"), True, False)
-            Return blResult
+            'blResult = If(outMessage.Equals("Validated"), True, False)
+            Return outMessage
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return "Not Validated. " & ex.Message
         End Try
     End Function
 
@@ -256,6 +263,7 @@ Public Class frmLoadExcel
                 If dt.Rows.Count > 0 Then
 
                     Dim dictionary As New Dictionary(Of String, String)
+                    'preparar logica para que lea automaticamente del xsd file las columnas en el diccionario
                     'dictionary.Add("PRNAME", "Project Name")
                     dictionary.Add("PRDPTN", "Part Number")
                     'dictionary.Add("VMVNUM", "Vendor Number")
@@ -286,27 +294,29 @@ Public Class frmLoadExcel
                             'If String.IsNullOrEmpty(item.ItemArray(dt.Columns("PRPECH").Ordinal).ToString()) Then
                             '    item.Item(dt.Columns("PRPECH").Ordinal) = userid
                             'End If
-                            If checkIfPartAndVdrExist(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString(), txtVendorNo.Text) Then
-                                dsError.Tables(0).ImportRow(item)
-                                errorMessagee = message3
-                                dsError.Tables(0).Rows(j).Item("ErrorDesc") = errorMessagee
-                                j += 1
-                            Else
-                                If gnr.isPartInExistence(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()) Then
-                                    Dim checkDuplicates = From data In dsResult.Tables(0).AsEnumerable()
-                                                          Where Trim(UCase(data.Item("PRDPTN").ToString())) = Trim(UCase(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()))
-
-                                    If checkDuplicates IsNot Nothing Then
-                                        If Not checkDuplicates.Any() Then
-                                            dsResult.Tables(0).ImportRow(item)
-                                            i += 1
-                                        End If
-                                    End If
-                                Else
+                            If Not String.IsNullOrEmpty(item.ItemArray(0).ToString()) Then
+                                If checkIfPartAndVdrExist(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString(), txtVendorNo.Text) Then
                                     dsError.Tables(0).ImportRow(item)
-                                    errorMessagee = message4
+                                    errorMessagee = message3
                                     dsError.Tables(0).Rows(j).Item("ErrorDesc") = errorMessagee
                                     j += 1
+                                Else
+                                    If gnr.isPartInExistence(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()) Then
+                                        Dim checkDuplicates = From data In dsResult.Tables(0).AsEnumerable()
+                                                              Where Trim(UCase(data.Item("PRDPTN").ToString())) = Trim(UCase(item.ItemArray(dt.Columns("PRDPTN").Ordinal).ToString()))
+
+                                        If checkDuplicates IsNot Nothing Then
+                                            If Not checkDuplicates.Any() Then
+                                                dsResult.Tables(0).ImportRow(item)
+                                                i += 1
+                                            End If
+                                        End If
+                                    Else
+                                        dsError.Tables(0).ImportRow(item)
+                                        errorMessagee = message4
+                                        dsError.Tables(0).Rows(j).Item("ErrorDesc") = errorMessagee
+                                        j += 1
+                                    End If
                                 End If
                             End If
                         Next
@@ -395,6 +405,12 @@ Public Class frmLoadExcel
             btnSelect.Enabled = True
         ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
             btnSelect.Enabled = True
+            Dim ds = gnr.GetDataByPRHCOD(txtProjectNo.Text)
+            Dim message = If(ds IsNot Nothing, "", "This project number is invalid.")
+            If (Not String.IsNullOrEmpty(message)) Then
+                MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
+                txtProjectNo.Text = Nothing
+            End If
         Else
             btnSelect.Enabled = False
         End If
@@ -940,9 +956,12 @@ Public Class frmLoadExcel
                         oda.Fill(dt)
 
                         Dim result = xlsDataSchemaValidation(dt)
-                        If result Then
+                        If String.IsNullOrEmpty(result) Then
                             LikeSession.dsData = dt
                             fillData(dt)
+                        Else
+                            Dim message = If(result.Equals("No XML Data."), "Error in the xml document structure.", result)
+                            MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
                         End If
 
                         'LoadThread()
@@ -1054,6 +1073,7 @@ Public Class frmLoadExcel
         'End If
         'cleanFormValues()
         OpenFileDialog1.ShowDialog()
+        'OpenFileDialog1.Dispose()
     End Sub
 
     Private Sub btnInsert_Click(sender As Object, e As EventArgs) Handles btnInsert.Click
@@ -1133,6 +1153,13 @@ Public Class frmLoadExcel
                     txtDesc.Text = Trim(item.ItemArray(ds.Tables(0).Columns("PRINFO").Ordinal).ToString())
                     dtProjectDate.Value = CDate(item.ItemArray(ds.Tables(0).Columns("PRDATE").Ordinal)).ToShortDateString()
                 Next
+
+                Dim lstVendors = gnr.GetVendorInProject(ProjectNoCurrent)
+                If lstVendors.Count > 1 Then
+                    MessageBox.Show("There is more than one vendor assgined in this project.", "CTP System", MessageBoxButtons.OK)
+                ElseIf lstVendors.Count = 1 Then
+                    txtVendorNo.Text = lstVendors(0)
+                End If
                 '?
             End If
 
@@ -1142,64 +1169,75 @@ Public Class frmLoadExcel
                 For Each row As DataGridViewRow In DataGridView1.Rows
                     'save
                     Dim partNo = row.Cells("clPRDPTN").Value
-                    'Dim vendorNo = row.Cells("clVMVNUM").Value
+                    vendorNo = txtVendorNo.Text
+                    If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
+                        dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
+                    End If
 
-                    Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
+                    dsResult.Tables(0).Rows(iterator).Item("PRHCOD") = ProjectNoCurrent
+                    dsResult.Tables(0).Rows(iterator).Item("VMVNUM") = txtVendorNo.Text
+
+                    'preguntar si parte ya existe en el proyecto
+                    Dim dsExist = gnr.GetDataByCodeAndPartNoProdDesc(ProjectNoCurrent, partNo)
+                    If dsExist Is Nothing Then
+
+                        Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
                                          .Where(Function(x) Trim(UCase(x.Field(Of String)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
                                          Trim(UCase(x.Field(Of String)("PRDPTN"))).ToString() = Trim(UCase(partNo)))
 
-                    If Qry1.Count > 0 Then
-                        Qry = Qry1.CopyToDataTable
-                        'Dim personInChargeValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()), userid, Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString())
-                        Dim personInChargeValue = userid
+                        If Qry1.Count > 0 Then
+                            Qry = Qry1.CopyToDataTable
+                            'Dim personInChargeValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()), userid, Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString())
+                            Dim personInChargeValue = userid
 
-                        Dim rsInsert = InsertProductDetails(Qry, ProjectNoCurrent, personInChargeValue)
+                            Dim rsInsert = InsertProductDetails(Qry, ProjectNoCurrent, personInChargeValue)
 
-                        'add to error dataset if insertion fails
-                        If rsInsert < 0 Then
-                            Dim dsError = LikeSession.dsErrorSession
+                            'add to error dataset if insertion fails
+                            If rsInsert < 0 Then
+                                Dim dsError = LikeSession.dsErrorSession
 
-                            Dim dtError = dsError.Tables(0).Copy()
-                            dtError.Columns.Add("VMVNUM", GetType(String))
+                                Dim dtError = dsError.Tables(0).Copy()
+                                dtError.Columns.Add("VMVNUM", GetType(String))
 
-                            For Each dw1 As DataRow In dtError.Rows
-                                dw1.Item("VMVNUM") = vendorNo
-                            Next
+                                For Each dw1 As DataRow In dtError.Rows
+                                    dw1.Item("VMVNUM") = vendorNo
+                                Next
 
-                            Dim row1 As DataRow = dtError.NewRow()
-                            row1(0) = Qry.Rows(0).ItemArray(Qry.Columns("PRDPTN").Ordinal).ToString()
-                            row1(2) = Qry.Rows(0).ItemArray(Qry.Columns("VMVNUM").Ordinal).ToString()
-                            row1(1) = "Error inserting the project reference."
+                                Dim row1 As DataRow = dtError.NewRow()
+                                row1(0) = Qry.Rows(0).ItemArray(Qry.Columns("PRDPTN").Ordinal).ToString()
+                                row1(2) = Qry.Rows(0).ItemArray(Qry.Columns("VMVNUM").Ordinal).ToString()
+                                row1(1) = "Error inserting the project reference."
 
-                            dtError.Rows.Add(row1)
-                            dtError.AcceptChanges()
+                                dtError.Rows.Add(row1)
+                                dtError.AcceptChanges()
 
-                            dsError.Tables.RemoveAt(0)
-                            dsError.Tables.Add(dtError)
-                            dsError.AcceptChanges()
-                            LikeSession.dsErrorSession = dsError
+                                dsError.Tables.RemoveAt(0)
+                                dsError.Tables.Add(dtError)
+                                dsError.AcceptChanges()
+                                LikeSession.dsErrorSession = dsError
+                            Else
+                                'right insertion
+                                'If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
+                                '    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
+                                'End If
+
+                                'dsResult.Tables(0).Rows(iterator).Item("PRHCOD") = ProjectNoCurrent
+                                'txtProjectNo.Text = ProjectNoCurrent
+                                If cmbPerCharge.FindStringExact(Trim(projectPerCharge)) Then
+                                    cmbPerCharge.SelectedIndex = cmbPerCharge.FindString(Trim(projectPerCharge))
+                                End If
+                                'arraySuccess.Add(ProjectNoCurrent)
+                            End If
+                            'countErrors += InsertProductDetails(Qry)
                         Else
-                            'right insertion
-                            If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
-                                dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
-                            End If
-
-                            dsResult.Tables(0).Rows(iterator).Item("PRHCOD") = ProjectNoCurrent
-                            dsResult.AcceptChanges()
-                            iterator += 1
-
-                            txtProjectNo.Text = ProjectNoCurrent
-                            If cmbPerCharge.FindStringExact(Trim(projectPerCharge)) Then
-                                cmbPerCharge.SelectedIndex = cmbPerCharge.FindString(Trim(projectPerCharge))
-                            End If
-                            'arraySuccess.Add(ProjectNoCurrent)
+                            btnSuccess.Enabled = False
+                            MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
                         End If
-                        'countErrors += InsertProductDetails(Qry)
-                    Else
-                        btnSuccess.Enabled = False
-                        MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
+
                     End If
+                    iterator += 1
                 Next
+                dsResult.AcceptChanges()
 
                 Dim rsReferences = gnr.GetReferencesInProject(ProjectNoCurrent)
                 If rsReferences = 0 Then
@@ -1208,126 +1246,14 @@ Public Class frmLoadExcel
                         'error deleting go to dsError
                     End If
                 End If
-#Region "not use"
 
-                '                    For Each tt As DataRow In dsResult.Tables(0).Rows
-                '#Region "not in use validate"
-
-                '                        'If dsExistsProject.Tables(0).Rows.Count > 0 Then
-                '                        '    'update
-
-                '                        'Else
-                '                        '    'insert
-                '                        '    Dim maxProjectNo = gnr.getmax("PRDVLH", "PRHCOD")
-                '                        '    Dim ProjectNoCurrent = CInt(maxProjectNo) + 1
-
-
-
-                '                        '    Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
-                '                        '                 .Where(Function(x) Trim(UCase(x.Field(Of String)("PRNAME")).ToString()) = Trim(UCase(txtProjectName.Text)) And
-                '                        '                 Trim(UCase(x.Field(Of Double)("PRDPTN"))) = Trim(UCase(partNo)))
-
-                '                        '    If Qry1.Count > 0 Then
-                '                        '        Qry = Qry1.CopyToDataTable
-
-                '                        '        Dim projectNameValue = txtProjectName.Text
-                '                        '        Dim personInChargeValue = Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()
-                '                        '        Dim detailsValue = txtDesc.Text
-
-                '                        '        Dim queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, dtProjectDate, detailsValue, projectNameValue, cmbStatus, personInChargeValue)
-                '                        '        If queryResult < 0 Then
-                '                        '            'error message insertion
-                '                        '        Else
-                '                        '            Dim rsInsert = InsertProductDetails(Qry, ProjectNoCurrent)
-                '                        '            If rsInsert > 0 Then
-                '                        '                'delete project no
-                '                        '                Dim rsDelete = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
-                '                        '                If rsDelete < 0 Then
-                '                        '                    'error
-                '                        '                End If
-                '                        '                countErrors += rsInsert
-                '                        '                arrayError.Add(ProjectNoCurrent)
-                '                        '            Else
-                '                        '                If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
-                '                        '                    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
-                '                        '                End If
-
-                '                        '                tt("PRHCOD") = ProjectNoCurrent
-                '                        '                dsResult.AcceptChanges()
-                '                        '                arraySuccess.Add(ProjectNoCurrent)
-                '                        '            End If
-                '                        '            'countErrors += InsertProductDetails(Qry)
-                '                        '        End If
-                '                        '    Else
-                '                        '        MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
-                '                        '    End If
-
-
-                '                        '    'If Qry IsNot Nothing Then
-                '                        '    '    If Qry.Rows.Count > 0 Then
-
-                '                        '    '    Else
-                '                        '    '        MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
-                '                        '    '    End If
-                '                        '    'Else
-                '                        '    '    MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
-                '                        '    'End If
-                '                        'End If
-
-                '#End Region
-                '                        'insert
-                '                        Dim partNo = tt.Item(dsResult.Tables(0).Columns("PRDPTN").Ordinal).ToString()
-                '                        Dim vendorNo = tt.Item(dsResult.Tables(0).Columns("VMVNUM").Ordinal).ToString()
-
-                '                        Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
-                '                                             .Where(Function(x) Trim(UCase(x.Field(Of Double)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
-                '                                             Trim(UCase(x.Field(Of Double)("PRDPTN"))) = Trim(UCase(partNo)))
-
-                '                        If Qry1.Count > 0 Then
-                '                            Qry = Qry1.CopyToDataTable
-                '                            Dim personInChargeValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()), userid, Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString())
-
-                '                            Dim rsInsert = InsertProductDetails(Qry, ProjectNoCurrent)
-                '                            If rsInsert > 0 Then
-                '                                'delete project no
-                '                                Dim rsDelete = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
-                '                                If rsDelete < 0 Then
-                '                                    'error borrando
-                '                                End If
-                '                                countErrors += rsInsert
-                '                                arrayError.Add(ProjectNoCurrent)
-                '                            Else
-                '                                'right insertion
-                '                                If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
-                '                                    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
-                '                                End If
-
-                '                                tt("PRHCOD") = ProjectNoCurrent
-                '                                dsResult.AcceptChanges()
-
-                '                                txtProjectNo.Text = ProjectNoCurrent
-                '                                If cmbPerCharge.FindStringExact(Trim(projectPerCharge)) Then
-                '                                    cmbPerCharge.SelectedIndex = cmbPerCharge.FindString(Trim(projectPerCharge))
-                '                                End If
-
-
-                '                                arraySuccess.Add(ProjectNoCurrent)
-                '                            End If
-                '                            'countErrors += InsertProductDetails(Qry)
-
-                '                        Else
-                '                            MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
-                '                        End If
-                '                    Next
-
-#End Region
             End If
 
             If countErrors > 0 Then
                 MessageBox.Show("The insertion process finished with some fails inserting data.", "CTP System", MessageBoxButtons.OK)
             Else
                 MessageBox.Show("The insertion process finished successfully.", "CTP System", MessageBoxButtons.OK)
-                disableAfterInsert()
+                disableAfterInsert(False)
                 LikeSession.gridEnable = True
                 DataGridView2.Enabled = LikeSession.gridEnable
                 DataGridView2.Refresh()
@@ -1352,6 +1278,120 @@ Public Class frmLoadExcel
 
             'lblMessage.Text = arraySuccess.Count & ": Records Inserted Successfully."
             'lblMessage.Visible = True
+
+#Region "not use"
+
+            '                    For Each tt As DataRow In dsResult.Tables(0).Rows
+            '#Region "not in use validate"
+
+            '                        'If dsExistsProject.Tables(0).Rows.Count > 0 Then
+            '                        '    'update
+
+            '                        'Else
+            '                        '    'insert
+            '                        '    Dim maxProjectNo = gnr.getmax("PRDVLH", "PRHCOD")
+            '                        '    Dim ProjectNoCurrent = CInt(maxProjectNo) + 1
+
+
+
+            '                        '    Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
+            '                        '                 .Where(Function(x) Trim(UCase(x.Field(Of String)("PRNAME")).ToString()) = Trim(UCase(txtProjectName.Text)) And
+            '                        '                 Trim(UCase(x.Field(Of Double)("PRDPTN"))) = Trim(UCase(partNo)))
+
+            '                        '    If Qry1.Count > 0 Then
+            '                        '        Qry = Qry1.CopyToDataTable
+
+            '                        '        Dim projectNameValue = txtProjectName.Text
+            '                        '        Dim personInChargeValue = Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()
+            '                        '        Dim detailsValue = txtDesc.Text
+
+            '                        '        Dim queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, dtProjectDate, detailsValue, projectNameValue, cmbStatus, personInChargeValue)
+            '                        '        If queryResult < 0 Then
+            '                        '            'error message insertion
+            '                        '        Else
+            '                        '            Dim rsInsert = InsertProductDetails(Qry, ProjectNoCurrent)
+            '                        '            If rsInsert > 0 Then
+            '                        '                'delete project no
+            '                        '                Dim rsDelete = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
+            '                        '                If rsDelete < 0 Then
+            '                        '                    'error
+            '                        '                End If
+            '                        '                countErrors += rsInsert
+            '                        '                arrayError.Add(ProjectNoCurrent)
+            '                        '            Else
+            '                        '                If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
+            '                        '                    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
+            '                        '                End If
+
+            '                        '                tt("PRHCOD") = ProjectNoCurrent
+            '                        '                dsResult.AcceptChanges()
+            '                        '                arraySuccess.Add(ProjectNoCurrent)
+            '                        '            End If
+            '                        '            'countErrors += InsertProductDetails(Qry)
+            '                        '        End If
+            '                        '    Else
+            '                        '        MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
+            '                        '    End If
+
+
+            '                        '    'If Qry IsNot Nothing Then
+            '                        '    '    If Qry.Rows.Count > 0 Then
+
+            '                        '    '    Else
+            '                        '    '        MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
+            '                        '    '    End If
+            '                        '    'Else
+            '                        '    '    MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
+            '                        '    'End If
+            '                        'End If
+
+            '#End Region
+            '                        'insert
+            '                        Dim partNo = tt.Item(dsResult.Tables(0).Columns("PRDPTN").Ordinal).ToString()
+            '                        Dim vendorNo = tt.Item(dsResult.Tables(0).Columns("VMVNUM").Ordinal).ToString()
+
+            '                        Dim Qry1 = dsResult.Tables(0).AsEnumerable() _
+            '                                             .Where(Function(x) Trim(UCase(x.Field(Of Double)("VMVNUM")).ToString()) = Trim(UCase(vendorNo)) And
+            '                                             Trim(UCase(x.Field(Of Double)("PRDPTN"))) = Trim(UCase(partNo)))
+
+            '                        If Qry1.Count > 0 Then
+            '                            Qry = Qry1.CopyToDataTable
+            '                            Dim personInChargeValue = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString()), userid, Qry.Rows(0).ItemArray(Qry.Columns("PRPECH").Ordinal).ToString())
+
+            '                            Dim rsInsert = InsertProductDetails(Qry, ProjectNoCurrent)
+            '                            If rsInsert > 0 Then
+            '                                'delete project no
+            '                                Dim rsDelete = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
+            '                                If rsDelete < 0 Then
+            '                                    'error borrando
+            '                                End If
+            '                                countErrors += rsInsert
+            '                                arrayError.Add(ProjectNoCurrent)
+            '                            Else
+            '                                'right insertion
+            '                                If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
+            '                                    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
+            '                                End If
+
+            '                                tt("PRHCOD") = ProjectNoCurrent
+            '                                dsResult.AcceptChanges()
+
+            '                                txtProjectNo.Text = ProjectNoCurrent
+            '                                If cmbPerCharge.FindStringExact(Trim(projectPerCharge)) Then
+            '                                    cmbPerCharge.SelectedIndex = cmbPerCharge.FindString(Trim(projectPerCharge))
+            '                                End If
+
+
+            '                                arraySuccess.Add(ProjectNoCurrent)
+            '                            End If
+            '                            'countErrors += InsertProductDetails(Qry)
+
+            '                        Else
+            '                            MessageBox.Show("The data has errors.", "CTP System", MessageBoxButtons.OK)
+            '                        End If
+            '                    Next
+
+#End Region
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
         End Try
@@ -1647,7 +1687,7 @@ Public Class frmLoadExcel
                 MessageBox.Show("The insertion process fail.", "CTP System", MessageBoxButtons.OK)
             Else
                 MessageBox.Show("The insertion process finished successfully.", "CTP System", MessageBoxButtons.OK)
-                disableAfterInsert()
+                disableAfterInsert(False)
             End If
 
         Catch ex As Exception
@@ -1726,9 +1766,17 @@ Public Class frmLoadExcel
         'End Try
     End Sub
 
+    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+        disableAfterInsert(True)
+    End Sub
+
 #End Region
 
 #Region "Utils"
+
+    'Private Sub cmdClearFilters_Click(sender As Object, e As EventArgs) Handles cmdClearFilters.Click
+
+    'End Sub
 
     Protected Sub toPaginate(dgv As DataGridView)
         Dim exMessage As String = " "
@@ -1885,7 +1933,7 @@ Public Class frmLoadExcel
         End Try
     End Function
 
-    Private Function InsertProductDetails(Qry As DataTable, code As String, personInCharge As String) As Integer
+    Private Function InsertProductDetails(Qry As DataTable, code As String, personInCharge As String, Optional ByVal vendorNoo As String = Nothing) As Integer
         Dim dtTime As DateTimePicker = New DateTimePicker()
         Dim dtTime1 As DateTimePicker = New DateTimePicker()
         Dim dtTime2 As DateTimePicker = New DateTimePicker()
@@ -2085,7 +2133,7 @@ Public Class frmLoadExcel
         End Try
     End Function
 
-    Private Sub disableAfterInsert()
+    Private Sub disableAfterInsert(flag As Boolean)
         Dim exMessage As String = " "
         Dim myTableLayout As TableLayoutPanel
         Dim myTableLayout4 As TableLayoutPanel
@@ -2093,16 +2141,24 @@ Public Class frmLoadExcel
             myTableLayout = Me.TableLayoutPanel2
             For Each tt In myTableLayout.Controls
                 If TypeOf tt Is Windows.Forms.TextBox Then
-                    tt.Enabled = False
+                    tt.Enabled = flag
+                    If flag Then
+                        tt.Text = Nothing
+                    End If
+                ElseIf TypeOf tt Is Autocomplete_Textbox Then
+                    tt.Enabled = flag
+                    If flag Then
+                        tt.Text = Nothing
+                    End If
                 ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
-                    tt.Enabled = False
+                    tt.Enabled = flag
                 ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
-                    tt.Enabled = False
+                    tt.Enabled = flag
                 ElseIf TypeOf tt Is Windows.Forms.Button Then
                     If tt.Name = "btnSuccess" Or tt.Name = "btnInsert" Then
-                        tt.Enabled = False
+                        tt.Enabled = flag
                     Else
-                        tt.Enabled = True
+                        tt.Enabled = Not flag
                     End If
                 ElseIf TypeOf tt Is Windows.Forms.SplitContainer Then
                     If tt.Name = "SplitContainer1" Then
@@ -2114,7 +2170,7 @@ Public Class frmLoadExcel
                                 For Each t4 As DataGridViewRow In dgv.Rows
                                     If t4.Cells("clPRHCOD").ToString() IsNot Nothing Then
                                         Dim index = t4.Index
-                                        dgv.Rows(index).ReadOnly = True
+                                        dgv.Rows(index).ReadOnly = Not flag
                                         'ttt.ReadOnly = False
                                     End If
                                 Next
@@ -2126,9 +2182,15 @@ Public Class frmLoadExcel
                 myTableLayout4 = Me.TableLayoutPanel4
                 For Each tt4 In myTableLayout4.Controls
                     If TypeOf tt4 Is Windows.Forms.TextBox Then
-                        tt4.Enabled = False
+                        tt4.Enabled = flag
+                        If flag Then
+                            tt4.Text = Nothing
+                        End If
                     ElseIf TypeOf tt4 Is Windows.Forms.Button Then
-                        tt4.Enabled = False
+                        tt4.Enabled = flag
+                        If flag Then
+                            tt4.Text = Nothing
+                        End If
                     End If
                 Next
 

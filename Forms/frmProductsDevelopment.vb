@@ -1524,6 +1524,7 @@ Public Class frmProductsDevelopment
                     flagdeve = 0
                     flagnewpart = 0
                     cmdnew2.Enabled = True
+                    dgvProjectDetails.Visible = True
 
 
                     'If Not SystemInformation.TerminalServerSession Then
