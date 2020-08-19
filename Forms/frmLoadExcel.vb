@@ -6,6 +6,7 @@ Imports System.Reflection
 Imports System.Text.RegularExpressions
 Imports System.Xml
 Imports System.Xml.Schema
+Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports Excel = Microsoft.Office.Interop.Excel
 'Dim ac As New Autocomplete__module()
@@ -195,14 +196,21 @@ Public Class frmLoadExcel
                 'copiar archivo xsd del server
             End If
 
-            Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath & "Input.xml", "MainNode")
+            deleteFilesInPath(rsPath)
+            'If Not flagDelete Then
+            Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath, "MainNode")
             If result Then
                 'blResult = If(String.IsNullOrEmpty(validationSchema(rsPath)), True, False)
                 'Return blResult
-                strResult = validationSchema(rsPath)
+                strResult = validationSchema(LikeSession.fullFilePath)
             Else
                 strResult = "No XML Data."
             End If
+            'Else
+            '    MessageBox.Show("Please close the file previously created to process a new one.", "CTP System", MessageBoxButtons.OK)
+            'End If
+
+            xmlConvertClass.Dispose()
             'Dim rsPath = New Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -218,7 +226,7 @@ Public Class frmLoadExcel
         Try
             Dim schema As XmlSchemaSet = New XmlSchemaSet()
             schema.Add("", gnr.UrlPathXsdFileMethod)
-            Dim rd As XmlReader = XmlReader.Create(rsPath + "Input.xml")
+            Dim rd As XmlReader = XmlReader.Create(rsPath)
             Dim doc As XDocument = XDocument.Load(rd)
             doc.Validate(schema, AddressOf XSDErrors)
             Dim outMessage As String = Nothing
@@ -1722,48 +1730,48 @@ Public Class frmLoadExcel
     End Sub
 
     Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
-        'Dim exMessage As String = " "
-        'Try
-        '    Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-        '    Dim folderPath As String = userPath & "\PD-Bulk-Errors\"
-        '    If Not Directory.Exists(folderPath) Then
-        '        Directory.CreateDirectory(folderPath)
-        '    End If
+        Dim exMessage As String = " "
+        Try
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim folderPath As String = userPath & "\PD-Bulk-Errors\"
+            If Not Directory.Exists(folderPath) Then
+                Directory.CreateDirectory(folderPath)
+            End If
 
-        '    Dim dt As New DataTable
-        '    dt = (DirectCast(DataGridView2.DataSource, DataTable))
-        '    If dt IsNot Nothing Then
-        '        If dt.Rows.Count > 0 Then
-        '            Dim fileExtension As String = Determine_OfficeVersion()
-        '            If String.IsNullOrEmpty(fileExtension) Then
-        '                Exit Sub
-        '            End If
+            Dim dt As New DataTable
+            dt = (DirectCast(DataGridView2.DataSource, DataTable))
+            If dt IsNot Nothing Then
+                If dt.Rows.Count > 0 Then
+                    Dim fileExtension As String = Determine_OfficeVersion()
+                    If String.IsNullOrEmpty(fileExtension) Then
+                        Exit Sub
+                    End If
 
-        '            Dim fileName As String
-        '            If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
-        '                fileName = "Project number " & txtProjectNo.Text & " - " & DateTime.Now.ToString("d") & " - Errors." & fileExtension
-        '            Else
-        '                fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
-        '            End If
+                    Dim fileName As String
+                    If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
+                        fileName = "Project number " & txtProjectNo.Text & " - " & DateTime.Now.ToString("d") & " - Errors." & fileExtension
+                    Else
+                        fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
+                    End If
 
-        '            Dim fullPath = folderPath & Convert.ToString(fileName)
-        '            Using wb As New XLWorkbook()
-        '                wb.Worksheets.Add(dt, "Project")
-        '                wb.SaveAs(fullPath)
-        '            End Using
+                    Dim fullPath = folderPath & Convert.ToString(fileName)
+                    Using wb As New XLWorkbook()
+                        wb.Worksheets.Add(dt, "Project")
+                        wb.SaveAs(fullPath)
+                    End Using
 
-        '            If File.Exists(fullPath) Then
-        '                MessageBox.Show("The file was created successfully.", "CTP System", MessageBoxButtons.OK)
-        '            End If
-        '        Else
-        '            MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
-        '        End If
-        '    Else
-        '        MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
-        '    End If
-        'Catch ex As Exception
-        '    exMessage = ex.Message + ". " + ex.ToString
-        'End Try
+                    If File.Exists(fullPath) Then
+                        MessageBox.Show("The file was created successfully in this path " & folderPath, "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
     End Sub
 
     Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
@@ -1777,6 +1785,56 @@ Public Class frmLoadExcel
     'Private Sub cmdClearFilters_Click(sender As Object, e As EventArgs) Handles cmdClearFilters.Click
 
     'End Sub
+
+    Protected Function IsFileLocked(file As FileInfo) As Boolean
+        Dim exMessage As String = Nothing
+        Dim stream As FileStream = Nothing
+        Try
+            stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)
+        Catch ex As IOException
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return True
+        Finally
+            If stream IsNot Nothing Then
+                stream.Close()
+            End If
+        End Try
+        Return False
+    End Function
+
+    Private Function areFilesInPath(strpath As String) As Boolean
+        Dim exMessage As String = Nothing
+        Try
+            Dim myDir As DirectoryInfo = New DirectoryInfo(strpath)
+            If myDir.EnumerateFiles().Any() Then
+                Return True
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return False
+        End Try
+    End Function
+
+    Private Sub deleteFilesInPath(strpath As String)
+        Dim exMessage As String = Nothing
+        Dim deletedFiles As Boolean = False
+        Try
+            Dim directoryName As String = strpath
+            For Each deleteFile In Directory.GetFiles(directoryName, "*.*", SearchOption.TopDirectoryOnly)
+                Dim fi2 = New FileInfo(deleteFile)
+                If Not IsFileLocked(fi2) Then
+                    File.Delete(deleteFile)
+                End If
+            Next
+            'deletedFiles = If(areFilesInPath(strpath) = False, True, False)
+            'Return deletedFiles
+        Catch ex As Exception
+            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            'Return deletedFiles
+        End Try
+    End Sub
 
     Protected Sub toPaginate(dgv As DataGridView)
         Dim exMessage As String = " "
@@ -2138,63 +2196,91 @@ Public Class frmLoadExcel
         Dim myTableLayout As TableLayoutPanel
         Dim myTableLayout4 As TableLayoutPanel
         Try
-            myTableLayout = Me.TableLayoutPanel2
-            For Each tt In myTableLayout.Controls
-                If TypeOf tt Is Windows.Forms.TextBox Then
-                    tt.Enabled = flag
-                    If flag Then
-                        tt.Text = Nothing
-                    End If
-                ElseIf TypeOf tt Is Autocomplete_Textbox Then
-                    tt.Enabled = flag
-                    If flag Then
-                        tt.Text = Nothing
-                    End If
-                ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
-                    tt.Enabled = flag
-                ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
-                    tt.Enabled = flag
-                ElseIf TypeOf tt Is Windows.Forms.Button Then
-                    If tt.Name = "btnSuccess" Or tt.Name = "btnInsert" Then
+            If flag Then
+                myTableLayout = Me.TableLayoutPanel2
+                For Each tt In myTableLayout.Controls
+                    If TypeOf tt Is Windows.Forms.TextBox Then
                         tt.Enabled = flag
-                    Else
-                        tt.Enabled = Not flag
-                    End If
-                ElseIf TypeOf tt Is Windows.Forms.SplitContainer Then
-                    If tt.Name = "SplitContainer1" Then
-                        Dim tlp As TableLayoutPanel = tt.Panel1.Controls("TableLayoutPanel6")
-                        For Each ttt In tlp.Controls
-                            If TypeOf ttt Is Windows.Forms.DataGridView Then
-                                Dim dgv As DataGridView = ttt
-                                'dgv.ReadOnly = True
-                                For Each t4 As DataGridViewRow In dgv.Rows
-                                    If t4.Cells("clPRHCOD").ToString() IsNot Nothing Then
-                                        Dim index = t4.Index
-                                        dgv.Rows(index).ReadOnly = Not flag
-                                        'ttt.ReadOnly = False
+                        If flag Then
+                            tt.Text = Nothing
+                        End If
+                    ElseIf TypeOf tt Is Autocomplete_Textbox Then
+                        tt.Enabled = flag
+                        If flag Then
+                            tt.Text = Nothing
+                        End If
+                    ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
+                        tt.Enabled = flag
+                    ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
+                        tt.Enabled = flag
+                    ElseIf TypeOf tt Is Windows.Forms.Button Then
+                        If tt.Name = "btnSuccess" Or tt.Name = "btnInsert" Then
+                            tt.Enabled = flag
+                        Else
+                            tt.Enabled = Not flag
+                        End If
+                    ElseIf TypeOf tt Is Windows.Forms.SplitContainer Then
+                        If tt.Name = "SplitContainer1" Then
+                            If Not flag Then
+                                Dim tlp As TableLayoutPanel = tt.Panel1.Controls("TableLayoutPanel6")
+                                For Each ttt In tlp.Controls
+                                    If TypeOf ttt Is Windows.Forms.DataGridView Then
+                                        Dim dgv As DataGridView = ttt
+                                        'dgv.ReadOnly = True
+                                        For Each t4 As DataGridViewRow In dgv.Rows
+                                            If t4.Cells("clPRHCOD").ToString() IsNot Nothing Then
+                                                Dim index = t4.Index
+                                                dgv.Rows(index).ReadOnly = Not flag
+                                                'ttt.ReadOnly = False
+                                            End If
+                                        Next
                                     End If
                                 Next
+                            Else
+
+                                tt.Visible = Not flag
+                                Dim tlp1 As TableLayoutPanel = tt.Panel1.Controls("TableLayoutPanel6")
+                                Dim tlp2 As TableLayoutPanel = tt.Panel1.Controls("TableLayoutPanel6")
+
+                                For Each tttt In tlp1.Controls
+                                    If TypeOf tttt Is Windows.Forms.DataGridView Then
+                                        tttt.Datasource = Nothing
+                                        tttt.Visible = Not flag
+                                    End If
+                                Next
+
+                                For Each tttt In tlp2.Controls
+                                    If TypeOf tttt Is Windows.Forms.DataGridView Then
+                                        tttt.Datasource = Nothing
+                                        tttt.Visible = Not flag
+                                    End If
+                                Next
+
                             End If
-                        Next
+                        End If
                     End If
-                End If
 
-                myTableLayout4 = Me.TableLayoutPanel4
-                For Each tt4 In myTableLayout4.Controls
-                    If TypeOf tt4 Is Windows.Forms.TextBox Then
-                        tt4.Enabled = flag
-                        If flag Then
-                            tt4.Text = Nothing
+                    myTableLayout4 = Me.TableLayoutPanel4
+                    For Each tt4 In myTableLayout4.Controls
+                        If TypeOf tt4 Is Windows.Forms.TextBox Then
+                            tt4.Enabled = flag
+                            If flag Then
+                                tt4.Text = Nothing
+                            End If
+                        ElseIf TypeOf tt4 Is Windows.Forms.Button Then
+                            tt4.Enabled = flag
+                            If flag Then
+                                tt4.Text = Nothing
+                            End If
                         End If
-                    ElseIf TypeOf tt4 Is Windows.Forms.Button Then
-                        tt4.Enabled = flag
-                        If flag Then
-                            tt4.Text = Nothing
-                        End If
-                    End If
+                    Next
+
                 Next
+            Else
+                'Me.hide()
+                'Me.ShowDialog()
+            End If
 
-            Next
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
         End Try

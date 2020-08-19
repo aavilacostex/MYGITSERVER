@@ -1,10 +1,12 @@
-﻿Imports System.IO
+﻿Imports System.Globalization
+Imports System.IO
 Imports System.Text
 Imports System.Xml
 Imports DocumentFormat.OpenXml.Office2010.ExcelAc
 
-Public Class ConvertXml
+Public Class ConvertXml : Implements IDisposable
 
+    Private disposedValue As Boolean
 
     Public Function CreateXltoXML(dt As DataTable, XmlFile As String, RowName As String) As Boolean
         Dim exMessage As String = " "
@@ -22,63 +24,54 @@ Public Class ConvertXml
             settings.IndentChars = ("    ")
             settings.CloseOutput = True
             settings.OmitXmlDeclaration = True
-            Using writer1 As XmlWriter = XmlWriter.Create(XmlFile, settings)
-                writer1.WriteStartElement(RowName)
-                'writer1.Formatting = Formatting.Indented
-                'writer1.Indentation = 2
 
-                For Each dr As DataRow In RowList
-                    'writer.WriteStartElement(RowName)
-                    For Each str As String In ColumnNames
-                        writer1.WriteStartElement(str)
-                        writer1.WriteString(dr.ItemArray(i).ToString())
-                        writer1.WriteEndElement()
-                        i += 1
+            Dim culture As CultureInfo = CultureInfo.CreateSpecificCulture("en-US")
+            Dim dtfi As DateTimeFormatInfo = culture.DateTimeFormat
+            dtfi.DateSeparator = "."
+
+            Dim now As DateTime = DateTime.Now
+            Dim halfName = now.ToString("G", dtfi)
+            halfName = halfName.Replace(" ", ".")
+            halfName = halfName.Replace(":", "")
+            Dim fileName = "Input." & halfName & ".xml"
+            XmlFile += fileName
+
+            Using fs As New FileStream(XmlFile, FileMode.Create)
+                Using writer1 As XmlWriter = XmlWriter.Create(fs, settings)
+                    writer1.WriteStartElement(RowName)
+                    'writer1.Formatting = Formatting.Indented
+                    'writer1.Indentation = 2
+
+                    For Each dr As DataRow In RowList
+                        'writer.WriteStartElement(RowName)
+                        For Each str As String In ColumnNames
+                            writer1.WriteStartElement(str)
+                            writer1.WriteString(dr.ItemArray(i).ToString())
+                            writer1.WriteEndElement()
+                            i += 1
+                        Next
+                        'writer.WriteEndElement()
+                        i = 0
                     Next
-                    'writer.WriteEndElement()
-                    i = 0
-                Next
-                writer1.WriteEndElement()
-                writer1.WriteEndDocument()
-                writer1.Flush()
+                    writer1.WriteEndElement()
+                    writer1.WriteEndDocument()
+                    writer1.Flush()
+
+                    writer1.Dispose()
+                End Using
+
+                If (File.Exists(XmlFile)) Then
+                    IsCreated = True
+                    LikeSession.fullFilePath = XmlFile
+                End If
+
+                fs.Dispose()
+
             End Using
 
-            If (File.Exists(XmlFile)) Then
-                IsCreated = True
-            End If
-
-            'Using writer As XmlTextWriter = XmlTextWriter.Create(XmlFile, settings)
-            '    'Using writer As XmlTextWriter = New XmlTextWriter(XmlFile, System.Text.Encoding.UTF8)
-            '    writer.Formatting = Formatting.Indented
-            '    writer.WriteStartDocument(True)
-            '    writer.Formatting = Formatting.Indented
-            '    writer.Indentation = 2
-            '    writer.WriteStartElement(RowName)
-
-
-            '    For Each dr As DataRow In RowList
-            '        'writer.WriteStartElement(RowName)
-            '        For Each str As String In ColumnNames
-            '            writer.WriteStartElement(str)
-            '            writer.WriteString(dr.ItemArray(i).ToString())
-            '            writer.WriteEndElement()
-            '            i += 1
-            '        Next
-            '        'writer.WriteEndElement()
-            '        i = 0
-            '    Next
-
-            '    writer.WriteEndElement()
-            '    writer.WriteEndDocument()
-            '    'writer.Flush()
-            '    'writer.Close()
-            '    'writer.Dispose()
-            '    If (File.Exists(XmlFile)) Then
-            '        IsCreated = True
-            '    End If
-            'End Using
-
             GC.Collect()
+            GC.WaitForPendingFinalizers()
+
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -86,6 +79,31 @@ Public Class ConvertXml
         Return IsCreated
 
     End Function
+
+    Protected Overridable Sub Dispose(disposing As Boolean)
+        If Not disposedValue Then
+            If disposing Then
+                ' TODO: dispose managed state (managed objects)
+            End If
+
+            ' TODO: free unmanaged resources (unmanaged objects) and override finalizer
+            ' TODO: set large fields to null
+            disposedValue = True
+        End If
+    End Sub
+
+    ' ' TODO: override finalizer only if 'Dispose(disposing As Boolean)' has code to free unmanaged resources
+    ' Protected Overrides Sub Finalize()
+    '     ' Do not change this code. Put cleanup code in 'Dispose(disposing As Boolean)' method
+    '     Dispose(disposing:=False)
+    '     MyBase.Finalize()
+    ' End Sub
+
+    Public Sub Dispose() Implements IDisposable.Dispose
+        ' Do not change this code. Put cleanup code in 'Dispose(disposing As Boolean)' method
+        Dispose(disposing:=True)
+        GC.SuppressFinalize(Me)
+    End Sub
 
     'Public Sub Dispose()
     '    'Me.Close

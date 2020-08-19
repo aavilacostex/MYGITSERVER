@@ -15,4 +15,5 @@
     Public Shared searchControls As List(Of Object)
     Public Shared retrieveUser As String
     Public Shared focussedControl As Control
+    Public Shared fullFilePath As String
 End Class
