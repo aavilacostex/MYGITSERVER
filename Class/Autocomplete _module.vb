@@ -9,7 +9,7 @@ Module Autocomplete__module
             Dim lstResult = gnr.getVendorNoAndNameByName()
             Return lstResult
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function

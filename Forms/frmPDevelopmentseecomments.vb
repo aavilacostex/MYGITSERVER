@@ -36,7 +36,7 @@ Public Class frmPDevelopmentseecomments
             TabPage1.Text = ""
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -90,7 +90,7 @@ Public Class frmPDevelopmentseecomments
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
 
     End Sub
@@ -150,7 +150,7 @@ Public Class frmPDevelopmentseecomments
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
 
     End Sub
@@ -184,7 +184,7 @@ Public Class frmPDevelopmentseecomments
             Next
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -284,7 +284,7 @@ Public Class frmPDevelopmentseecomments
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 

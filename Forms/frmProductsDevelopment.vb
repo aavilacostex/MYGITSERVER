@@ -106,7 +106,7 @@ Public Class frmProductsDevelopment
             'Dim toemailsww = prepareEmailsToSend(1)
             'Dim rsResult = gnr.sendEmail(toemailsww, txtpartno.Text)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -172,7 +172,7 @@ Public Class frmProductsDevelopment
             'cmbuser1.SelectedIndex = cmbuser.FindString(Trim(UCase(userid)))
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -209,7 +209,7 @@ Public Class frmProductsDevelopment
 
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -250,7 +250,7 @@ Public Class frmProductsDevelopment
             cmbuser2.DisplayMember = "FullValue"
             cmbuser2.ValueMember = "USUSER"
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -294,7 +294,7 @@ Public Class frmProductsDevelopment
             cmbPrpech.SelectedIndex = -1
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -338,7 +338,7 @@ Public Class frmProductsDevelopment
             MyComboBox1.SelectedIndex = -1
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -371,7 +371,7 @@ Public Class frmProductsDevelopment
 
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -414,7 +414,7 @@ Public Class frmProductsDevelopment
 
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -441,7 +441,7 @@ Public Class frmProductsDevelopment
             cmbminorcode.ValueMember = "CNT03"
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -468,7 +468,7 @@ Public Class frmProductsDevelopment
             cmbmajorcode.ValueMember = "CNT03"
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -648,7 +648,7 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -716,7 +716,7 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -831,7 +831,7 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -905,7 +905,7 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -1048,7 +1048,7 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         Exit Sub
@@ -1116,7 +1116,7 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
 
             ds = Nothing
@@ -1468,7 +1468,7 @@ Public Class frmProductsDevelopment
             cmbmajorcode.Enabled = False
             txtMajor.Enabled = False
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -1555,7 +1555,7 @@ Public Class frmProductsDevelopment
                 End If
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
@@ -1670,7 +1670,7 @@ Public Class frmProductsDevelopment
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1729,7 +1729,7 @@ Public Class frmProductsDevelopment
 
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -2001,7 +2001,7 @@ Public Class frmProductsDevelopment
             gotonew()
             SSTab1.SelectedIndex = 2
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -2208,7 +2208,7 @@ Public Class frmProductsDevelopment
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -2280,7 +2280,7 @@ Public Class frmProductsDevelopment
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -2311,7 +2311,7 @@ Public Class frmProductsDevelopment
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -2339,7 +2339,7 @@ Public Class frmProductsDevelopment
                 MessageBox.Show("Ann error ocurred inserting data in Product Comment Detail database.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -2833,7 +2833,7 @@ Public Class frmProductsDevelopment
                 fillcell1LastOne("")
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -2902,7 +2902,7 @@ Public Class frmProductsDevelopment
             Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
             Return dtChange
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
@@ -2995,7 +2995,7 @@ Public Class frmProductsDevelopment
 
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -3434,7 +3434,7 @@ Public Class frmProductsDevelopment
                 Dim result1 As DialogResult = MessageBox.Show("Part No. cannot be changed when is already created.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -3508,7 +3508,7 @@ Public Class frmProductsDevelopment
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -3539,7 +3539,7 @@ Public Class frmProductsDevelopment
                 Dim result1 As DialogResult = MessageBox.Show("Select Part No.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
@@ -3592,7 +3592,7 @@ Public Class frmProductsDevelopment
                 CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -3610,7 +3610,7 @@ Public Class frmProductsDevelopment
             CallByName(Me, button_method, CallType.Method, Nothing)
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -3629,7 +3629,7 @@ Public Class frmProductsDevelopment
             cleanDataSources()
             LikeSession.focussedControl = Nothing
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -3640,7 +3640,7 @@ Public Class frmProductsDevelopment
             'cleanDataSources()
             fillcell2(txtCode.Text)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -3721,7 +3721,7 @@ Public Class frmProductsDevelopment
             'lstQueries.Add(strToUnionTab2)
             'buildMixedQuery(lstQueries, genericObj.Name, 0, True)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -3776,7 +3776,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
@@ -3815,7 +3815,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
@@ -3861,7 +3861,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -3965,7 +3965,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4006,7 +4006,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4097,7 +4097,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4137,7 +4137,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4157,7 +4157,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             '    Thread.Sleep(1000)
             'Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
 
     End Sub
@@ -4198,7 +4198,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4241,7 +4241,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4280,7 +4280,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4347,7 +4347,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 fillcell2(txtCode.Text)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4412,7 +4412,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4475,7 +4475,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 fillcell2(txtCode.Text)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4542,7 +4542,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 fillcell2(txtCode.Text)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4574,7 +4574,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 CallByName(Me, button_method, CallType.Method, selection(0), selection(1))
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -4584,7 +4584,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         Try
             buildMixedQueryTab2()
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -4596,7 +4596,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Dim button_method = button_name & "_click"
             CallByName(Me, button_method, CallType.Method, Nothing)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -4631,7 +4631,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             sql += buildSearchQuerySintax(hasVal, 2)
             fillcell2(txtCode.Text, sql)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Function
 
@@ -4716,7 +4716,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 Return Nothing
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -4739,7 +4739,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             'hasVal.Add(selectedObj)
             cleanSearchTextBoxesComplex(hasVal, True)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -4761,7 +4761,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             'hasVal.Add(selectedObj)
             cleanSearchTextBoxesComplexTab2(hasVal, True)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -4799,7 +4799,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             'End If
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Function
 
@@ -5009,7 +5009,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
 #End Region
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Function
 
@@ -5088,7 +5088,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 'End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -5119,7 +5119,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 MessageBox.Show("The Project Number and Part Number are mandatory fields.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         Exit Sub
@@ -5183,7 +5183,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 MessageBox.Show("The part number is a mandatory field.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         'MsgBox "You didn't select any file.", vbOKOnly + vbInformation, "CTP System"
@@ -5215,7 +5215,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         'MsgBox "No files for this Part #.", vbOKOnly + vbInformation, "CTP System"
@@ -5246,7 +5246,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -5275,7 +5275,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -5304,7 +5304,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -5333,7 +5333,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
@@ -5360,7 +5360,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 'fillcell22(sql)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -5382,7 +5382,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 End If
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -5418,7 +5418,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -5489,7 +5489,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 txtvendorname.Text = txtvendornamea.Text
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -5521,7 +5521,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 Return result
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return result
         End Try
 
@@ -5743,7 +5743,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 MessageBox.Show("The Project Number must be filled.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return hasDocs
         End Try
@@ -5766,7 +5766,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return 0
         End Try
@@ -5819,7 +5819,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             flagnewpart = 0
             cmdnew2.Enabled = True
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -5868,7 +5868,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 End If
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
         Exit Sub
@@ -5901,7 +5901,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
             Return toemailsok
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
@@ -5922,7 +5922,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Return toemailss
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
@@ -5943,7 +5943,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             Return toemailss
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return Nothing
         End Try
@@ -6092,7 +6092,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
             'myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Select(Function(ctx) ctx.Text = "")
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
 
@@ -6199,7 +6199,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -6225,7 +6225,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 End If
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -6251,7 +6251,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 End If
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
@@ -6265,7 +6265,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 End If
             Next
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             Return False
         End Try

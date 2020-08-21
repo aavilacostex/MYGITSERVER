@@ -66,7 +66,7 @@
                     Exit Select
             End Select
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -161,7 +161,7 @@
                 ResetListBox()
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -213,7 +213,7 @@
 
             Return Text.Substring(posStart, lenght)
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -234,7 +234,7 @@
             Me.SelectionStart = firstPart.Length
 
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -266,7 +266,7 @@
             End If
             Return dt
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -285,7 +285,7 @@
             End If
             Return code
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function

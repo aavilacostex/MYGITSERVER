@@ -106,7 +106,7 @@
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -320,7 +320,7 @@
                 'MsgBox("Connection to NOVATIME failed!", vbOKOnly + vbInformation, "CTP System")
             End If
             Exit Sub
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -402,7 +402,7 @@
             End If
             Exit Sub
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 

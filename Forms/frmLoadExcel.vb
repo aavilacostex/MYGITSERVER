@@ -162,7 +162,7 @@ Public Class frmLoadExcel
             End If
             Return dt
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -183,7 +183,7 @@ Public Class frmLoadExcel
             End If
             Return code
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
         End Try
     End Function
@@ -463,7 +463,7 @@ Public Class frmLoadExcel
                 'ac1.Text = lblVendorDesc.Text
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -1796,7 +1796,7 @@ Public Class frmLoadExcel
         Try
             stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)
         Catch ex As IOException
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return True
         Finally
             If stream IsNot Nothing Then
@@ -1816,7 +1816,7 @@ Public Class frmLoadExcel
                 Return False
             End If
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return False
         End Try
     End Function
@@ -1835,7 +1835,7 @@ Public Class frmLoadExcel
             'deletedFiles = If(areFilesInPath(strpath) = False, True, False)
             'Return deletedFiles
         Catch ex As Exception
-            exMessage = ex.HResult.ToString + ". " + ex.Message + ". " + ex.ToString
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             'Return deletedFiles
         End Try
     End Sub

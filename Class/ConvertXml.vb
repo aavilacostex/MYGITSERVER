@@ -57,7 +57,6 @@ Public Class ConvertXml : Implements IDisposable
                     writer1.WriteEndDocument()
                     writer1.Flush()
 
-                    writer1.Dispose()
                 End Using
 
                 If (File.Exists(XmlFile)) Then
