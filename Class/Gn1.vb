@@ -344,6 +344,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private authorizeUser As String
+    Public Property AuthorizatedUser() As String
+        Get
+            Return authorizeUser
+        End Get
+        Set(ByVal value As String)
+            authorizeUser = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -371,6 +381,7 @@ NotInheritable Class Gn1
         PathStartImage = ConfigurationManager.AppSettings("urlPathStartImg").ToString()
         UrlPathImgNew = ConfigurationManager.AppSettings("urlPathImgNew").ToString()
         UrlPathXsdFile = ConfigurationManager.AppSettings("urlPathXsdFile").ToString()
+        AuthorizatedUser = ConfigurationManager.AppSettings("authorizeUser").ToString()
 
     End Sub
 
