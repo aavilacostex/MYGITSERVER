@@ -24,7 +24,7 @@ Public Class MDIMain
             optionSelection = UCase(arrayArgs(3).ToString().Replace(",", ""))
             user = UCase(arrayArgs(2).ToString().Replace(",", ""))
             LikeSession.retrieveUser = user
-            MessageBox.Show(optionSelection & " - " & user, "CTP Sytems", MessageBoxButtons.OK)
+            'MessageBox.Show(optionSelection & " - " & user, "CTP Sytems", MessageBoxButtons.OK)
 
             If optionSelection.Equals("OPT1") Then
                 'MessageBox.Show(optionSelection, "CTP Sytems", MessageBoxButtons.OK)

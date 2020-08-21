@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.CTP_IS_VBNET.frmLogin
+            Me.MainForm = Global.CTP_IS_VBNET.MDIMain
         End Sub
     End Class
 End Namespace

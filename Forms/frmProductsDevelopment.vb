@@ -61,6 +61,7 @@ Public Class frmProductsDevelopment
 
             If CInt(gnr.FlagProductionMethod).Equals(1) Then
                 userid = LikeSession.retrieveUser
+                userid = "CMONTILVA"
             Else
                 userid = frmLogin.txtUserName.Text
                 userid = "CMONTILVA"
