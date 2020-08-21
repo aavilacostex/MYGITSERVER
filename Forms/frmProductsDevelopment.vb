@@ -58,8 +58,14 @@ Public Class frmProductsDevelopment
     Private Sub frmProductsDevelopment_load()
         Dim exMessage As String = " "
         Try
-            userid = frmLogin.txtUserName.Text
-            userid = "CMONTILVA"
+
+            If CInt(gnr.FlagProductionMethod).Equals(1) Then
+                userid = LikeSession.retrieveUser
+            Else
+                userid = frmLogin.txtUserName.Text
+                userid = "CMONTILVA"
+            End If
+
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             Else
