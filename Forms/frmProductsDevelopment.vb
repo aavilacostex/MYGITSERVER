@@ -65,6 +65,7 @@ Public Class frmProductsDevelopment
             Else
                 cmbPrpech.Visible = False
                 cmddelete.Visible = False
+                cmbuser2.Visible = False
             End If
 
 
@@ -466,6 +467,11 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
+    Private Sub SSTab1_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) _
+    Handles SSTab1.SelectedIndexChanged
+        SSTab1_Selected(sender, Nothing)
+    End Sub
+
     Private Sub SSTab1_Selected(ByVal sender As Object, ByVal e As TabControlEventArgs) _
     Handles SSTab1.Selected
 
@@ -485,6 +491,9 @@ Public Class frmProductsDevelopment
             Else
                 cmdnew2.Enabled = True
             End If
+
+            showTab2FilterPanel(dgvProjectDetails)
+
         ElseIf SSTab1.SelectedIndex = 2 Then
             Dim rsValue As Integer = -1
             Panel4.Enabled = True
@@ -1796,30 +1805,58 @@ Public Class frmProductsDevelopment
 
     Private Sub TextBox_Focus(ByVal sender As System.Object, ByVal e As System.EventArgs) _
         Handles txtsearch.GotFocus, txtsearch1.GotFocus, txtsearchcode.GotFocus, txtsearchctp.GotFocus, txtsearchpart.GotFocus,
-        txtMfrNoSearch.GotFocus, txtJiratasksearch.GotFocus
-        Dim currTextBox As System.Windows.Forms.TextBox = sender
-        Dim castedTextBox As Control = Nothing
-        If currTextBox.Equals(txtsearch) Then
-            castedTextBox = DirectCast(txtsearch, Control)
-            LikeSession.focussedControl = castedTextBox
-        ElseIf currTextBox.Equals(txtsearch1) Then
-            castedTextBox = DirectCast(txtsearch1, Control)
-            LikeSession.focussedControl = txtsearch1
-        ElseIf currTextBox.Equals(txtsearchcode) Then
-            castedTextBox = DirectCast(txtsearchcode, Control)
-            LikeSession.focussedControl = txtsearchcode
-        ElseIf currTextBox.Equals(txtsearchctp) Then
-            castedTextBox = DirectCast(txtsearchctp, Control)
-            LikeSession.focussedControl = txtsearchctp
-        ElseIf currTextBox.Equals(txtsearchpart) Then
-            castedTextBox = DirectCast(txtsearchpart, Control)
-            LikeSession.focussedControl = txtsearchpart
-        ElseIf currTextBox.Equals(txtMfrNoSearch) Then
-            castedTextBox = DirectCast(txtMfrNoSearch, Control)
-            LikeSession.focussedControl = txtMfrNoSearch
-        ElseIf currTextBox.Equals(txtJiratasksearch) Then
-            castedTextBox = DirectCast(txtJiratasksearch, Control)
-            LikeSession.focussedControl = txtJiratasksearch
+        txtMfrNoSearch.GotFocus, txtJiratasksearch.GotFocus, cmbstatus1.GotFocus, cmbPrpech.GotFocus
+
+        Dim controlSender As Object
+        Dim currTextBox As System.Windows.Forms.TextBox
+        Dim currComboBox As System.Windows.Forms.ComboBox
+        Dim flag As Integer = 0
+
+        Dim sender_type = sender.GetType().ToString()
+        If sender_type.Equals("System.Windows.Forms.TextBox") Then
+            controlSender = DirectCast(sender, System.Windows.Forms.TextBox)
+        ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
+            controlSender = DirectCast(sender, System.Windows.Forms.ComboBox)
+            flag = 1
+        Else
+            controlSender = Nothing
+        End If
+
+        If flag = 0 Then
+            currTextBox = sender
+            Dim castedTextBox As Control = Nothing
+            If currTextBox.Equals(txtsearch) Then
+                castedTextBox = DirectCast(txtsearch, Control)
+                LikeSession.focussedControl = castedTextBox
+            ElseIf currTextBox.Equals(txtsearch1) Then
+                castedTextBox = DirectCast(txtsearch1, Control)
+                LikeSession.focussedControl = txtsearch1
+            ElseIf currTextBox.Equals(txtsearchcode) Then
+                castedTextBox = DirectCast(txtsearchcode, Control)
+                LikeSession.focussedControl = txtsearchcode
+            ElseIf currTextBox.Equals(txtsearchctp) Then
+                castedTextBox = DirectCast(txtsearchctp, Control)
+                LikeSession.focussedControl = txtsearchctp
+            ElseIf currTextBox.Equals(txtsearchpart) Then
+                castedTextBox = DirectCast(txtsearchpart, Control)
+                LikeSession.focussedControl = txtsearchpart
+            ElseIf currTextBox.Equals(txtMfrNoSearch) Then
+                castedTextBox = DirectCast(txtMfrNoSearch, Control)
+                LikeSession.focussedControl = txtMfrNoSearch
+            ElseIf currTextBox.Equals(txtJiratasksearch) Then
+                castedTextBox = DirectCast(txtJiratasksearch, Control)
+                LikeSession.focussedControl = txtJiratasksearch
+            End If
+        Else
+            currComboBox = sender
+            Dim castedComboBox As Control = Nothing
+            If currComboBox.Equals(cmbstatus1) Then
+                castedComboBox = DirectCast(cmbstatus1, Control)
+                LikeSession.focussedControl = cmbstatus1
+            ElseIf currComboBox.Equals(cmbPrpech) Then
+                castedComboBox = DirectCast(cmbPrpech, Control)
+                LikeSession.focussedControl = cmbPrpech
+            End If
         End If
 
     End Sub
@@ -1933,6 +1970,7 @@ Public Class frmProductsDevelopment
                     cmdmpartno.Enabled = True
                     cmdcvendor.Enabled = True
                     gotonew()
+                    showTab2FilterPanel(dgvProjectDetails)
                     'frmProductsDevelopment_load()
                 End If
             End If
@@ -2780,6 +2818,7 @@ Public Class frmProductsDevelopment
                         SSTab1.SelectedTab = TabPage2
                     Else
                         SSTab1.SelectedTab = TabPage3
+                        flagnewpart = 1
                     End If
                     cleanFormValues("TabPage3", 0)
                     setVendorValues()
@@ -2981,7 +3020,7 @@ Public Class frmProductsDevelopment
                                 End If
                             ElseIf dsGetDataFromProdHeadAndDet.Tables(0).Rows.Count > 1 Then
                                 For Each ttt As DataRow In dsGetDataFromProdHeadAndDet.Tables(0).Rows
-                                    If txtCode.Text = ttt.ItemArray(dsGetDataFromProdHeadAndDet.Tables(0).Columns("PRHCOD").Ordinal.ToString()) Then
+                                    If txtCode.Text = ttt.ItemArray(dsGetDataFromProdHeadAndDet.Tables(0).Columns("PRHCOD").Ordinal.ToString()).ToString() Then
                                         Dim result1 As DialogResult = MessageBox.Show("This part no. already exists in this project. : " & txtCode.Text & " - " & Trim(txtname.Text), "CTP System", MessageBoxButtons.OK)
                                         validation = 1
                                         Exit Sub
@@ -5381,6 +5420,22 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
 #Region "Utils"
 
+    Public Sub showTab2FilterPanel(dgv As DataGridView)
+        Dim flag = If(dgv.DataSource Is Nothing, False, True)
+        'Dim flag = False
+        'TableLayoutPanel15.Visible = False
+        txtCtpNoMore.Visible = flag
+        txtMfrNoMore.Visible = flag
+        txtPartNoMore.Visible = flag
+        cmdAll1.Visible = flag
+        LinkLabel2.Visible = flag
+        dgvProjectDetails.Visible = flag
+        cmdcvendor.Visible = flag
+        cmdunitcost.Visible = flag
+        cmdchange.Visible = flag
+        cmdmpartno.Visible = flag
+    End Sub
+
     Public Function FindFocussedControl(ByVal ctr As Control) As Control
         Dim exMessage As String = Nothing
         Try
@@ -5610,7 +5665,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         logUser.Text += userid
 
-        txtsearchcode.SetBtnTexbox(ImageList1)
+        'add image to textbox
+        'txtsearchcode.SetBtnTexbox(ImageList1)
 
         'tab 1
         txtsearch1.SetWatermark("Vendor No.")
@@ -5908,7 +5964,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                     If TypeOf tt Is Windows.Forms.TextBox Then
                         TextboxQty += 1
                         If tt.Text = "" Then
-                            If tt.Name <> "txtainfo" Then
+                            If tt.Name <> "txtainfo" Or tt.Name <> "txtCode" Then
                                 TextboxQtyEmpty += 1
                             End If
                         End If
