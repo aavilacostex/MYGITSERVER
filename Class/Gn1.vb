@@ -354,6 +354,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private authorizeTestUser As String
+    Public Property AuthorizatedTestUser() As String
+        Get
+            Return authorizeTestUser
+        End Get
+        Set(ByVal value As String)
+            authorizeTestUser = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -382,6 +392,7 @@ NotInheritable Class Gn1
         UrlPathImgNew = ConfigurationManager.AppSettings("urlPathImgNew").ToString()
         UrlPathXsdFile = ConfigurationManager.AppSettings("urlPathXsdFile").ToString()
         AuthorizatedUser = ConfigurationManager.AppSettings("authorizeUser").ToString()
+        AuthorizatedTestUser = ConfigurationManager.AppSettings("authorizeTestUser").ToString()
 
     End Sub
 
@@ -1284,7 +1295,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT * FROM PRDWL WHERE TRIM(UCASE(PRWPTN)) = '" & Trim(UCase(partNo)) & "'"
+            Sql = "SELECT * FROM PRDWL WHERE TRIM(UCASE(WHLPARTN)) = '" & Trim(UCase(partNo)) & "'"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -1645,7 +1656,7 @@ NotInheritable Class Gn1
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
-            Sql = "INSERT INTO PRDWL(PRWCOD,CRUSER,CRDATE,PRWPTN,PRWAIN,PRWISS) 
+            Sql = "INSERT INTO PRDWL(WHLCODE,WHLUSER,WHLDATE,WHLPARTN,WHLREASONT,WHLCOMMENT)
                     VALUES(" & maxItem & ",'" & userId & "','" & Format(Now, "yyyy-mm-dd") & "','" & Trim(UCase(partNo)) & "','','No vendor assigned')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult

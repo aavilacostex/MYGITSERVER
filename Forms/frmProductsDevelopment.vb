@@ -60,11 +60,15 @@ Public Class frmProductsDevelopment
         Try
 
             If CInt(gnr.FlagProductionMethod).Equals(1) Then
-                userid = LikeSession.retrieveUser
-                userid = "CMONTILVA"
+                userid = UCase(LikeSession.retrieveUser)
+                'userid = "CMONTILVA"
             Else
-                userid = frmLogin.txtUserName.Text
-                userid = "CMONTILVA"
+
+                If frmLogin.txtUserName.Text IsNot Nothing Then
+                    userid = UCase(LikeSession.retrieveUser)
+                Else
+                    userid = UCase(gnr.AuthorizatedTestUser)
+                End If
             End If
 
             If gnr.getFlagAllow(userid) = 1 Then
@@ -2297,14 +2301,14 @@ Public Class frmProductsDevelopment
                     If dsGetWLByPartNo.Tables(0).Rows.Count > 0 Then
                         Dim rsPartExist As DialogResult = MessageBox.Show("This part # is already included in the wish list.", "CTP System", MessageBoxButtons.OK)
                     Else
-                        Dim maxItemWL = gnr.getmax("PRDWL", "PRWCOD")
+                        Dim maxItemWL = gnr.getmax("PRDWL", "WHLCODE")
                         Dim rsInsWishListPart = gnr.InsertWishListProduct(maxItemWL, userId, txtpartno.Text)
                         If rsInsWishListPart < 0 Then
                             MessageBox.Show("Ann error ocurred inserting data in WishList.", "CTP System", MessageBoxButtons.OK)
                         End If
                     End If
                 Else
-                    Dim maxItemWL = gnr.getmax("PRDWL", "PRWCOD") + 1
+                    Dim maxItemWL = gnr.getmax("PRDWL", "WHLCODE") + 1
                     Dim rsInsWishListPart = gnr.InsertWishListProduct(maxItemWL, userId, txtpartno.Text)
                     If rsInsWishListPart < 0 Then
                         MessageBox.Show("Ann error ocurred inserting data in WishList.", "CTP System", MessageBoxButtons.OK)
