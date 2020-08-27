@@ -33,21 +33,12 @@ Public Class MDIMain
 
             If optionSelection.Equals("OPT1") Then
                 If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
-                    Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
-                    If dsGetUserMenuByUserId IsNot Nothing Then
-                        For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
-                            If item("CODDETMENU") = currentCode Then
-                                valid = True
-                                frmProductsDevelopment.Show()
-                                Exit For
-                            End If
-                        Next
+                    valid = getAcceptedMenu(user, currentCode)
+                    If valid Then
+                        frmProductsDevelopment.Show()
                     End If
                 Else
                     If gnr.AuthorizatedUser.Equals("All") Then
-                        'LoadCombos(sender, e)
-                        'frmProductsDevelopment_load()
-                        'MyBase.Hide()
                         frmProductsDevelopment.Show()
                     Else
                         Dim result = CheckCredentials(user)
@@ -56,22 +47,10 @@ Public Class MDIMain
                             Me.Close()
                             Exit Sub
                         Else
-                            Dim rightAccess As Boolean = False
-                            If valid Then
-                                Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
-                                For Each item As String In lstUsers
-                                    If UCase(user).Equals(UCase(item)) Then
-                                        rightAccess = True
-                                        Exit For
-                                    End If
-                                Next
-                            End If
-
+                            'If valid Then
+                            Dim rightAccess = getAcceptedMenuOption(gnr.AuthorizatedUser, user)
                             If rightAccess Then
                                 'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
-                                'LoadCombos(sender, e)
-                                'frmProductsDevelopment_load()
-                                'MyBase.Hide()
                                 frmProductsDevelopment.Show()
                             Else
                                 Me.Close()
@@ -81,24 +60,12 @@ Public Class MDIMain
                 End If
             ElseIf optionSelection.Equals("OPT2") Then
                 If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
-                    Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
-                    If dsGetUserMenuByUserId IsNot Nothing Then
-
-                        'Dim lstNewMenus As String() = gnr.NewUserMenuCodes.Split(",")
-
-                        For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
-                            If item("CODDETMENU") = currentCode Then
-                                valid = True
-                                frmLoadExcel.Show()
-                                Exit For
-                            End If
-                        Next
+                    valid = getAcceptedMenu(user, currentCode)
+                    If valid Then
+                        frmLoadExcel.Show()
                     End If
                 Else
                     If gnr.AuthorizatedUser.Equals("All") Then
-                        'LoadCombos(sender, e)
-                        'frmProductsDevelopment_load()
-                        'MyBase.Hide()
                         frmLoadExcel.Show()
                     Else
                         Dim result = CheckCredentials(user)
@@ -107,22 +74,9 @@ Public Class MDIMain
                             Me.Close()
                             Exit Sub
                         Else
-                            Dim rightAccess As Boolean = False
-                            If valid Then
-                                Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
-                                For Each item As String In lstUsers
-                                    If UCase(user).Equals(UCase(item)) Then
-                                        rightAccess = True
-                                        Exit For
-                                    End If
-                                Next
-                            End If
-
+                            Dim rightAccess = getAcceptedMenuOption(gnr.AuthorizatedUser, user)
                             If rightAccess Then
-                                'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
-                                'LoadCombos(sender, e)
-                                'frmProductsDevelopment_load()
-                                'MyBase.Hide()
+                                'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)                                '
                                 frmLoadExcel.Show()
                             Else
                                 Me.Close()
@@ -134,38 +88,20 @@ Public Class MDIMain
                 MessageBox.Show("OPT3", "CTP Sytems", MessageBoxButtons.OK)
             End If
         Else
-
             If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
                 user = gnr.AuthorizatedTestUser.Split(",")(0).ToString()
                 currentCode = lstNewMenus(0)
-                Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
-                If dsGetUserMenuByUserId IsNot Nothing Then
-                    For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
-                        If item("CODDETMENU") = currentCode Then
-                            valid = True
-                            frmProductsDevelopment.Show()
-                            Exit For
-                        End If
-                    Next
+                valid = getAcceptedMenu(user, currentCode)
+                If valid Then
+                    frmProductsDevelopment.Show()
                 End If
             Else
-                Dim rightAccess As Boolean = False
-                If valid Then
-                    Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
-                    For Each item As String In lstUsers
-                        If UCase(user).Equals(UCase(item)) Then
-                            rightAccess = True
-                            Exit For
-                        End If
-                    Next
-                End If
-
+                Dim rightAccess = getAcceptedMenuOption(gnr.AuthorizatedUser, user)
                 If rightAccess Then
-                    'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
-                    'LoadCombos(sender, e)
-                    'frmProductsDevelopment_load()
-                    'MyBase.Hide()
+                    'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)                                '
                     frmProductsDevelopment.Show()
+                Else
+                    Me.Close()
                 End If
             End If
 
@@ -214,6 +150,41 @@ Public Class MDIMain
 
         End If
     End Sub
+
+    Private Function getAcceptedMenu(user As String, currentCode As String) As Boolean
+        Dim valid As Boolean = False
+        Try
+            Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
+            If dsGetUserMenuByUserId IsNot Nothing Then
+                For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
+                    If item("CODDETMENU") = currentCode Then
+                        valid = True
+                        frmLoadExcel.Show()
+                        Exit For
+                    End If
+                Next
+            End If
+            Return valid
+        Catch ex As Exception
+            Return valid
+        End Try
+    End Function
+
+    Private Function getAcceptedMenuOption(lstCodes As String, user As String) As Boolean
+        Dim valid As Boolean = False
+        Try
+            Dim lstUsers As String() = lstCodes.Split(",")
+            For Each item As String In lstUsers
+                If UCase(user).Equals(UCase(item)) Then
+                    valid = True
+                    Exit For
+                End If
+            Next
+            Return valid
+        Catch ex As Exception
+            Return valid
+        End Try
+    End Function
 
     Private Sub ProductsDevelopmentToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ProductsDevelopmentToolStripMenuItem1.Click
 
