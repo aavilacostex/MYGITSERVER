@@ -33,7 +33,7 @@ Public Class MDIMain
 
             If optionSelection.Equals("OPT1") Then
                 If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
-                    valid = getAcceptedMenu(user, currentCode)
+                    valid = getAcceptedMenu(user, currentCode, frmProductsDevelopment)
                     If valid Then
                         frmProductsDevelopment.Show()
                     End If
@@ -60,7 +60,7 @@ Public Class MDIMain
                 End If
             ElseIf optionSelection.Equals("OPT2") Then
                 If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
-                    valid = getAcceptedMenu(user, currentCode)
+                    valid = getAcceptedMenu(user, currentCode, frmLoadExcel)
                     If valid Then
                         frmLoadExcel.Show()
                     End If
@@ -91,7 +91,7 @@ Public Class MDIMain
             If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
                 user = gnr.AuthorizatedTestUser.Split(",")(0).ToString()
                 currentCode = lstNewMenus(0)
-                valid = getAcceptedMenu(user, currentCode)
+                valid = getAcceptedMenu(user, currentCode, frmProductsDevelopment)
                 If valid Then
                     frmProductsDevelopment.Show()
                 End If
@@ -151,7 +151,7 @@ Public Class MDIMain
         End If
     End Sub
 
-    Private Function getAcceptedMenu(user As String, currentCode As String) As Boolean
+    Private Function getAcceptedMenu(user As String, currentCode As String, curForm As Form) As Boolean
         Dim valid As Boolean = False
         Try
             Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
@@ -159,7 +159,7 @@ Public Class MDIMain
                 For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
                     If item("CODDETMENU") = currentCode Then
                         valid = True
-                        frmLoadExcel.Show()
+                        curForm.Show()
                         Exit For
                     End If
                 Next
