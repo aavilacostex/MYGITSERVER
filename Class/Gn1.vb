@@ -364,6 +364,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private newMenuCodes As String
+    Public Property NewUserMenuCodes() As String
+        Get
+            Return newMenuCodes
+        End Get
+        Set(ByVal value As String)
+            newMenuCodes = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -393,6 +403,7 @@ NotInheritable Class Gn1
         UrlPathXsdFile = ConfigurationManager.AppSettings("urlPathXsdFile").ToString()
         AuthorizatedUser = ConfigurationManager.AppSettings("authorizeUser").ToString()
         AuthorizatedTestUser = ConfigurationManager.AppSettings("authorizeTestUser").ToString()
+        NewUserMenuCodes = ConfigurationManager.AppSettings("newMenuCodes").ToString()
 
     End Sub
 

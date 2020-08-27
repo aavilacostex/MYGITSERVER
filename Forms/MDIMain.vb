@@ -15,6 +15,9 @@ Public Class MDIMain
         loadImage()
         Dim user As String = Nothing
         Dim optionSelection As String = Nothing
+        Dim valid As Boolean = False
+        Dim lstNewMenus As String() = gnr.NewUserMenuCodes.Split(",")
+        Dim currentCode As String = Nothing
 
         If CInt(gnr.FlagProductionMethod).Equals(1) Then
             Dim args As String() = Environment.GetCommandLineArgs()
@@ -26,63 +29,104 @@ Public Class MDIMain
             LikeSession.retrieveUser = user
             'MessageBox.Show(optionSelection & " - " & user, "CTP Sytems", MessageBoxButtons.OK)
 
+            currentCode = If(optionSelection.Equals("OPT1"), lstNewMenus(0), lstNewMenus(1))
+
             If optionSelection.Equals("OPT1") Then
-                If gnr.AuthorizatedUser.Equals("All") Then
-                    'LoadCombos(sender, e)
-                    'frmProductsDevelopment_load()
-                    'MyBase.Hide()
-                    frmProductsDevelopment.Show()
-                Else
-                    Dim result = CheckCredentials(user)
-                    If Not result Then
-                        MessageBox.Show("Operation Error", "CTP System", MessageBoxButtons.OK)
-                        Exit Sub
-                    Else
-                        Dim rightAccess As Boolean = False
-                        Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
-                        For Each item As String In lstUsers
-                            If UCase(user).Equals(UCase(item)) Then
-                                rightAccess = True
+                If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
+                    Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
+                    If dsGetUserMenuByUserId IsNot Nothing Then
+                        For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
+                            If item("CODDETMENU") = currentCode Then
+                                valid = True
+                                frmProductsDevelopment.Show()
                                 Exit For
                             End If
                         Next
+                    End If
+                Else
+                    If gnr.AuthorizatedUser.Equals("All") Then
+                        'LoadCombos(sender, e)
+                        'frmProductsDevelopment_load()
+                        'MyBase.Hide()
+                        frmProductsDevelopment.Show()
+                    Else
+                        Dim result = CheckCredentials(user)
+                        If Not result Then
+                            MessageBox.Show("Operation Error", "CTP System", MessageBoxButtons.OK)
+                            Me.Close()
+                            Exit Sub
+                        Else
+                            Dim rightAccess As Boolean = False
+                            If valid Then
+                                Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
+                                For Each item As String In lstUsers
+                                    If UCase(user).Equals(UCase(item)) Then
+                                        rightAccess = True
+                                        Exit For
+                                    End If
+                                Next
+                            End If
 
-                        If rightAccess Then
-                            'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
-                            'LoadCombos(sender, e)
-                            'frmProductsDevelopment_load()
-                            'MyBase.Hide()
-                            frmProductsDevelopment.Show()
+                            If rightAccess Then
+                                'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
+                                'LoadCombos(sender, e)
+                                'frmProductsDevelopment_load()
+                                'MyBase.Hide()
+                                frmProductsDevelopment.Show()
+                            Else
+                                Me.Close()
+                            End If
                         End If
                     End If
                 End If
             ElseIf optionSelection.Equals("OPT2") Then
-                If gnr.AuthorizatedUser.Equals("All") Then
-                    'LoadCombos(sender, e)
-                    'frmProductsDevelopment_load()
-                    'MyBase.Hide()
-                    frmLoadExcel.Show()
-                Else
-                    Dim result = CheckCredentials(user)
-                    If Not result Then
-                        MessageBox.Show("Operation Error", "CTP System", MessageBoxButtons.OK)
-                        Exit Sub
-                    Else
-                        Dim rightAccess As Boolean = False
-                        Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
-                        For Each item As String In lstUsers
-                            If UCase(user).Equals(UCase(item)) Then
-                                rightAccess = True
+                If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
+                    Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
+                    If dsGetUserMenuByUserId IsNot Nothing Then
+
+                        'Dim lstNewMenus As String() = gnr.NewUserMenuCodes.Split(",")
+
+                        For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
+                            If item("CODDETMENU") = currentCode Then
+                                valid = True
+                                frmLoadExcel.Show()
                                 Exit For
                             End If
                         Next
+                    End If
+                Else
+                    If gnr.AuthorizatedUser.Equals("All") Then
+                        'LoadCombos(sender, e)
+                        'frmProductsDevelopment_load()
+                        'MyBase.Hide()
+                        frmLoadExcel.Show()
+                    Else
+                        Dim result = CheckCredentials(user)
+                        If Not result Then
+                            MessageBox.Show("Operation Error", "CTP System", MessageBoxButtons.OK)
+                            Me.Close()
+                            Exit Sub
+                        Else
+                            Dim rightAccess As Boolean = False
+                            If valid Then
+                                Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
+                                For Each item As String In lstUsers
+                                    If UCase(user).Equals(UCase(item)) Then
+                                        rightAccess = True
+                                        Exit For
+                                    End If
+                                Next
+                            End If
 
-                        If rightAccess Then
-                            'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
-                            'LoadCombos(sender, e)
-                            'frmProductsDevelopment_load()
-                            'MyBase.Hide()
-                            frmLoadExcel.Show()
+                            If rightAccess Then
+                                'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
+                                'LoadCombos(sender, e)
+                                'frmProductsDevelopment_load()
+                                'MyBase.Hide()
+                                frmLoadExcel.Show()
+                            Else
+                                Me.Close()
+                            End If
                         End If
                     End If
                 End If
@@ -91,25 +135,83 @@ Public Class MDIMain
             End If
         Else
 
-            user = If(String.IsNullOrEmpty(gnr.AuthorizatedTestUser), "All", UCase(gnr.AuthorizatedTestUser))
-            LikeSession.retrieveUser = user
-
-            Dim rightAccess As Boolean = False
-            Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
-            For Each item As String In lstUsers
-                If UCase(user).Equals(UCase(item)) Then
-                    rightAccess = True
-                    Exit For
+            If String.IsNullOrEmpty(gnr.AuthorizatedUser) Then
+                user = gnr.AuthorizatedTestUser.Split(",")(0).ToString()
+                currentCode = lstNewMenus(0)
+                Dim dsGetUserMenuByUserId = gnr.GetMenuByUser(user)
+                If dsGetUserMenuByUserId IsNot Nothing Then
+                    For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
+                        If item("CODDETMENU") = currentCode Then
+                            valid = True
+                            frmProductsDevelopment.Show()
+                            Exit For
+                        End If
+                    Next
                 End If
-            Next
+            Else
+                Dim rightAccess As Boolean = False
+                If valid Then
+                    Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
+                    For Each item As String In lstUsers
+                        If UCase(user).Equals(UCase(item)) Then
+                            rightAccess = True
+                            Exit For
+                        End If
+                    Next
+                End If
 
-            If rightAccess Then
-                MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
-                'LoadCombos(sender, e)
-                'frmProductsDevelopment_load()
-                'MyBase.Hide()
-                frmProductsDevelopment.Show()
+                If rightAccess Then
+                    'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
+                    'LoadCombos(sender, e)
+                    'frmProductsDevelopment_load()
+                    'MyBase.Hide()
+                    frmProductsDevelopment.Show()
+                End If
             End If
+
+
+            'If Not valid Then
+            '    user = If(String.IsNullOrEmpty(gnr.AuthorizatedTestUser), "All", UCase(gnr.AuthorizatedTestUser))
+            '    LikeSession.retrieveUser = user
+
+
+            '    'Dim user1 = "aavila"
+            '    'Dim pass1 = "alexei20"
+
+            '    'Dim check = gnr.checkusr(Trim(UCase(user1)), Trim(UCase(pass1)))
+
+            '    Dim rightAccess As Boolean = False
+            '    Dim rightAccessTest As Boolean = False
+            '    Dim lstUsers As String() = gnr.AuthorizatedUser.Split(",")
+            '    For Each item As String In lstUsers
+            '        If UCase(user).Equals(UCase(item)) Then
+            '            rightAccess = True
+            '            Exit For
+            '        End If
+            '    Next
+
+            '    If rightAccess Then
+            '        MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)
+            '        'LoadCombos(sender, e)
+            '        'frmProductsDevelopment_load()
+            '        'MyBase.Hide()
+            '        frmProductsDevelopment.Show()
+            '    Else
+            '        Dim lstUsersTests As String() = gnr.AuthorizatedTestUser.Split(",")
+            '        For Each item As String In lstUsersTests
+            '            If UCase(user).Equals(UCase(item)) Then
+            '                rightAccessTest = True
+            '                Exit For
+            '            End If
+            '        Next
+
+            '        If rightAccessTest Then
+            '            frmProductsDevelopment.Show()
+            '        End If
+
+            '    End If
+            'End If
+
         End If
     End Sub
 
