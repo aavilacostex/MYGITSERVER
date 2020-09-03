@@ -93,12 +93,14 @@ Public Class MDIMain
                 currentCode = lstNewMenus(0)
                 valid = getAcceptedMenu(user, currentCode, frmProductsDevelopment)
                 If valid Then
+                    LikeSession.retrieveUser = user
                     frmProductsDevelopment.Show()
                 End If
             Else
                 Dim rightAccess = getAcceptedMenuOption(gnr.AuthorizatedUser, user)
                 If rightAccess Then
-                    'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK)                                '
+                    'MessageBox.Show("right validation for user: " & user, "CTP System", MessageBoxButtons.OK) 
+                    LikeSession.retrieveUser = user '
                     frmProductsDevelopment.Show()
                 Else
                     Me.Close()
@@ -159,7 +161,7 @@ Public Class MDIMain
                 For Each item As DataRow In dsGetUserMenuByUserId.Tables(0).Rows
                     If item("CODDETMENU") = currentCode Then
                         valid = True
-                        curForm.Show()
+                        'curForm.Show()
                         Exit For
                     End If
                 Next

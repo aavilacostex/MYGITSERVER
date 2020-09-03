@@ -79,7 +79,6 @@ Public Class frmProductsDevelopment
                 cmbuser2.Visible = False
             End If
 
-
             'Dim btn As System.Windows.Forms.Button = New System.Windows.Forms.Button()
             'btn.Size = New Size(25, txtsearchcode.ClientSize.Height + 2)
             'btn.Location = New Point(txtsearchcode.ClientSize.Width - btn.Width - 1, -1)
@@ -93,12 +92,9 @@ Public Class frmProductsDevelopment
             ResizeTabs()
             SetValues()
 
-
             FillDDLStatus1()
             FillDDlPrPech()
             FillDDlPrPech1()
-
-
 
             'testMethod()
             'test purpose
@@ -4865,154 +4861,6 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
 
             Return strwhere
-#Region "Maybe"
-
-            'Dim b
-            'For Each pair As KeyValuePair(Of String, String) In dictionary
-            '    If pair.Key = "txtMfrNoSearch" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-
-            '    ElseIf pair.Key = "txtsearchctp" Then
-
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-
-            '        End If
-            '    ElseIf pair.Key = "cmbstatus1" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-            '    ElseIf pair.Key = "cmbPrpech" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-            '    ElseIf pair.Key = "txtsearchpart" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-            '    ElseIf pair.Key = "txtsearch1" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-            '    ElseIf pair.Key = "txtJiratasksearch" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-            '    ElseIf pair.Key = "txtsearchcode" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-            '    ElseIf pair.Key = "txtsearch" Then
-            '        If flagallow = 1 Then
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += "AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '        Else
-            '            If TypeOf tt Is Windows.Forms.TextBox Then
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.Text) & "' "
-            '            Else
-            '                strwhere += " AND (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE('" & pair.Value & "')) = '" & Trim(tt.SelectedValue) & "' "
-            '            End If
-            '            'strwhere = "WHERE PRPECH = '" & UserID & "' AND TRIM(UCASE(PRDSTS)) = '" & Trim(Left(cmbstatus1.Text, 2)) & "' "
-            '        End If
-            '        'Eg Label1.Text = pair.value or Console.WriteLine(pair.value)
-            '    End If
-            'Next
-            'Dim c
-
-#End Region
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
@@ -5446,7 +5294,6 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         cmdchange.Visible = flag
         cmdmpartno.Visible = flag
     End Sub
-
     Public Function FindFocussedControl(ByVal ctr As Control) As Control
         Dim exMessage As String = Nothing
         Try
@@ -5461,6 +5308,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return Nothing
         End Try
     End Function
+
 
     Private Sub cleanDataSources()
         bs.DataSource = Nothing
@@ -6047,6 +5895,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         Try
             Dim myTableLayout As TableLayoutPanel
             Dim myTableLayout1 As TableLayoutPanel
+            Dim myPanel As Windows.Forms.Panel
             Dim lstLayouts As New List(Of TableLayoutPanel)
 
             If tab = "TabPage1" Then
@@ -6060,8 +5909,10 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstLayouts.Add(myTableLayout1)
             Else
                 myTableLayout = Me.TableLayoutPanel4
+                myTableLayout1 = Me.TableLayoutPanel5
                 SSTab1.TabPages(2).Text = "Reference: "
                 lstLayouts.Add(myTableLayout)
+                lstLayouts.Add(myTableLayout1)
             End If
 
             For Each ttt In lstLayouts
@@ -6080,8 +5931,19 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         End If
                     ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
                         tt.Value = DateTime.Now
-                    ElseIf TypeOf tt Is Windows.Forms.PictureBox Then
-                        tt.Image = Nothing
+                    ElseIf TypeOf tt Is Windows.Forms.Panel Then
+                        If tt.Name = "Panel7" Then
+                            For Each item As Control In tt.Controls
+                                Dim item_type = item.GetType().ToString()
+                                If item_type.Equals("System.Windows.Forms.PictureBox") Then
+                                    Dim controlSender = DirectCast(item, System.Windows.Forms.PictureBox)
+                                    controlSender.Image = Nothing
+                                End If
+                            Next
+                        End If
+                    Else
+                        Dim pepe = tt.Name
+                        Dim papa = pepe
                     End If
                 Next
             Next
