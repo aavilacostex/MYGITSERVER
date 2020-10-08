@@ -378,7 +378,7 @@ NotInheritable Class Gn1
 
     Public Sub New()
         ConString = ConfigurationManager.AppSettings("ConnectionString").ToString()
-        Pathgeneral = ConfigurationManager.AppSettings("pathgeneralTest").ToString()
+        Pathgeneral = ConfigurationManager.AppSettings("urlPathGeneral").ToString()
         Version = ConfigurationManager.AppSettings("Version").ToString()
         Company = ConfigurationManager.AppSettings("strCompany").ToString()
         Database = ConfigurationManager.AppSettings("strdatabase").ToString()
@@ -1851,8 +1851,11 @@ NotInheritable Class Gn1
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
         Try
-            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQMIN  = " & minQty & ",PQPRC  = " & unitCostNew & ",PQCOMM = '" & statusquote & "',
+            Dim statusquoteNew = If(String.IsNullOrEmpty(statusquote), statusquote, If(statusquote.Length < maxLength, statusquote, statusquote.Substring(0, Math.Min(statusquote.Length, maxLength))))
+
+            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQMIN  = " & minQty & ",PQPRC  = " & unitCostNew & ",PQCOMM = '" & statusquoteNew & "',
                 PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
                 WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
                 " AND PQCOMM LIKE 'D%'"
@@ -1868,8 +1871,11 @@ NotInheritable Class Gn1
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
         Try
-            Sql = "UPDATE POQOTA SET PQCOMM = '" & statusquote & "', PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,
+            Dim statusquoteNew = If(String.IsNullOrEmpty(statusquote), statusquote, If(statusquote.Length < maxLength, statusquote, statusquote.Substring(0, Math.Min(statusquote.Length, maxLength))))
+
+            Sql = "UPDATE POQOTA SET PQCOMM = '" & statusquoteNew & "', PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,
                     PQQDTD = " & insertDay & " WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
                     " AND PQCOMM LIKE 'D%'"
             QueryResult = UpdateDataInDatabase(Sql)
@@ -1930,8 +1936,11 @@ NotInheritable Class Gn1
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
         Try
-            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQCOMM = '" & statusquote + "NEW" & "',
+            Dim statusquoteNew = If(String.IsNullOrEmpty(statusquote), statusquote, If(statusquote.Length < maxLength, statusquote, statusquote.Substring(0, Math.Min(statusquote.Length, maxLength))))
+
+            Sql = "UPDATE POQOTA SET PQMPTN = '" & mpnopo & "',PQCOMM = '" & statusquoteNew + "NEW" & "',
                 PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,PQQDTD = " & insertDay & " 
                 WHERE PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
                 " AND PQCOMM LIKE 'D%'"
