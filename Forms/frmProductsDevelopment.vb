@@ -1226,6 +1226,7 @@ Public Class frmProductsDevelopment
                         txtqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDQTY").Ordinal).ToString()
                         txtmfrno.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR#").Ordinal).ToString()
                         txtsampleqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDSQTY").Ordinal).ToString()
+                        txtminqty.Text = If(String.IsNullOrEmpty(gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text)), 0, gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text))
                         'txtminqty.Text = RowDs.Item(ds.Tables(0).Columns("PQMIN").Ordinal).ToString()
                         Dim unitCostNew = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()), 3)
                         txtunitcostnew.Text = If(unitCostNew <> 0, String.Format("{0:0.00}", unitCostNew), "0")
@@ -1243,8 +1244,8 @@ Public Class frmProductsDevelopment
 
                         'prevetn to get min qty from database
                         'txtminqty.Text = gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text)
-                        Dim minQtyValue As Integer = 0
-                        txtminqty.Text = minQtyValue.ToString()
+                        'Dim minQtyValue As Integer = 0
+                        'txtminqty.Text = minQtyValue.ToString()
 
                         flagdeve = 0
                         flagnewpart = 0
@@ -1393,9 +1394,10 @@ Public Class frmProductsDevelopment
                                 txtBenefits.Text = RowDs.Item(ds.Tables(0).Columns("PRDBEN").Ordinal).ToString()
 
                                 'prevent to get the min qty from database
+                                txtminqty.Text = If(String.IsNullOrEmpty(gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text)), 0, gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text))
                                 'txtminqty.Text = gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text)
-                                Dim minQtyValue As Integer = 0
-                                txtminqty.Text = minQtyValue.ToString()
+                                'Dim minQtyValue As Integer = 0
+                                'txtminqty.Text = minQtyValue.ToString()
 
                                 flagdeve = 0
                                 flagnewpart = 0
@@ -2135,7 +2137,7 @@ Public Class frmProductsDevelopment
                 If Not String.IsNullOrEmpty(maxValue) Then
                     maxValue += 1
                 Else
-                    maxValue = 1 'preguntar duda
+                    maxValue = 1
                 End If
                 spacepoqota = "                               DEV"
                 mpnopo = Trim(UCase(txtmfrno.Text))
@@ -3010,7 +3012,7 @@ Public Class frmProductsDevelopment
 
                             End If
                         Else
-                            MessageBox.Show("This part is not present in other projects. We are looking for it in the inventary.", "CTP System", MessageBoxButtons.OK)
+                            MessageBox.Show("This part is not present in other projects. We are looking for it in the inventory.", "CTP System", MessageBoxButtons.OK)
                         End If
 
                         Dim dsGetDataFromDualInv = gnr.GetDataFromDualInventory(partno)
@@ -4202,7 +4204,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                         strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDSTS)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                     End If
