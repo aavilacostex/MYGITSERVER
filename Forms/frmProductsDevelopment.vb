@@ -724,7 +724,7 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Public Sub fillcell2(code As String, Optional ByVal strwhere As String = Nothing, Optional ByVal status As String = Nothing)
+    Public Sub fillcell2(code As String, Optional ByVal strwhere As String = Nothing, Optional ByVal status As String = Nothing, Optional ByVal sessionFlag As Boolean = False)
         Dim exMessage As String = " "
         Try
             Dim ds As New DataSet()
@@ -790,6 +790,10 @@ Public Class frmProductsDevelopment
                     Else
                         dgvProjectDetails.DataSource = ds.Tables(0)
                         dgvProjectDetails.Refresh()
+                    End If
+
+                    If sessionFlag Then
+                        LikeSession.dsDgvProjectDetails = ds
                     End If
 
                     'fill third tab if one record in datagrid
@@ -911,7 +915,7 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub fillcelldetail(strwhere As String, flag As Integer, Optional ByVal strExtraUnion As String = Nothing)
+    Private Sub fillcelldetail(strwhere As String, flag As Integer, Optional ByVal strExtraUnion As String = Nothing, Optional ByVal sessionFlag As Boolean = False)
         Dim exMessage As String = " "
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
@@ -970,7 +974,7 @@ Public Class frmProductsDevelopment
                         If Not String.IsNullOrEmpty(txtsearchcode.Text) Then
                             If GetAmountOfProjectReferences(txtsearchcode.Text) = 1 Then
                                 fillSecondTabUpp(txtsearchcode.Text)
-                                fillcell2(txtsearchcode.Text, newstrExtraTab2)
+                                fillcell2(txtsearchcode.Text, newstrExtraTab2, Nothing, sessionFlag)
                                 fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
                                 flagdeve = 0
                                 flagnewpart = 0
@@ -978,7 +982,7 @@ Public Class frmProductsDevelopment
                             Else
                                 fillSecondTabUpp(txtsearchcode.Text)
                                 SSTab1.SelectedIndex = 1
-                                fillcell2(txtsearchcode.Text, newstrExtraTab2)
+                                fillcell2(txtsearchcode.Text, newstrExtraTab2, Nothing, sessionFlag)
                                 showTab2FilterPanel(dgvProjectDetails)
 
                                 'Dim sql1 = "SELECT A2.* FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY A1.PRDATE DESC"
@@ -999,7 +1003,7 @@ Public Class frmProductsDevelopment
                             Dim grvCode = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("PRHCOD").Ordinal).ToString()
                             If GetAmountOfProjectReferences(grvCode) = 1 Then
                                 fillSecondTabUpp(grvCode)
-                                fillcell2(grvCode, newstrExtraTab2)
+                                fillcell2(grvCode, newstrExtraTab2, Nothing, sessionFlag)
                                 fillTab3(grvCode, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
                                 flagdeve = 0
                                 flagnewpart = 0
@@ -1007,7 +1011,7 @@ Public Class frmProductsDevelopment
                             Else
                                 fillSecondTabUpp(grvCode)
                                 SSTab1.SelectedIndex = 1
-                                fillcell2(grvCode, newstrExtraTab2)
+                                fillcell2(grvCode, newstrExtraTab2, Nothing, sessionFlag)
                                 showTab2FilterPanel(dgvProjectDetails)
 
                                 'AQUI REVISAR EN CASO DE purc EL UNION FALLA 
@@ -2393,11 +2397,11 @@ Public Class frmProductsDevelopment
                                             ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                                         End If
 
-                                        Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
-                                        If resultMsgUser = DialogResult.Yes Then
-                                            'save files
-                                            copyProjecFiles(strProjectNo)
-                                        End If
+                                        'Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
+                                        'If resultMsgUser = DialogResult.Yes Then
+                                        '    'save files
+                                        '    copyProjecFiles(strProjectNo)
+                                        'End If
                                     End If
                                 End If
                             Else
@@ -2542,11 +2546,11 @@ Public Class frmProductsDevelopment
                                             ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                                         End If
 
-                                        Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
-                                        If resultMsgUser = DialogResult.Yes Then
-                                            'save files
-                                            copyProjecFiles(strProjectNo)
-                                        End If
+                                        'Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
+                                        'If resultMsgUser = DialogResult.Yes Then
+                                        '    'save files
+                                        '    copyProjecFiles(strProjectNo)
+                                        'End If
 
                                         MessageBox.Show("Reference Added Successfully.", "CTP System", MessageBoxButtons.OK)
                                     End If
@@ -3778,7 +3782,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
                 'fillcell1(strwhere, flag)
                 'cleanSearchTextBoxes(tt.Name)
             Else
@@ -3826,7 +3830,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
             Else
                 MessageBox.Show("You must type a vendor number to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -3928,7 +3932,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
 
             Else
                 'the part has no value
@@ -3971,7 +3975,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -4012,7 +4016,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
 
 #Region "Previous"
 
@@ -4102,7 +4106,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
             Else
                 MessageBox.Show("You must type a search criteria to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -4163,9 +4167,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strToUnionTab2)
 
                 If flag1 Then
-                    buildMixedQuery(lstQueries, tt.Name, flag, False, False, True)
+                    buildMixedQuery(lstQueries, tt.Name, flag, False, False, True, True)
                 Else
-                    buildMixedQuery(lstQueries, tt.Name, flag)
+                    buildMixedQuery(lstQueries, tt.Name, flag, False, False, False, True)
                 End If
                 'buildMixedQuery(lstQueries, tt.Name, flag)
                 'fillcell1(strwhere, flag)
@@ -4212,7 +4216,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
             Else
                 MessageBox.Show("You must select a status value to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -4251,7 +4255,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 lstQueries.Add(strwhere)
                 lstQueries.Add(strToUnion)
                 lstQueries.Add(strToUnionTab2)
-                buildMixedQuery(lstQueries, tt.Name, 0)
+                buildMixedQuery(lstQueries, tt.Name, 0, False, False, False, True)
             Else
                 MessageBox.Show("You must select a person in charge value to get results.", "CTP System", MessageBoxButtons.OK)
             End If
@@ -4353,8 +4357,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
                 Dim dt As New DataTable
                 Dim ds As New DataSet
-                dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
-                'dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
+                'dt = (DirectCast(dgvProjectDetails.DataSource, DataTable))
+                dt = If(LikeSession.dsDgvProjectDetails IsNot Nothing, LikeSession.dsDgvProjectDetails.Tables(0), Nothing)
 
                 If dt IsNot Nothing Then
                     Dim Qry1 = dt.AsEnumerable() _
@@ -4612,7 +4616,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         End Try
     End Function
 
-    Private Function buildMixedQuery(initialQuery As List(Of String), selectedField As String, flag As Integer, Optional ByVal btnSelect As Boolean = Nothing, Optional ByVal flagBtn As Boolean = Nothing, Optional ByVal flagUpdate As Boolean = Nothing) As String
+    Private Function buildMixedQuery(initialQuery As List(Of String), selectedField As String, flag As Integer, Optional ByVal btnSelect As Boolean = Nothing,
+                                     Optional ByVal flagBtn As Boolean = Nothing, Optional ByVal flagUpdate As Boolean = Nothing, Optional ByVal sessionFlag As Boolean = False) As String
         Dim exMessage As String = " "
         Try
             Dim myTableLayout As TableLayoutPanel
@@ -4693,9 +4698,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 ElseIf flag = 2 Then
                     Dim code = If(txtCode.Text IsNot Nothing, txtCode.Text.Trim(), txtsearchcode.Text.Trim())
                     'forceDbClick_Action(code, 2)
-                    fillcell2(code, initialQuery(1))
+                    fillcell2(code, initialQuery(1), Nothing, sessionFlag)
                 Else
-                    fillcelldetail(sql, 0, initialQuery(2))
+                    fillcelldetail(sql, 0, initialQuery(2), sessionFlag)
                 End If
                 hasVal.Add(selectedObj)
                 cleanSearchTextBoxesComplex(hasVal, False)
