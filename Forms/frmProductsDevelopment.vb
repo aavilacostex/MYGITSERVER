@@ -548,6 +548,63 @@ Public Class frmProductsDevelopment
 #End Region
 
 #Region "Grid Events"
+    Private Sub dgvProjectDetails_ColumnHeaderMouseClick(ByVal sender As Object,
+        ByVal e As DataGridViewCellMouseEventArgs) _
+        Handles dgvProjectDetails.ColumnHeaderMouseClick
+
+        'REVISAR REVISAR SE PUEDE HACER
+
+        'Dim ds = LikeSession.dsDgvProjectDetails
+        'Dim dt = If(ds IsNot Nothing, ds.Tables(0), Nothing)
+
+        'If dt IsNot Nothing Then
+
+        '    If dt.Rows.Count > 10 Then
+        '        toPaginateDs(dgvProjectDetails, ds)
+        '    Else
+        '        dgvProjectDetails.DataSource = dt
+        '        dgvProjectDetails.Refresh()
+        '    End If
+
+        '    'dgvProjectDetails.DataSource = dt
+        '    'dgvProjectDetails.Refresh()
+        'End If
+
+        'Dim newColumn As DataGridViewColumn =
+        '    dgvProjectDetails.Columns(e.ColumnIndex)
+        'Dim oldColumn As DataGridViewColumn = dgvProjectDetails.SortedColumn
+        'Dim direction As ListSortDirection
+
+        '' If oldColumn is null, then the DataGridView is not currently sorted. 
+        'If oldColumn IsNot Nothing Then
+
+        '    ' Sort the same column again, reversing the SortOrder. 
+        '    If oldColumn Is newColumn AndAlso dgvProjectDetails.SortOrder =
+        '        SortOrder.Ascending Then
+        '        direction = ListSortDirection.Descending
+        '        ' Msgbox HERE
+        '    Else
+
+        '        ' Sort a new column and remove the old SortGlyph.
+        '        direction = ListSortDirection.Ascending
+        '        oldColumn.HeaderCell.SortGlyphDirection = SortOrder.None
+        '        ' Msgbox HERE
+        '    End If
+        'Else
+        '    direction = ListSortDirection.Ascending
+        '    ' Msgbox HERE
+        'End If
+
+        '' Sort the selected column.
+        'dgvProjectDetails.Sort(newColumn, direction)
+        'If direction = ListSortDirection.Ascending Then
+        '    newColumn.HeaderCell.SortGlyphDirection = SortOrder.Ascending
+        'Else
+        '    newColumn.HeaderCell.SortGlyphDirection = SortOrder.Descending
+        'End If
+
+    End Sub
+
 
     Private Sub fillcell1(strwhere As String, flag As Integer)
         Dim exMessage As String = " "
@@ -784,7 +841,7 @@ Public Class frmProductsDevelopment
                     dgvProjectDetails.Columns(8).DataPropertyName = ""
 
                     'dgvProjectDetails.DataSource = ds.Tables(0)
-                    LikeSession.dsDgvProjectDetails = ds
+                    'LikeSession.dsDgvProjectDetails = ds
                     If ds.Tables(0).Rows.Count > 10 Then
                         toPaginateDs(dgvProjectDetails, ds)
                     Else
@@ -826,10 +883,10 @@ Public Class frmProductsDevelopment
                 Else
                     dgvProjectDetails.DataSource = Nothing
                     dgvProjectDetails.Refresh()
-                    Dim resultAlert As DialogResult = MessageBox.Show("This project does not have parts.", "CTP System", MessageBoxButtons.YesNo)
-                    If resultAlert = DialogResult.Yes Then
-                        SSTab1.SelectedIndex = 2
-                    End If
+                    Dim resultAlert As DialogResult = MessageBox.Show("This search reference is not present in the current project.", "CTP System", MessageBoxButtons.OK)
+                    'If resultAlert = DialogResult.Yes Then
+                    '    SSTab1.SelectedIndex = 2
+                    'End If
                     Exit Sub
                 End If
             End If
@@ -975,10 +1032,12 @@ Public Class frmProductsDevelopment
                             If GetAmountOfProjectReferences(txtsearchcode.Text) = 1 Then
                                 fillSecondTabUpp(txtsearchcode.Text)
                                 fillcell2(txtsearchcode.Text, newstrExtraTab2, Nothing, sessionFlag)
-                                fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
-                                flagdeve = 0
-                                flagnewpart = 0
-                                SSTab1.SelectedIndex = 2
+                                If dgvProjectDetails.DataSource IsNot Nothing Then
+                                    fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                                    flagdeve = 0
+                                    flagnewpart = 0
+                                    SSTab1.SelectedIndex = 2
+                                End If
                             Else
                                 fillSecondTabUpp(txtsearchcode.Text)
                                 SSTab1.SelectedIndex = 1
@@ -1004,10 +1063,12 @@ Public Class frmProductsDevelopment
                             If GetAmountOfProjectReferences(grvCode) = 1 Then
                                 fillSecondTabUpp(grvCode)
                                 fillcell2(grvCode, newstrExtraTab2, Nothing, sessionFlag)
-                                fillTab3(grvCode, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
-                                flagdeve = 0
-                                flagnewpart = 0
-                                SSTab1.SelectedIndex = 2
+                                If dgvProjectDetails.DataSource IsNot Nothing Then
+                                    fillTab3(txtsearchcode.Text, dgvProjectDetails.Rows(0).Cells(1).Value.ToString())
+                                    flagdeve = 0
+                                    flagnewpart = 0
+                                    SSTab1.SelectedIndex = 2
+                                End If
                             Else
                                 fillSecondTabUpp(grvCode)
                                 SSTab1.SelectedIndex = 1
@@ -1171,20 +1232,28 @@ Public Class frmProductsDevelopment
 
         Dim CurrentState As String = " "
         Dim NewState As String = " "
-
-        For Each row As DataGridViewRow In dgvProjectDetails.Rows
-            CurrentState = If(row.Cells(6).Value IsNot Nothing, row.Cells(6).Value.ToString(), Nothing)
-            If CurrentState IsNot Nothing Then
-                If CurrentState.Length <= 4 Then
-                    NewState = gnr.GetProjectStatusDescription(CurrentState)
-                    row.Cells(6).Value = NewState
-                Else
-                    Exit For
+        Dim exMessage As String = " "
+        Try
+            For Each row As DataGridViewRow In dgvProjectDetails.Rows
+                CurrentState = If(row.Cells(6).Value IsNot Nothing, row.Cells(6).Value.ToString(), Nothing)
+                If CurrentState IsNot Nothing Then
+                    If CurrentState.Length <= 4 Then
+                        NewState = gnr.GetProjectStatusDescription(CurrentState)
+                        row.Cells(6).Value = NewState
+                    Else
+                        Exit For
+                    End If
                 End If
-            End If
-        Next
+            Next
 
-        dgvProjectDetails.AutoResizeColumns()
+            For Each column As DataGridViewColumn In dgvProjectDetails.Columns
+                column.SortMode = DataGridViewColumnSortMode.Programmatic
+            Next
+
+            dgvProjectDetails.AutoResizeColumns()
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
 
     End Sub
 
@@ -1232,15 +1301,15 @@ Public Class frmProductsDevelopment
                         txtsampleqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDSQTY").Ordinal).ToString()
                         txtminqty.Text = If(String.IsNullOrEmpty(gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text)), 0, gnr.GetDataByVendorAndPartNo(txtvendorno.Text, txtpartno.Text))
                         'txtminqty.Text = RowDs.Item(ds.Tables(0).Columns("PQMIN").Ordinal).ToString()
-                        Dim unitCostNew = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()), 3)
+                        Dim unitCostNew = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()), 5)
                         txtunitcostnew.Text = If(unitCostNew <> 0, String.Format("{0:0.00}", unitCostNew), "0")
-                        Dim unitCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCOS").Ordinal).ToString()), 3)
+                        Dim unitCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCOS").Ordinal).ToString()), 5)
                         txtunitcost.Text = If(unitCost <> 0, String.Format("{0:0.00}", unitCost), "0")
-                        Dim sampleCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDSCO").Ordinal).ToString()), 3)
+                        Dim sampleCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDSCO").Ordinal).ToString()), 5)
                         txtsample.Text = If(sampleCost <> 0, String.Format("{0:0.00}", sampleCost), "0")
-                        Dim miscCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTTC").Ordinal).ToString()), 3)
+                        Dim miscCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTTC").Ordinal).ToString()), 5)
                         txttcost.Text = If(miscCost <> 0, String.Format("{0:0.00}", miscCost), "0")
-                        Dim toolingCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTCO").Ordinal).ToString()), 3)
+                        Dim toolingCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTCO").Ordinal).ToString()), 5)
                         txttoocost.Text = If(toolingCost <> 0, String.Format("{0:0.00}", toolingCost), "0")
                         txtpo.Text = RowDs.Item(ds.Tables(0).Columns("PRDPO#").Ordinal).ToString()
                         txtBenefits.Text = RowDs.Item(ds.Tables(0).Columns("PRDBEN").Ordinal).ToString()
@@ -1378,21 +1447,21 @@ Public Class frmProductsDevelopment
                                 txtvendorname.Text = RowDs.Item(ds.Tables(0).Columns("VMNAME").Ordinal).ToString()
                                 txtpartno.Text = RowDs.Item(ds.Tables(0).Columns("PRDPTN").Ordinal).ToString()
                                 txtctpno.Text = RowDs.Item(ds.Tables(0).Columns("PRDCTP").Ordinal).ToString()
-                                'txtqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDQTY").Ordinal).ToString()
-                                Dim qtyValue As Integer = 0
-                                txtqty.Text = qtyValue.ToString()
+                                txtqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDQTY").Ordinal).ToString()
+                                'Dim qtyValue As Integer = 0
+                                'txtqty.Text = qtyValue.ToString()
                                 txtmfrno.Text = RowDs.Item(ds.Tables(0).Columns("PRDMFR#").Ordinal).ToString()
                                 txtsampleqty.Text = RowDs.Item(ds.Tables(0).Columns("PRDSQTY").Ordinal).ToString()
                                 'txtminqty.Text = RowDs.Item(ds.Tables(0).Columns("PQMIN").Ordinal).ToString()
-                                Dim unitCostNew = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()), 3)
+                                Dim unitCostNew = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCON").Ordinal).ToString()), 5)
                                 txtunitcostnew.Text = If(unitCostNew <> 0, String.Format("{0:0.00}", unitCostNew), "0")
-                                Dim unitCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCOS").Ordinal).ToString()), 3)
+                                Dim unitCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDCOS").Ordinal).ToString()), 5)
                                 txtunitcost.Text = If(unitCost <> 0, String.Format("{0:0.00}", unitCost), "0")
-                                Dim sampleCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDSCO").Ordinal).ToString()), 3)
+                                Dim sampleCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDSCO").Ordinal).ToString()), 5)
                                 txtsample.Text = If(sampleCost <> 0, String.Format("{0:0.00}", sampleCost), "0")
-                                Dim miscCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTTC").Ordinal).ToString()), 3)
+                                Dim miscCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTTC").Ordinal).ToString()), 5)
                                 txttcost.Text = If(miscCost <> 0, String.Format("{0:0.00}", miscCost), "0")
-                                Dim toolingCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTCO").Ordinal).ToString()), 3)
+                                Dim toolingCost = Math.Round(CDbl(RowDs.Item(ds.Tables(0).Columns("PRDTCO").Ordinal).ToString()), 5)
                                 txttoocost.Text = If(toolingCost <> 0, String.Format("{0:0.00}", toolingCost), "0")
                                 txtpo.Text = RowDs.Item(ds.Tables(0).Columns("PRDPO#").Ordinal).ToString()
                                 txtBenefits.Text = RowDs.Item(ds.Tables(0).Columns("PRDBEN").Ordinal).ToString()
@@ -1497,7 +1566,7 @@ Public Class frmProductsDevelopment
 
     Private Sub DataGridView1_DoubleClick(ByVal sender As Object, ByVal e As EventArgs) Handles DataGridView1.DoubleClick
         Dim Index As Integer
-        Dim ds As New DataSet()
+        Dim ds As New DataSet
         Dim RowDs As DataRow
         ds.Locale = CultureInfo.InvariantCulture
         Dim exMessage As String = " "
@@ -2586,11 +2655,11 @@ Public Class frmProductsDevelopment
                                             ProdDetailAndAllCommentHelper(cmbuser.SelectedValue, 0)
                                         End If
 
-                                        Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
-                                        If resultMsgUser = DialogResult.Yes Then
-                                            'save files
-                                            copyProjecFiles(strProjectNo)
-                                        End If
+                                        'Dim resultMsgUser As DialogResult = MessageBox.Show("Do you want to add the files in project no. : " & ProjectNo & " - " & strProjectName & "", "CTP System", MessageBoxButtons.YesNo)
+                                        'If resultMsgUser = DialogResult.Yes Then
+                                        '    'save files
+                                        '    copyProjecFiles(strProjectNo)
+                                        'End If
 
                                         MessageBox.Show("Reference Added Successfully.", "CTP System", MessageBoxButtons.OK)
                                     End If
@@ -5566,7 +5635,10 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         cmbuser2.SetWatermark("Person In Charge")
         ContextMenuStrip1.Visible = False
 
-        cmbuser1.SelectedIndex = If(cmbuser.FindString(Trim(UCase(userid))) <> -1,
+        cmbuser1.SelectedIndex = If(cmbuser1.FindString(Trim(UCase(userid))) <> -1,
+                                    cmbuser1.FindString(Trim(UCase(userid))), 0)
+
+        cmbuser.SelectedIndex = If(cmbuser.FindString(Trim(UCase(userid))) <> -1,
                                     cmbuser.FindString(Trim(UCase(userid))), 0)
     End Sub
 
