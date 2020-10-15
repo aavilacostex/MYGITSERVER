@@ -2700,6 +2700,7 @@ Public Class frmProductsDevelopment
                                 '        Dim maxItem = gnr.getmax("PRDWL", "PRWCOD")
                                 '        Dim rsInsWishListPart = gnr.InsertWishListProduct(maxItem, userid, txtpartno.Text)
                                 '        If rsInsWishListPart < 0 Then
+
                                 '            'error message
                                 '        End If
                                 '    End If
@@ -2802,8 +2803,10 @@ Public Class frmProductsDevelopment
 
                         Dim strCheckPoQoteIns = gnr.checkfieldsPoQote(txtpartno.Text, txtvendorno.Text, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), mpnopo,
                                                             DateTime.Now.Day.ToString(), statusquote, spacepoqota, txtunitcostnew.Text, txtminqty.Text)
+                        Dim newUnitCost = If(txtunitcostnew.Text <> "0", txtunitcostnew.Text, 0)
+
                         If String.IsNullOrEmpty(strCheckPoQoteIns) Then
-                            dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                            dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, newUnitCost, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
                                                 txtvendorno.Text, txtpartno.Text)
                             If dsUpdatedData <> 0 Then
                                 'show message error
@@ -2823,7 +2826,7 @@ Public Class frmProductsDevelopment
                                     txtminqty.Text = "0"
                                 End If
                             Next
-                            dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, txtunitcost.Text, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
+                            dsUpdatedData = gnr.UpdatePoQoraRow(mpnopo, txtminqty.Text, newUnitCost, statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(),
                                                 txtvendorno.Text, txtpartno.Text)
 
                             If dsUpdatedData <> 0 Then

@@ -69,6 +69,7 @@ Public Class frmLoadExcel
             cmbStatus.Items.Add("I - In Process")
             cmbStatus.Items.Add("F - Finished")
             cmbStatus.SelectedIndex = 1
+            FillDDLStatus1()
             FillDDlUser1()
 
             txtProjectNo.SetWatermark("Project Number")
@@ -139,7 +140,177 @@ Public Class frmLoadExcel
 
 #End Region
 
-#Region "Gridview,  dropdowns and textboxes methods"
+#Region "DropDowns"
+
+    Private Sub FillDDLStatus1()
+        Dim exMessage As String = " "
+        Dim CleanUser As String
+        Try
+            Dim dsStatuses = gnr.GetAllStatuses()
+
+            dsStatuses.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsStatuses.Tables(0).Rows.Count - 1
+                If dsStatuses.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(3).ToString()
+                    'CleanUser = Trim(dsStatuses.Tables(0).Rows(i).Item(0).ToString())
+                    dsStatuses.Tables(0).Rows(i).Item(5) = fllValueName
+                    'dsStatuses.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+            Dim newRow As DataRow = dsStatuses.Tables(0).NewRow
+            newRow("CNT01") = ""
+            newRow("CNT02") = ""
+            newRow("CNT03") = ""
+            newRow("CNTDE1") = ""
+            newRow("CNTDE2") = ""
+            newRow("FullValue") = ""
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsStatuses.Tables(0).Rows.InsertAt(newRow, 0)
+
+            cmbStatusMore.DataSource = dsStatuses.Tables(0)
+            cmbStatusMore.DisplayMember = "FullValue"
+            cmbStatusMore.ValueMember = "CNT03"
+
+            'cmbstatus1.DataSource = dsStatuses.Tables(0)
+            'cmbstatus1.DisplayMember = "FullValue"
+            'cmbstatus1.ValueMember = "CNT03"
+
+            'cmbstatus1.SelectedIndex = -1
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub FillDDlUser1()
+        Dim exMessage As String = " "
+        Dim CleanUser As String
+        Try
+            Dim dsUser = gnr.FillDDLUser()
+
+            dsUser.Tables(0).Columns.Add("FullValue", GetType(String))
+
+            For i As Integer = 0 To dsUser.Tables(0).Rows.Count - 1
+                If dsUser.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
+                    Dim fllValueName = dsUser.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsUser.Tables(0).Rows(i).Item(1).ToString()
+                    CleanUser = Trim(dsUser.Tables(0).Rows(i).Item(0).ToString())
+                    dsUser.Tables(0).Rows(i).Item(2) = fllValueName
+                    dsUser.Tables(0).Rows(i).Item(0) = CleanUser
+                    'do something
+                End If
+            Next
+
+
+            Dim newRow As DataRow = dsUser.Tables(0).NewRow
+            newRow("USUSER") = "N/A"
+            newRow("USNAME") = "NO NAME"
+            newRow("FullValue") = "N/A -- NO NAME"
+            'dsUser.Tables(0).Rows.Add(newRow)
+            dsUser.Tables(0).Rows.InsertAt(newRow, 0)
+
+            cmbPerCharge.DataSource = dsUser.Tables(0)
+            cmbPerCharge.DisplayMember = "FullValue"
+            cmbPerCharge.ValueMember = "USUSER"
+
+
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+        End Try
+    End Sub
+
+    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged, ComboBox1.TextChanged
+        If ComboBox1.SelectedValue IsNot Nothing Then
+            txtVendorNo.Text = ComboBox1.SelectedValue.ToString()
+        End If
+    End Sub
+
+    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+        Dim exMessage As String = Nothing
+        Try
+            If ComboBox2.SelectedValue IsNot Nothing And ComboBox2.SelectedIndex <> 0 Then
+                txtVendorNo.Text = ComboBox2.SelectedValue.ToString()
+                lblVendorDesc.Text = ComboBox2.GetItemText(ComboBox2.SelectedItem)
+                'ac1.Text = lblVendorDesc.Text
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+#End Region
+
+#Region "TextBox"
+
+    Private Sub txtProjectNo_TextChanged(sender As Object, e As EventArgs) Handles txtProjectNo.TextChanged
+        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+            Dim ds = gnr.GetDataByPRHCOD(txtProjectNo.Text)
+            Dim message = If(ds IsNot Nothing, "", "This project number is invalid.")
+            If (Not String.IsNullOrEmpty(message)) Then
+                MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
+                txtProjectNo.Text = Nothing
+            End If
+        Else
+            btnSelect.Enabled = False
+        End If
+    End Sub
+
+    Private Sub txtProjectName_TextChanged(sender As Object, e As EventArgs) Handles txtProjectName.TextChanged
+        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+        Else
+            btnSelect.Enabled = False
+        End If
+    End Sub
+
+    Private Sub txtVendorName_TextChanged(sender As Object, e As EventArgs)
+
+        'Dim result = gnr.getVendorNoAndNameByNameLike(txtVendorName.Text)
+        'Dim strValue = txtVendorName.Text
+        'Dim DataCollection As New AutoCompleteStringCollection()
+        'Dim collection = gnr.getVendorNoAndNameByName()
+        'txtVendorName.AutoCompleteCustomSource = collection
+
+    End Sub
+
+    Private Sub txtVendorNo_TextChanged_1(sender As Object, e As EventArgs) Handles txtVendorNo.TextChanged
+        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
+            btnSelect.Enabled = True
+        Else
+            btnSelect.Enabled = False
+        End If
+        btnValidVendor.Enabled = True
+
+        'txtVendorNo.Text = If(txtVendorNo.Text IsNot Nothing Or txtVendorNo.Text <> "", txtVendorNo.Text.Replace(Environment.NewLine, ""), " ")
+        txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
+        'If (Regex.IsMatch(txtVendorNo.Text, "^[0-9]{1,6}$") And gnr.isVendorAccepted(txtVendorNo.Text)) Then
+        'ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
+        'If ComboBox1.SelectedIndex > 0 Then
+        '    ac1.Text = lblVendorDesc.Text
+        'End If
+        'End If
+
+        If txtVendorNo.Text = "-1" Then
+            Dim selIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
+            Dim curSel As DataRowView = ComboBox1.Items(selIndex)
+            txtVendorNo.Text = curSel.Row.ItemArray(1).ToString()
+            lblVendorDesc.Text = curSel.Row.ItemArray(0).ToString()
+        End If
+    End Sub
+
+#End Region
+
+#Region "Gridview and Pagination methods"
 
     Private Function fromListboxToDatatable(lst As ListBox, Optional dtBase As DataTable = Nothing) As DataTable
         Dim exMessage As String = Nothing
@@ -166,98 +337,6 @@ Public Class frmLoadExcel
             Return Nothing
         End Try
     End Function
-
-    'Private function fromDataTableToList() As List(Of
-
-    Private Function utilDT(value As String, dtvalues As DataTable) As String
-        Dim exMessage As String = Nothing
-        Dim code As String = Nothing
-        Try
-            If value IsNot Nothing And dtvalues IsNot Nothing Then
-                For Each item As DataRow In dtvalues.Rows
-                    If item.ItemArray(0).ToString().Equals(value) Then
-                        code = item.ItemArray(1).ToString()
-                        Exit For
-                    End If
-                Next
-            End If
-            Return code
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function xlsDataSchemaValidation(dt As DataTable) As String
-        Dim exMessage As String = " "
-        'Dim blResult As Boolean = False
-        Dim strResult As String = Nothing
-        Try
-            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            Dim rsPath As String = userPath & "\Excel_validation\"
-            If Not Directory.Exists(rsPath) Then
-                Directory.CreateDirectory(rsPath)
-                'copiar archivo xsd del server
-            End If
-
-            deleteFilesInPath(rsPath)
-            'If Not flagDelete Then
-            Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath, "MainNode")
-            If result Then
-                'blResult = If(String.IsNullOrEmpty(validationSchema(rsPath)), True, False)
-                'Return blResult
-                strResult = validationSchema(LikeSession.fullFilePath)
-            Else
-                strResult = "No XML Data."
-            End If
-            'Else
-            '    MessageBox.Show("Please close the file previously created to process a new one.", "CTP System", MessageBoxButtons.OK)
-            'End If
-
-            xmlConvertClass.Dispose()
-            'Dim rsPath = New Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            strResult = exMessage
-            'Return blResult
-        End Try
-        Return strResult
-    End Function
-
-    Public Function validationSchema(rsPath As String) As String
-        Dim exMessage As String = " "
-        Dim blResult As Boolean = False
-        Try
-            Dim schema As XmlSchemaSet = New XmlSchemaSet()
-            schema.Add("", gnr.UrlPathXsdFileMethod)
-            Dim rd As XmlReader = XmlReader.Create(rsPath)
-            Dim doc As XDocument = XDocument.Load(rd)
-            doc.Validate(schema, AddressOf XSDErrors)
-            Dim outMessage As String = Nothing
-            outMessage = If(errors, "Not Validated. " & schemaErrorDesc, "")
-
-            'blResult = If(outMessage.Equals("Validated"), True, False)
-            Return outMessage
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return "Not Validated. " & ex.Message
-        End Try
-    End Function
-
-    Private Sub XSDErrors(ByVal o As Object, ByVal e As ValidationEventArgs)
-        Dim exMessage As String = " "
-        Try
-            Dim Type As XmlSeverityType = XmlSeverityType.Warning
-            If [Enum].TryParse(Of XmlSeverityType)("Error", Type) Then
-                If (Type = XmlSeverityType.Error) Then
-                    errors = True
-                    schemaErrorDesc = e.Message
-                End If
-            End If
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
 
     Private Sub fillData(dt As DataTable)
         Dim exMessage As String = " "
@@ -412,88 +491,6 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-    Private Sub txtProjectNo_TextChanged(sender As Object, e As EventArgs) Handles txtProjectNo.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-            Dim ds = gnr.GetDataByPRHCOD(txtProjectNo.Text)
-            Dim message = If(ds IsNot Nothing, "", "This project number is invalid.")
-            If (Not String.IsNullOrEmpty(message)) Then
-                MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
-                txtProjectNo.Text = Nothing
-            End If
-        Else
-            btnSelect.Enabled = False
-        End If
-    End Sub
-
-    Private Sub txtProjectName_TextChanged(sender As Object, e As EventArgs) Handles txtProjectName.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        Else
-            btnSelect.Enabled = False
-        End If
-    End Sub
-
-    Private Sub txtVendorName_TextChanged(sender As Object, e As EventArgs)
-
-        'Dim result = gnr.getVendorNoAndNameByNameLike(txtVendorName.Text)
-        'Dim strValue = txtVendorName.Text
-        'Dim DataCollection As New AutoCompleteStringCollection()
-        'Dim collection = gnr.getVendorNoAndNameByName()
-        'txtVendorName.AutoCompleteCustomSource = collection
-
-    End Sub
-
-    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged, ComboBox1.TextChanged
-        If ComboBox1.SelectedValue IsNot Nothing Then
-            txtVendorNo.Text = ComboBox1.SelectedValue.ToString()
-        End If
-    End Sub
-
-    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-        Dim exMessage As String = Nothing
-        Try
-            If ComboBox2.SelectedValue IsNot Nothing And ComboBox2.SelectedIndex <> 0 Then
-                txtVendorNo.Text = ComboBox2.SelectedValue.ToString()
-                lblVendorDesc.Text = ComboBox2.GetItemText(ComboBox2.SelectedItem)
-                'ac1.Text = lblVendorDesc.Text
-            End If
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Private Sub txtVendorNo_TextChanged_1(sender As Object, e As EventArgs) Handles txtVendorNo.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        Else
-            btnSelect.Enabled = False
-        End If
-        btnValidVendor.Enabled = True
-
-        'txtVendorNo.Text = If(txtVendorNo.Text IsNot Nothing Or txtVendorNo.Text <> "", txtVendorNo.Text.Replace(Environment.NewLine, ""), " ")
-        txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
-        'If (Regex.IsMatch(txtVendorNo.Text, "^[0-9]{1,6}$") And gnr.isVendorAccepted(txtVendorNo.Text)) Then
-        'ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
-        'If ComboBox1.SelectedIndex > 0 Then
-        '    ac1.Text = lblVendorDesc.Text
-        'End If
-        'End If
-
-        If txtVendorNo.Text = "-1" Then
-            Dim selIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
-            Dim curSel As DataRowView = ComboBox1.Items(selIndex)
-            txtVendorNo.Text = curSel.Row.ItemArray(1).ToString()
-            lblVendorDesc.Text = curSel.Row.ItemArray(0).ToString()
-        End If
-    End Sub
-
     Private Sub fillcell1(dt As DataTable, flag As Integer, dsName As String, Optional ByVal stopPag As Boolean = False)
         Dim exMessage As String = " "
         Try
@@ -561,7 +558,7 @@ Public Class frmLoadExcel
 #End Region
 
                 If DataGridView1.Rows.Count > 0 And Not stopPag Then
-                    toPaginate(DataGridView1)
+                    toPaginateDs(DataGridView1, dt)
                 End If
             Else
                 Dim dsError = LikeSession.dsErrorSession
@@ -638,7 +635,7 @@ Public Class frmLoadExcel
                     'btnCheck_Click(Nothing, Nothing)
 
                     If DataGridView2.Rows.Count > 0 And Not stopPag Then
-                        toPaginate1(DataGridView2)
+                        toPaginateDs(DataGridView2, dt)
                     End If
                 End If
             End If
@@ -674,8 +671,10 @@ Public Class frmLoadExcel
                 '    DataGridView1.Rows(e.RowIndex).Cells(0).ReadOnly = True
                 'End If
             ElseIf e.ColumnIndex = 3 Then
-                'Dim valueField = e.Value.ToString()
-                CurrentState = If((e.Value IsNot Nothing), e.Value.ToString, "E")
+                Dim status = If(cmbStatusMore.SelectedIndex = 0, "E", cmbStatusMore.SelectedValue.ToString())
+                Dim valueField = If(e.Value IsNot Nothing, e.Value.ToString(), Nothing)
+                CurrentState = If((Not String.IsNullOrEmpty(valueField)), e.Value.ToString, status)
+                'CurrentState = If((e.Value IsNot Nothing), e.Value.ToString, "E")
                 NewState = buildStatusString(CurrentState)
                 If Not String.IsNullOrEmpty(NewState) Then
                     DataGridView1.Rows(e.RowIndex).Cells("clPRDSTS").Value = NewState
@@ -685,43 +684,6 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Private Sub FillDDlUser1()
-        Dim exMessage As String = " "
-        Dim CleanUser As String
-        Try
-            Dim dsUser = gnr.FillDDLUser()
-
-            dsUser.Tables(0).Columns.Add("FullValue", GetType(String))
-
-            For i As Integer = 0 To dsUser.Tables(0).Rows.Count - 1
-                If dsUser.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsUser.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsUser.Tables(0).Rows(i).Item(1).ToString()
-                    CleanUser = Trim(dsUser.Tables(0).Rows(i).Item(0).ToString())
-                    dsUser.Tables(0).Rows(i).Item(2) = fllValueName
-                    dsUser.Tables(0).Rows(i).Item(0) = CleanUser
-                    'do something
-                End If
-            Next
-
-
-            Dim newRow As DataRow = dsUser.Tables(0).NewRow
-            newRow("USUSER") = "N/A"
-            newRow("USNAME") = "NO NAME"
-            newRow("FullValue") = "N/A -- NO NAME"
-            'dsUser.Tables(0).Rows.Add(newRow)
-            dsUser.Tables(0).Rows.InsertAt(newRow, 0)
-
-            cmbPerCharge.DataSource = dsUser.Tables(0)
-            cmbPerCharge.DisplayMember = "FullValue"
-            cmbPerCharge.ValueMember = "USUSER"
-
-
-        Catch ex As Exception
-            exMessage = ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
         End Try
     End Sub
 
@@ -759,7 +721,7 @@ Public Class frmLoadExcel
 
         If e.ColumnIndex = 0 Then
             DataGridView2.Rows(e.RowIndex).Cells(2).ReadOnly = False
-            'DataGridView2.Rows(e.RowIndex).Cells(3).ReadOnly = False
+            DataGridView2.Rows(e.RowIndex).Cells(3).ReadOnly = True
             Dim value = DataGridView2.Rows(e.RowIndex).Cells(0).FormattedValue
             If value.Equals("Edit") Then
                 DataGridView2.BeginEdit(True)
@@ -800,6 +762,14 @@ Public Class frmLoadExcel
                 MessageBox.Show("You must fill the value for the part for this reference.", "CTP System", MessageBoxButtons.OK)
             End If
         Else
+            If LikeSession.acceptChanges = True Then
+                DataGridView2.Rows(e.RowIndex).Cells(2).ReadOnly = False
+            Else
+                DataGridView2.Rows(e.RowIndex).Cells(2).ReadOnly = True
+                DataGridView2.Rows(e.RowIndex).Cells(3).ReadOnly = True
+                DataGridView2.Rows(e.RowIndex).Cells(4).ReadOnly = True
+            End If
+
             'DataGridView1_DoubleClick(sender, e)
         End If
     End Sub
@@ -907,6 +877,209 @@ Public Class frmLoadExcel
                 '        End If
                 '    End If
             End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Protected Sub toPaginateDs(dgv As DataGridView, dtOk As DataTable)
+        Dim exMessage As String = " "
+        Try
+
+            Dim dtGrid As New DataTable
+            dtGrid = dtOk
+
+            Dim counter As Integer = 0
+            Dim dt As DataTable = Nothing
+
+            If dgv.Name.ToString().Equals("DataGridView1") Then
+
+                DataGridView1.Visible = True
+                If Tables.Count > 0 Then
+                    Tables = New BindingList(Of DataTable)()
+                    bs.MoveFirst()
+                End If
+
+                For Each item As DataRow In dtGrid.Rows
+                    If counter = 0 Then
+                        dt = dtGrid.Clone()
+                        Tables.Add(dt)
+                    End If
+
+                    dt.Rows.Add(item.ItemArray)
+                    counter += 1
+
+                    If counter > 9 Then
+                        counter = 0
+                    End If
+                Next
+
+                BindingNavigator1.BindingSource = bs
+                bs.DataSource = Tables
+                AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
+                bs_PositionChanged(bs, Nothing)
+            Else
+                DataGridView2.Visible = True
+                If Tables1.Count > 0 Then
+                    Tables1 = New BindingList(Of DataTable)()
+                    bs1.MoveFirst()
+                End If
+
+                For Each item As DataRow In dtGrid.Rows
+                    If counter = 0 Then
+                        dt = dtGrid.Clone()
+                        Tables1.Add(dt)
+                    End If
+
+                    dt.Rows.Add(item.ItemArray)
+                    counter += 1
+
+                    If counter > 9 Then
+                        counter = 0
+                    End If
+                Next
+
+                BindingNavigator2.BindingSource = bs1
+                bs1.DataSource = Tables1
+                AddHandler bs1.PositionChanged, AddressOf bs1_PositionChanged
+                bs1_PositionChanged(bs1, Nothing)
+
+            End If
+
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Protected Sub toPaginate(dgv As DataGridView)
+        Dim exMessage As String = " "
+        Try
+            'dim tables as BindingList<DataTable>  = new BindingList<DataTable>()
+            Dim dtGrid As New DataTable
+            dtGrid = (DirectCast(dgv.DataSource, DataTable))
+
+            Dim counter As Integer = 0
+            Dim dt As DataTable = Nothing
+
+            For Each item As DataRow In dtGrid.Rows
+                If counter = 0 Then
+                    dt = dtGrid.Clone()
+                    Tables.Add(dt)
+                End If
+
+                dt.Rows.Add(item.ItemArray)
+                counter += 1
+
+                If counter > 9 Then
+                    counter = 0
+                End If
+            Next
+
+            BindingNavigator1.BindingSource = bs
+            bs.DataSource = Tables
+            AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
+            'AddHandler bs.PositionChanged, AddressOf bs_PositionChanged1
+
+            bs_PositionChanged(bs, Nothing)
+            'bs_PositionChanged1(bs, Nothing)
+
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Protected Sub toPaginate1(dgv As DataGridView)
+        Dim exMessage As String = " "
+        Try
+            'dim tables as BindingList<DataTable>  = new BindingList<DataTable>()
+            Dim dtGrid As New DataTable
+            dtGrid = (DirectCast(dgv.DataSource, DataTable))
+
+            Dim counter As Integer = 0
+            Dim dt As DataTable = Nothing
+
+            For Each item As DataRow In dtGrid.Rows
+                If counter = 0 Then
+                    dt = dtGrid.Clone()
+                    Tables1.Add(dt)
+                End If
+
+                dt.Rows.Add(item.ItemArray)
+                counter += 1
+
+                If counter > 9 Then
+                    counter = 0
+                End If
+            Next
+
+            BindingNavigator2.BindingSource = bs1
+            bs1.DataSource = Tables1
+            'AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
+            AddHandler bs1.PositionChanged, AddressOf bs1_PositionChanged
+
+            'bs_PositionChanged(bs, Nothing)
+            bs1_PositionChanged(bs1, Nothing)
+
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Sub refreshPagination(partNo As String)
+        Dim exMessage As String = Nothing
+        Try
+            Dim myTables = Tables1
+            Dim iterator As Integer = 0
+            Dim changeDone As Boolean = False
+            For Each dtInnerTable As DataTable In myTables
+                For Each item As DataRow In dtInnerTable.Rows
+                    Dim lookupValue = item("PRDPTN").ToString()
+                    If lookupValue.Equals(partNo) Then
+                        Dim rowToDelete = dtInnerTable.Rows(iterator)
+                        rowToDelete.Delete()
+                        dtInnerTable.AcceptChanges()
+                        changeDone = True
+                        Exit For
+                    End If
+                    iterator += 1
+                Next
+                If changeDone Then
+                    Exit For
+                End If
+            Next
+
+            Tables1 = myTables
+            Dim epep = Nothing
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+        DataGridView1.DataSource = Tables(bs.Position)
+    End Sub
+
+    Private Sub bs1_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
+        DataGridView2.DataSource = Tables1(bs1.Position)
+    End Sub
+
+    Public Sub handleDataGridColumnsOnDemand(dgvHandle As DataGridView, listToChange As List(Of Integer), index As Integer, flag As Boolean)
+        Dim exMessage As String = " "
+        Try
+            For Each item As Integer In listToChange
+                dgvHandle.Rows(index).Cells(item).ReadOnly = flag
+            Next
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Sub handleDataGridColumns(handleDataRow As DataGridViewRow, listToChange As List(Of Integer), flag As Boolean)
+        Dim exMessage As String = " "
+        Try
+            For Each item As Integer In listToChange
+                handleDataRow.Cells(item).ReadOnly = flag
+            Next
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
         End Try
@@ -1096,6 +1269,7 @@ Public Class frmLoadExcel
         Dim arraySuccess As New List(Of Integer)
         Dim arrayError As New List(Of Integer)
         Dim vendorNo = Trim(txtVendorNo.Text)
+        Dim projectNo As Integer = 0
         Try
             If String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) Then
                 MessageBox.Show("The Project Name is a required field.", "CTP System", MessageBoxButtons.OK)
@@ -1145,17 +1319,17 @@ Public Class frmLoadExcel
 
             'validation for create a project or retrieve project data from database
             If Not existProject Then
+
                 projectPerCharge = If(cmbPerCharge.SelectedIndex = 0, userid, cmbPerCharge.SelectedValue)
 
                 Dim dsExistsProject = gnr.GetExistByPRNAME(txtProjectName.Text)
                 If dsExistsProject IsNot Nothing Then
                     Dim msgResult As DialogResult =
-                        MessageBox.Show("The name " & txtProjectName.Text & " is in use in project number: " & dsExistsProject.Tables(0).Rows(0).ItemArray(0).ToString() & ". Do you want to create a new project with that name?", "CTP System", MessageBoxButtons.YesNo)
-                    If msgResult = DialogResult.No Then
-                        Exit Sub
-                    End If
+                        MessageBox.Show("The name " & txtProjectName.Text & " is in use in project number: " & dsExistsProject.Tables(0).Rows(0).ItemArray(0).ToString() & ". Please change the project name entered.", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                Else
+                    queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, dtProjectDate, txtDesc.Text, txtProjectName.Text, cmbStatus, projectPerCharge)
                 End If
-                queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, dtProjectDate, txtDesc.Text, txtProjectName.Text, cmbStatus, projectPerCharge)
             Else
                 Dim ds = gnr.GetDataByPRHCOD(ProjectNoCurrent)
                 For Each item As DataRow In ds.Tables(0).Rows
@@ -1168,6 +1342,7 @@ Public Class frmLoadExcel
 
                 Dim lstVendors = gnr.GetVendorInProject(ProjectNoCurrent)
                 If lstVendors.Count > 1 Then
+                    'duda de vendor ?????
                     MessageBox.Show("There is more than one vendor assgined in this project.", "CTP System", MessageBoxButtons.OK)
                 ElseIf lstVendors.Count = 1 Then
                     txtVendorNo.Text = lstVendors(0)
@@ -1178,6 +1353,8 @@ Public Class frmLoadExcel
             If queryResult < 0 Then
                 'error message insertion
             Else
+                txtProjectNo.Text = ProjectNoCurrent
+
                 For Each row As DataGridViewRow In DataGridView1.Rows
                     'save
                     Dim partNo = row.Cells("clPRDPTN").Value
@@ -1232,6 +1409,13 @@ Public Class frmLoadExcel
                                 'If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
                                 '    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
                                 'End If
+
+                                'If Not dsResult.Tables(0).Columns.Contains("PRDSTS") Then
+                                '    dsResult.Tables(0).Columns.Add("PRDSTS", GetType(String))
+                                'End If
+
+                                'dsResult.Tables(0).Rows(iterator).Item("PRDSTS") = ProjectNoCurrent
+
 
                                 'dsResult.Tables(0).Rows(iterator).Item("PRHCOD") = ProjectNoCurrent
                                 'txtProjectNo.Text = ProjectNoCurrent
@@ -1426,7 +1610,7 @@ Public Class frmLoadExcel
             End If
 
             Dim queryResult As Integer = 0
-            Dim ProjectNoCurrent As Integer
+            Dim ProjectNoCurrent As Integer = 0
 
             If String.IsNullOrEmpty(projectNo) Then
 
@@ -1438,12 +1622,8 @@ Public Class frmLoadExcel
                 If dsExistsProject IsNot Nothing Then
                     'decirlo y preguntar que hacer, puede actualizar o puede dejarlo
                     Dim msgResult As DialogResult =
-                    MessageBox.Show("The name " & txtProjectName.Text & " is in use in project number: " & dsExistsProject.Tables(0).Rows(0).ItemArray(0).ToString() & ". Do you want to create a new project with that name?", "CTP System", MessageBoxButtons.YesNo)
-                    If msgResult = DialogResult.Yes Then
-                        queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, dtProjectDate, txtDesc.Text, txtProjectName.Text, cmbStatus, projectPerCharge)
-                    Else
-                        Exit Sub
-                    End If
+                        MessageBox.Show("The name " & txtProjectName.Text & " is in use in project number: " & dsExistsProject.Tables(0).Rows(0).ItemArray(0).ToString() & ". Please change the project name entered.", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
                     'Dim projectNo1 = dsExistsProject.Tables(0).Rows(0).ItemArray(0).ToString()
                 Else
                     queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, dtProjectDate, txtDesc.Text, txtProjectName.Text, cmbStatus, projectPerCharge)
@@ -1534,7 +1714,8 @@ Public Class frmLoadExcel
                     Dim newRow As DataRow = dtGrig1Ok.NewRow
                     newRow("PRDPTN") = dsGrig2.Tables(0).Rows(position).Item("PRDPTN").ToString()
                     newRow("VMVNUM") = dsGrig2.Tables(0).Rows(position).Item("VMVNUM").ToString()
-                    newRow("PRDSTS") = "E"
+                    Dim status = If(cmbStatusMore.SelectedIndex = 0, "E", cmbStatusMore.SelectedValue.ToString())
+                    newRow("PRDSTS") = status
                     dtGrig1Ok.Rows.Add(newRow)
                     dsGrig1.Tables.Add(dtGrig1Ok)
                     'dsGrig1.AcceptChanges()
@@ -1782,9 +1963,103 @@ Public Class frmLoadExcel
         disableAfterInsert(True)
     End Sub
 
+    Private Sub cmbStatusMore_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbStatusMore.SelectedIndexChanged
+
+    End Sub
+
 #End Region
 
 #Region "Utils"
+
+    Private Function utilDT(value As String, dtvalues As DataTable) As String
+        Dim exMessage As String = Nothing
+        Dim code As String = Nothing
+        Try
+            If value IsNot Nothing And dtvalues IsNot Nothing Then
+                For Each item As DataRow In dtvalues.Rows
+                    If item.ItemArray(0).ToString().Equals(value) Then
+                        code = item.ItemArray(1).ToString()
+                        Exit For
+                    End If
+                Next
+            End If
+            Return code
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function xlsDataSchemaValidation(dt As DataTable) As String
+        Dim exMessage As String = " "
+        'Dim blResult As Boolean = False
+        Dim strResult As String = Nothing
+        Try
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim rsPath As String = userPath & "\Excel_validation\"
+            If Not Directory.Exists(rsPath) Then
+                Directory.CreateDirectory(rsPath)
+                'copiar archivo xsd del server
+            End If
+
+            deleteFilesInPath(rsPath)
+            'If Not flagDelete Then
+            Dim result = xmlConvertClass.CreateXltoXML(dt, rsPath, "MainNode")
+            If result Then
+                'blResult = If(String.IsNullOrEmpty(validationSchema(rsPath)), True, False)
+                'Return blResult
+                strResult = validationSchema(LikeSession.fullFilePath)
+            Else
+                strResult = "No XML Data."
+            End If
+            'Else
+            '    MessageBox.Show("Please close the file previously created to process a new one.", "CTP System", MessageBoxButtons.OK)
+            'End If
+
+            xmlConvertClass.Dispose()
+            'Dim rsPath = New Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).LocalPath
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            strResult = exMessage
+            'Return blResult
+        End Try
+        Return strResult
+    End Function
+
+    Public Function validationSchema(rsPath As String) As String
+        Dim exMessage As String = " "
+        Dim blResult As Boolean = False
+        Try
+            Dim schema As XmlSchemaSet = New XmlSchemaSet()
+            schema.Add("", gnr.UrlPathXsdFileMethod)
+            Dim rd As XmlReader = XmlReader.Create(rsPath)
+            Dim doc As XDocument = XDocument.Load(rd)
+            doc.Validate(schema, AddressOf XSDErrors)
+            Dim outMessage As String = Nothing
+            outMessage = If(errors, "Not Validated. " & schemaErrorDesc, "")
+
+            'blResult = If(outMessage.Equals("Validated"), True, False)
+            Return outMessage
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return "Not Validated. " & ex.Message
+        End Try
+    End Function
+
+    Private Sub XSDErrors(ByVal o As Object, ByVal e As ValidationEventArgs)
+        Dim exMessage As String = " "
+        Try
+            Dim Type As XmlSeverityType = XmlSeverityType.Warning
+            If [Enum].TryParse(Of XmlSeverityType)("Error", Type) Then
+                If (Type = XmlSeverityType.Error) Then
+                    errors = True
+                    schemaErrorDesc = e.Message
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
 
     'Private Sub cmdClearFilters_Click(sender As Object, e As EventArgs) Handles cmdClearFilters.Click
 
@@ -1837,140 +2112,6 @@ Public Class frmLoadExcel
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             'Return deletedFiles
-        End Try
-    End Sub
-
-    Protected Sub toPaginate(dgv As DataGridView)
-        Dim exMessage As String = " "
-        Try
-            'dim tables as BindingList<DataTable>  = new BindingList<DataTable>()
-            Dim dtGrid As New DataTable
-            dtGrid = (DirectCast(dgv.DataSource, DataTable))
-
-            Dim counter As Integer = 0
-            Dim dt As DataTable = Nothing
-
-            For Each item As DataRow In dtGrid.Rows
-                If counter = 0 Then
-                    dt = dtGrid.Clone()
-                    Tables.Add(dt)
-                End If
-
-                dt.Rows.Add(item.ItemArray)
-                counter += 1
-
-                If counter > 9 Then
-                    counter = 0
-                End If
-            Next
-
-            BindingNavigator1.BindingSource = bs
-            bs.DataSource = Tables
-            AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
-            'AddHandler bs.PositionChanged, AddressOf bs_PositionChanged1
-
-            bs_PositionChanged(bs, Nothing)
-            'bs_PositionChanged1(bs, Nothing)
-
-        Catch ex As Exception
-            exMessage = ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Protected Sub toPaginate1(dgv As DataGridView)
-        Dim exMessage As String = " "
-        Try
-            'dim tables as BindingList<DataTable>  = new BindingList<DataTable>()
-            Dim dtGrid As New DataTable
-            dtGrid = (DirectCast(dgv.DataSource, DataTable))
-
-            Dim counter As Integer = 0
-            Dim dt As DataTable = Nothing
-
-            For Each item As DataRow In dtGrid.Rows
-                If counter = 0 Then
-                    dt = dtGrid.Clone()
-                    Tables1.Add(dt)
-                End If
-
-                dt.Rows.Add(item.ItemArray)
-                counter += 1
-
-                If counter > 9 Then
-                    counter = 0
-                End If
-            Next
-
-            BindingNavigator2.BindingSource = bs1
-            bs1.DataSource = Tables1
-            'AddHandler bs.PositionChanged, AddressOf bs_PositionChanged
-            AddHandler bs1.PositionChanged, AddressOf bs_PositionChanged1
-
-            'bs_PositionChanged(bs, Nothing)
-            bs_PositionChanged1(bs1, Nothing)
-
-        Catch ex As Exception
-            exMessage = ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Public Sub refreshPagination(partNo As String)
-        Dim exMessage As String = Nothing
-        Try
-            Dim myTables = Tables1
-            Dim iterator As Integer = 0
-            Dim changeDone As Boolean = False
-            For Each dtInnerTable As DataTable In myTables
-                For Each item As DataRow In dtInnerTable.Rows
-                    Dim lookupValue = item("PRDPTN").ToString()
-                    If lookupValue.Equals(partNo) Then
-                        Dim rowToDelete = dtInnerTable.Rows(iterator)
-                        rowToDelete.Delete()
-                        dtInnerTable.AcceptChanges()
-                        changeDone = True
-                        Exit For
-                    End If
-                    iterator += 1
-                Next
-                If changeDone Then
-                    Exit For
-                End If
-            Next
-
-            Tables1 = myTables
-            Dim epep = Nothing
-        Catch ex As Exception
-            exMessage = ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
-        DataGridView1.DataSource = Tables(bs.Position)
-    End Sub
-
-    Private Sub bs_PositionChanged1(ByVal sender As Object, ByVal e As EventArgs)
-        DataGridView2.DataSource = Tables1(bs1.Position)
-    End Sub
-
-    Public Sub handleDataGridColumnsOnDemand(dgvHandle As DataGridView, listToChange As List(Of Integer), index As Integer, flag As Boolean)
-        Dim exMessage As String = " "
-        Try
-            For Each item As Integer In listToChange
-                dgvHandle.Rows(index).Cells(item).ReadOnly = flag
-            Next
-        Catch ex As Exception
-            exMessage = ex.Message + ". " + ex.ToString
-        End Try
-    End Sub
-
-    Public Sub handleDataGridColumns(handleDataRow As DataGridViewRow, listToChange As List(Of Integer), flag As Boolean)
-        Dim exMessage As String = " "
-        Try
-            For Each item As Integer In listToChange
-                handleDataRow.Cells(item).ReadOnly = flag
-            Next
-        Catch ex As Exception
-            exMessage = ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -2084,10 +2225,11 @@ Public Class frmLoadExcel
 
 #End Region
 
+            Dim generalStatus = If(cmbStatusMore.SelectedIndex = 0, "E", cmbStatusMore.SelectedValue.ToString())
             QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
                                     userid, dtTime1, userid, dtTime2, "", 0,
                                     "", "", 0, 0,
-                                    "", dtTime3, "E", "",
+                                    "", dtTime3, generalStatus, "",
                                     "", personInCharge, chkControl, dtTime4, "0",
                                     "0", Trim(txtVendorNo.Text), "", "", "0", dtTime5,
                                     dtTime6, If(Not String.IsNullOrEmpty(""), CInt(""), "0"))
@@ -2373,6 +2515,7 @@ Public Class frmLoadExcel
     Private Sub ac1_TextChanged(sender As Object, e As EventArgs)
 
     End Sub
+
 
 #End Region
 
