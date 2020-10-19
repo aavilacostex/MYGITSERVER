@@ -34,7 +34,10 @@ Public Class frmLoadExcel
 #Region "Page Load"
 
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        LoadCombos(sender, e)
         frmLoadExcel_Load()
+
     End Sub
 
     Private Sub frmLoadExcel_Load()
@@ -52,35 +55,7 @@ Public Class frmLoadExcel
                 flagallow = 1
             End If
 
-            cmdExcel.BackgroundImageLayout = ImageLayout.Stretch
-
-            btnSuccess.Enabled = False
-            btnInsert.Enabled = False
-            btnCheck.Enabled = False
-            btnSelect.Enabled = False
-            'dtProjectDate.Value = Now
-            DataGridView1.ReadOnly = True
-            cmdExcel.Visible = False
-            SplitContainer1.Visible = False
-
-            DataGridView2.Enabled = LikeSession.gridEnable
-
-            cmbStatus.Items.Add("-- Select Status --")
-            cmbStatus.Items.Add("I - In Process")
-            cmbStatus.Items.Add("F - Finished")
-            cmbStatus.SelectedIndex = 1
-            FillDDLStatus1()
-            FillDDlUser1()
-
-            txtProjectNo.SetWatermark("Project Number")
-            txtProjectName.SetWatermark("Project Name")
-            txtVendorNo.SetWatermark("Vendor Number")
-            txtDesc.SetWatermark("Description")
-
-            cmbStatus.SetWatermark("Project Status")
-            cmbPerCharge.SetWatermark("Person In Charge")
-
-            ac1.SetWatermark("Vendor Name")
+            setValues()
 
             'Then Set ComboBox AutoComplete properties
             Dim ds = gnr.getVendorNoAndNameByNameDS()
@@ -89,11 +64,32 @@ Public Class frmLoadExcel
             bs.DataSource = ds.Tables(0)
             Dim dataview = New DataView(ds.Tables(0))
             Dim myTable As DataTable = dataview.ToTable(False, "VMNAME", "VMVNUM")
-            ComboBox1.DataSource = myTable
+
+            Dim newRow As DataRow = myTable.NewRow
+            newRow("VMNAME") = " "
+            newRow("VMVNUM") = 0
+            'dsUser.Tables(0).Rows.Add(newRow)
+            myTable.Rows.InsertAt(newRow, 0)
+
             ComboBox1.DisplayMember = "VMNAME"
             ComboBox1.ValueMember = "VMVNUM"
+            ComboBox1.DataSource = myTable
 
-            txtVendorNo.Text = ""
+
+            Dim myList As String() = New String(myTable.Rows.Count) {}
+            Dim i As Integer = 0
+            For Each item As DataRow In myTable.Rows
+                If Not item("VMNAME").ToString().Equals("") Then
+                    If item("VMNAME").ToString() IsNot Nothing Then
+                        myList(i) = item("VMNAME").ToString()
+                        i += 1
+                    End If
+                End If
+            Next
+
+            ac1.Values = myList
+
+
 
             'Dim newRow As DataRow = myTable.NewRow
             'newRow("VMNAME") = ""
@@ -110,32 +106,29 @@ Public Class frmLoadExcel
             '    .AutoCompleteSource = AutoCompleteSource.ListItems
             'End With
 
-            Dim myList As String() = New String(myTable.Rows.Count) {}
-            Dim i As Integer = 0
-            For Each item As DataRow In myTable.Rows
-                If Not item("VMNAME").ToString().Equals("") Then
-                    If item("VMNAME").ToString() IsNot Nothing Then
-                        myList(i) = item("VMNAME").ToString()
-                        i += 1
-                    End If
-                End If
-            Next
 
-            ac1.Values = myList
-
-            'If (Not String.IsNullOrEmpty(ComboBox1.Text) Or (ComboBox2.SelectedIndex <> -1)) Then
-            '    With ComboBox2
-            '        .DisplayMember = "VMNAME"
-            '        .ValueMember = "VMVNUM"
-            '        .DataSource = DirectCast(ComboBox2.DataSource, DataTable)
-            '        .DropDownStyle = ComboBoxStyle.DropDown
-            '        .AutoCompleteMode = AutoCompleteMode.SuggestAppend
-            '        .AutoCompleteSource = AutoCompleteSource.ListItems
-            '    End With
-            'End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
         End Try
+    End Sub
+
+#End Region
+
+#Region "Threads"
+
+    Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
+        Handles BackgroundWorker1.RunWorkerCompleted
+        Loading.Close()
+    End Sub
+
+    Private Sub backgroundWorker1_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
+        Handles BackgroundWorker1.DoWork
+        ExecuteCombos(sender, e)
+    End Sub
+
+    Private Sub backgroundWorker1_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
+        Handles BackgroundWorker1.ProgressChanged
+        'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
     End Sub
 
 #End Region
@@ -291,8 +284,10 @@ Public Class frmLoadExcel
         End If
         btnValidVendor.Enabled = True
 
+        Dim txtValue As String = txtVendorNo.Text
         'txtVendorNo.Text = If(txtVendorNo.Text IsNot Nothing Or txtVendorNo.Text <> "", txtVendorNo.Text.Replace(Environment.NewLine, ""), " ")
-        txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
+        txtVendorNo.Text = If(txtValue = "0" Or txtValue = Environment.NewLine, txtVendorNo.Text.Replace(txtValue, ""), txtValue)
+        ''txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
         'If (Regex.IsMatch(txtVendorNo.Text, "^[0-9]{1,6}$") And gnr.isVendorAccepted(txtVendorNo.Text)) Then
         'ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
         'If ComboBox1.SelectedIndex > 0 Then
@@ -466,7 +461,7 @@ Public Class frmLoadExcel
             pi.SetValue(SplitContainer1, Convert.ChangeType(value, pi.PropertyType), Nothing)
             If index.Equals(1) Then
                 btnCheck.Enabled = Not value
-                'btnSuccess.Enabled = value
+                btnSuccess.Enabled = value
                 DataGridView1.Visible = Not value
                 DataGridView1.Enabled = Not value
                 cmdExcel.Visible = value
@@ -475,8 +470,8 @@ Public Class frmLoadExcel
                 Dim pi2 As PropertyInfo = SplitContainer1.GetType().GetProperty(buildNameReverse)
                 pi2.SetValue(SplitContainer1, Convert.ChangeType(Not value, pi2.PropertyType), Nothing)
             Else
+                btnSuccess.Enabled = Not value
                 btnCheck.Enabled = value
-                'btnSuccess.Enabled = Not value
                 cmdExcel.Visible = Not value
                 lblExcel.Visible = Not value
                 'cmdExcel.Enabled = Not value
@@ -1971,6 +1966,64 @@ Public Class frmLoadExcel
 
 #Region "Utils"
 
+    Private Sub LoadCombos(Optional ByVal sender As Object = Nothing, Optional ByVal e As EventArgs = Nothing)
+
+        BackgroundWorker1.RunWorkerAsync()
+        Loading.ShowDialog()
+        Loading.BringToFront()
+
+    End Sub
+
+    Private Sub ExecuteCombos(Optional ByVal sender As Object = Nothing, Optional ByVal e As EventArgs = Nothing)
+        Dim exMessage As String = " "
+
+        Try
+            cmbStatus.Items.Add("-- Select Status --")
+            cmbStatus.Items.Add("I - In Process")
+            cmbStatus.Items.Add("F - Finished")
+            cmbStatus.SelectedIndex = 1
+
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Sub
+
+    Private Sub setValues()
+
+        cmdExcel.BackgroundImageLayout = ImageLayout.Stretch
+
+        btnSuccess.Enabled = False
+        btnInsert.Enabled = False
+        btnCheck.Enabled = False
+        btnSelect.Enabled = False
+        'dtProjectDate.Value = Now
+        DataGridView1.ReadOnly = True
+        cmdExcel.Visible = False
+        SplitContainer1.Visible = False
+
+        txtProjectNo.SetWatermark("Project Number")
+        txtProjectName.SetWatermark("Project Name")
+        txtVendorNo.SetWatermark("Vendor Number")
+        txtDesc.SetWatermark("Description")
+
+        cmbStatus.SetWatermark("Project Status")
+        cmbPerCharge.SetWatermark("Person In Charge")
+        cmbStatusMore.SetWatermark("Project Status")
+
+        ac1.SetWatermark("Vendor Name")
+
+        txtVendorNo.Text = ""
+
+        lblUsrLog.Text += userid
+
+        DataGridView2.Enabled = LikeSession.gridEnable
+
+        FillDDLStatus1()
+        FillDDlUser1()
+
+    End Sub
+
     Private Function utilDT(value As String, dtvalues As DataTable) As String
         Dim exMessage As String = Nothing
         Dim code As String = Nothing
@@ -2357,6 +2410,9 @@ Public Class frmLoadExcel
                         End If
                     ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
                         tt.Enabled = flag
+                        If flag Then
+                            tt.selectedIndex = 0
+                        End If
                     ElseIf TypeOf tt Is Windows.Forms.DateTimePicker Then
                         tt.Enabled = flag
                     ElseIf TypeOf tt Is Windows.Forms.Button Then

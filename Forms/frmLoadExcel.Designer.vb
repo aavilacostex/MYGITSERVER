@@ -105,10 +105,9 @@ Partial Class frmLoadExcel
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
         Me.ac1 = New CTP_IS_VBNET.Autocomplete_Textbox()
+        Me.cmbStatusMore = New System.Windows.Forms.ComboBox()
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.ComboBox3 = New System.Windows.Forms.ComboBox()
-        Me.cmbStatusMore = New System.Windows.Forms.ComboBox()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -199,7 +198,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.82426!))
         Me.TableLayoutPanel3.Controls.Add(Me.cmdExcel, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.lblExcel, 1, 0)
-        Me.TableLayoutPanel3.Location = New System.Drawing.Point(248, 598)
+        Me.TableLayoutPanel3.Location = New System.Drawing.Point(3, 598)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
         Me.TableLayoutPanel3.RowCount = 1
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -286,6 +285,7 @@ Partial Class frmLoadExcel
         '
         Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AllowUserToOrderColumns = True
+        Me.DataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -783,11 +783,11 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.btnSuccess, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.btnCheck, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(493, 598)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(248, 598)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(239, 28)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(239, 57)
         Me.TableLayoutPanel1.TabIndex = 18
         '
         'btnSuccess
@@ -797,7 +797,7 @@ Partial Class frmLoadExcel
         Me.btnSuccess.Location = New System.Drawing.Point(3, 6)
         Me.btnSuccess.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
         Me.btnSuccess.Name = "btnSuccess"
-        Me.btnSuccess.Size = New System.Drawing.Size(113, 19)
+        Me.btnSuccess.Size = New System.Drawing.Size(113, 39)
         Me.btnSuccess.TabIndex = 4
         Me.btnSuccess.Text = "Show Success"
         Me.btnSuccess.UseVisualStyleBackColor = True
@@ -809,7 +809,7 @@ Partial Class frmLoadExcel
         Me.btnCheck.Location = New System.Drawing.Point(122, 6)
         Me.btnCheck.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
         Me.btnCheck.Name = "btnCheck"
-        Me.btnCheck.Size = New System.Drawing.Size(114, 19)
+        Me.btnCheck.Size = New System.Drawing.Size(114, 39)
         Me.btnCheck.TabIndex = 3
         Me.btnCheck.Text = "Check Errors"
         Me.btnCheck.UseVisualStyleBackColor = True
@@ -834,7 +834,7 @@ Partial Class frmLoadExcel
         '
         Me.btnInsert.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnInsert.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnInsert.Location = New System.Drawing.Point(70, 637)
+        Me.btnInsert.Location = New System.Drawing.Point(560, 603)
         Me.btnInsert.Margin = New System.Windows.Forms.Padding(70, 8, 3, 3)
         Me.btnInsert.Name = "btnInsert"
         Me.btnInsert.Size = New System.Drawing.Size(161, 9)
@@ -917,7 +917,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 285.0!))
-        Me.TableLayoutPanel2.Controls.Add(Me.ComboBox3, 0, 10)
         Me.TableLayoutPanel2.Controls.Add(Me.lblVendorNo, 1, 3)
         Me.TableLayoutPanel2.Controls.Add(Me.lblProjectNo, 0, 1)
         Me.TableLayoutPanel2.Controls.Add(Me.lblProjectName, 1, 1)
@@ -954,9 +953,9 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 260.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(775, 647)
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(775, 675)
         Me.TableLayoutPanel2.TabIndex = 2
         '
         'txtDesc
@@ -1004,22 +1003,6 @@ Partial Class frmLoadExcel
         Me.ac1.TabIndex = 14
         Me.ac1.Values = Nothing
         '
-        'BackgroundWorker1
-        '
-        Me.BackgroundWorker1.WorkerReportsProgress = True
-        '
-        'ComboBox3
-        '
-        Me.ComboBox3.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComboBox3.FormattingEnabled = True
-        Me.ComboBox3.IntegralHeight = False
-        Me.ComboBox3.ItemHeight = 17
-        Me.ComboBox3.Location = New System.Drawing.Point(3, 598)
-        Me.ComboBox3.Name = "ComboBox3"
-        Me.ComboBox3.Size = New System.Drawing.Size(239, 25)
-        Me.ComboBox3.TabIndex = 36
-        Me.ComboBox3.Visible = False
-        '
         'cmbStatusMore
         '
         Me.cmbStatusMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1028,6 +1011,10 @@ Partial Class frmLoadExcel
         Me.cmbStatusMore.Name = "cmbStatusMore"
         Me.cmbStatusMore.Size = New System.Drawing.Size(279, 25)
         Me.cmbStatusMore.TabIndex = 37
+        '
+        'BackgroundWorker1
+        '
+        Me.BackgroundWorker1.WorkerReportsProgress = True
         '
         'frmLoadExcel
         '
@@ -1147,6 +1134,5 @@ Partial Class frmLoadExcel
     Friend WithEvents dtProjectDate As DateTimePicker
     Friend WithEvents TableLayoutPanel8 As TableLayoutPanel
     Friend WithEvents LinkLabel1 As LinkLabel
-    Friend WithEvents ComboBox3 As ComboBox
     Friend WithEvents cmbStatusMore As ComboBox
 End Class
