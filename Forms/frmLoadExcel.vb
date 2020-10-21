@@ -2050,7 +2050,8 @@ Public Class frmLoadExcel
                             Dim dsGetVendorQuey = gnr.GetVendorQuey(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString())
                             If Not dsGetVendorQuey Is Nothing Then
                                 If dsGetVendorQuey.Tables(0).Rows.Count > 0 Then
-                                    objData.Header.Detail.Details.VendorNumber = dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()
+                                    'objData.Header.Detail.Details.VendorNumber = dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()
+                                    objData.Header.Detail.Details.VendorNumber = vendor
                                     'prdDetData.vendor = Trim(dsGetVendorQuey.Tables(0).Rows(0).ItemArray(dsGetVendorQuey.Tables(0).Columns("VMNAME").Ordinal).ToString())
                                 Else
                                     objData.Header.Detail.Details.VendorNumber = ""
