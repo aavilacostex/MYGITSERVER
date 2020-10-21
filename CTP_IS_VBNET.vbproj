@@ -131,6 +131,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlClient, Version=4.6.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -184,10 +185,15 @@
     </Compile>
     <Compile Include="Class\ConvertXml.vb" />
     <Compile Include="Class\CrystalReport.vb" />
+    <Compile Include="Class\DTO\Details.vb" />
+    <Compile Include="Class\DTO\ProductDetails.vb" />
+    <Compile Include="Class\DTO\ProductHeader.vb" />
     <Compile Include="Class\LikeSession.vb" />
     <Compile Include="Class\LoadExcel.vb" />
     <Compile Include="Class\Module1.vb" />
     <Compile Include="Class\Pagination.vb" />
+    <Compile Include="Class\DTO\ProductClass.vb" />
+    <Compile Include="Class\ConversionClasses.vb" />
     <Compile Include="Class\Supergrid.vb">
       <SubType>Component</SubType>
     </Compile>

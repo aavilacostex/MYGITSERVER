@@ -16,4 +16,5 @@
     Public Shared retrieveUser As String
     Public Shared focussedControl As Control
     Public Shared fullFilePath As String
+    Public Shared objToFill As String
 End Class

@@ -1682,10 +1682,13 @@ NotInheritable Class Gn1
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
         Try
+            Dim statusquoteNew = If(String.IsNullOrEmpty(strStsQuote), strStsQuote, If(strStsQuote.Length < maxLength, strStsQuote, strStsQuote.Substring(0, Math.Min(strStsQuote.Length, maxLength))))
+
             Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE,PQPRC,PQMIN) VALUES 
             ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
-            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "'," & strUnitCostNew & "," & strMinQty & ")"
+            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & statusquoteNew & "','" & strSpace & "'," & strUnitCostNew & "," & strMinQty & ")"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -1699,10 +1702,13 @@ NotInheritable Class Gn1
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
         Try
+            Dim statusquoteNew = If(String.IsNullOrEmpty(strStsQuote), strStsQuote, If(strStsQuote.Length < maxLength, strStsQuote, strStsQuote.Substring(0, Math.Min(strStsQuote.Length, maxLength))))
+
             Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE) VALUES 
             ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
-            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "')"
+            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & statusquoteNew & "','" & strSpace & "')"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -1989,16 +1995,18 @@ NotInheritable Class Gn1
         Dim Sql As String
         Dim QueryResult As Integer = -1
         Try
-            Dim checkDate1 = Format(strDate1, "yyyy-MM-dd")
-            Dim checkDate2 = Format(strDate2, "yyyy-MM-dd")
-            Dim checkDate3 = Format(strDate3, "yyyy-MM-dd")
+            Dim checkDate1 = Format(strDate1, "yyyy/MM/dd")
+            Dim checkDate2 = Format(strDate2, "yyyy/MM/dd")
+            Dim checkDate3 = Format(strDate3, "yyyy/MM-dd")
             Dim checkDate4 = Format(Now, "yyyy-MM-dd")
 
-            Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(strDate1, "yyyy-MM-dd") & "', 
-                    PRDJIRA = '" & Trim(jiraTask) & "', " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(strDate2, "yyyy-MM-dd") & "',
-                    PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(strDate3, "yyyy-MM-dd") & "',MOUSER = '" & userid & "',
-                    MODATE = '" & Format(Now, "yyyy-MM-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
-                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(strDate4, "yyyy-MM-dd") & "',
+
+
+            Sql = "UPDATE PRDVLD SET PRDPTS = '" & partstoshow & "',PRDMPC = '" & minorCode & "',PRDTCO = " & tooCost & ",PRDERD = '" & Format(Today(), "yyyy-MM-dd") & "', 
+                    PRDJIRA = '" & Trim(jiraTask) & "', " & "VMVNUM = " & Trim(vendorNo) & ",PRDNEW = " & strChkSel & ",PRDEDD = '" & Format(Today(), "yyyy-MM-dd") & "',
+                    PRDSCO = " & sampleCost & ",PRDTTC = " & miscCost & ",PRDUSR = '" & Trim(userSelec) & "',PRDDAT = '" & Format(Today(), "yyyy-MM-dd") & "',MOUSER = '" & userid & "',
+                    MODATE = '" & Format(Today(), "yyyy-MM-dd") & "',PRDCTP = '" & Trim(tcpNo) & "',PRDSQTY = " & sampleQty & ", PRDQTY = " & qty & ",PRDMFR = '" & Trim(mfr) & "',
+                    PRDMFR# = '" & Trim(mfrNo) & "',PRDCOS = " & unitCost & ",PRDCON = " & unitCostNew & ",PRDPO# = '" & Trim(poNo) & "',PODATE = '" & Format(Today(), "yyyy-MM-dd") & "',
                     PRDSTS = '" & Trim(status) & "',PRDBEN = '" & Trim(benefits) & "',PRDINF = '" & Trim(comments) & "' WHERE PRHCOD = " & Trim(code) & " AND
                     PRDPTN = '" & Trim(UCase(partNo)) & "'"
             QueryResult = UpdateDataInDatabase(Sql)

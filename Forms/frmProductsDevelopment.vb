@@ -2253,7 +2253,7 @@ Public Class frmProductsDevelopment
         End Try
     End Sub
 
-    Private Sub InsertProductDetails(projectNo As String, partstoshow As String)
+    Public Sub InsertProductDetails(projectNo As String, partstoshow As String)
         Dim dtTime As DateTimePicker = New DateTimePicker()
         Dim dtTime1 As DateTimePicker = New DateTimePicker()
         Dim dtTime2 As DateTimePicker = New DateTimePicker()
