@@ -2441,23 +2441,8 @@ Public Class frmProductsDevelopment
                                         InsertProductDetails(ProjectNo, partstoshow)
 
                                         If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
-
-                                            'Dim AppOutlook As New outlook.Application
-                                            'Try
-                                            '    OutlookMessage = AppOutlook.CreateItem(outlook.OlItemType.olMailItem)
-                                            '    Dim Recipents As outlook.Recipients = OutlookMessage.Recipients
-                                            '    Recipents.Add("myemail@hotmail.com")
-                                            '    OutlookMessage.Subject = "Sending through Outlook"
-                                            '    OutlookMessage.Body = "Testing outlook Mail"
-                                            '    OutlookMessage.BodyFormat = outlook.OlBodyFormat.olFormatHTML
-                                            '    OutlookMessage.Send()
-                                            'Catch ex As Exception
-                                            '    MessageBox.Show("Mail could not be sent") 'if you dont want this message, simply delete this line 
-                                            'Finally
-                                            '    OutlookMessage = Nothing
-                                            '    AppOutlook = Nothing
-                                            'End Try
-
+                                            'send email
+                                            gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
                                         End If
 
                                         PoQotaFunction(Status2)
@@ -2477,6 +2462,7 @@ Public Class frmProductsDevelopment
                                 InsertProductDetails(ProjectNo, partstoshow)
                                 If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                     'send email
+                                    gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
                                 End If
 
                                 PoQotaFunction(Status2)
@@ -2605,6 +2591,7 @@ Public Class frmProductsDevelopment
                                         InsertProductDetails(ProjectNo, partstoshow)
                                         If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                             'send email
+                                            gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
                                         End If
 
                                         InsertProdWishList(userid, txtpartno.Text)
@@ -2645,6 +2632,7 @@ Public Class frmProductsDevelopment
                                         InsertProductDetails(ProjectNo, partstoshow)
                                         If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                             'send email
+                                            gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
                                         End If
 
                                         InsertProdWishList(userid, txtpartno.Text)
@@ -2670,6 +2658,7 @@ Public Class frmProductsDevelopment
 
                             If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                 'send email
+                                gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
                             End If
 
                             PoQotaFunction(Status2)
@@ -2751,6 +2740,7 @@ Public Class frmProductsDevelopment
                                 End If
                                 If (Trim(Status2) = "Technical Documentation") Or (Trim(Status2) = "Analysis of Samples") Or (Trim(Status2) = "Pending from Supplier") Then
                                     'send email
+                                    gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
                                 End If
                                 'remove condition to prevent the update the statues when analysis of sample yto others
                                 'If (Trim(dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "AS") And (Trim(cmbstatus.SelectedValue) <> "AS")) Then

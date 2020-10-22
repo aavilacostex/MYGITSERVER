@@ -1199,7 +1199,6 @@ Public Class frmLoadExcel
 #Region "button methods"
 
 
-
     'Private Sub txtVendorNo_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) _
     '    Handles txtVendorNo.KeyPress
     '    If e.KeyChar = Microsoft.VisualBasic.ChrW(Keys.Return) Then
@@ -1408,7 +1407,7 @@ Public Class frmLoadExcel
                     dsResult.Tables(0).Rows(iterator).Item("VMVNUM") = txtVendorNo.Text
 
                     'preguntar si parte ya existe en el proyecto
-                    Dim dsExist = gnr.GetDataByCodeAndPartNoProdDesc(ProjectNoCurrent, partNo)
+                    Dim dsExist = gnr.GetDataByCodeAndPartNoProdDesc1(ProjectNoCurrent, partNo)
                     If dsExist Is Nothing Then
 
                         Dim Qry1 = dsResult.Tables(0).AsEnumerable() _

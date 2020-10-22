@@ -954,6 +954,21 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function GetDataByCodeAndPartNoProdDesc1(code As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM PRDVLD WHERE PRHCOD = " & Trim(code) & " AND trim(ucase(PRDPTN)) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetProdDetByCodeAndExc(code As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -2233,6 +2248,26 @@ NotInheritable Class Gn1
 
     End Sub
 
+    Public Sub OpenOutlookMessage(name As String, partNo As String, subject As String)
+        Dim exMessage As String = ""
+        Try
+
+            Dim AppOutlook As New Outlook.Application
+            Dim OutlookMessage As Object
+            OutlookMessage = AppOutlook.CreateItem(Outlook.OlItemType.olMailItem)
+
+            'OutlookMessage.Subject = "Newly Developed Part(s)"
+            OutlookMessage.Subject = subject
+            OutlookMessage.Body = "Project: " & Trim(name) & "  Part No. " & Trim(partNo)
+            OutlookMessage.BodyFormat = Outlook.OlBodyFormat.olFormatHTML
+            OutlookMessage.Display(True)
+
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Sub
+
     Public Function sendEmail(toemails As String, Optional ByVal partNo As String = Nothing) As Integer
         Dim exMessage As String = " "
         Dim AppOutlook As New Outlook.Application
@@ -2240,7 +2275,8 @@ NotInheritable Class Gn1
         Dim rsResult As Integer = 0
         Try
             OutlookMessage = AppOutlook.CreateItem(Outlook.OlItemType.olMailItem)
-            Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
+            'Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
+            Dim Recipents1 As Outlook.Recipients = OutlookMessage.Recipients
 
             Dim listEmail As New List(Of String)
             Dim strArr() As String
@@ -2251,18 +2287,18 @@ NotInheritable Class Gn1
                 End If
             Next
 
-            For Each ttt As String In listEmail
-                Recipents.Add(ttt)
-                Recipents.ResolveAll()
-            Next
+            'For Each ttt As String In listEmail
+            '    Recipents.Add(ttt)
+            '    Recipents.ResolveAll()
+            'Next
 
             'test purpose
-            Dim lenghtRec = Recipents.Count
-            For index As Integer = 1 To lenghtRec
-                Recipents.Remove(index)
-            Next
-            Recipents.Add("alexei.ansberto85@gmail.com")
-            Recipents.Add("ansberto.avila85@gmail.com")
+            'Dim lenghtRec = Recipents.Count
+            'For index As Integer = 1 To lenghtRec
+            '    Recipents.Remove(index)
+            'Next
+            Recipents1.Add("alexei.ansberto85@gmail.com")
+            Recipents1.Add("ansberto.avila85@gmail.com")
             'test purpose
 
             OutlookMessage.Subject = "Newly Developed Part(s)"
