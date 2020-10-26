@@ -8,7 +8,7 @@ Public Class ConvertXml : Implements IDisposable
 
     Private disposedValue As Boolean
 
-    Public Function CreateXltoXML(dt As DataTable, XmlFile As String, RowName As String) As Boolean
+    Public Function CreateXltoXML(dt As DataTable, XmlFile As String, RowName As String, InnerName As String) As Boolean
         Dim exMessage As String = " "
         Dim IsCreated As Boolean = False
         Try
@@ -43,14 +43,20 @@ Public Class ConvertXml : Implements IDisposable
                     'writer1.Indentation = 2
 
                     For Each dr As DataRow In RowList
-                        'writer.WriteStartElement(RowName)
+                        writer1.WriteStartElement(InnerName)
                         For Each str As String In ColumnNames
-                            writer1.WriteStartElement(str)
-                            writer1.WriteString(dr.ItemArray(i).ToString())
-                            writer1.WriteEndElement()
-                            i += 1
+                            If str = "ErrorDesc" Then
+                                Continue For
+                            ElseIf str = "VMVNUM" Then
+                                Continue For
+                            Else
+                                writer1.WriteStartElement(str)
+                                writer1.WriteString(dr.ItemArray(i).ToString())
+                                writer1.WriteEndElement()
+                                i += 1
+                            End If
                         Next
-                        'writer.WriteEndElement()
+                        writer1.WriteEndElement()
                         i = 0
                     Next
                     writer1.WriteEndElement()

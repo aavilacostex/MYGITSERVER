@@ -1737,10 +1737,13 @@ NotInheritable Class Gn1
         Dim exMessage As String = " "
         Dim Sql As String
         Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
         Try
+            Dim statusquoteNew = If(String.IsNullOrEmpty(strStsQuote), strStsQuote, If(strStsQuote.Length < maxLength, strStsQuote, strStsQuote.Substring(0, Math.Min(strStsQuote.Length, maxLength))))
+
             Sql = "INSERT INTO POQOTA (PQPTN,PQVND,PQSEQ,PQQDTY,PQQDTM,PQMPTN,PQQDTD,PQCOMM,SPACE,PQPRC) VALUES 
             ('" & Trim(UCase(partNo)) & "'," & Trim(vendorNo) & "," & maxValue & "," & strYear.Substring(strYear.Length - 2) & ",
-            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & strStsQuote & "','" & strSpace & "'," & strUnitCostNew & ")"
+            " & strMonth & ",'" & mpnPo & "'," & strDay & ",'" & statusquoteNew & "','" & strSpace & "'," & strUnitCostNew & ")"
             QueryResult = InsertDataInDatabase(Sql)
             Return QueryResult
         Catch ex As Exception
@@ -2271,9 +2274,12 @@ NotInheritable Class Gn1
     Public Function sendEmail(toemails As String, Optional ByVal partNo As String = Nothing) As Integer
         Dim exMessage As String = " "
         Dim AppOutlook As New Outlook.Application
+        'Dim oNS As Outlook.NameSpace
         Dim OutlookMessage As Object
         Dim rsResult As Integer = 0
         Try
+            'oNS = AppOutlook.GetNamespace("MAPI")
+            'oNS.Logon("Outlokk", "", False, True)
             OutlookMessage = AppOutlook.CreateItem(Outlook.OlItemType.olMailItem)
             'Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
             Dim Recipents1 As Outlook.Recipients = OutlookMessage.Recipients
@@ -2305,6 +2311,9 @@ NotInheritable Class Gn1
             OutlookMessage.Body = "Part No. " & Trim(partNo)
             OutlookMessage.BodyFormat = Outlook.OlBodyFormat.olFormatHTML
             OutlookMessage.Send() 'must be uncommented to send emails
+
+            'oNS.Logoff()
+
             Return rsResult = 1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString

@@ -124,24 +124,34 @@ Public Class ProductDetails
         Private pqmin As String
         Public Property MinQty() As String
             Get
-                Return prdmpc
-            End Get
+            Return pqmin
+        End Get
             Set(ByVal value As String)
-                prdmpc = value
-            End Set
+            pqmin = value
+        End Set
         End Property
 
         Private objDetail As ProductDetails
-        Public Property detailObj() As ProductDetails
-            Get
-                Return objDetail
-            End Get
-            Set(ByVal value As ProductDetails)
-                objDetail = value
-            End Set
-        End Property
+    Public Property detailObj() As ProductDetails
+        Get
+            Return objDetail
+        End Get
+        Set(ByVal value As ProductDetails)
+            objDetail = value
+        End Set
+    End Property
+
+    Private flagValidationPoqota As String
+    Public Property PoqotaValidation() As String
+        Get
+            Return flagValidationPoqota
+        End Get
+        Set(ByVal value As String)
+            flagValidationPoqota = value
+        End Set
+    End Property
 
 #End Region
 
-    End Class
+End Class
 
