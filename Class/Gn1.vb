@@ -2308,6 +2308,7 @@ NotInheritable Class Gn1
             'test purpose
 
             OutlookMessage.Subject = "Newly Developed Part(s)"
+
             OutlookMessage.Body = "Part No. " & Trim(partNo)
             OutlookMessage.BodyFormat = Outlook.OlBodyFormat.olFormatHTML
             OutlookMessage.Send() 'must be uncommented to send emails
