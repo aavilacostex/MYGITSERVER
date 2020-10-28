@@ -2281,8 +2281,8 @@ NotInheritable Class Gn1
             'oNS = AppOutlook.GetNamespace("MAPI")
             'oNS.Logon("Outlokk", "", False, True)
             OutlookMessage = AppOutlook.CreateItem(Outlook.OlItemType.olMailItem)
-            'Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
-            Dim Recipents1 As Outlook.Recipients = OutlookMessage.Recipients
+            Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
+            'Dim Recipents1 As Outlook.Recipients = OutlookMessage.Recipients
 
             Dim listEmail As New List(Of String)
             Dim strArr() As String
@@ -2293,18 +2293,18 @@ NotInheritable Class Gn1
                 End If
             Next
 
-            'For Each ttt As String In listEmail
-            '    Recipents.Add(ttt)
-            '    Recipents.ResolveAll()
-            'Next
+            For Each ttt As String In listEmail
+                Recipents.Add(ttt)
+                Recipents.ResolveAll()
+            Next
 
             'test purpose
             'Dim lenghtRec = Recipents.Count
             'For index As Integer = 1 To lenghtRec
             '    Recipents.Remove(index)
             'Next
-            Recipents1.Add("alexei.ansberto85@gmail.com")
-            Recipents1.Add("ansberto.avila85@gmail.com")
+            'Recipents1.Add("alexei.ansberto85@gmail.com")
+            'Recipents1.Add("ansberto.avila85@gmail.com")
             'test purpose
 
             OutlookMessage.Subject = "Newly Developed Part(s)"

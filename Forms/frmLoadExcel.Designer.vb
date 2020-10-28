@@ -108,10 +108,10 @@ Partial Class frmLoadExcel
         Me.txtDesc = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
+        Me.ac1 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.cmbStatusMore = New System.Windows.Forms.ComboBox()
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.BackgroundWorker2 = New System.ComponentModel.BackgroundWorker()
-        Me.ac1 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -154,13 +154,13 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel4.Controls.Add(Me.txtVendorNo, 0, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.btnValidVendor, 1, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.lblVendorDesc, 0, 1)
-        Me.TableLayoutPanel4.Location = New System.Drawing.Point(248, 152)
+        Me.TableLayoutPanel4.Location = New System.Drawing.Point(248, 127)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
         Me.TableLayoutPanel4.RowCount = 2
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(239, 63)
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(239, 62)
         Me.TableLayoutPanel4.TabIndex = 31
         '
         'txtVendorNo
@@ -178,7 +178,7 @@ Partial Class frmLoadExcel
         Me.btnValidVendor.ImageList = Me.ImageList1
         Me.btnValidVendor.Location = New System.Drawing.Point(199, 3)
         Me.btnValidVendor.Name = "btnValidVendor"
-        Me.btnValidVendor.Size = New System.Drawing.Size(37, 25)
+        Me.btnValidVendor.Size = New System.Drawing.Size(37, 24)
         Me.btnValidVendor.TabIndex = 31
         Me.btnValidVendor.Text = " "
         Me.btnValidVendor.UseVisualStyleBackColor = True
@@ -188,7 +188,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel4.SetColumnSpan(Me.lblVendorDesc, 2)
         Me.lblVendorDesc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.lblVendorDesc.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblVendorDesc.Location = New System.Drawing.Point(3, 34)
+        Me.lblVendorDesc.Location = New System.Drawing.Point(3, 33)
         Me.lblVendorDesc.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.lblVendorDesc.Name = "lblVendorDesc"
         Me.lblVendorDesc.Size = New System.Drawing.Size(233, 27)
@@ -202,7 +202,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.82426!))
         Me.TableLayoutPanel3.Controls.Add(Me.cmdExcel, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.lblExcel, 1, 0)
-        Me.TableLayoutPanel3.Location = New System.Drawing.Point(3, 598)
+        Me.TableLayoutPanel3.Location = New System.Drawing.Point(3, 587)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
         Me.TableLayoutPanel3.RowCount = 1
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -225,8 +225,8 @@ Partial Class frmLoadExcel
         Me.lblExcel.AutoSize = True
         Me.lblExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.lblExcel.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblExcel.Location = New System.Drawing.Point(61, 15)
-        Me.lblExcel.Margin = New System.Windows.Forms.Padding(8, 15, 3, 0)
+        Me.lblExcel.Location = New System.Drawing.Point(61, 12)
+        Me.lblExcel.Margin = New System.Windows.Forms.Padding(8, 12, 3, 0)
         Me.lblExcel.Name = "lblExcel"
         Me.lblExcel.Size = New System.Drawing.Size(165, 12)
         Me.lblExcel.TabIndex = 30
@@ -237,7 +237,7 @@ Partial Class frmLoadExcel
         '
         Me.TableLayoutPanel2.SetColumnSpan(Me.SplitContainer1, 3)
         Me.SplitContainer1.IsSplitterFixed = True
-        Me.SplitContainer1.Location = New System.Drawing.Point(3, 330)
+        Me.SplitContainer1.Location = New System.Drawing.Point(3, 311)
         Me.SplitContainer1.Name = "SplitContainer1"
         Me.SplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -268,17 +268,17 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel6.Location = New System.Drawing.Point(3, 3)
         Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
         Me.TableLayoutPanel6.RowCount = 2
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 86.29032!))
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.70968!))
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 79.85612!))
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.14388!))
         Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel6.Size = New System.Drawing.Size(763, 259)
+        Me.TableLayoutPanel6.Size = New System.Drawing.Size(763, 278)
         Me.TableLayoutPanel6.TabIndex = 0
         '
         'dtProjectDate
         '
         Me.dtProjectDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtProjectDate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtProjectDate.Location = New System.Drawing.Point(515, 226)
+        Me.dtProjectDate.Location = New System.Drawing.Point(515, 225)
         Me.dtProjectDate.Name = "dtProjectDate"
         Me.dtProjectDate.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.dtProjectDate.Size = New System.Drawing.Size(131, 24)
@@ -325,7 +325,7 @@ Partial Class frmLoadExcel
         Me.DataGridView1.RowHeadersVisible = False
         Me.DataGridView1.RowHeadersWidth = 62
         Me.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.DataGridView1.Size = New System.Drawing.Size(757, 217)
+        Me.DataGridView1.Size = New System.Drawing.Size(757, 216)
         Me.DataGridView1.TabIndex = 11
         '
         'clPRHCOD
@@ -370,14 +370,14 @@ Partial Class frmLoadExcel
         Me.clPQPRC.HeaderText = "Unit Cost"
         Me.clPQPRC.Name = "clPQPRC"
         Me.clPQPRC.ReadOnly = True
-        Me.clPQPRC.Width = 75
+        Me.clPQPRC.Width = 69
         '
         'clPQMIN
         '
         Me.clPQMIN.HeaderText = "Min Qty"
         Me.clPQMIN.Name = "clPQMIN"
         Me.clPQMIN.ReadOnly = True
-        Me.clPQMIN.Width = 68
+        Me.clPQMIN.Width = 49
         '
         'clPRDSTS
         '
@@ -397,7 +397,7 @@ Partial Class frmLoadExcel
         Me.BindingNavigator1.Dock = System.Windows.Forms.DockStyle.None
         Me.BindingNavigator1.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.BindingNavigator1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.BindingNavigatorMoveFirstItem, Me.BindingNavigatorMovePreviousItem, Me.BindingNavigatorSeparator, Me.BindingNavigatorPositionItem, Me.BindingNavigatorCountItem, Me.BindingNavigatorSeparator1, Me.BindingNavigatorMoveNextItem, Me.BindingNavigatorMoveLastItem, Me.BindingNavigatorSeparator2})
-        Me.BindingNavigator1.Location = New System.Drawing.Point(248, 223)
+        Me.BindingNavigator1.Location = New System.Drawing.Point(248, 222)
         Me.BindingNavigator1.Margin = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.BindingNavigator1.MoveFirstItem = Me.BindingNavigatorMoveFirstItem
         Me.BindingNavigator1.MoveLastItem = Me.BindingNavigatorMoveLastItem
@@ -443,7 +443,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
-        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(75, 35)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -481,7 +480,7 @@ Partial Class frmLoadExcel
         '
         Me.lblUsrLog.AutoSize = True
         Me.lblUsrLog.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUsrLog.Location = New System.Drawing.Point(3, 231)
+        Me.lblUsrLog.Location = New System.Drawing.Point(3, 230)
         Me.lblUsrLog.Margin = New System.Windows.Forms.Padding(3, 8, 3, 0)
         Me.lblUsrLog.Name = "lblUsrLog"
         Me.lblUsrLog.Size = New System.Drawing.Size(91, 13)
@@ -644,7 +643,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
-        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"
@@ -684,7 +682,7 @@ Partial Class frmLoadExcel
         Me.cmbStatus.FormattingEnabled = True
         Me.cmbStatus.IntegralHeight = False
         Me.cmbStatus.ItemHeight = 17
-        Me.cmbStatus.Location = New System.Drawing.Point(493, 221)
+        Me.cmbStatus.Location = New System.Drawing.Point(493, 195)
         Me.cmbStatus.Name = "cmbStatus"
         Me.cmbStatus.Size = New System.Drawing.Size(279, 25)
         Me.cmbStatus.TabIndex = 26
@@ -694,7 +692,7 @@ Partial Class frmLoadExcel
         '
         Me.cmbPerCharge.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbPerCharge.FormattingEnabled = True
-        Me.cmbPerCharge.Location = New System.Drawing.Point(3, 155)
+        Me.cmbPerCharge.Location = New System.Drawing.Point(3, 130)
         Me.cmbPerCharge.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
         Me.cmbPerCharge.Name = "cmbPerCharge"
         Me.cmbPerCharge.Size = New System.Drawing.Size(239, 25)
@@ -708,7 +706,7 @@ Partial Class frmLoadExcel
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(3, 3)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(769, 50)
+        Me.Panel2.Size = New System.Drawing.Size(769, 44)
         Me.Panel2.TabIndex = 19
         '
         'Label2
@@ -723,10 +721,10 @@ Partial Class frmLoadExcel
         'Label1
         '
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(3, 285)
+        Me.Label1.Location = New System.Drawing.Point(3, 267)
         Me.Label1.Margin = New System.Windows.Forms.Padding(3, 10, 3, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(239, 42)
+        Me.Label1.Size = New System.Drawing.Size(239, 41)
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Please select the file that you want to process"
         '
@@ -734,10 +732,10 @@ Partial Class frmLoadExcel
         '
         Me.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnSelect.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSelect.Location = New System.Drawing.Point(315, 285)
+        Me.btnSelect.Location = New System.Drawing.Point(315, 267)
         Me.btnSelect.Margin = New System.Windows.Forms.Padding(70, 10, 3, 3)
         Me.btnSelect.Name = "btnSelect"
-        Me.btnSelect.Size = New System.Drawing.Size(147, 39)
+        Me.btnSelect.Size = New System.Drawing.Size(147, 38)
         Me.btnSelect.TabIndex = 0
         Me.btnSelect.Text = "Load File"
         Me.btnSelect.UseVisualStyleBackColor = True
@@ -745,9 +743,9 @@ Partial Class frmLoadExcel
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.TableLayoutPanel7)
-        Me.Panel1.Location = New System.Drawing.Point(493, 278)
+        Me.Panel1.Location = New System.Drawing.Point(493, 260)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(279, 46)
+        Me.Panel1.Size = New System.Drawing.Size(279, 45)
         Me.Panel1.TabIndex = 2
         '
         'TableLayoutPanel7
@@ -810,11 +808,11 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.btnSuccess, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.btnCheck, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(248, 598)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(248, 587)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(239, 57)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(239, 49)
         Me.TableLayoutPanel1.TabIndex = 18
         '
         'btnSuccess
@@ -844,7 +842,7 @@ Partial Class frmLoadExcel
         'txtProjectName
         '
         Me.txtProjectName.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtProjectName.Location = New System.Drawing.Point(248, 94)
+        Me.txtProjectName.Location = New System.Drawing.Point(248, 75)
         Me.txtProjectName.Name = "txtProjectName"
         Me.txtProjectName.Size = New System.Drawing.Size(239, 25)
         Me.txtProjectName.TabIndex = 12
@@ -852,7 +850,7 @@ Partial Class frmLoadExcel
         'txtProjectNo
         '
         Me.txtProjectNo.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtProjectNo.Location = New System.Drawing.Point(3, 94)
+        Me.txtProjectNo.Location = New System.Drawing.Point(3, 75)
         Me.txtProjectNo.Name = "txtProjectNo"
         Me.txtProjectNo.Size = New System.Drawing.Size(239, 25)
         Me.txtProjectNo.TabIndex = 11
@@ -861,7 +859,7 @@ Partial Class frmLoadExcel
         '
         Me.btnInsert.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnInsert.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnInsert.Location = New System.Drawing.Point(560, 603)
+        Me.btnInsert.Location = New System.Drawing.Point(560, 592)
         Me.btnInsert.Margin = New System.Windows.Forms.Padding(70, 8, 3, 3)
         Me.btnInsert.Name = "btnInsert"
         Me.btnInsert.Size = New System.Drawing.Size(161, 9)
@@ -875,7 +873,7 @@ Partial Class frmLoadExcel
         Me.lblDesc.AutoSize = True
         Me.TableLayoutPanel2.SetColumnSpan(Me.lblDesc, 2)
         Me.lblDesc.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblDesc.Location = New System.Drawing.Point(3, 222)
+        Me.lblDesc.Location = New System.Drawing.Point(3, 196)
         Me.lblDesc.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.lblDesc.Name = "lblDesc"
         Me.lblDesc.Size = New System.Drawing.Size(80, 15)
@@ -886,8 +884,8 @@ Partial Class frmLoadExcel
         '
         Me.lblStatus.AutoSize = True
         Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStatus.Location = New System.Drawing.Point(493, 71)
-        Me.lblStatus.Margin = New System.Windows.Forms.Padding(3, 15, 3, 0)
+        Me.lblStatus.Location = New System.Drawing.Point(493, 53)
+        Me.lblStatus.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(116, 15)
         Me.lblStatus.TabIndex = 7
@@ -897,8 +895,8 @@ Partial Class frmLoadExcel
         '
         Me.lblPerCharge.AutoSize = True
         Me.lblPerCharge.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblPerCharge.Location = New System.Drawing.Point(3, 132)
-        Me.lblPerCharge.Margin = New System.Windows.Forms.Padding(3, 8, 3, 0)
+        Me.lblPerCharge.Location = New System.Drawing.Point(3, 104)
+        Me.lblPerCharge.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.lblPerCharge.Name = "lblPerCharge"
         Me.lblPerCharge.Size = New System.Drawing.Size(138, 15)
         Me.lblPerCharge.TabIndex = 6
@@ -908,8 +906,8 @@ Partial Class frmLoadExcel
         '
         Me.lblProjectName.AutoSize = True
         Me.lblProjectName.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProjectName.Location = New System.Drawing.Point(248, 71)
-        Me.lblProjectName.Margin = New System.Windows.Forms.Padding(3, 15, 3, 0)
+        Me.lblProjectName.Location = New System.Drawing.Point(248, 53)
+        Me.lblProjectName.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.lblProjectName.Name = "lblProjectName"
         Me.lblProjectName.Size = New System.Drawing.Size(114, 15)
         Me.lblProjectName.TabIndex = 4
@@ -919,8 +917,8 @@ Partial Class frmLoadExcel
         '
         Me.lblProjectNo.AutoSize = True
         Me.lblProjectNo.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProjectNo.Location = New System.Drawing.Point(3, 71)
-        Me.lblProjectNo.Margin = New System.Windows.Forms.Padding(3, 15, 3, 0)
+        Me.lblProjectNo.Location = New System.Drawing.Point(3, 53)
+        Me.lblProjectNo.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.lblProjectNo.Name = "lblProjectNo"
         Me.lblProjectNo.Size = New System.Drawing.Size(78, 15)
         Me.lblProjectNo.TabIndex = 3
@@ -930,8 +928,8 @@ Partial Class frmLoadExcel
         '
         Me.lblVendorNo.AutoSize = True
         Me.lblVendorNo.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblVendorNo.Location = New System.Drawing.Point(248, 132)
-        Me.lblVendorNo.Margin = New System.Windows.Forms.Padding(3, 8, 3, 0)
+        Me.lblVendorNo.Location = New System.Drawing.Point(248, 104)
+        Me.lblVendorNo.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.lblVendorNo.Name = "lblVendorNo"
         Me.lblVendorNo.Size = New System.Drawing.Size(127, 15)
         Me.lblVendorNo.TabIndex = 30
@@ -953,7 +951,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.Controls.Add(Me.txtProjectNo, 0, 2)
         Me.TableLayoutPanel2.Controls.Add(Me.txtProjectName, 1, 2)
         Me.TableLayoutPanel2.Controls.Add(Me.txtDesc, 0, 6)
-        Me.TableLayoutPanel2.Controls.Add(Me.TableLayoutPanel1, 1, 10)
         Me.TableLayoutPanel2.Controls.Add(Me.Panel1, 2, 7)
         Me.TableLayoutPanel2.Controls.Add(Me.btnSelect, 1, 7)
         Me.TableLayoutPanel2.Controls.Add(Me.Label1, 0, 7)
@@ -967,40 +964,41 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.Controls.Add(Me.TableLayoutPanel8, 2, 4)
         Me.TableLayoutPanel2.Controls.Add(Me.cmbStatus, 2, 5)
         Me.TableLayoutPanel2.Controls.Add(Me.cmbStatusMore, 2, 2)
+        Me.TableLayoutPanel2.Controls.Add(Me.TableLayoutPanel1, 1, 10)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(13, 21)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 11
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 56.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 68.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 69.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 52.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 260.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 267.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 9.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 64.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(775, 675)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(775, 647)
         Me.TableLayoutPanel2.TabIndex = 2
         '
         'txtDesc
         '
         Me.TableLayoutPanel2.SetColumnSpan(Me.txtDesc, 3)
-        Me.txtDesc.Location = New System.Drawing.Point(3, 242)
+        Me.txtDesc.Location = New System.Drawing.Point(3, 225)
         Me.txtDesc.Multiline = True
         Me.txtDesc.Name = "txtDesc"
         Me.txtDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtDesc.Size = New System.Drawing.Size(766, 30)
+        Me.txtDesc.Size = New System.Drawing.Size(766, 29)
         Me.txtDesc.TabIndex = 16
         '
         'Label3
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(493, 132)
-        Me.Label3.Margin = New System.Windows.Forms.Padding(3, 8, 3, 0)
+        Me.Label3.Location = New System.Drawing.Point(493, 104)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(114, 15)
         Me.Label3.TabIndex = 34
@@ -1012,26 +1010,13 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel8.Controls.Add(Me.ComboBox2, 0, 1)
         Me.TableLayoutPanel8.Controls.Add(Me.ac1, 0, 0)
-        Me.TableLayoutPanel8.Location = New System.Drawing.Point(493, 152)
+        Me.TableLayoutPanel8.Location = New System.Drawing.Point(493, 127)
         Me.TableLayoutPanel8.Name = "TableLayoutPanel8"
         Me.TableLayoutPanel8.RowCount = 2
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel8.Size = New System.Drawing.Size(279, 63)
+        Me.TableLayoutPanel8.Size = New System.Drawing.Size(279, 62)
         Me.TableLayoutPanel8.TabIndex = 35
-        '
-        'cmbStatusMore
-        '
-        Me.cmbStatusMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmbStatusMore.FormattingEnabled = True
-        Me.cmbStatusMore.Location = New System.Drawing.Point(493, 94)
-        Me.cmbStatusMore.Name = "cmbStatusMore"
-        Me.cmbStatusMore.Size = New System.Drawing.Size(279, 25)
-        Me.cmbStatusMore.TabIndex = 37
-        '
-        'BackgroundWorker2
-        '
-        Me.BackgroundWorker2.WorkerReportsProgress = True
         '
         'ac1
         '
@@ -1042,6 +1027,19 @@ Partial Class frmLoadExcel
         Me.ac1.Size = New System.Drawing.Size(273, 25)
         Me.ac1.TabIndex = 14
         Me.ac1.Values = Nothing
+        '
+        'cmbStatusMore
+        '
+        Me.cmbStatusMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cmbStatusMore.FormattingEnabled = True
+        Me.cmbStatusMore.Location = New System.Drawing.Point(493, 75)
+        Me.cmbStatusMore.Name = "cmbStatusMore"
+        Me.cmbStatusMore.Size = New System.Drawing.Size(279, 25)
+        Me.cmbStatusMore.TabIndex = 37
+        '
+        'BackgroundWorker2
+        '
+        Me.BackgroundWorker2.WorkerReportsProgress = True
         '
         'frmLoadExcel
         '
@@ -1096,16 +1094,6 @@ Partial Class frmLoadExcel
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
     Friend WithEvents lblVendorNo As Label
-    Friend WithEvents BindingNavigator1 As BindingNavigator
-    Friend WithEvents BindingNavigatorCountItem As ToolStripLabel
-    Friend WithEvents BindingNavigatorMoveFirstItem As ToolStripButton
-    Friend WithEvents BindingNavigatorMovePreviousItem As ToolStripButton
-    Friend WithEvents BindingNavigatorSeparator As ToolStripSeparator
-    Friend WithEvents BindingNavigatorPositionItem As ToolStripTextBox
-    Friend WithEvents BindingNavigatorSeparator1 As ToolStripSeparator
-    Friend WithEvents BindingNavigatorMoveNextItem As ToolStripButton
-    Friend WithEvents BindingNavigatorMoveLastItem As ToolStripButton
-    Friend WithEvents BindingNavigatorSeparator2 As ToolStripSeparator
     Friend WithEvents lblProjectNo As Label
     Friend WithEvents lblProjectName As Label
     Friend WithEvents lblPerCharge As Label
@@ -1124,7 +1112,6 @@ Partial Class frmLoadExcel
     Friend WithEvents Label2 As Label
     Friend WithEvents cmbPerCharge As ComboBox
     Friend WithEvents cmbStatus As ComboBox
-    Friend WithEvents TableLayoutPanel6 As TableLayoutPanel
     Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
     Friend WithEvents BindingNavigator2 As BindingNavigator
     Friend WithEvents BindingNavigatorCountItem1 As ToolStripLabel
@@ -1136,28 +1123,18 @@ Partial Class frmLoadExcel
     Friend WithEvents BindingNavigatorMoveNextItem1 As ToolStripButton
     Friend WithEvents BindingNavigatorMoveLastItem1 As ToolStripButton
     Friend WithEvents BindingNavigatorSeparator5 As ToolStripSeparator
-    Friend WithEvents DataGridView1 As DataGridView
     Friend WithEvents DataGridView2 As DataGridView
     Friend WithEvents lblExcel As Label
     Friend WithEvents BackgroundWorker2 As System.ComponentModel.BackgroundWorker
     Friend WithEvents TableLayoutPanel7 As TableLayoutPanel
     Friend WithEvents Label3 As Label
     Friend WithEvents ComboBox1 As ComboBox
-    Friend WithEvents lblUsrLog As Label
     Friend WithEvents ac1 As Autocomplete_Textbox
     Friend WithEvents ComboBox2 As ComboBox
     Friend WithEvents txtDesc As TextBox
-    Friend WithEvents dtProjectDate As DateTimePicker
     Friend WithEvents TableLayoutPanel8 As TableLayoutPanel
     Friend WithEvents LinkLabel1 As LinkLabel
     Friend WithEvents cmbStatusMore As ComboBox
-    Friend WithEvents clPRHCOD As DataGridViewTextBoxColumn
-    Friend WithEvents clPRDPTN As DataGridViewTextBoxColumn
-    Friend WithEvents clVMVNUM As DataGridViewTextBoxColumn
-    Friend WithEvents clPRDMFR As DataGridViewTextBoxColumn
-    Friend WithEvents clPQPRC As DataGridViewTextBoxColumn
-    Friend WithEvents clPQMIN As DataGridViewTextBoxColumn
-    Friend WithEvents clPRDSTS As DataGridViewTextBoxColumn
     Friend WithEvents EditReference As DataGridViewLinkColumn
     Friend WithEvents AddReference As DataGridViewLinkColumn
     Friend WithEvents clPRDPTN2 As DataGridViewTextBoxColumn
@@ -1166,4 +1143,25 @@ Partial Class frmLoadExcel
     Friend WithEvents clPQPRC2 As DataGridViewTextBoxColumn
     Friend WithEvents clPQMIN2 As DataGridViewTextBoxColumn
     Friend WithEvents clError As DataGridViewTextBoxColumn
+    Friend WithEvents TableLayoutPanel6 As TableLayoutPanel
+    Friend WithEvents dtProjectDate As DateTimePicker
+    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents clPRHCOD As DataGridViewTextBoxColumn
+    Friend WithEvents clPRDPTN As DataGridViewTextBoxColumn
+    Friend WithEvents clVMVNUM As DataGridViewTextBoxColumn
+    Friend WithEvents clPRDMFR As DataGridViewTextBoxColumn
+    Friend WithEvents clPQPRC As DataGridViewTextBoxColumn
+    Friend WithEvents clPQMIN As DataGridViewTextBoxColumn
+    Friend WithEvents clPRDSTS As DataGridViewTextBoxColumn
+    Friend WithEvents BindingNavigator1 As BindingNavigator
+    Friend WithEvents BindingNavigatorCountItem As ToolStripLabel
+    Friend WithEvents BindingNavigatorMoveFirstItem As ToolStripButton
+    Friend WithEvents BindingNavigatorMovePreviousItem As ToolStripButton
+    Friend WithEvents BindingNavigatorSeparator As ToolStripSeparator
+    Friend WithEvents BindingNavigatorPositionItem As ToolStripTextBox
+    Friend WithEvents BindingNavigatorSeparator1 As ToolStripSeparator
+    Friend WithEvents BindingNavigatorMoveNextItem As ToolStripButton
+    Friend WithEvents BindingNavigatorMoveLastItem As ToolStripButton
+    Friend WithEvents BindingNavigatorSeparator2 As ToolStripSeparator
+    Friend WithEvents lblUsrLog As Label
 End Class

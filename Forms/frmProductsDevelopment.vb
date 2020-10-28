@@ -2745,6 +2745,23 @@ Public Class frmProductsDevelopment
                                         MessageBox.Show("Ann error ocurred sending emails.", "CTP System", MessageBoxButtons.OK)
                                     End If
 
+                                    Dim rsAssignVendor As DialogResult = MessageBox.Show("Do you want to change the assigned vendor?", "CTP System", MessageBoxButtons.YesNo)
+                                    If rsAssignVendor = DialogResult.Yes Then
+                                        Dim dsGetPartVendor = gnr.GetDataByPartVendor(txtpartno.Text)
+                                        If dsGetPartVendor.Tables(0).Rows.Count > 0 Then
+                                            gnr.changeVendor(txtpartno.Text, txtvendorno.Text, userid)
+                                        Else
+                                            Dim dsGetPartNoVendor = gnr.GetDataByPartNoVendor(txtpartno.Text)
+                                            If dsGetPartNoVendor.Tables(0).Rows.Count > 0 Then
+                                                Dim rsInsertNewInv = gnr.InsertNewInv("", txtpartno.Text, dsGetPartNoVendor.Tables(0).Rows(0).ItemArray(dsGetPartNoVendor.Tables(0).Columns("impc1").Ordinal),
+                                                                                      dsGetPartNoVendor.Tables(0).Rows(0).ItemArray(dsGetPartNoVendor.Tables(0).Columns("impc2").Ordinal), "", txtunitcostnew.Text, "", "", txtvendorno.Text)
+                                                If rsInsertNewInv <> 0 Then
+                                                    MessageBox.Show("Ann error ocurred inserting data in Inventory.", "CTP System", MessageBoxButtons.OK)
+                                                End If
+                                            End If
+                                        End If
+                                    End If
+
                                 End If
                                 If (Trim(Status2) = "Technical Documentation") Or (Trim(Status2) = "Analysis of Samples") Or (Trim(Status2) = "Pending from Supplier") Then
                                     'send email
