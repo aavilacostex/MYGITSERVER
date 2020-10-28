@@ -2144,6 +2144,8 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
+    
+
     Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
         Dim exMessage As String = " "
         Try

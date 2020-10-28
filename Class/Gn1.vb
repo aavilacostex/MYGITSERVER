@@ -2215,6 +2215,22 @@ NotInheritable Class Gn1
 
 #Region "Utils"
 
+    Public Function GetMassiveReferences(vendorNo As String, status As String) As DataSet
+        Dim exMessage As String = " "
+        Dim sql As String = ""
+        Dim ds As DataSet = New DataSet()
+        Try
+            sql = " Select a2.prhcod, A1.prname, A2.crdate, a2.prdctp, a2.prdmfr#, a2.prdcon from prdvlh A1 inner join prdvld A2 On a1.prhcod = a2.prhcod where a2.vmvnum = " & vendorNo & " And a2.prdsts = '" & Trim(UCase(status)) & "'
+                        order by 1 desc"
+            'Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(userName)) & "'"
+            ds = GetDataFromDatabase(sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function getValueCheckTab3(vendorNo As String, partno As String)
         Dim exMessage As String = " "
 

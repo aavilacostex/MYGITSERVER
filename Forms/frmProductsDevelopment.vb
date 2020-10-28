@@ -7,6 +7,9 @@ Imports outlook = Microsoft.Office.Interop.Outlook
 Imports System.Reflection
 Imports System.Threading
 Imports System.Runtime.InteropServices
+Imports Microsoft.Win32
+Imports Excel = Microsoft.Office.Interop.Excel
+Imports ClosedXML.Excel
 
 Public Class frmProductsDevelopment
     Public flagdeve As Long '1 is new
@@ -25,6 +28,9 @@ Public Class frmProductsDevelopment
     Dim gnr As Gn1 = New Gn1()
     Dim wm As WatermarkTextBox = New WatermarkTextBox()
     Dim bt As ButtonTextBox = New ButtonTextBox()
+
+    Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
+    Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
 
     'Public Const PageSize = 10
     'Public Property TotalRecords() As Integer
@@ -1922,6 +1928,26 @@ Public Class frmProductsDevelopment
 
     Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
         cmdClearFilters_Click(sender, Nothing)
+    End Sub
+
+    Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
+        Dim exMessage As String = " "
+        Try
+            If Not String.IsNullOrEmpty(txtsearch1.Text) And cmbstatus1.SelectedIndex > 0 Then
+                Dim dsMassiveData = gnr.GetMassiveReferences(txtsearch1.Text, cmbstatus1.SelectedValue)
+                If dsMassiveData IsNot Nothing Then
+                    If dsMassiveData.Tables(0).Rows.Count() > 0 Then
+                        prodDevExcelGeneration(dsMassiveData, txtsearch1.Text, cmbstatus1.SelectedValue)
+                    Else
+
+                    End If
+                Else
+
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
     End Sub
 
     Private Sub AddNewProjectToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles AddNewProjectToolStripMenuItem1.Click
@@ -5379,6 +5405,115 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
 #Region "Utils"
 
+    Private Sub prodDevExcelGeneration(ds As DataSet, vendorNo As String, status As String)
+        Dim exMessage As String = " "
+        Try
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim folderPath As String = userPath & "\CTP-NEW-DOCS\"
+            If Not Directory.Exists(folderPath) Then
+                Directory.CreateDirectory(folderPath)
+            End If
+
+            Dim dt As New DataTable
+            dt = ds.Tables(0)
+            'dt = (DirectCast(DataGridView2.DataSource, DataTable))
+            If dt IsNot Nothing Then
+                If dt.Rows.Count > 0 Then
+                    Dim fileExtension As String = Determine_OfficeVersion()
+                    If String.IsNullOrEmpty(fileExtension) Then
+                        Exit Sub
+                    End If
+
+                    Dim fileName As String
+                    fileName = "Excel Custon Report for vendor " & vendorNo & " And Status " & status & " running in - " & DateTime.Now.ToString("d") & "." & fileExtension
+
+
+                    'If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
+                    '    fileName = "Excel Custon Report for vendor " & vendorNo & " And Status " & status & " running in - " & DateTime.Now.ToString("d") & "." & fileExtension
+                    'Else
+                    '    fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
+                    'End If
+
+                    Dim fullPath = folderPath & Convert.ToString(fileName)
+                    Using wb As New XLWorkbook()
+                        wb.Worksheets.Add(dt, "Project")
+                        wb.SaveAs(fullPath)
+                    End Using
+
+                    If File.Exists(fullPath) Then
+                        MessageBox.Show("The file was created successfully in this path " & folderPath, "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Function Determine_OfficeVersion() As String
+        Dim exMessage As String = " "
+        Dim strExt As String = Nothing
+        Try
+            Dim strEVersionSubKey As String = "\Excel.Application\CurVer" '/HKEY_CLASSES_ROOT/Excel.Application/Curver
+
+            Dim strValue As String 'Value Present In Above Key
+            Dim strVersion As String 'Determines Excel Version
+            Dim strExtension() As String = {"xls", "xlsx"}
+
+            Dim rkVersion As RegistryKey = Nothing 'Registry Key To Determine Excel Version
+            rkVersion = Registry.ClassesRoot.OpenSubKey(name:=strEVersionSubKey, writable:=False) 'Open Registry Key
+
+            If Not rkVersion Is Nothing Then 'If Key Exists
+                strValue = rkVersion.GetValue(String.Empty) 'get Value
+                strValue = strValue.Substring(strValue.LastIndexOf(".") + 1) 'Store Value
+
+                Select Case strValue 'Determine Version
+                    Case "7"
+                        strVersion = "95"
+                        strExt = strExtension(0)
+                    Case "8"
+                        strVersion = "97"
+                        strExt = strExtension(0)
+                    Case "9"
+                        strVersion = "2000"
+                        strExt = strExtension(0)
+                    Case "10"
+                        strVersion = "2002"
+                        strExt = strExtension(0)
+                    Case "11"
+                        strVersion = "2003"
+                        strExt = strExtension(0)
+                    Case "12"
+                        strVersion = "2007"
+                        strExt = strExtension(1)
+                    Case "14"
+                        strVersion = "2010"
+                        strExt = strExtension(1)
+                    Case "15"
+                        strVersion = "2013"
+                        strExt = strExtension(1)
+                    Case "16"
+                        strVersion = "2016"
+                        strExt = strExtension(1)
+                    Case Else
+                        strExt = strExtension(1)
+                End Select
+
+                Return strExt
+            Else
+                MessageBox.Show("Microsoft Excel is not installed or corrupt in this computer.", "CTP System", MessageBoxButtons.OK)
+                Return strExt
+            End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            Return strExt
+        End Try
+    End Function
+
     Public Sub showTab2FilterPanel(dgv As DataGridView)
         Dim flag = If(dgv.DataSource Is Nothing, False, True)
         'Dim flag = False
@@ -6267,6 +6402,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
     Private Sub BindingNavigator1_RefreshItems(sender As Object, e As EventArgs)
 
     End Sub
+
 
     'Private Sub cmdSplit_Click(sender As Object, e As EventArgs) Handles cmdSplit.Click
     '    Dim screenPoint As Point = cmdSplit.PointToScreen(New Point(cmdSplit.Left, cmdSplit.Bottom))
