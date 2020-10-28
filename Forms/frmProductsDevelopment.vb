@@ -1471,6 +1471,15 @@ Public Class frmProductsDevelopment
                                 'Dim minQtyValue As Integer = 0
                                 'txtminqty.Text = minQtyValue.ToString()
 
+                                'new item or new supplier
+                                chknew.Checked = False
+                                chkSupplier.Checked = False
+                                chknew.Checked = If(itemCategory(txtpartno.Text, txtvendorno.Text) = 2, True, False)
+                                chkSupplier.Checked = If(chknew.Checked, False, True)
+                                'If chknew.Checked Then
+                                '    chkSupplier.Checked = Not chknew.Checked
+                                'End If
+
                                 flagdeve = 0
                                 flagnewpart = 0
 
