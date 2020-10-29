@@ -1939,14 +1939,49 @@ Public Class frmProductsDevelopment
                     If dsMassiveData.Tables(0).Rows.Count() > 0 Then
                         prodDevExcelGeneration(dsMassiveData, txtsearch1.Text, cmbstatus1.SelectedValue)
                     Else
-
+                        MessageBox.Show("There is not results with this vendor number and project status selected.", "CTP System", MessageBoxButtons.OK)
                     End If
                 Else
-
+                    MessageBox.Show("There is not results with this vendor number and project status selected.", "CTP System", MessageBoxButtons.OK)
                 End If
+            Else
+                MessageBox.Show("To run this report you must select the vendor number and project status.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Private Sub LinkLabel4_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel4.LinkClicked
+        Dim exMessage As String = " "
+        Dim created As String = False
+        Try
+            If userid IsNot Nothing Then
+                Dim alertInactives = gnr.GetInactiveAlertByUser(userid)
+                If alertInactives IsNot Nothing Then
+                    If alertInactives.Tables(0).Rows.Count > 0 Then
+                        InactiveQotaAlertExcelGeneration(alertInactives, userid, created)
+                        If created Then
+                            Dim result As DialogResult = MessageBox.Show("Did you want to receive an email with the oldest quotation without activity?", "CTP System", MessageBoxButtons.YesNo)
+                            If result = DialogResult.Yes Then
+                                Dim customtoemails = prepareEmailsToSendReport(1)
+                                Dim rsResult = gnr.sendEmail(customtoemails, userid)
+                                If rsResult < 0 Then
+                                    MessageBox.Show("Ann error ocurred sending emails.", "CTP System", MessageBoxButtons.OK)
+                                End If
+                            End If
+                        End If
+                    Else
+                        MessageBox.Show("There is not results with this user.", "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is not results with this user.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                MessageBox.Show("There is an error reaching the current logged user.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
@@ -5405,6 +5440,56 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
 #Region "Utils"
 
+    Private Sub InactiveQotaAlertExcelGeneration(ds As DataSet, userid As String, ByRef created As Boolean)
+        Dim exMessage As String = " "
+        Try
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim folderPath As String = userPath & "\CTP-NEW-DOCS\"
+            If Not Directory.Exists(folderPath) Then
+                Directory.CreateDirectory(folderPath)
+            End If
+
+            Dim dt As New DataTable
+            dt = ds.Tables(0)
+            'dt = (DirectCast(DataGridView2.DataSource, DataTable))
+            If dt IsNot Nothing Then
+                If dt.Rows.Count > 0 Then
+                    Dim fileExtension As String = Determine_OfficeVersion()
+                    If String.IsNullOrEmpty(fileExtension) Then
+                        Exit Sub
+                    End If
+
+                    Dim fileName As String
+                    fileName = "Excel Report for almost inactive quotation - User " & userid & " running in - " & DateTime.Now.ToString("d") & "." & fileExtension
+
+
+                    'If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
+                    '    fileName = "Excel Custon Report for vendor " & vendorNo & " And Status " & status & " running in - " & DateTime.Now.ToString("d") & "." & fileExtension
+                    'Else
+                    '    fileName = "Project Name " & txtProjectName.Text & " - Errors. The project does not have a number yet." & fileExtension
+                    'End If
+
+                    Dim fullPath = folderPath & Convert.ToString(fileName)
+                    Using wb As New XLWorkbook()
+                        wb.Worksheets.Add(dt, "Project")
+                        wb.SaveAs(fullPath)
+                    End Using
+
+                    If File.Exists(fullPath) Then
+                        created = True
+                        MessageBox.Show("The file was created successfully in this path " & folderPath, "CTP System", MessageBoxButtons.OK)
+                    End If
+                Else
+                    MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+                End If
+            Else
+                MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
+            End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     Private Sub prodDevExcelGeneration(ds As DataSet, vendorNo As String, status As String)
         Dim exMessage As String = " "
         Try
@@ -5991,6 +6076,21 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Else
                 toemailsok = prepareEmailMktDict()
             End If
+
+            Return toemailsok
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function prepareEmailsToSendReport(flag As Integer) As String
+        Dim exMessage As String = " "
+        Dim toemailss As String = ""
+        Dim toemailsok As String = ""
+        Try
+            toemailsok = "alexei.ansberto85@gmail.com;ansberto.avila85@gmail.com"
 
             Return toemailsok
         Catch ex As Exception

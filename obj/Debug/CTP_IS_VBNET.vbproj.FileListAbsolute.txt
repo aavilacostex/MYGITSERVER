@@ -49,3 +49,4 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.pdb
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Interop.Crystal.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\AxInterop.Crystal.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache

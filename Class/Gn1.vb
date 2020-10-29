@@ -2215,6 +2215,28 @@ NotInheritable Class Gn1
 
 #Region "Utils"
 
+    Public Function GetInactiveAlertByUser(userid As String) As DataSet
+        Dim exMessage As String = " "
+        Dim sql As String = ""
+        Dim ds As DataSet = New DataSet()
+        Try
+            sql = " select A1.prhcod,A1.prdptn, A1.vmvnum, A1.crdate, date(now()), A1.modate, (Days(date(now())) - Days(A1.modate)) as diffays, A2.pqcomm, A1.prdusr from prdvld A1 inner join poqota A2 on A1.prdptn = A2.pqptn and A1.vmvnum = A2.pqvnd
+                    where SUBSTR(UCASE(A2.SPACE),32,3) = 'DEV' AND A2.PQCOMM LIKE 'D%' and (Days(date(now())) - Days(A1.modate)) < 30 and (Days(date(now())) - Days(A1.modate)) > 0
+                    and PQCOMM NOT LIKE 'D-Closed%' and PQCOMM NOT LIKE 'D-Approved%' and PQCOMM NOT LIKE 'D-Reject%' and A1.prdusr = '" & Trim(UCase(userid)) & "'
+                    union
+                    select A0.prhcod, A0.prdptn, A0.vmvnum, A0.crdate,date(now()), A0.modate, (Days(date(now())) - Days(A0.modate)) as diffays, '' as pqcomm , A0.prdusr
+                    from prdvld A0 inner join vnmas A1 on A0.vmvnum = A1.vmvnum inner join csuser A2 on A1.vmabb# = A2.uspurc 
+                    where A2.ususer = '" & Trim(UCase(userid)) & "'
+                    and prdsts not in ('AA','A','R','CS','CN','CD','CL') and (Days(date(now())) - Days(A0.modate)) < 30 and (Days(date(now())) - Days(A0.modate)) > 0"
+            'Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(userName)) & "'"
+            ds = GetDataFromDatabase(sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetMassiveReferences(vendorNo As String, status As String) As DataSet
         Dim exMessage As String = " "
         Dim sql As String = ""
@@ -2287,7 +2309,7 @@ NotInheritable Class Gn1
 
     End Sub
 
-    Public Function sendEmail(toemails As String, Optional ByVal partNo As String = Nothing) As Integer
+    Public Function sendEmail1(toemails As String, ByVal userid As String) As Integer
         Dim exMessage As String = " "
         Dim AppOutlook As New Outlook.Application
         'Dim oNS As Outlook.NameSpace
@@ -2324,6 +2346,61 @@ NotInheritable Class Gn1
             'test purpose
 
             OutlookMessage.Subject = "Newly Developed Part(s)"
+
+            OutlookMessage.Body = "User Notified. " & Trim(userid)
+            OutlookMessage.BodyFormat = Outlook.OlBodyFormat.olFormatHTML
+            OutlookMessage.Send() 'must be uncommented to send emails
+
+            'oNS.Logoff()
+
+            Return rsResult = 1
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            MessageBox.Show("Mail could Not be sent") 'if you dont want this message, simply delete this line 
+            Return rsResult = -1
+        Finally
+            OutlookMessage = Nothing
+            AppOutlook = Nothing
+        End Try
+    End Function
+
+    Public Function sendEmail(toemails As String, Optional ByVal partNo As String = Nothing) As Integer
+        Dim exMessage As String = " "
+        Dim AppOutlook As New Outlook.Application
+        'Dim oNS As Outlook.NameSpace
+        Dim OutlookMessage As Object
+        Dim rsResult As Integer = 0
+        Try
+            'oNS = AppOutlook.GetNamespace("MAPI")
+            'oNS.Logon("Outlokk", "", False, True)
+            OutlookMessage = AppOutlook.CreateItem(Outlook.OlItemType.olMailItem)
+            Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
+            'Dim Recipents1 As Outlook.Recipients = OutlookMessage.Recipients
+
+            Dim listEmail As New List(Of String)
+            Dim strArr() As String
+            strArr = toemails.Split(";")
+            For Each tt As String In strArr
+                If Not String.IsNullOrEmpty(tt) Then
+                    listEmail.Add(tt)
+                End If
+            Next
+
+            For Each ttt As String In listEmail
+                Recipents.Add(ttt)
+                Recipents.ResolveAll()
+            Next
+
+            'test purpose
+            'Dim lenghtRec = Recipents.Count
+            'For index As Integer = 1 To lenghtRec
+            '    Recipents.Remove(index)
+            'Next
+            'Recipents1.Add("alexei.ansberto85@gmail.com")
+            'Recipents1.Add("ansberto.avila85@gmail.com")
+            'test purpose
+
+            OutlookMessage.Subject = "New Report for User"
 
             OutlookMessage.Body = "Part No. " & Trim(partNo)
             OutlookMessage.BodyFormat = Outlook.OlBodyFormat.olFormatHTML

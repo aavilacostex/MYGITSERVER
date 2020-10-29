@@ -108,10 +108,10 @@ Partial Class frmLoadExcel
         Me.txtDesc = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
-        Me.ac1 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.cmbStatusMore = New System.Windows.Forms.ComboBox()
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.BackgroundWorker2 = New System.ComponentModel.BackgroundWorker()
+        Me.ac1 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -443,6 +443,7 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
+        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(75, 35)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -643,6 +644,7 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
+        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"
@@ -1018,16 +1020,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel8.Size = New System.Drawing.Size(279, 62)
         Me.TableLayoutPanel8.TabIndex = 35
         '
-        'ac1
-        '
-        Me.ac1.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ac1.Location = New System.Drawing.Point(3, 3)
-        Me.ac1.lstSelectedValues = CType(resources.GetObject("ac1.lstSelectedValues"), System.Collections.Generic.List(Of String))
-        Me.ac1.Name = "ac1"
-        Me.ac1.Size = New System.Drawing.Size(273, 25)
-        Me.ac1.TabIndex = 14
-        Me.ac1.Values = Nothing
-        '
         'cmbStatusMore
         '
         Me.cmbStatusMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1040,6 +1032,16 @@ Partial Class frmLoadExcel
         'BackgroundWorker2
         '
         Me.BackgroundWorker2.WorkerReportsProgress = True
+        '
+        'ac1
+        '
+        Me.ac1.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ac1.Location = New System.Drawing.Point(3, 3)
+        Me.ac1.lstSelectedValues = CType(resources.GetObject("ac1.lstSelectedValues"), System.Collections.Generic.List(Of String))
+        Me.ac1.Name = "ac1"
+        Me.ac1.Size = New System.Drawing.Size(273, 25)
+        Me.ac1.TabIndex = 14
+        Me.ac1.Values = Nothing
         '
         'frmLoadExcel
         '
