@@ -362,9 +362,9 @@ Public Class frmProductsDevelopment
 
             For i As Integer = 0 To dsStatuses.Tables(0).Rows.Count - 1
                 If dsStatuses.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(1).ToString()
                     'CleanUser = Trim(dsStatuses.Tables(0).Rows(i).Item(0).ToString())
-                    dsStatuses.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsStatuses.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsStatuses.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                 End If
@@ -395,20 +395,17 @@ Public Class frmProductsDevelopment
 
             For i As Integer = 0 To dsStatuses.Tables(0).Rows.Count - 1
                 If dsStatuses.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(1).ToString()
                     'CleanUser = Trim(dsStatuses.Tables(0).Rows(i).Item(0).ToString())
-                    dsStatuses.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsStatuses.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsStatuses.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                 End If
             Next
 
             Dim newRow As DataRow = dsStatuses.Tables(0).NewRow
-            newRow("CNT01") = ""
-            newRow("CNT02") = ""
             newRow("CNT03") = ""
             newRow("CNTDE1") = ""
-            newRow("CNTDE2") = ""
             newRow("FullValue") = ""
             'dsUser.Tables(0).Rows.Add(newRow)
             dsStatuses.Tables(0).Rows.InsertAt(newRow, 0)
@@ -437,9 +434,9 @@ Public Class frmProductsDevelopment
 
             For i As Integer = 0 To dsMinCodes.Tables(0).Rows.Count - 1
                 If dsMinCodes.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsMinCodes.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsMinCodes.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsMinCodes.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsMinCodes.Tables(0).Rows(i).Item(1).ToString()
                     'dsMinCodes = Trim(dsMinCodes.Tables(0).Rows(i).Item(0).ToString())
-                    dsMinCodes.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsMinCodes.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsMinCodes.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                 End If

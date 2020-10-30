@@ -194,6 +194,7 @@
     <Compile Include="Class\Pagination.vb" />
     <Compile Include="Class\DTO\ProductClass.vb" />
     <Compile Include="Class\ConversionClasses.vb" />
+    <Compile Include="Class\PleaseWait.vb" />
     <Compile Include="Class\Supergrid.vb">
       <SubType>Component</SubType>
     </Compile>

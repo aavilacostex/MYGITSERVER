@@ -44,9 +44,9 @@
 
             For i As Integer = 0 To dsStatuses.Tables(0).Rows.Count - 1
                 If dsStatuses.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(1).ToString()
                     'CleanUser = Trim(dsStatuses.Tables(0).Rows(i).Item(0).ToString())
-                    dsStatuses.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsStatuses.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsStatuses.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                 End If

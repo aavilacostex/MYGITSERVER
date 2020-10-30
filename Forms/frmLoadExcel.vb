@@ -9,6 +9,7 @@ Imports System.Xml.Schema
 Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports Excel = Microsoft.Office.Interop.Excel
+Imports System.Threading.Tasks
 'Dim ac As New Autocomplete__module()
 
 Public Class frmLoadExcel
@@ -39,7 +40,7 @@ Public Class frmLoadExcel
 
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        LoadCombos(sender, e)
+        'LoadCombos(sender, e)
         frmLoadExcel_Load()
 
     End Sub
@@ -129,12 +130,31 @@ Public Class frmLoadExcel
 
     Private Sub BackgroundWorker2_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
         Handles BackgroundWorker2.RunWorkerCompleted
-        Loading.Close()
+
+        If (Not e.Cancelled And e.Error Is Nothing) Then
+            Dim result = DirectCast(e.Result, String)
+            LoadingExcel.Close()
+
+
+            'Task.Factory.when
+            Me.Invoke(New launchGridProcessDelegate(Sub()
+                                                        LaunchGridProcess()
+                                                    End Sub))
+            'do something
+        ElseIf e.Cancelled Then
+            LoadingExcel.Close()
+        Else
+            LoadingExcel.Close()
+        End If
+
+
+        'testMessage()
     End Sub
 
     Private Sub backgroundWorker2_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
         Handles BackgroundWorker2.DoWork
-        ExecuteCombos(sender, e)
+        'ExecuteCombos(sender, e)
+        openFileDialog1_FileOk(sender, Nothing)
     End Sub
 
     Private Sub backgroundWorker2_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
@@ -156,9 +176,9 @@ Public Class frmLoadExcel
 
             For i As Integer = 0 To dsStatuses.Tables(0).Rows.Count - 1
                 If dsStatuses.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsStatuses.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsStatuses.Tables(0).Rows(i).Item(1).ToString()
                     'CleanUser = Trim(dsStatuses.Tables(0).Rows(i).Item(0).ToString())
-                    dsStatuses.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsStatuses.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsStatuses.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                 End If
@@ -488,26 +508,26 @@ Public Class frmLoadExcel
                             MessageBox.Show("Some project references has errors. You can check them by clicking in the Check Errors button.", "CTP System", MessageBoxButtons.OK)
                         End If
 
-                        If dsResult.Tables(0).Rows.Count = 0 And dsError.Tables(0).Rows.Count = 0 Then
-                            MessageBox.Show("There is not data to load. Please check the excel file that you uploaded.", "CTP System", MessageBoxButtons.OK)
-                        Else
-                            If dsResult.Tables(0).Rows.Count > 0 Then
-                                fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
-                            End If
+                        'If dsResult.Tables(0).Rows.Count = 0 And dsError.Tables(0).Rows.Count = 0 Then
+                        '    MessageBox.Show("There is not data to load. Please check the excel file that you uploaded.", "CTP System", MessageBoxButtons.OK)
+                        'Else
+                        '    If dsResult.Tables(0).Rows.Count > 0 Then
+                        '        fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
+                        '    End If
 
-                            If dsError.Tables(0).Rows.Count > 0 Then
-                                fillcell1(dsError.Tables(0), 1, dsError.Namespace)
-                            End If
-                        End If
+                        '    If dsError.Tables(0).Rows.Count > 0 Then
+                        '        fillcell1(dsError.Tables(0), 1, dsError.Namespace)
+                        '    End If
+                        'End If
 
-                        btnSuccess.Enabled = If(dsResult.Tables(0).Rows.Count > 0, True, False)
-                        btnCheck.Enabled = If(dsError.Tables(0).Rows.Count > 0, True, False)
+                        'btnSuccess.Enabled = If(dsResult.Tables(0).Rows.Count > 0, True, False)
+                        'btnCheck.Enabled = If(dsError.Tables(0).Rows.Count > 0, True, False)
 
-                        If dsResult.Tables(0).Rows.Count > 0 Then
-                            setSplitContainerVisualization(1, False)
-                        Else
-                            setSplitContainerVisualization(2, False)
-                        End If
+                        'If dsResult.Tables(0).Rows.Count > 0 Then
+                        '    setSplitContainerVisualization(1, False)
+                        'Else
+                        '    setSplitContainerVisualization(2, False)
+                        'End If
 
                     End If
                 Else
@@ -1291,21 +1311,23 @@ Public Class frmLoadExcel
 
 #Region "Threads"
 
-    Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
-        Handles BackgroundWorker2.RunWorkerCompleted
-        LoadingExcel.Close()
-    End Sub
+    'Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
+    '    Handles BackgroundWorker2.RunWorkerCompleted
+    '    LoadingExcel.Close()
+    '    testMessage()
+    'End Sub
 
-    Private Sub backgroundWorker1_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
-        Handles BackgroundWorker2.DoWork
-        ExecuteCombos(sender, e)
-        'ExecuteFillData()
-    End Sub
+    'Private Sub backgroundWorker1_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
+    '    Handles BackgroundWorker2.DoWork
+    '    'ExecuteCombos(sender, e)
+    '    'ExecuteFillData()
+    '    openFileDialog1_FileOk(sender, Nothing)
+    'End Sub
 
-    Private Sub backgroundWorker1_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
-        Handles BackgroundWorker2.ProgressChanged
-        'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
-    End Sub
+    'Private Sub backgroundWorker1_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
+    '    Handles BackgroundWorker2.ProgressChanged
+    '    'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
+    'End Sub
 
     'Private Sub ExecuteFillData(Optional dt As DataTable = Nothing)
     '    fillData(dt)
@@ -1382,11 +1404,22 @@ Public Class frmLoadExcel
 
     Private Sub btnSelect_Click(sender As Object, e As EventArgs) Handles btnSelect.Click
 
+        ' Call ShowDialog.
+        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+
+        ' Test result.
+        If result = Windows.Forms.DialogResult.OK Then
+            BackgroundWorker2.RunWorkerAsync(sender)
+            LoadingExcel.ShowDialog()
+            LoadingExcel.BringToFront()
+        End If
+
+
         'If Not String.IsNullOrEmpty(txtProjectName.Text) Then
 
         'End If
         'cleanFormValues()
-        OpenFileDialog1.ShowDialog()
+        'OpenFileDialog1.ShowDialog()
         'OpenFileDialog1.Dispose()
     End Sub
 
@@ -2144,7 +2177,7 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-    
+
 
     Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
         Dim exMessage As String = " "
@@ -2395,6 +2428,40 @@ Public Class frmLoadExcel
 
 #Region "Utils"
 
+    Private Delegate Sub launchGridProcessDelegate()
+
+    Public Sub LaunchGridProcess()
+        Dim exMessage As String = " "
+        Dim dsResult As DataSet = New DataSet()
+        Dim dsError As DataSet = New DataSet()
+        Try
+            dsResult = LikeSession.dsResultsSession
+            dsError = LikeSession.dsErrorSession
+            If dsResult.Tables(0).Rows.Count = 0 And dsError.Tables(0).Rows.Count = 0 Then
+                MessageBox.Show("There is not data to load. Please check the excel file that you uploaded.", "CTP System", MessageBoxButtons.OK)
+            Else
+                If dsResult.Tables(0).Rows.Count > 0 Then
+                    fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
+                End If
+
+                If dsError.Tables(0).Rows.Count > 0 Then
+                    fillcell1(dsError.Tables(0), 1, dsError.Namespace)
+                End If
+            End If
+
+            btnSuccess.Enabled = If(dsResult.Tables(0).Rows.Count > 0, True, False)
+            btnCheck.Enabled = If(dsError.Tables(0).Rows.Count > 0, True, False)
+
+            If dsResult.Tables(0).Rows.Count > 0 Then
+                setSplitContainerVisualization(1, False)
+            Else
+                setSplitContainerVisualization(2, False)
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
     'Public Static Object GetCellValueFromColumnHeader(this DataGridViewCellCollection CellCollection, String HeaderText)
     '{
     '    Return CellCollection.Cast < DataGridViewCell > ().First(c >= c.OwningColumn.HeaderText == HeaderText).Value;            
@@ -2411,6 +2478,19 @@ Public Class frmLoadExcel
 
     'End Function
 
+
+    '    Private Async void YourButton_Click(Object sender, EventArgs e)
+    '{
+    '    await Task.Delay(2000);
+
+    '    // do whatever you want
+    '}
+
+    'Public Async Sub testMessage()
+
+    '    Await Task.
+    '    MessageBox.Show("TEstMessage")
+    'End Sub
 
     Private Function itemCategory(partNo As String, vendorNo As String) As Integer
         Dim exMessage As String = " "
@@ -2456,9 +2536,9 @@ Public Class frmLoadExcel
 
             For i As Integer = 0 To dsMinCodes.Tables(0).Rows.Count - 1
                 If dsMinCodes.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsMinCodes.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsMinCodes.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsMinCodes.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsMinCodes.Tables(0).Rows(i).Item(1).ToString()
                     'dsMinCodes = Trim(dsMinCodes.Tables(0).Rows(i).Item(0).ToString())
-                    dsMinCodes.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsMinCodes.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsMinCodes.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                     dictionary.Add(dsMinCodes.Tables(0).Rows(i).Item(2).ToString(), dsMinCodes.Tables(0).Rows(i).Item(5).ToString())
@@ -2482,9 +2562,9 @@ Public Class frmLoadExcel
 
             For i As Integer = 0 To dsMMajCodes.Tables(0).Rows.Count - 1
                 If dsMMajCodes.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsMMajCodes.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsMMajCodes.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsMMajCodes.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsMMajCodes.Tables(0).Rows(i).Item(1).ToString()
                     'dsMinCodes = Trim(dsMinCodes.Tables(0).Rows(i).Item(0).ToString())
-                    dsMMajCodes.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsMMajCodes.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsMinCodes.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                     dictionary.Add(dsMMajCodes.Tables(0).Rows(i).Item(2).ToString(), dsMMajCodes.Tables(0).Rows(i).Item(5).ToString())
@@ -2727,10 +2807,10 @@ Public Class frmLoadExcel
 
         DataGridView2.Enabled = LikeSession.gridEnable
 
-        'cmbStatus.Items.Add("-- Select Status --")
-        'cmbStatus.Items.Add("I - In Process")
-        'cmbStatus.Items.Add("F - Finished")
-        'cmbStatus.SelectedIndex = 1
+        cmbStatus.Items.Add("-- Select Status --")
+        cmbStatus.Items.Add("I - In Process")
+        cmbStatus.Items.Add("F - Finished")
+        cmbStatus.SelectedIndex = 1
 
         FillDDLStatus1()
         FillDDlUser1()

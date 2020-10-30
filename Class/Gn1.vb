@@ -461,6 +461,9 @@ NotInheritable Class Gn1
 
 #Region "Selects"
 
+
+#Region "Optimized"
+
     Public Function getVendorNoAndNameByNameDS() As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -534,48 +537,6 @@ NotInheritable Class Gn1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
-        End Try
-    End Function
-
-    Public Function checkPurcByUser(userid As String) As Integer
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Dim rsValue As Integer = -1
-        Try
-            Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & userid & "' AND USPURC <> 0 "
-            ds = GetDataFromDatabase(Sql)
-            If ds IsNot Nothing Then
-                If ds.Tables(0).Rows.Count > 0 Then
-                    rsValue = If(ds.Tables(0).Rows(0).Item("USPURC").ToString() IsNot Nothing, ds.Tables(0).Rows(0).Item("USPURC").ToString(), -1)
-                End If
-            End If
-            Return rsValue
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return rsValue
-        End Try
-    End Function
-
-    Public Function getFlagAllow(userid As String) As Integer
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Dim rsValue As Integer = -1
-        Try
-            Sql = "SELECT * FROM CNTRLL WHERE TRIM(CNT01) = '988' AND TRIM(CNTDE1) = Trim (UCase('" & userid & "'))"
-            ds = GetDataFromDatabase(Sql)
-            If ds IsNot Nothing Then
-                If ds.Tables(0).Rows.Count > 0 Then
-                    rsValue = 1
-                End If
-            End If
-            Return rsValue
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return rsValue
         End Try
     End Function
 
@@ -666,7 +627,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT * FROM CATER where TRIM(catptn) = '" & Trim(UCase(partNo)) & "'"
+            Sql = "SELECT CATPTN FROM CATER where TRIM(catptn) = '" & Trim(UCase(partNo)) & "'"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -681,7 +642,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT * FROM KOMAT where TRIM(koptno) = '" & Trim(UCase(partNo)) & "'"
+            Sql = "SELECT KOPTNO FROM KOMAT where TRIM(koptno) = '" & Trim(UCase(partNo)) & "'"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -695,7 +656,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
 
-        Dim Sql = "SELECT * FROM PRDVLD WHERE VMVNUM = " & Trim(vendorNo) & " And trim(ucase(PRDPTN)) = '" & Trim(UCase(partNo)) & "'"
+        Dim Sql = "SELECT PRHCOD FROM PRDVLD WHERE VMVNUM = " & Trim(vendorNo) & " And trim(ucase(PRDPTN)) = '" & Trim(UCase(partNo)) & "'"
         Try
             ds = FillGrid(Sql)
             If ds IsNot Nothing Then
@@ -766,6 +727,280 @@ NotInheritable Class Gn1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByPRHCODInDetails(code As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(PRDVLD.VMVNUM) as VMVNUM,
+                    Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLD 
+                    INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetExistByPRNAME(name As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRHCOD FROM PRDVLH WHERE PRNAME = '" & Trim(name) & "' ORDER BY 1 DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByVendorAndPartNoProdDesc(partNo As String, vendorNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select PRHCOD from prdvld where TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' and vmvnum = " & Trim(vendorNo) & " order by 1 desc"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT PRDVLH.PRHCOD,PRDVLH.PRNAME,PRDVLD.VMVNUM FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataByPartNoVendor(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select IMDSC,impc2,impc1 from inmsta where trim(ucase(imptn)) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetAllStatuses() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT CNT03, CNTDE1 FROM cntrll where cnt01 = 'DSI' order by cnt02"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetAllStatusesReturn(strValue As String, strColumn As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        Dim Qry As New DataTable
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT cnt03, cntde1 FROM cntrll where cnt01 = 'DSI' order by cnt02"
+            ds = GetDataFromDatabase(Sql)
+
+            Dim Qry1 = ds.Tables(0).AsEnumerable() _
+                          .Where(Function(x) Trim(UCase(x.Field(Of String)(strColumn))) = Trim(UCase(strValue)))
+            If Qry1.Count > 0 Then
+                Qry = Qry1.CopyToDataTable
+                Dim result = Qry(0).Item("CNT03").ToString()
+                Return result
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPOQotaData(vendorNo As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+
+        Try
+            Sql = "SELECT PQMPTN,PQPRC,PQSEQ,PQPTN,PQVND,PQMIN,PQCOMM FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' 
+                    AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetDataFromDualInventory(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT A2.DVPRMG,A1.IMPC1,A1.IMPC2,A1.IMDSC FROM INMSTA A1 INNER JOIN DVINVA A2 
+                                        ON A1.IMPTN = A2.DVPART WHERE A2.DVLOCN = '01' AND UCASE(A1.IMPTN) = '" & UCase(partNo) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetEmailData(flag As Integer) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            If flag = 1 Then
+                Sql = "select cntde1 from cntrll where cnt01 = 'SLS' and cnt03 = 'MGR'"
+            Else
+                Sql = "select cntde1 from cntrll where cnt01 = 'MKT' "
+            End If
+
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function CallForCtpNumber(partno As String, ctppartno As String, flagctp As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "CALL CTPINV.CATCTPR ('" & partno & "','" & ctppartno & "','" & flagctp & "')"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function FillDDLUser() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select distinct A1.ususer, A1.usname from csuser A1 inner join prdvld A2 on A1.ususer = A2.prdusr WHERE USPTY8 = 'X' AND USPTY9 <> 'R' ORDER BY USNAME"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function FillDDlMinorCode() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT CNT03, CNTDE1 FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1) "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function FillDDlMajorCode() As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT CNT03, CNTDE1 FROM CNTRLL WHERE CNT01 = '110' ORDER BY TRIM(CNTDE1) "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+#End Region
+
+    Public Function checkPurcByUser(userid As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Dim rsValue As Integer = -1
+        Try
+            Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & userid & "' AND USPURC <> 0 "
+            ds = GetDataFromDatabase(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    rsValue = If(ds.Tables(0).Rows(0).Item("USPURC").ToString() IsNot Nothing, ds.Tables(0).Rows(0).Item("USPURC").ToString(), -1)
+                End If
+            End If
+            Return rsValue
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return rsValue
+        End Try
+    End Function
+
+    Public Function getFlagAllow(userid As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Dim rsValue As Integer = -1
+        Try
+            Sql = "SELECT * FROM CNTRLL WHERE TRIM(CNT01) = '988' AND TRIM(CNTDE1) = Trim (UCase('" & userid & "'))"
+            ds = GetDataFromDatabase(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    rsValue = 1
+                End If
+            End If
+            Return rsValue
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return rsValue
         End Try
     End Function
 
@@ -883,39 +1118,7 @@ NotInheritable Class Gn1
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT * FROM PRDVLH WHERE PRHCOD = " & Trim(code)
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetDataByPRHCODInDetails(code As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(PRDVLD.VMVNUM) as VMVNUM,
-                    Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLD 
-                    INNER JOIN VNMAS ON PRDVLD.VMVNUM = VNMAS.VMVNUM WHERE PRHCOD = " & code & " "
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetExistByPRNAME(name As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT PRHCOD FROM PRDVLH WHERE PRNAME = '" & Trim(name) & "' ORDER BY 1 DESC"
+            Sql = "SELECT * FROM PRDVLH WHERE S = " & Trim(code)
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -976,21 +1179,6 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "select * from prdvld where prhcod = " & Trim(code) & " and prdsts <> 'CS' and prdsts <> 'CN' and prdsts <> 'CD' and prdsts <> 'CL'"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetDataByVendorAndPartNoProdDesc(partNo As String, vendorNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "select * from prdvld where TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' and vmvnum = " & Trim(vendorNo) & " order by 1 desc"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -1066,21 +1254,6 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT * FROM PRDCMD WHERE PRDCCO = " & tableCode
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT PRDVLH.PRHCOD,PRDVLH.PRNAME,PRDVLD.VMVNUM FROM PRDVLH INNER JOIN PRDVLD ON PRDVLH.PRHCOD = PRDVLD.PRHCOD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "' ORDER BY PRDVLD.CRDATE DESC"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -1194,21 +1367,6 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function GetDataByPartNoVendor(partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "select * from inmsta where trim(ucase(imptn)) = '" & Trim(UCase(partNo)) & "'"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
     Public Function GetJiraPath() As String
         Dim exMessage As String = " "
         Dim Sql As String
@@ -1222,62 +1380,6 @@ NotInheritable Class Gn1
                 JiraPath = ds.Tables(0).Rows(0).Item(3).ToString()
             End If
             Return JiraPath
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetAllStatuses() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM cntrll where cnt01 = 'DSI' order by cnt02"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetAllStatusesReturn(strValue As String, strColumn As String) As String
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        Dim Qry As New DataTable
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT cnt03, cntde1 FROM cntrll where cnt01 = 'DSI' order by cnt02"
-            ds = GetDataFromDatabase(Sql)
-
-            Dim Qry1 = ds.Tables(0).AsEnumerable() _
-                          .Where(Function(x) Trim(UCase(x.Field(Of String)(strColumn))) = Trim(UCase(strValue)))
-            If Qry1.Count > 0 Then
-                Qry = Qry1.CopyToDataTable
-                Dim result = Qry(0).Item("CNT03").ToString()
-                Return result
-            Else
-                Return Nothing
-            End If
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function GetPOQotaData(vendorNo As String, partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-
-        Try
-            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' AND PQCOMM LIKE 'D%' ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Return Nothing
@@ -1420,21 +1522,6 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function GetDataFromDualInventory(partNo As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM INMSTA INNER JOIN DVINVA ON INMSTA.IMPTN = DVINVA.DVPART WHERE DVLOCN = '01' AND UCASE(IMPTN) = '" & UCase(partNo) & "'"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
     Public Function GetPartInWishList(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -1513,41 +1600,6 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function GetEmailData(flag As Integer) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            If flag = 1 Then
-                Sql = "select cntde1 from cntrll where cnt01 = 'SLS' and cnt03 = 'MGR'"
-            Else
-                Sql = "select cntde1 from cntrll where cnt01 = 'MKT' "
-            End If
-
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function CallForCtpNumber(partno As String, ctppartno As String, flagctp As String) As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "CALL CTPINV.CATCTPR ('" & partno & "','" & ctppartno & "','" & flagctp & "')"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Return Nothing
-        End Try
-    End Function
-
     Public Function GetInvProdDetailByProject(code As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
@@ -1562,52 +1614,6 @@ NotInheritable Class Gn1
             Return Nothing
         End Try
     End Function
-
-    Public Function FillDDLUser() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "select distinct A1.ususer, A1.usname from csuser A1 inner join prdvld A2 on A1.ususer = A2.prdusr WHERE USPTY8 = 'X' AND USPTY9 <> 'R' ORDER BY USNAME"
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function FillDDlMinorCode() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '120' ORDER BY TRIM(CNTDE1) "
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
-    Public Function FillDDlMajorCode() As Data.DataSet
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Try
-            Sql = "SELECT * FROM CNTRLL WHERE CNT01 = '110' ORDER BY TRIM(CNTDE1) "
-            ds = GetDataFromDatabase(Sql)
-            Return ds
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return Nothing
-        End Try
-    End Function
-
 
 #End Region
 
