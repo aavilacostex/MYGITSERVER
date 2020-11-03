@@ -10,6 +10,9 @@ Imports ClosedXML.Excel
 Imports Microsoft.Win32
 Imports Excel = Microsoft.Office.Interop.Excel
 Imports System.Threading.Tasks
+Imports System.Windows.Threading
+Imports System.Windows.Threading.Dispatcher
+Imports System.Threading
 'Dim ac As New Autocomplete__module()
 
 Public Class frmLoadExcel
@@ -29,20 +32,27 @@ Public Class frmLoadExcel
 
     Private Const totalRecords As Integer = 43
     Private Const pageSize As Integer = 10
+    Dim dspCall As Dispatcher
+    Dim thr As Thread
 
     Dim bs As BindingSource = New BindingSource()
     Dim bs1 As BindingSource = New BindingSource()
     Dim Tables = New BindingList(Of DataTable)()
     Dim Tables1 = New BindingList(Of DataTable)()
     Dim form As frmProductsDevelopment = New frmProductsDevelopment()
+    'Dim ac1 As Autocomplete_Textbox = New Autocomplete_Textbox()
 
 #Region "Page Load"
 
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'LoadCombos(sender, e)
-        frmLoadExcel_Load()
+        thr = Threading.Thread.CurrentThread
+        dspCall = CurrentDispatcher
+        'ProgressBar2.Minimum = 0
+        'ProgressBar2.Maximum = 10000
 
+        frmLoadExcel_Load()
     End Sub
 
     Private Sub frmLoadExcel_Load()
@@ -99,7 +109,7 @@ Public Class frmLoadExcel
                 End If
             Next
 
-            ac1.Values = myList
+            ac2.Values = myList
 
 
 
@@ -128,39 +138,70 @@ Public Class frmLoadExcel
 
 #Region "Threads"
 
+#Region "Second Thread"
+
     Private Sub BackgroundWorker2_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
         Handles BackgroundWorker2.RunWorkerCompleted
 
-        If (Not e.Cancelled And e.Error Is Nothing) Then
-            Dim result = DirectCast(e.Result, String)
+        If e.Cancelled Then
+            'Label1.Text = "cancelled"
             LoadingExcel.Close()
-
-
-            'Task.Factory.when
-            Me.Invoke(New launchGridProcessDelegate(Sub()
-                                                        LaunchGridProcess()
-                                                    End Sub))
-            'do something
-        ElseIf e.Cancelled Then
+        ElseIf e.Error IsNot Nothing Then
             LoadingExcel.Close()
+            'Label1.Text = e.Error.Message
         Else
             LoadingExcel.Close()
+            'Label1.Text = "Sum = " & e.Result.ToString()
         End If
 
+        'If (Not e.Cancelled And e.Error Is Nothing) Then
+        '    Dim result = DirectCast(e.Result, String)
+        '    LoadingExcel.Close()
+        'End If
 
-        'testMessage()
     End Sub
 
     Private Sub backgroundWorker2_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
-        Handles BackgroundWorker2.DoWork
-        'ExecuteCombos(sender, e)
-        openFileDialog1_FileOk(sender, Nothing)
+        Handles BackgroundWorker2.DoWork, BackgroundWorker3.DoWork
+
+        Dim bgw = DirectCast(sender, BackgroundWorker)
+
+
+
+
+        'AutoClosingMessageBox.Show("It may take a while", "Processing", 2500, MessageBoxButtons.OK, DialogResult.Yes)
+        If BackgroundWorker2.CancellationPending Then
+            e.Cancel = True
+            Return
+        End If
+
+        execute_delegate()
+        LoadingExcel.ShowDialog()
+
+        'execute_delegate_1(e) ' execute the counter
+
+        'Task.Factory.when
+        'Me.Invoke(New launchGridProcessDelegate(Sub()
+        '                                            progressSimulation(e)
+        '                                        End Sub))
     End Sub
 
-    Private Sub backgroundWorker2_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
-        Handles BackgroundWorker2.ProgressChanged
-        'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
+    'Private Sub backgroundWorker2_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
+    '    Handles BackgroundWorker2.ProgressChanged
+    '    ProgressBar2.Value = e.ProgressPercentage
+    '    'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
+    'End Sub
+
+#End Region
+
+#Region "Third Thread"
+
+    Private Sub BackgroundWorker3_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
+        Handles BackgroundWorker3.RunWorkerCompleted
+
     End Sub
+
+#End Region
 
 #End Region
 
@@ -185,11 +226,8 @@ Public Class frmLoadExcel
             Next
 
             Dim newRow As DataRow = dsStatuses.Tables(0).NewRow
-            newRow("CNT01") = ""
-            newRow("CNT02") = ""
             newRow("CNT03") = ""
             newRow("CNTDE1") = ""
-            newRow("CNTDE2") = ""
             newRow("FullValue") = ""
             'dsUser.Tables(0).Rows.Add(newRow)
             dsStatuses.Tables(0).Rows.InsertAt(newRow, 0)
@@ -507,6 +545,13 @@ Public Class frmLoadExcel
                         If dsError.Tables(0).Rows.Count > 0 Then
                             MessageBox.Show("Some project references has errors. You can check them by clicking in the Check Errors button.", "CTP System", MessageBoxButtons.OK)
                         End If
+
+                        Me.BringToFront()
+
+                        'LoadingExcel.ShowDialog()
+                        'LoadingExcel.BringToFront()
+
+                        'LaunchGridProcess()
 
                         'If dsResult.Tables(0).Rows.Count = 0 And dsError.Tables(0).Rows.Count = 0 Then
                         '    MessageBox.Show("There is not data to load. Please check the excel file that you uploaded.", "CTP System", MessageBoxButtons.OK)
@@ -1309,32 +1354,6 @@ Public Class frmLoadExcel
 
 #End Region
 
-#Region "Threads"
-
-    'Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
-    '    Handles BackgroundWorker2.RunWorkerCompleted
-    '    LoadingExcel.Close()
-    '    testMessage()
-    'End Sub
-
-    'Private Sub backgroundWorker1_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
-    '    Handles BackgroundWorker2.DoWork
-    '    'ExecuteCombos(sender, e)
-    '    'ExecuteFillData()
-    '    openFileDialog1_FileOk(sender, Nothing)
-    'End Sub
-
-    'Private Sub backgroundWorker1_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
-    '    Handles BackgroundWorker2.ProgressChanged
-    '    'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
-    'End Sub
-
-    'Private Sub ExecuteFillData(Optional dt As DataTable = Nothing)
-    '    fillData(dt)
-    'End Sub
-
-#End Region
-
 #Region "button methods"
 
 
@@ -1364,7 +1383,7 @@ Public Class frmLoadExcel
                     lblVendorDesc.Text = txtVendorNo.Text & ": It is not a valid vendor number."
                     txtVendorNo.Text = Nothing
                     ComboBox1.SelectedIndex = -1
-                    ac1.Text = Nothing
+                    ac2.Text = Nothing
                     ComboBox2.DataSource = Nothing
                 Else
                     txtVendorNo_TextChanged_1(Nothing, Nothing)
@@ -1404,23 +1423,10 @@ Public Class frmLoadExcel
 
     Private Sub btnSelect_Click(sender As Object, e As EventArgs) Handles btnSelect.Click
 
-        ' Call ShowDialog.
+        'Call ShowDialog and launch second thread
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+        BackgroundWorker2.RunWorkerAsync()
 
-        ' Test result.
-        If result = Windows.Forms.DialogResult.OK Then
-            BackgroundWorker2.RunWorkerAsync(sender)
-            LoadingExcel.ShowDialog()
-            LoadingExcel.BringToFront()
-        End If
-
-
-        'If Not String.IsNullOrEmpty(txtProjectName.Text) Then
-
-        'End If
-        'cleanFormValues()
-        'OpenFileDialog1.ShowDialog()
-        'OpenFileDialog1.Dispose()
     End Sub
 
     Private Sub btnInsert_Click(sender As Object, e As EventArgs) Handles btnInsert.Click
@@ -1562,9 +1568,13 @@ Public Class frmLoadExcel
                 txtProjectNo.Text = ProjectNoCurrent
                 objData.Header.projectNo = ProjectNoCurrent
 
+                Dim amount = dsResult.Tables(0).Rows.Count
+                Dim pos As Integer = 0
+
                 DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
 
                 For Each row As DataGridViewRow In DataGridView1.Rows
+
                     'save
                     Dim partNo = row.Cells("clPRDPTN").Value
                     Dim manufNo = row.Cells("clPRDMFR").Value
@@ -1632,6 +1642,9 @@ Public Class frmLoadExcel
                                 dsError.AcceptChanges()
                                 LikeSession.dsErrorSession = dsError
                             Else
+                                pos += 1
+                                'BackgroundWorker2.ReportProgress(pos)
+
                                 'right insertion
                                 '----- Get data forthe part from dvinva or imnsta, insert or update into poqota ----------------------
 
@@ -1708,15 +1721,18 @@ Public Class frmLoadExcel
 
             If countErrors > 0 Then
                 MessageBox.Show("The insertion process finished with some fails inserting data.", "CTP System", MessageBoxButtons.OK)
+                LoadingExcel.Close()
             ElseIf acumulativeFailure > 0 Then
                 MessageBox.Show("The vendor selected must be the vendor configured in the project. The right vendor is " & vendorNo, "CTP System", MessageBoxButtons.OK)
+                LoadingExcel.Close()
             Else
-                MessageBox.Show("The insertion process finished successfully.", "CTP System", MessageBoxButtons.OK)
-                disableAfterInsert(False)
-                LikeSession.gridEnable = True
-                DataGridView2.Enabled = LikeSession.gridEnable
-                DataGridView2.Refresh()
-
+                Dim rsOK As DialogResult = MessageBox.Show("The insertion process finished successfully.", "CTP System", MessageBoxButtons.OK)
+                If rsOK = DialogResult.OK Then
+                    disableAfterInsert(False)
+                    LikeSession.gridEnable = True
+                    DataGridView2.Enabled = LikeSession.gridEnable
+                    DataGridView2.Refresh()
+                End If
             End If
             'cleanFormValues()
 
@@ -2177,8 +2193,6 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
-
-
     Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
         Dim exMessage As String = " "
         Try
@@ -2426,11 +2440,93 @@ Public Class frmLoadExcel
 
 #End Region
 
+
+#Region "Delegates"
+
+    Delegate Sub launchGridProcessDelegate()
+
+    Private Delegate Sub progressSimulationDelegate(val As Object)
+
+    Private Delegate Sub closeExternalDialogDelegate(val As Object)
+
+    Public Delegate Function AsyncMethodCaller(callDuration As Integer, ByRef threadId As Integer) As String
+
+    Public Delegate Sub safeInvokeDelegate(uielement As Control, updater As Action, forceSynchronous As Boolean)
+
+#End Region
+
 #Region "Utils"
 
-    Private Delegate Sub launchGridProcessDelegate()
+    Private Sub execute_delegate_1(e As Object)
+        dspCall.BeginInvoke(New progressSimulationDelegate(AddressOf progressSimulation), e)
+    End Sub
+
+    Public Sub progressSimulation(val As Object)
+        Dim sum As Integer = 0
+
+        Dim e = DirectCast(val, DoWorkEventArgs)
+
+        For i = 1 To 10000
+            Threading.Thread.Sleep(100)
+
+            If thr.IsAlive Then
+                sum += i
+                If BackgroundWorker2.CancellationPending Then
+                    e.Cancel = True
+                    'BackgroundWorker2.ReportProgress(0)
+                    Return
+                Else
+                    'BackgroundWorker2.ReportProgress(i)
+                End If
+            Else
+                Return
+            End If
+        Next
+        e.Result = sum
+    End Sub
+
+    Public Shared Sub closeExternalDialog(obj As Object)
+        Dim form = DirectCast(obj, Form)
+        form.Close()
+    End Sub
+
+    'how to call a begininvoke delegate
+    Private Sub execute_delegate()
+        dspCall.BeginInvoke(New launchGridProcessDelegate(AddressOf LaunchGridProcess))
+    End Sub
+
+    Public Shared Sub safeInvoke(uielement As Control, updater As Action, forceSynchronous As Boolean)
+        If uielement Is Nothing Then
+            'exception
+        End If
+        If uielement.InvokeRequired Then
+            If forceSynchronous Then
+                uielement.Invoke(New safeInvokeDelegate(AddressOf safeInvoke), uielement, updater, forceSynchronous)
+            Else
+                'uiElement.Invoke((Action)delegate { SafeInvoke(uiElement, updater, forceSynchronous); })
+                uielement.BeginInvoke(New safeInvokeDelegate(AddressOf safeInvoke), uielement, updater, forceSynchronous)
+            End If
+        Else
+            If Not uielement.IsHandleCreated Then
+                uielement.CreateControl()
+                'uielement.Invoke(New safeInvokeDelegate(AddressOf safeInvoke), uielement, updater, forceSynchronous)
+                'Return
+                'uielement.
+            End If
+
+            If uielement.IsDisposed Then
+                'exception message
+            Else
+
+                'uielement.Dispose()
+                'uielement.Invoke(New closeExternalDialogDelegate(AddressOf closeExternalDialog), LoadingExcel)
+                'exception
+            End If
+        End If
+    End Sub
 
     Public Sub LaunchGridProcess()
+
         Dim exMessage As String = " "
         Dim dsResult As DataSet = New DataSet()
         Dim dsError As DataSet = New DataSet()
@@ -2441,11 +2537,25 @@ Public Class frmLoadExcel
                 MessageBox.Show("There is not data to load. Please check the excel file that you uploaded.", "CTP System", MessageBoxButtons.OK)
             Else
                 If dsResult.Tables(0).Rows.Count > 0 Then
-                    fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
+
+                    If Not InvokeRequired Then
+                        fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
+                    Else
+                        'Me.Invoke(New launchGridProcessDelegate(Sub()
+                        '                                            progressSimulation(e)
+                        '                                        End Sub))
+                        fillcell1(dsResult.Tables(0), 0, dsResult.Namespace)
+                    End If
+
                 End If
 
                 If dsError.Tables(0).Rows.Count > 0 Then
-                    fillcell1(dsError.Tables(0), 1, dsError.Namespace)
+                    If Not InvokeRequired Then
+                        fillcell1(dsError.Tables(0), 1, dsError.Namespace)
+                    Else
+                        fillcell1(dsError.Tables(0), 1, dsError.Namespace)
+                    End If
+
                 End If
             End If
 
@@ -2457,9 +2567,29 @@ Public Class frmLoadExcel
             Else
                 setSplitContainerVisualization(2, False)
             End If
+
+            'While BackgroundWorker2.IsBusy
+            'System.Threading.Thread.Sleep(100)
+
+            'LoadingExcel.Invoke(New closeExternalDialogDelegate(AddressOf closeExternalDialog))
+
+            'BackgroundWorker2.CancelAsync()
+            'Application.DoEvents()
+            'End While
+
+            'LoadingExcel.Close()
+
+
+            LoadingExcel.BeginInvoke(New closeExternalDialogDelegate(AddressOf closeExternalDialog))
+
+            safeInvoke(LoadingExcel, Sub()
+                                         closeExternalDialog(LoadingExcel)
+                                     End Sub, True)
+
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
+
     End Sub
 
     'Public Static Object GetCellValueFromColumnHeader(this DataGridViewCellCollection CellCollection, String HeaderText)
@@ -2491,6 +2621,18 @@ Public Class frmLoadExcel
     '    Await Task.
     '    MessageBox.Show("TEstMessage")
     'End Sub
+
+    Public Sub InitializeOpenFileDialog()
+        OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+
+        'Set the file dialog to filter for graphics files.
+        OpenFileDialog1.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
+        '"CSV files (*.csv)|*.csv|Excel Files|*.xls;*.xlsx"
+
+        'Allow the user to select multiple images.
+        OpenFileDialog1.Multiselect = True
+        OpenFileDialog1.Title = "Select an excel document"
+    End Sub
 
     Private Function itemCategory(partNo As String, vendorNo As String) As Integer
         Dim exMessage As String = " "
@@ -2799,7 +2941,7 @@ Public Class frmLoadExcel
         cmbPerCharge.SetWatermark("Person In Charge")
         cmbStatusMore.SetWatermark("Project Status")
 
-        ac1.SetWatermark("Vendor Name")
+        ac2.SetWatermark("Vendor Name")
 
         txtVendorNo.Text = ""
 
@@ -2814,6 +2956,8 @@ Public Class frmLoadExcel
 
         FillDDLStatus1()
         FillDDlUser1()
+
+        InitializeOpenFileDialog()
 
     End Sub
 
@@ -3360,11 +3504,6 @@ Public Class frmLoadExcel
             Return strExt
         End Try
     End Function
-
-    Private Sub ac1_TextChanged(sender As Object, e As EventArgs)
-
-    End Sub
-
 
 #End Region
 

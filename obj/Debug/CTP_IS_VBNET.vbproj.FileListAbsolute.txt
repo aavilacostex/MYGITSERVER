@@ -1,6 +1,8 @@
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.exe.config
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.exe
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.pdb
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.exe.config
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\AutoClosingMessageBox.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ClosedXML.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\DocumentFormat.OpenXml.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ExcelNumberFormat.dll
@@ -14,6 +16,8 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\DocumentFormat.OpenXml.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\ExcelNumberFormat.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\IBM.Data.DB2.iSeries.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\System.Data.SqlClient.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Interop.Crystal.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\AxInterop.Crystal.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.ADODB.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.ADOR.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\Interop.CRPEAuto.dll
@@ -46,7 +50,3 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.CopyComp
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.exe
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.pdb
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\CTP_IS_VBNET.xml
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Interop.Crystal.dll
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\AxInterop.Crystal.dll
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache

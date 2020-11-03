@@ -461,9 +461,9 @@ Public Class frmProductsDevelopment
 
             For i As Integer = 0 To dsMMajCodes.Tables(0).Rows.Count - 1
                 If dsMMajCodes.Tables(0).Rows(i).Table.Columns("FullValue").ToString = "FullValue" Then
-                    Dim fllValueName = dsMMajCodes.Tables(0).Rows(i).Item(2).ToString() + " -- " + dsMMajCodes.Tables(0).Rows(i).Item(3).ToString()
+                    Dim fllValueName = dsMMajCodes.Tables(0).Rows(i).Item(0).ToString() + " -- " + dsMMajCodes.Tables(0).Rows(i).Item(1).ToString()
                     'dsMinCodes = Trim(dsMinCodes.Tables(0).Rows(i).Item(0).ToString())
-                    dsMMajCodes.Tables(0).Rows(i).Item(5) = fllValueName
+                    dsMMajCodes.Tables(0).Rows(i).Item(2) = fllValueName
                     'dsMinCodes.Tables(0).Rows(i).Item(0) = CleanUser
                     'do something
                 End If
