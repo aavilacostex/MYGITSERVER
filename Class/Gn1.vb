@@ -384,6 +384,26 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private sendTestEmails As String
+    Public Property FlagTestEmails() As String
+        Get
+            Return sendTestEmails
+        End Get
+        Set(ByVal value As String)
+            sendTestEmails = value
+        End Set
+    End Property
+
+    Private testEmails As String
+    Public Property TestEmailAddresess() As String
+        Get
+            Return testEmails
+        End Get
+        Set(ByVal value As String)
+            testEmails = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -415,6 +435,8 @@ NotInheritable Class Gn1
         AuthorizatedTestUser = ConfigurationManager.AppSettings("authorizeTestUser").ToString()
         NewUserMenuCodes = ConfigurationManager.AppSettings("newMenuCodes").ToString()
         FlagCloseMDIForm = ConfigurationManager.AppSettings("hideMDIForm").ToString()
+        FlagTestEmails = ConfigurationManager.AppSettings("sendToTestEmails").ToString()
+        TestEmailAddresess = ConfigurationManager.AppSettings("testEmails").ToString()
     End Sub
 
     <DllImport("user32.dll")>
@@ -1098,7 +1120,6 @@ NotInheritable Class Gn1
         End Try
 
     End Function
-
 
 
 #End Region
@@ -2395,28 +2416,38 @@ NotInheritable Class Gn1
             Dim Recipents As Outlook.Recipients = OutlookMessage.Recipients
             'Dim Recipents1 As Outlook.Recipients = OutlookMessage.Recipients
 
-            Dim listEmail As New List(Of String)
-            Dim strArr() As String
-            strArr = toemails.Split(";")
-            For Each tt As String In strArr
-                If Not String.IsNullOrEmpty(tt) Then
-                    listEmail.Add(tt)
-                End If
-            Next
+            If FlagTestEmails = 0 Then
+                Dim listEmail As New List(Of String)
+                Dim strArr() As String
+                strArr = toemails.Split(";")
+                For Each tt As String In strArr
+                    If Not String.IsNullOrEmpty(tt) Then
+                        listEmail.Add(tt)
+                    End If
+                Next
 
-            For Each ttt As String In listEmail
-                Recipents.Add(ttt)
-                Recipents.ResolveAll()
-            Next
+                listEmail.Add("aavila@costex.com")
 
-            'test purpose
-            'Dim lenghtRec = Recipents.Count
-            'For index As Integer = 1 To lenghtRec
-            '    Recipents.Remove(index)
-            'Next
-            'Recipents1.Add("alexei.ansberto85@gmail.com")
-            'Recipents1.Add("ansberto.avila85@gmail.com")
-            'test purpose
+                For Each ttt As String In listEmail
+                    Recipents.Add(ttt)
+                    Recipents.ResolveAll()
+                Next
+            Else
+                'test purpose from config
+                Dim listEmail As New List(Of String)
+                Dim strArr() As String
+                strArr = TestEmailAddresess.Split(";")
+                For Each tt As String In strArr
+                    If Not String.IsNullOrEmpty(tt) Then
+                        listEmail.Add(tt)
+                    End If
+                Next
+
+                For Each ttt As String In listEmail
+                    Recipents.Add(ttt)
+                    Recipents.ResolveAll()
+                Next
+            End If
 
             OutlookMessage.Subject = "New Report for User"
 
