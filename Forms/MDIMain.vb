@@ -151,6 +151,7 @@ Public Class MDIMain
             'End If
 
         End If
+
     End Sub
 
     Private Function getAcceptedMenu(user As String, currentCode As String, curForm As Form) As Boolean

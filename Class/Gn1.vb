@@ -374,6 +374,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private CloseMDIForm As String
+    Public Property FlagCloseMDIForm() As String
+        Get
+            Return CloseMDIForm
+        End Get
+        Set(ByVal value As String)
+            CloseMDIForm = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -404,7 +414,7 @@ NotInheritable Class Gn1
         AuthorizatedUser = ConfigurationManager.AppSettings("authorizeUser").ToString()
         AuthorizatedTestUser = ConfigurationManager.AppSettings("authorizeTestUser").ToString()
         NewUserMenuCodes = ConfigurationManager.AppSettings("newMenuCodes").ToString()
-
+        FlagCloseMDIForm = ConfigurationManager.AppSettings("hideMDIForm").ToString()
     End Sub
 
     <DllImport("user32.dll")>
@@ -960,29 +970,6 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-#End Region
-
-    Public Function checkPurcByUser(userid As String) As Integer
-        Dim exMessage As String = " "
-        Dim Sql As String
-        Dim ds As New DataSet()
-        ds.Locale = CultureInfo.InvariantCulture
-        Dim rsValue As Integer = -1
-        Try
-            Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & userid & "' AND USPURC <> 0 "
-            ds = GetDataFromDatabase(Sql)
-            If ds IsNot Nothing Then
-                If ds.Tables(0).Rows.Count > 0 Then
-                    rsValue = If(ds.Tables(0).Rows(0).Item("USPURC").ToString() IsNot Nothing, ds.Tables(0).Rows(0).Item("USPURC").ToString(), -1)
-                End If
-            End If
-            Return rsValue
-        Catch ex As Exception
-            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Return rsValue
-        End Try
-    End Function
-
     Public Function getFlagAllow(userid As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
@@ -990,7 +977,7 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Dim rsValue As Integer = -1
         Try
-            Sql = "SELECT * FROM CNTRLL WHERE TRIM(CNT01) = '988' AND TRIM(CNTDE1) = Trim (UCase('" & userid & "'))"
+            Sql = "SELECT CNT01 FROM CNTRLL WHERE TRIM(CNT01) = '988' AND TRIM(CNTDE1) = Trim (UCase('" & userid & "'))"
             ds = GetDataFromDatabase(Sql)
             If ds IsNot Nothing Then
                 If ds.Tables(0).Rows.Count > 0 Then
@@ -1112,13 +1099,38 @@ NotInheritable Class Gn1
 
     End Function
 
+
+
+#End Region
+
+    Public Function checkPurcByUser(userid As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Dim rsValue As Integer = -1
+        Try
+            Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & userid & "' AND USPURC <> 0 "
+            ds = GetDataFromDatabase(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    rsValue = If(ds.Tables(0).Rows(0).Item("USPURC").ToString() IsNot Nothing, ds.Tables(0).Rows(0).Item("USPURC").ToString(), -1)
+                End If
+            End If
+            Return rsValue
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return rsValue
+        End Try
+    End Function
+
     Public Function GetDataByPRHCOD(code As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
         Dim ds As New DataSet()
         ds.Locale = CultureInfo.InvariantCulture
         Try
-            Sql = "SELECT * FROM PRDVLH WHERE S = " & Trim(code)
+            Sql = "SELECT * FROM PRDVLH WHERE PRHCOD = " & Trim(code)
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception

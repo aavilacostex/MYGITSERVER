@@ -10,6 +10,8 @@ Imports System.Runtime.InteropServices
 Imports Microsoft.Win32
 Imports Excel = Microsoft.Office.Interop.Excel
 Imports ClosedXML.Excel
+Imports System.Windows.Threading
+Imports System.Windows.Threading.Dispatcher
 
 Public Class frmProductsDevelopment
     Public flagdeve As Long '1 is new
@@ -28,6 +30,7 @@ Public Class frmProductsDevelopment
     Dim gnr As Gn1 = New Gn1()
     Dim wm As WatermarkTextBox = New WatermarkTextBox()
     Dim bt As ButtonTextBox = New ButtonTextBox()
+    Dim dspCall As Dispatcher
 
     Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
@@ -58,6 +61,16 @@ Public Class frmProductsDevelopment
 
         LoadCombos(sender, e)
         frmProductsDevelopment_load()
+        dspCall = CurrentDispatcher
+
+        If gnr.FlagCloseMDIForm.Equals("0") Then
+
+            '    If MDIMain.Visible Then
+            '        MDIMain.Hide()
+            '    End If
+
+            BackgroundWorker2.RunWorkerAsync()
+        End If
 
     End Sub
 
@@ -103,7 +116,6 @@ Public Class frmProductsDevelopment
             FillDDlPrPech()
             FillDDlPrPech1()
 
-
             'testMethod()
             'test purpose
             'gnr.sendEmail()
@@ -129,6 +141,8 @@ Public Class frmProductsDevelopment
 
 #Region "Threads"
 
+#Region "Thread 1"
+
     Private Sub backgroundWorker1_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
         Handles BackgroundWorker1.RunWorkerCompleted
         Loading.Close()
@@ -143,6 +157,27 @@ Public Class frmProductsDevelopment
         Handles BackgroundWorker1.ProgressChanged
         'txtMfrNoSearch.Text = e.ProgressPercentage.ToString()
     End Sub
+
+#End Region
+
+#Region "Thread 2"
+
+    Private Sub BackgroundWorker2_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
+        Handles BackgroundWorker2.RunWorkerCompleted
+        If e.Cancelled Then
+            'Label1.Text = "cancelled"
+        ElseIf e.Error IsNot Nothing Then
+            'Label1.Text = e.Error.Message
+        Else
+            'Label1.Text = "Sum = " & e.Result.ToString()
+        End If
+    End Sub
+
+    Private Sub BackgroundWorker2_DoWork(sender As Object, e As DoWorkEventArgs) Handles BackgroundWorker2.DoWork
+        execute_delegate_MDIClose()
+    End Sub
+
+#End Region
 
 #End Region
 
@@ -5435,6 +5470,24 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
 #End Region
 
+#Region "Delegate"
+
+    Private Delegate Sub closeMDIFormDelegate()
+
+#Region "Delegate Methods"
+
+    Private Sub execute_delegate_MDIClose()
+        dspCall.BeginInvoke(New closeMDIFormDelegate(AddressOf closeMDIForm))
+    End Sub
+
+    Public Shared Sub closeMDIForm()
+        MDIMain.Hide()
+    End Sub
+
+#End Region
+
+#End Region
+
 #Region "Utils"
 
     Private Sub InactiveQotaAlertExcelGeneration(ds As DataSet, userid As String, ByRef created As Boolean)
@@ -5735,7 +5788,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         Dim bgWorker = CType(sender, BackgroundWorker)
         For index = 0 To 2
             bgWorker.ReportProgress(index)
-            Thread.Sleep(1000)
+            Threading.Thread.Sleep(1000)
         Next
 
     End Sub
@@ -5956,17 +6009,17 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
                 'SSTab1.SelectedTab = TabPage2
                 For Each RowDs In ds.Tables(0).Rows
-                    txtCode.Text = Trim(RowDs.Item(0).ToString())
-                    txtname.Text = Trim(RowDs.Item(3).ToString()) ' format date
+                    txtCode.Text = Trim(RowDs.Item("PRHCOD").ToString())
+                    txtname.Text = Trim(RowDs.Item("PRNAME").ToString()) ' format date
                     TabPage2.Text = "Project: " + txtname.Text
 
-                    Dim CleanDateString As String = Regex.Replace(RowDs.Item(1).ToString(), "/[^0-9a-zA-Z:]/g", "")
+                    Dim CleanDateString As String = Regex.Replace(RowDs.Item("PRDATE").ToString(), "/[^0-9a-zA-Z:]/g", "")
                     'Dim dtChange As DateTime = DateTime.ParseExact(CleanDateString, "MM/dd/yyyy HH:mm:ss tt", CultureInfo.InvariantCulture)
                     Dim dtChange As DateTime = DateTime.Parse(CleanDateString)
                     DTPicker1.Value = dtChange.ToShortDateString()
 
-                    If cmbuser1.FindStringExact(Trim(RowDs.Item(9).ToString())) Then
-                        cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(RowDs.Item(9).ToString()))
+                    If cmbuser1.FindStringExact(Trim(RowDs.Item("PRPECH").ToString())) Then
+                        cmbuser1.SelectedIndex = cmbuser1.FindString(Trim(RowDs.Item("PRPECH").ToString()))
                     End If
 
                     If cmbuser1.SelectedIndex = -1 Then
@@ -5974,9 +6027,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                     End If
 
 
-                    If Trim(RowDs.Item(4).ToString()) = "I" Then
+                    If Trim(RowDs.Item("PRNAME").ToString()) = "I" Then
                         cmbprstatus.SelectedIndex = 1
-                    ElseIf Trim(RowDs.Item(4).ToString()) = "F" Then
+                    ElseIf Trim(RowDs.Item("PRNAME").ToString()) = "F" Then
                         cmbprstatus.SelectedIndex = 2
                     Else
                         cmbprstatus.SelectedIndex = 2

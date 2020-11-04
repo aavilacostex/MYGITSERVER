@@ -52,6 +52,10 @@ Public Class frmLoadExcel
         'ProgressBar2.Minimum = 0
         'ProgressBar2.Maximum = 10000
 
+        If gnr.FlagCloseMDIForm.Equals(0) Then
+            BackgroundWorker4.RunWorkerAsync()
+        End If
+
         frmLoadExcel_Load()
     End Sub
 
@@ -111,8 +115,6 @@ Public Class frmLoadExcel
 
             ac2.Values = myList
 
-
-
             'Dim newRow As DataRow = myTable.NewRow
             'newRow("VMNAME") = ""
             'newRow("VMVNUM") = -1
@@ -144,7 +146,7 @@ Public Class frmLoadExcel
         Handles BackgroundWorker2.RunWorkerCompleted
 
         If e.Cancelled Then
-            'Label1.Text = "cancelled"
+            'Label1.Text = "cancelled"            '
             LoadingExcel.Close()
         ElseIf e.Error IsNot Nothing Then
             LoadingExcel.Close()
@@ -154,11 +156,6 @@ Public Class frmLoadExcel
             'Label1.Text = "Sum = " & e.Result.ToString()
         End If
 
-        'If (Not e.Cancelled And e.Error Is Nothing) Then
-        '    Dim result = DirectCast(e.Result, String)
-        '    LoadingExcel.Close()
-        'End If
-
     End Sub
 
     Private Sub backgroundWorker2_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
@@ -166,24 +163,25 @@ Public Class frmLoadExcel
 
         Dim bgw = DirectCast(sender, BackgroundWorker)
 
-
-
-
-        'AutoClosingMessageBox.Show("It may take a while", "Processing", 2500, MessageBoxButtons.OK, DialogResult.Yes)
-        If BackgroundWorker2.CancellationPending Then
-            e.Cancel = True
-            Return
+        If bgw.WorkerSupportsCancellation Then
+            If BackgroundWorker2.CancellationPending Then
+                e.Cancel = True
+                Return
+            Else
+                execute_delegate()
+                'execute_delegate_open()
+                LoadingExcel.ShowDialog()
+                LoadingExcel.BringToFront()
+            End If
+        Else
+            If BackgroundWorker2.CancellationPending Then
+                Dim ee As RunWorkerCompletedEventArgs = New RunWorkerCompletedEventArgs(Nothing, Nothing, True)
+                BackgroundWorker2_RunWorkerCompleted(BackgroundWorker2, ee)
+            End If
+            'Dim bgw2 = BackgroundWorker2
+            'bgw2.Dispose()
         End If
 
-        execute_delegate()
-        LoadingExcel.ShowDialog()
-
-        'execute_delegate_1(e) ' execute the counter
-
-        'Task.Factory.when
-        'Me.Invoke(New launchGridProcessDelegate(Sub()
-        '                                            progressSimulation(e)
-        '                                        End Sub))
     End Sub
 
     'Private Sub backgroundWorker2_ProgressChanged(ByVal sender As Object, ByVal e As ProgressChangedEventArgs) _
@@ -198,7 +196,26 @@ Public Class frmLoadExcel
 
     Private Sub BackgroundWorker3_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
         Handles BackgroundWorker3.RunWorkerCompleted
+        BackgroundWorker3.Dispose()
+    End Sub
 
+#End Region
+
+#Region "Four Thread"
+
+    Private Sub BackgroundWorker4_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) Handles BackgroundWorker4.RunWorkerCompleted
+
+        If e.Cancelled Then
+            'Label1.Text = "cancelled"
+        ElseIf e.Error IsNot Nothing Then
+            'Label1.Text = e.Error.Message
+        Else
+            'Label1.Text = "Sum = " & e.Result.ToString()
+        End If
+    End Sub
+
+    Private Sub BackgroundWorker4_DoWork(sender As Object, e As DoWorkEventArgs) Handles BackgroundWorker4.DoWork
+        execute_delegate_MDIClose()
     End Sub
 
 #End Region
@@ -546,7 +563,7 @@ Public Class frmLoadExcel
                             MessageBox.Show("Some project references has errors. You can check them by clicking in the Check Errors button.", "CTP System", MessageBoxButtons.OK)
                         End If
 
-                        Me.BringToFront()
+                        'Me.BringToFront()
 
                         'LoadingExcel.ShowDialog()
                         'LoadingExcel.BringToFront()
@@ -1336,8 +1353,11 @@ Public Class frmLoadExcel
                         If String.IsNullOrEmpty(result) Then
                             LikeSession.dsData = dt
                             fillData(dt)
+                            LikeSession.excelErrorValidation = False
                         Else
+                            LikeSession.excelErrorValidation = True
                             Dim message = If(result.Equals("No XML Data."), "Error in the xml document structure.", result)
+                            errors = False
                             MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
                         End If
 
@@ -1425,7 +1445,9 @@ Public Class frmLoadExcel
 
         'Call ShowDialog and launch second thread
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
-        BackgroundWorker2.RunWorkerAsync()
+        If LikeSession.excelErrorValidation = False Then
+            BackgroundWorker2.RunWorkerAsync()
+        End If
 
     End Sub
 
@@ -1728,6 +1750,10 @@ Public Class frmLoadExcel
             Else
                 Dim rsOK As DialogResult = MessageBox.Show("The insertion process finished successfully.", "CTP System", MessageBoxButtons.OK)
                 If rsOK = DialogResult.OK Then
+                    If BackgroundWorker2.IsBusy Then
+                        BackgroundWorker2.CancelAsync()
+                    End If
+                    BackgroundWorker3.RunWorkerAsync()
                     disableAfterInsert(False)
                     LikeSession.gridEnable = True
                     DataGridView2.Enabled = LikeSession.gridEnable
@@ -2440,25 +2466,38 @@ Public Class frmLoadExcel
 
 #End Region
 
-
 #Region "Delegates"
 
     Delegate Sub launchGridProcessDelegate()
 
     Private Delegate Sub progressSimulationDelegate(val As Object)
 
-    Private Delegate Sub closeExternalDialogDelegate(val As Object)
+    Private Delegate Sub closeExternalDialogDelegate()
+
+    Private Delegate Sub openExternalDialogDelegate()
+
+    Private Delegate Sub closeMDIFormDelegate()
 
     Public Delegate Function AsyncMethodCaller(callDuration As Integer, ByRef threadId As Integer) As String
 
     Public Delegate Sub safeInvokeDelegate(uielement As Control, updater As Action, forceSynchronous As Boolean)
 
-#End Region
+#Region "Delegate Methods"
 
-#Region "Utils"
+    Private Sub execute_delegate_MDIClose()
+        dspCall.BeginInvoke(New closeMDIFormDelegate(AddressOf closeMDIForm))
+    End Sub
 
     Private Sub execute_delegate_1(e As Object)
         dspCall.BeginInvoke(New progressSimulationDelegate(AddressOf progressSimulation), e)
+    End Sub
+
+    Private Sub execute_delegate_open()
+        dspCall.BeginInvoke(New openExternalDialogDelegate(AddressOf openExternalDialog))
+    End Sub
+
+    Private Sub execute_delegate_close()
+        dspCall.BeginInvoke(New closeExternalDialogDelegate(AddressOf closeExternalDialog))
     End Sub
 
     Public Sub progressSimulation(val As Object)
@@ -2485,9 +2524,16 @@ Public Class frmLoadExcel
         e.Result = sum
     End Sub
 
-    Public Shared Sub closeExternalDialog(obj As Object)
-        Dim form = DirectCast(obj, Form)
-        form.Close()
+    Public Shared Sub closeMDIForm()
+        MDIMain.Close()
+    End Sub
+
+    Public Shared Sub openExternalDialog()
+        LoadingExcel.ShowDialog()
+    End Sub
+
+    Public Shared Sub closeExternalDialog()
+        LoadingExcel.Close()
     End Sub
 
     'how to call a begininvoke delegate
@@ -2524,6 +2570,12 @@ Public Class frmLoadExcel
             End If
         End If
     End Sub
+
+#End Region
+
+#End Region
+
+#Region "Utils"
 
     Public Sub LaunchGridProcess()
 
@@ -2580,11 +2632,11 @@ Public Class frmLoadExcel
             'LoadingExcel.Close()
 
 
-            LoadingExcel.BeginInvoke(New closeExternalDialogDelegate(AddressOf closeExternalDialog))
+            'LoadingExcel.BeginInvoke(New closeExternalDialogDelegate(AddressOf closeExternalDialog))
 
-            safeInvoke(LoadingExcel, Sub()
-                                         closeExternalDialog(LoadingExcel)
-                                     End Sub, True)
+            'safeInvoke(LoadingExcel, Sub()
+            '                             closeExternalDialog(LoadingExcel)
+            '                         End Sub, True)
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString

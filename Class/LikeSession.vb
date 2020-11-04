@@ -17,4 +17,5 @@
     Public Shared focussedControl As Control
     Public Shared fullFilePath As String
     Public Shared objToFill As String
+    Public Shared excelErrorValidation As Boolean
 End Class
