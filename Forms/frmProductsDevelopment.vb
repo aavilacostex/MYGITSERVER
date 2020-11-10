@@ -59,17 +59,21 @@ Public Class frmProductsDevelopment
 
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        LoadCombos(sender, e)
-        frmProductsDevelopment_load()
-        dspCall = CurrentDispatcher
+        If Not gnr.CheckForInternetConnection Then
+            MessageBox.Show("There is an internet connection issue.Please try in a while!", "CTP System", MessageBoxButtons.OK)
+        Else
+            LoadCombos(sender, e)
+            frmProductsDevelopment_load()
+            dspCall = CurrentDispatcher
 
-        If gnr.FlagCloseMDIForm.Equals("0") Then
+            If gnr.FlagCloseMDIForm.Equals("0") Then
 
-            '    If MDIMain.Visible Then
-            '        MDIMain.Hide()
-            '    End If
+                '    If MDIMain.Visible Then
+                '        MDIMain.Hide()
+                '    End If
 
-            BackgroundWorker2.RunWorkerAsync()
+                BackgroundWorker2.RunWorkerAsync()
+            End If
         End If
 
     End Sub
@@ -94,7 +98,7 @@ Public Class frmProductsDevelopment
                 flagallow = 1
             Else
                 cmbPrpech.Visible = False
-                cmddelete.Visible = False
+                'cmddelete.Visible = False
                 cmbuser2.Visible = False
             End If
 
@@ -1367,7 +1371,7 @@ Public Class frmProductsDevelopment
                         Dim posValue As Integer = 0
                         For Each obj As DataRowView In cmbstatus.Items
                             Dim VarQuery = Trim(RowDs.Item(ds.Tables(0).Columns("PRDSTS").Ordinal).ToString())
-                            Dim VarCombo = Trim(obj.Item(2).ToString())
+                            Dim VarCombo = Trim(obj.Item(0).ToString())
                             If VarQuery = VarCombo Then
                                 cmbstatus.SelectedIndex = posValue
                                 Exit For
@@ -1969,7 +1973,7 @@ Public Class frmProductsDevelopment
                 Dim dsMassiveData = gnr.GetMassiveReferences(txtsearch1.Text, cmbstatus1.SelectedValue)
                 If dsMassiveData IsNot Nothing Then
                     If dsMassiveData.Tables(0).Rows.Count() > 0 Then
-                        prodDevExcelGeneration(dsMassiveData, txtsearch1.Text, cmbstatus1.SelectedValue)
+                        prodDevExcelGeneration(dsMassiveData, txtsearch1.Text, Trim(cmbstatus1.GetItemText(cmbstatus1.SelectedItem(1))))
                     Else
                         MessageBox.Show("There is not results with this vendor number and project status selected.", "CTP System", MessageBoxButtons.OK)
                     End If
@@ -1989,10 +1993,21 @@ Public Class frmProductsDevelopment
         Dim created As String = False
         Try
             If userid IsNot Nothing Then
-                Dim alertInactives = gnr.GetInactiveAlertByUser(userid)
-                If alertInactives IsNot Nothing Then
-                    If alertInactives.Tables(0).Rows.Count > 0 Then
-                        InactiveQotaAlertExcelGeneration(alertInactives, userid, created)
+                Dim dsAlertInactives = gnr.GetInactiveAlertByUser(userid)
+                If dsAlertInactives IsNot Nothing Then
+                    If dsAlertInactives.Tables(0).Rows.Count > 0 Then
+                        Dim newDsAlertInactive = New DataSet()
+                        Dim newDtAlertInactive = New DataTable()
+                        newDtAlertInactive = dsAlertInactives.Tables(0).Clone()
+
+                        For Each dtw As DataRow In dsAlertInactives.Tables(0).Rows
+                            If UCase(Trim(dtw.ItemArray(8).ToString())) = userid Then
+                                newDtAlertInactive.ImportRow(dtw)
+                            End If
+                        Next
+                        newDsAlertInactive.Tables.Add(newDtAlertInactive)
+
+                        InactiveQotaAlertExcelGeneration(newDsAlertInactive, userid, created)
                         If created Then
                             Dim result As DialogResult = MessageBox.Show("Did you want to receive an email with the oldest quotation without activity?", "CTP System", MessageBoxButtons.YesNo)
                             If result = DialogResult.Yes Then
@@ -3675,18 +3690,25 @@ Public Class frmProductsDevelopment
                 If Trim(txtctpno.Text) <> "" Then
                     Dim result As DialogResult = MessageBox.Show("CTP # has been already generated.", "CTP System", MessageBoxButtons.OK)
                 Else
-                    Dim PartNo = Trim(UCase(txtpartno.Text)).Substring(0, 19) & "                   "
-                    'PartNo = Left(PartNo, 19)
-                    Dim ctppartno = "                   "
-                    Dim flagctp = "9"
-                    Dim dsctpValue = gnr.CallForCtpNumber(PartNo, ctppartno, flagctp)
-                    If Not dsctpValue Is Nothing Then
-                        If dsctpValue.Tables(0).Rows.Count > 0 Then
-                            txtctpno.Text = Trim(UCase(dsctpValue.Tables(0).Rows(0).ItemArray(0).ToString()))
-                            txtmfrno.Text = Trim(UCase(dsctpValue.Tables(0).Rows(0).ItemArray(0).ToString()))
-                        Else
-                            txtctpno.Text = ""
-                            txtmfrno.Text = ""
+                    Dim strCTPExist = gnr.GetCTPPartRef(txtpartno.Text)
+                    If Not String.IsNullOrEmpty(strCTPExist) Then
+                        txtctpno.Text = strCTPExist
+                        txtmfrno.Text = strCTPExist
+                    Else
+                        'Dim PartNo = Trim(UCase(txtpartno.Text)).Substring(0, 19) & "                   "
+                        Dim PartNo = Trim(UCase(txtpartno.Text)) & "                   "
+                        PartNo = PartNo.Substring(0, Math.Min(PartNo.Length, 19))
+                        Dim ctppartno = "                   "
+                        Dim flagctp = "9"
+                        Dim dsctpValue = gnr.CallForCtpNumber(PartNo, ctppartno, flagctp)
+                        If Not dsctpValue Is Nothing Then
+                            If dsctpValue.Tables(0).Rows.Count > 0 Then
+                                txtctpno.Text = Trim(UCase(dsctpValue.Tables(0).Rows(0).ItemArray(1).ToString()))
+                                txtmfrno.Text = Trim(UCase(dsctpValue.Tables(0).Rows(0).ItemArray(1).ToString()))
+                            Else
+                                txtctpno.Text = ""
+                                txtmfrno.Text = ""
+                            End If
                         End If
                     End If
                 End If
@@ -5509,9 +5531,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Exit Sub
                     End If
 
-                    Dim fileName As String
-                    fileName = "Excel Report for almost inactive quotation - User " & userid & " running in - " & DateTime.Now.ToString("d") & "." & fileExtension
-
+                    Dim title As String
+                    title = "Inactivity report for " & userid & " running at "
+                    Dim fileName = gnr.adjustDatetimeFormat(title, fileExtension)
 
                     'If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
                     '    fileName = "Excel Custon Report for vendor " & vendorNo & " And Status " & status & " running in - " & DateTime.Now.ToString("d") & "." & fileExtension
@@ -5527,7 +5549,14 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
                     If File.Exists(fullPath) Then
                         created = True
-                        MessageBox.Show("The file was created successfully in this path " & folderPath, "CTP System", MessageBoxButtons.OK)
+                        Dim rsConfirm As DialogResult = MessageBox.Show("The file was created successfully in this path " & folderPath & " .Do you want to open the created document location?", "CTP System", MessageBoxButtons.YesNo)
+                        If rsConfirm = DialogResult.Yes Then
+                            Try
+                                Process.Start("explorer.exe", folderPath)
+                            Catch Win32Exception As Win32Exception
+                                Shell("explorer " & folderPath, AppWinStyle.NormalFocus)
+                            End Try
+                        End If
                     End If
                 Else
                     MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
@@ -5559,8 +5588,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Exit Sub
                     End If
 
-                    Dim fileName As String
-                    fileName = "Excel Custon Report for vendor " & vendorNo & " And Status " & status & " running in - " & DateTime.Now.ToString("d") & "." & fileExtension
+                    Dim title As String
+                    title = "Status Report for vendor " & vendorNo & " And Status " & status & " requested by " & userid & " running at "
+                    Dim fileName = gnr.adjustDatetimeFormat(title, fileExtension)
 
 
                     'If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
@@ -5576,7 +5606,14 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                     End Using
 
                     If File.Exists(fullPath) Then
-                        MessageBox.Show("The file was created successfully in this path " & folderPath, "CTP System", MessageBoxButtons.OK)
+                        Dim rsConfirm As DialogResult = MessageBox.Show("The file was created successfully in this path " & folderPath & " .Do you want to open the created document location?", "CTP System", MessageBoxButtons.YesNo)
+                        If rsConfirm = DialogResult.Yes Then
+                            Try
+                                Process.Start("explorer.exe", folderPath)
+                            Catch Win32Exception As Win32Exception
+                                Shell("explorer " & folderPath, AppWinStyle.NormalFocus)
+                            End Try
+                        End If
                     End If
                 Else
                     MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)

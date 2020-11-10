@@ -18,4 +18,5 @@
     Public Shared fullFilePath As String
     Public Shared objToFill As String
     Public Shared excelErrorValidation As Boolean
+    Public Shared dtReloadedData As DataTable = Nothing
 End Class

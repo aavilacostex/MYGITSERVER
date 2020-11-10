@@ -40,23 +40,29 @@ Public Class frmLoadExcel
     Dim Tables = New BindingList(Of DataTable)()
     Dim Tables1 = New BindingList(Of DataTable)()
     Dim form As frmProductsDevelopment = New frmProductsDevelopment()
+    Dim exColumnNames = gnr.GetColumnNames()
     'Dim ac1 As Autocomplete_Textbox = New Autocomplete_Textbox()
 
 #Region "Page Load"
 
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        'LoadCombos(sender, e)
-        thr = Threading.Thread.CurrentThread
-        dspCall = CurrentDispatcher
-        'ProgressBar2.Minimum = 0
-        'ProgressBar2.Maximum = 10000
+        If Not gnr.CheckForInternetConnection Then
+            MessageBox.Show("There is an internet connection issue.Please try in a while!", "CTP System", MessageBoxButtons.OK)
+        Else
+            'LoadCombos(sender, e)
+            thr = Threading.Thread.CurrentThread
+            dspCall = CurrentDispatcher
+            'ProgressBar2.Minimum = 0
+            'ProgressBar2.Maximum = 10000
 
-        If gnr.FlagCloseMDIForm.Equals(0) Then
-            BackgroundWorker4.RunWorkerAsync()
+            If gnr.FlagCloseMDIForm.Equals(0) Then
+                BackgroundWorker4.RunWorkerAsync()
+            End If
+
+            frmLoadExcel_Load()
         End If
 
-        frmLoadExcel_Load()
     End Sub
 
     Private Sub frmLoadExcel_Load()
@@ -147,37 +153,40 @@ Public Class frmLoadExcel
 
         If e.Cancelled Then
             'Label1.Text = "cancelled"            '
-            LoadingExcel.Close()
+            LoadingExcel.ClosePanel()
         ElseIf e.Error IsNot Nothing Then
-            LoadingExcel.Close()
+            LoadingExcel.ClosePanel()
             'Label1.Text = e.Error.Message
         Else
-            LoadingExcel.Close()
+            LoadingExcel.ClosePanel()
             'Label1.Text = "Sum = " & e.Result.ToString()
         End If
 
     End Sub
 
     Private Sub backgroundWorker2_DoWork(ByVal sender As Object, ByVal e As DoWorkEventArgs) _
-        Handles BackgroundWorker2.DoWork, BackgroundWorker3.DoWork
+        Handles BackgroundWorker2.DoWork
 
         Dim bgw = DirectCast(sender, BackgroundWorker)
 
         If bgw.WorkerSupportsCancellation Then
             If BackgroundWorker2.CancellationPending Then
                 e.Cancel = True
+                LoadingExcel.ClosePanel()
                 Return
             Else
+
+                Threading.Thread.Sleep(2000)
                 execute_delegate()
                 'execute_delegate_open()
-                LoadingExcel.ShowDialog()
-                LoadingExcel.BringToFront()
+                'LoadingExcel.ShowDialog()
+                'LoadingExcel.BringToFront()
             End If
         Else
-            If BackgroundWorker2.CancellationPending Then
-                Dim ee As RunWorkerCompletedEventArgs = New RunWorkerCompletedEventArgs(Nothing, Nothing, True)
-                BackgroundWorker2_RunWorkerCompleted(BackgroundWorker2, ee)
-            End If
+            'If BackgroundWorker2.CancellationPending Then
+            '    Dim ee As RunWorkerCompletedEventArgs = New RunWorkerCompletedEventArgs(Nothing, Nothing, True)
+            '    BackgroundWorker2_RunWorkerCompleted(BackgroundWorker2, ee)
+            'End If
             'Dim bgw2 = BackgroundWorker2
             'bgw2.Dispose()
         End If
@@ -194,14 +203,16 @@ Public Class frmLoadExcel
 
 #Region "Third Thread"
 
-    Private Sub BackgroundWorker3_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
-        Handles BackgroundWorker3.RunWorkerCompleted
-        BackgroundWorker3.Dispose()
-    End Sub
+    'Private Sub BackgroundWorker3_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) _
+    '    Handles BackgroundWorker3.RunWorkerCompleted
+    '    BackgroundWorker3.Dispose()
+    'End Sub
 
 #End Region
 
 #Region "Four Thread"
+
+    'close MDI Form
 
     Private Sub BackgroundWorker4_RunWorkerCompleted(ByVal sender As Object, ByVal e As RunWorkerCompletedEventArgs) Handles BackgroundWorker4.RunWorkerCompleted
 
@@ -445,6 +456,7 @@ Public Class frmLoadExcel
                     dictionary.Add("PartNo", "Part No")
                     dictionary.Add("UnitCost", "Unit Cost")
                     dictionary.Add("MOQ", "Minimun Cost")
+                    dictionary.Add("CTPNo", "CTP No")
                     dictionary.Add("MFRNo", "MFR No")
                     'Dim lstRequiredColumns As New List(Of String)({"PRNAME", "PRDPTN", "VMVNUM"})
                     For Each pair As KeyValuePair(Of String, String) In dictionary
@@ -477,6 +489,16 @@ Public Class frmLoadExcel
                             'If String.IsNullOrEmpty(item.ItemArray(dt.Columns("PRPECH").Ordinal).ToString()) Then
                             '    item.Item(dt.Columns("PRPECH").Ordinal) = userid
                             'End If
+                            If String.IsNullOrEmpty(item.ItemArray(0).ToString()) Then
+                                Dim partNo = gnr.GetPartCtpRef(item.ItemArray(3).ToString())
+                                If partNo IsNot Nothing Then
+                                    item.Item("partNo") = partNo
+                                    'dt.Rows(i)("columnName") = strVerse
+                                Else
+                                    Continue For
+                                End If
+                            End If
+
                             If Not String.IsNullOrEmpty(item.ItemArray(0).ToString()) Then
                                 If checkIfPartAndVdrExist(item.ItemArray(dt.Columns("PartNo").Ordinal).ToString(), txtVendorNo.Text) Then
                                     dsError.Tables(0).ImportRow(item)
@@ -651,7 +673,7 @@ Public Class frmLoadExcel
                     DataGridView1.DataSource = Nothing
                     DataGridView1.Refresh()
                     DataGridView1.AutoGenerateColumns = False
-                    DataGridView1.ColumnCount = 7
+                    DataGridView1.ColumnCount = 8
 
                     'Add Columns
                     DataGridView1.Columns(0).Name = "clPRHCOD"
@@ -666,21 +688,25 @@ Public Class frmLoadExcel
                     DataGridView1.Columns(2).HeaderText = "Vendor No."
                     DataGridView1.Columns(2).DataPropertyName = "VMVNUM"
 
-                    DataGridView1.Columns(3).Name = "clPRDMFR"
-                    DataGridView1.Columns(3).HeaderText = "Manufacturer No."
-                    DataGridView1.Columns(3).DataPropertyName = "MFRNo"
+                    DataGridView1.Columns(3).Name = "clPRDCTP"
+                    DataGridView1.Columns(3).HeaderText = "CTP No."
+                    DataGridView1.Columns(3).DataPropertyName = "CTPNo"
 
-                    DataGridView1.Columns(4).Name = "clPQPRC"
-                    DataGridView1.Columns(4).HeaderText = "Unit Cost"
-                    DataGridView1.Columns(4).DataPropertyName = "UnitCost"
+                    DataGridView1.Columns(4).Name = "clPRDMFR"
+                    DataGridView1.Columns(4).HeaderText = "Manufacturer No."
+                    DataGridView1.Columns(4).DataPropertyName = "MFRNo"
 
-                    DataGridView1.Columns(5).Name = "clPQMIN"
-                    DataGridView1.Columns(5).HeaderText = "Min Qty"
-                    DataGridView1.Columns(5).DataPropertyName = "MOQ"
+                    DataGridView1.Columns(5).Name = "clPQPRC"
+                    DataGridView1.Columns(5).HeaderText = "Unit Cost"
+                    DataGridView1.Columns(5).DataPropertyName = "UnitCost"
 
-                    DataGridView1.Columns(6).Name = "clPRDSTS"
-                    DataGridView1.Columns(6).HeaderText = "Status"
-                    DataGridView1.Columns(6).DataPropertyName = "PRDSTS"
+                    DataGridView1.Columns(6).Name = "clPQMIN"
+                    DataGridView1.Columns(6).HeaderText = "Min Qty"
+                    DataGridView1.Columns(6).DataPropertyName = "MOQ"
+
+                    DataGridView1.Columns(7).Name = "clPRDSTS"
+                    DataGridView1.Columns(7).HeaderText = "Status"
+                    DataGridView1.Columns(7).DataPropertyName = "PRDSTS"
 
                     'FILL GRID
 
@@ -724,14 +750,19 @@ Public Class frmLoadExcel
 #End Region
 
                     If DataGridView1.Rows.Count > 0 And Not stopPag Then
-                        toPaginateDs(DataGridView1, dt)
+                        If LikeSession.dtReloadedData IsNot Nothing Then
+                            toPaginateDs(DataGridView1, LikeSession.dtReloadedData)
+                        Else
+                            toPaginateDs(DataGridView1, dt)
+                        End If
+
                     End If
                 Else
                     Dim dsError = LikeSession.dsErrorSession
                     DataGridView2.DataSource = Nothing
                     DataGridView2.Refresh()
                     DataGridView2.AutoGenerateColumns = False
-                    DataGridView2.ColumnCount = 8
+                    DataGridView2.ColumnCount = 9
 
                     'Add Columns
                     DataGridView2.Columns(0).Name = "EditReference"
@@ -750,21 +781,25 @@ Public Class frmLoadExcel
                     DataGridView2.Columns(3).HeaderText = "Vendor Number"
                     DataGridView2.Columns(3).DataPropertyName = "VMVNUM"
 
-                    DataGridView2.Columns(4).Name = "clPRDMFR2"
-                    DataGridView2.Columns(4).HeaderText = "Manufacturer No."
-                    DataGridView2.Columns(4).DataPropertyName = "MFRNo"
+                    DataGridView1.Columns(4).Name = "clPRDCTP2"
+                    DataGridView1.Columns(4).HeaderText = "CTP No."
+                    DataGridView1.Columns(4).DataPropertyName = "CTPNo"
 
-                    DataGridView2.Columns(5).Name = "clPQPRC2"
-                    DataGridView2.Columns(5).HeaderText = "Unit Cost"
-                    DataGridView2.Columns(5).DataPropertyName = "UnitCost"
+                    DataGridView2.Columns(5).Name = "clPRDMFR2"
+                    DataGridView2.Columns(5).HeaderText = "Manufacturer No."
+                    DataGridView2.Columns(5).DataPropertyName = "MFRNo"
 
-                    DataGridView2.Columns(6).Name = "clPQMIN2"
-                    DataGridView2.Columns(6).HeaderText = "Min Qty"
-                    DataGridView2.Columns(6).DataPropertyName = "MOQ"
+                    DataGridView2.Columns(6).Name = "clPQPRC2"
+                    DataGridView2.Columns(6).HeaderText = "Unit Cost"
+                    DataGridView2.Columns(6).DataPropertyName = "UnitCost"
 
-                    DataGridView2.Columns(7).Name = "clError"
-                    DataGridView2.Columns(7).HeaderText = "Error Description"
-                    DataGridView2.Columns(7).DataPropertyName = "ErrorDesc"
+                    DataGridView2.Columns(7).Name = "clPQMIN2"
+                    DataGridView2.Columns(7).HeaderText = "Min Qty"
+                    DataGridView2.Columns(7).DataPropertyName = "MOQ"
+
+                    DataGridView2.Columns(8).Name = "clError"
+                    DataGridView2.Columns(8).HeaderText = "Error Description"
+                    DataGridView2.Columns(8).DataPropertyName = "ErrorDesc"
 
                     If Not dt.Columns.Contains("VMVNUM") Then
                         'Add vendor column
@@ -820,9 +855,14 @@ Public Class frmLoadExcel
                             toPaginateDs(DataGridView2, dt)
                         End If
                     End If
+
+                    If BackgroundWorker2.IsBusy Then
+                        BackgroundWorker2.CancelAsync()
+                    End If
+                    'BackgroundWorker3.RunWorkerAsync()
+
                 End If
             End If
-
 
         Catch ex As Exception
             DataGridView1.DataSource = Nothing
@@ -1340,6 +1380,7 @@ Public Class frmLoadExcel
                         dt.Columns.Add("PartNo", GetType(String))
                         dt.Columns.Add("UnitCost", GetType(String))
                         dt.Columns.Add("MOQ", GetType(String))
+                        dt.Columns.Add("CTPNo", GetType(String))
                         dt.Columns.Add("MFRNo", GetType(String))
                         dt.AcceptChanges()
                         cmd.CommandText = (Convert.ToString("SELECT * From [") & sheetName) + "]"
@@ -1349,17 +1390,24 @@ Public Class frmLoadExcel
                         'oda.TableMappings.Add("Table", "Net-informations.com")
                         oda.Fill(dt)
 
-                        Dim result = xlsDataSchemaValidation(dt)
-                        If String.IsNullOrEmpty(result) Then
-                            LikeSession.dsData = dt
-                            fillData(dt)
-                            LikeSession.excelErrorValidation = False
+                        Dim cleanColumns = RemoveEmptyColumns(dt, exColumnNames)
+
+                        If cleanColumns Then
+                            Dim result = xlsDataSchemaValidation(dt)
+                            If String.IsNullOrEmpty(result) Then
+                                LikeSession.dsData = dt
+                                fillData(dt)
+                                LikeSession.excelErrorValidation = False
+                            Else
+                                LikeSession.excelErrorValidation = True
+                                Dim message = If(result.Equals("No XML Data."), "Error in the xml document structure.", result)
+                                errors = False
+                                MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
+                            End If
                         Else
-                            LikeSession.excelErrorValidation = True
-                            Dim message = If(result.Equals("No XML Data."), "Error in the xml document structure.", result)
-                            errors = False
-                            MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
+                            MessageBox.Show("Please refresh the excel document that you are uploading!", "CTP System", MessageBoxButtons.OK)
                         End If
+
 
                         'LoadThread()
                         'ExecuteFillData(dt)
@@ -1445,9 +1493,14 @@ Public Class frmLoadExcel
 
         'Call ShowDialog and launch second thread
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
-        If LikeSession.excelErrorValidation = False Then
-            BackgroundWorker2.RunWorkerAsync()
+        If result = DialogResult.OK Then
+            If LikeSession.excelErrorValidation = False Then
+                BackgroundWorker2.RunWorkerAsync()
+                LoadingExcel.ShowDialog()
+                LoadingExcel.BringToFront()
+            End If
         End If
+
 
     End Sub
 
@@ -1461,6 +1514,7 @@ Public Class frmLoadExcel
         Dim vendorNo = Trim(txtVendorNo.Text)
         Dim projectNo As Integer = 0
         Dim acumulativeFailure As Integer = 0
+        Dim dtReload As DataTable = New DataTable()
 
         Dim objData = New ProductClass()
         Dim objHeader = New ProductHeader()
@@ -1594,11 +1648,16 @@ Public Class frmLoadExcel
                 Dim pos As Integer = 0
 
                 DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+                If DataGridView1.Rows.Count > 0 Then
+                    Dim dt As DataTable = (DirectCast(DataGridView1.DataSource, DataTable))
+                    dtReload = dt.Clone()
+                End If
 
                 For Each row As DataGridViewRow In DataGridView1.Rows
 
                     'save
                     Dim partNo = row.Cells("clPRDPTN").Value
+                    Dim ctpNo = row.Cells("clPRDCTP").Value
                     Dim manufNo = row.Cells("clPRDMFR").Value
                     Dim price = row.Cells("clPQPRC").Value
                     Dim minimun = row.Cells("clPQMIN").Value
@@ -1620,6 +1679,7 @@ Public Class frmLoadExcel
                         '                 Trim(UCase(x.Field(Of String)("PartNo")).ToString()) = Trim(UCase(partNo)))
                         'Dim Qry1 As DataRowCollection
 
+                        'REVISAR ESRE FUNCIONAMIENTO HOY
                         Dim goAhead As Boolean = False
                         Dim selectedRow As DataRow = Nothing
                         For Each item As DataRow In dsResult.Tables(0).Rows
@@ -1634,6 +1694,109 @@ Public Class frmLoadExcel
                         If goAhead Then
                             'Dim Qry = Qry1.CopyToDataTable
                             Dim personInChargeValue = userid
+                            Dim rsExistence = getPartFullData(partNo, objData)
+                            If rsExistence = 0 Or rsExistence = -1 Then
+                                MessageBox.Show("The selected Part Number is not in our inventary? Plase add it before add as reference in a project.", "CTP System", MessageBoxButtons.OK)
+                                addDsErrorRow(partNo, txtVendorNo.Text, "The selected Part Number is not in our inventary? Plase add it before add as reference in a project.")
+                                removeRowDs(partNo, txtVendorNo.Text)
+                                Continue For
+                            End If
+
+                            objData.Header.Detail.Details.ProjectNo = objData.Header.projectNo
+
+                            Dim zeroValue = 0
+                            objData.Header.Detail.Details.UnitCostNew = If(price Is Nothing Or IsDBNull(price), 0, price.ToString())
+                            objData.Header.Detail.Details.ManufactNo = If(manufNo Is Nothing Or IsDBNull(manufNo), zeroValue.ToString(), manufNo.ToString())
+                            objData.Header.Detail.Details.CTPNo = If(ctpNo Is Nothing Or IsDBNull(ctpNo), zeroValue.ToString(), ctpNo.ToString())
+                            objData.Header.Detail.Details.MinQty = If(minimun Is Nothing Or IsDBNull(minimun), 0, minimun.ToString)
+                            objData.Header.Detail.Details.PartNo = partNo
+
+                            objData.Header.Detail.Details.NewOrSupplier = If(itemCategory(partNo, txtVendorNo.Text) = 2, 1, 0)
+
+                            objData.Header.Detail.Details.Qty = 0
+                            objData.Header.Detail.Details.UnitCost = 0
+                            If cmbStatusMore.SelectedIndex = 0 Or cmbStatusMore.SelectedIndex = -1 Then
+                                cmbStatusMore.SelectedIndex = 1
+                                objData.Header.Detail.Details.Status = cmbStatusMore.SelectedValue
+                            Else
+                                objData.Header.Detail.Details.Status = cmbStatusMore.SelectedValue
+                            End If
+
+                            getCtpReference(partNo, objData)
+
+#Region "Not used search in dvinva"
+
+                            'BUSQUEDA EN DVINVA DESHABILITADA
+                            'Dim dsGetDataFromDualInv = gnr.GetDataFromDualInventory(partNo)
+                            'If Not dsGetDataFromDualInv Is Nothing Then
+                            '    If dsGetDataFromDualInv.Tables(0).Rows.Count > 0 Then
+                            '        objData.Header.Detail.Details.MinorCode = Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC2").Ordinal).ToString())
+
+                            '        'If Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()) <> "" Then
+                            '        '    Dim dsGetVendorQuey = gnr.GetVendorQuey(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString())
+                            '        '    If Not dsGetVendorQuey Is Nothing Then
+                            '        '        If dsGetVendorQuey.Tables(0).Rows.Count > 0 Then
+                            '        '            'objData.Header.Detail.Details.VendorNumber = dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()
+                            '        '            objData.Header.Detail.Details.VendorNumber = vendor
+                            '        '            'prdDetData.vendor = Trim(dsGetVendorQuey.Tables(0).Rows(0).ItemArray(dsGetVendorQuey.Tables(0).Columns("VMNAME").Ordinal).ToString())
+                            '        '        Else
+                            '        '            objData.Header.Detail.Details.VendorNumber = ""
+                            '        '            'txtvendornamea.Text = ""
+                            '        '        End If
+                            '        '    End If
+                            '        'Else
+                            '        '    objData.Header.Detail.Details.VendorNumber = ""
+                            '        '    'txtvendornamea.Text = ""
+                            '        'End If
+                            '        'Dim dsGetCTPPartRef = gnr.GetCTPPartRef(partNo)
+
+                            '        If objData.Header.Detail.Details.CTPNo = "0" Then
+                            '            If Not String.IsNullOrEmpty(dsGetCTPPartRef) Then
+                            '                objData.Header.Detail.Details.CTPNo = dsGetCTPPartRef
+                            '            Else
+                            '                objData.Header.Detail.Details.CTPNo = ""
+                            '            End If
+                            '        End If
+
+                            '        If objData.Header.Detail.Details.ManufactNo = "0" Then
+                            '            If Not String.IsNullOrEmpty(dsGetCTPPartRef) Then
+                            '                objData.Header.Detail.Details.ManufactNo = dsGetCTPPartRef
+                            '            Else
+                            '                objData.Header.Detail.Details.ManufactNo = ""
+                            '            End If
+                            '        End If
+
+                            '        'Dim dsGetCTPPartRef = gnr.GetCTPPartRef(partNo)
+                            '        'If Not String.IsNullOrEmpty(dsGetCTPPartRef) Then
+                            '        '    objData.Header.Detail.Details.CTPNo = dsGetCTPPartRef
+                            '        '    objData.Header.Detail.Details.ManufactNo = dsGetCTPPartRef
+                            '        'Else
+                            '        '    objData.Header.Detail.Details.CTPNo = ""
+                            '        '    objData.Header.Detail.Details.ManufactNo = ""
+                            '        'End If
+
+                            '        '----- Quizas no poner aqui ------
+
+                            '        'Dim dsGetAssignedVendor = gnr.GetAssignedVendor(vendor, partNo)
+                            '        'If dsGetAssignedVendor IsNot Nothing Then
+                            '        '    If dsGetAssignedVendor.Tables(0).Rows.Count > 0 Then
+                            '        '        objData.Header.Detail.Details.UnitCost = dsGetAssignedVendor.Tables(0).Rows(0).ItemArray(dsGetAssignedVendor.Tables(0).Columns("PQPRC").Ordinal).ToString()
+                            '        '        '?
+                            '        '        objData.Header.Detail.Details.MinQty = dsGetAssignedVendor.Tables(0).Rows(0).ItemArray(dsGetAssignedVendor.Tables(0).Columns("PQMIN").Ordinal).ToString()
+                            '        '        'txtminqty.Text = dsGetAssignedVendor.Tables(0).Rows(0).ItemArray(dsGetAssignedVendor.Tables(0).Columns("PQMIN").Ordinal).ToString()
+                            '        '    Else
+                            '        '        objData.Header.Detail.Details.UnitCost = 0
+                            '        '        objData.Header.Detail.Details.MinQty = 0
+                            '        '    End If
+                            '        '    objData.Header.Detail.Details.VendorNumber = vendor
+                            '        'End If
+
+                            '        '----- Quizas no poner aqui ------
+
+                            '    End If
+                            'End If
+
+#End Region
 
                             Dim rsInsert = InsertProductDetails(partNo, ProjectNoCurrent, personInChargeValue)
                             'Dim rsInsert = 0
@@ -1642,61 +1805,42 @@ Public Class frmLoadExcel
 
                             'add to error dataset if insertion fails
                             If rsInsert < 0 Then
-                                Dim dsError = LikeSession.dsErrorSession
-
-                                Dim dtError = dsError.Tables(0).Copy()
-                                dtError.Columns.Add("VMVNUM", GetType(String))
-
-                                For Each dw1 As DataRow In dtError.Rows
-                                    dw1.Item("VMVNUM") = vendorNo
-                                Next
-
-                                Dim row1 As DataRow = dtError.NewRow()
-                                row1(0) = partNo
-                                row1(2) = txtVendorNo.Text
-                                row1(1) = "Error inserting the project reference."
-
-                                dtError.Rows.Add(row1)
-                                dtError.AcceptChanges()
-
-                                dsError.Tables.RemoveAt(0)
-                                dsError.Tables.Add(dtError)
-                                dsError.AcceptChanges()
-                                LikeSession.dsErrorSession = dsError
+                                addDsErrorRow(partNo, txtVendorNo.Text, "Error inserting the project reference.")
+                                removeRowDs(partNo, txtVendorNo.Text)
                             Else
                                 pos += 1
-                                'BackgroundWorker2.ReportProgress(pos)
-
                                 'right insertion
-                                '----- Get data forthe part from dvinva or imnsta, insert or update into poqota ----------------------
-
-                                objData.Header.Detail.Details.ProjectNo = objData.Header.projectNo
-
-                                Dim zeroValue = 0
-                                objData.Header.Detail.Details.UnitCostNew = If(price Is Nothing Or IsDBNull(price), 0, price.ToString())
-                                objData.Header.Detail.Details.ManufactNo = If(manufNo Is Nothing Or IsDBNull(manufNo), zeroValue.ToString(), manufNo.ToString())
-                                objData.Header.Detail.Details.MinQty = If(minimun Is Nothing Or IsDBNull(minimun), 0, minimun.ToString)
-                                objData.Header.Detail.Details.PartNo = partNo
-
-                                objData.Header.Detail.Details.NewOrSupplier = If(itemCategory(partNo, txtVendorNo.Text) = 2, 1, 0)
-
+                                'insert or update into poqota 
                                 Dim qotaObj = GetDataByVendorAndPartNo(txtVendorNo.Text, partNo, True, objData)
 
                                 If qotaObj IsNot Nothing And objData.Header.Detail.Details.PoqotaValidation = 0 Then
-                                    'update product development detail
-                                    Dim rsUpdProdDet = gnr.UpdateProductDetail1("", qotaObj.Header.Detail.Details.MinorCode, 0, Today(), "", qotaObj.Header.Detail.Details.VendorNumber,
-                                                                                qotaObj.Header.Detail.Details.NewOrSupplier, Today(), 0, 0,
-                                                                                qotaObj.Header.personInCharge, Today(), userid, qotaObj.Header.Detail.Details.CTPNo,
-                                                                                 0, qotaObj.Header.Detail.Details.Qty, "", qotaObj.Header.Detail.Details.ManufactNo, qotaObj.Header.Detail.Details.UnitCost,
-                                                                                 qotaObj.Header.Detail.Details.UnitCostNew, "", Today(), qotaObj.Header.Detail.Details.Status,
-                                                                                 "", "", qotaObj.Header.Detail.Details.ProjectNo, qotaObj.Header.Detail.Details.PartNo)
+                                    'update product development detail not necessary
+                                    'Dim rsUpdProdDet = gnr.UpdateProductDetail1("", qotaObj.Header.Detail.Details.MinorCode, 0, Today(), "", qotaObj.Header.Detail.Details.VendorNumber,
+                                    '                                            qotaObj.Header.Detail.Details.NewOrSupplier, Today(), 0, 0,
+                                    '                                            qotaObj.Header.personInCharge, Today(), userid, qotaObj.Header.Detail.Details.CTPNo,
+                                    '                                             0, qotaObj.Header.Detail.Details.Qty, "", qotaObj.Header.Detail.Details.ManufactNo, qotaObj.Header.Detail.Details.UnitCost,
+                                    '                                             qotaObj.Header.Detail.Details.UnitCostNew, "", Today(), qotaObj.Header.Detail.Details.Status,
+                                    '                                             "", "", qotaObj.Header.Detail.Details.ProjectNo, qotaObj.Header.Detail.Details.PartNo)
 
-                                    If rsUpdProdDet < 0 Then
-                                        'error message
+                                    If Not dtReload.Columns.Contains("PRHCOD") Then
+                                        dtReload.Columns.Add("PRHCOD", GetType(String))
                                     End If
+
+                                    Dim R As DataRow = dtReload.NewRow
+                                    R("PartNo") = qotaObj.Header.Detail.Details.PartNo
+                                    R("PartNo") = qotaObj.Header.Detail.Details.PartNo
+                                    R("UnitCost") = qotaObj.Header.Detail.Details.UnitCostNew
+                                    R("MOQ") = qotaObj.Header.Detail.Details.MinQty
+                                    R("CTPNo") = qotaObj.Header.Detail.Details.CTPNo
+                                    R("MFRNo") = qotaObj.Header.Detail.Details.ManufactNo
+                                    R("PRDSTS") = buildStatusString(qotaObj.Header.Detail.Details.Status)
+                                    R("VMVNUM") = qotaObj.Header.Detail.Details.VendorNumber
+                                    R("PRHCOD") = qotaObj.Header.projectNo
+                                    dtReload.Rows.Add(R)
 
                                 Else
                                     'error message
+                                    'cumulative reverse process
                                 End If
                                 'If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
                                 '    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
@@ -1720,7 +1864,8 @@ Public Class frmLoadExcel
                         Else
                             btnSuccess.Enabled = False
                             acumulativeFailure += 1
-                            DataGridView1.Rows.RemoveAt(DataGridView1.CurrentRow.Index)
+                            addDsErrorRow(partNo, txtVendorNo.Text, "The vendor selected must be the vendor configured in the project. The right vendor is " & vendorNo)
+                            removeRowDs(partNo, txtVendorNo.Text)
 
                             'DataGridView1.Rows.Remove(row)
                             'MessageBox.Show("The vendor selected must be the vendor configured in the project. The right vendor is " & vendorNo, "CTP System", MessageBoxButtons.OK)
@@ -1730,6 +1875,10 @@ Public Class frmLoadExcel
                     iterator += 1
                 Next
                 dsResult.AcceptChanges()
+                If dtReload.Rows.Count > 0 And dtReload.Rows.Count = DataGridView1.Rows.Count Then
+                    LikeSession.dtReloadedData = dtReload
+                End If
+
 
                 Dim rsReferences = gnr.GetReferencesInProject(ProjectNoCurrent)
                 If rsReferences = 0 Then
@@ -1753,7 +1902,7 @@ Public Class frmLoadExcel
                     If BackgroundWorker2.IsBusy Then
                         BackgroundWorker2.CancelAsync()
                     End If
-                    BackgroundWorker3.RunWorkerAsync()
+                    'BackgroundWorker3.RunWorkerAsync()
                     disableAfterInsert(False)
                     LikeSession.gridEnable = True
                     DataGridView2.Enabled = LikeSession.gridEnable
@@ -2288,80 +2437,6 @@ Public Class frmLoadExcel
                 objData.Header.Detail.Details.PartNo = partNo
                 objData.Header.Detail.Details.VendorNumber = vendor
 
-                'busco en dvinva
-                Dim dsGetDataFromDualInv = gnr.GetDataFromDualInventory(partNo)
-                If Not dsGetDataFromDualInv Is Nothing Then
-                    If dsGetDataFromDualInv.Tables(0).Rows.Count > 0 Then
-                        objData.Header.Detail.Details.MinorCode = Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("IMPC2").Ordinal).ToString())
-
-                        'If Trim(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()) <> "" Then
-                        '    Dim dsGetVendorQuey = gnr.GetVendorQuey(dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString())
-                        '    If Not dsGetVendorQuey Is Nothing Then
-                        '        If dsGetVendorQuey.Tables(0).Rows.Count > 0 Then
-                        '            'objData.Header.Detail.Details.VendorNumber = dsGetDataFromDualInv.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInv.Tables(0).Columns("DVPRMG").Ordinal).ToString()
-                        '            objData.Header.Detail.Details.VendorNumber = vendor
-                        '            'prdDetData.vendor = Trim(dsGetVendorQuey.Tables(0).Rows(0).ItemArray(dsGetVendorQuey.Tables(0).Columns("VMNAME").Ordinal).ToString())
-                        '        Else
-                        '            objData.Header.Detail.Details.VendorNumber = ""
-                        '            'txtvendornamea.Text = ""
-                        '        End If
-                        '    End If
-                        'Else
-                        '    objData.Header.Detail.Details.VendorNumber = ""
-                        '    'txtvendornamea.Text = ""
-                        'End If
-
-                        Dim dsGetCTPPartRef = gnr.GetCTPPartRef(partNo)
-                        If Not String.IsNullOrEmpty(dsGetCTPPartRef) Then
-                            objData.Header.Detail.Details.CTPNo = dsGetCTPPartRef
-                            objData.Header.Detail.Details.ManufactNo = dsGetCTPPartRef
-                        Else
-                            objData.Header.Detail.Details.CTPNo = ""
-                            objData.Header.Detail.Details.ManufactNo = ""
-                        End If
-
-                        '----- Quizas no poner aqui ------
-
-                        'Dim dsGetAssignedVendor = gnr.GetAssignedVendor(vendor, partNo)
-                        'If dsGetAssignedVendor IsNot Nothing Then
-                        '    If dsGetAssignedVendor.Tables(0).Rows.Count > 0 Then
-                        '        objData.Header.Detail.Details.UnitCost = dsGetAssignedVendor.Tables(0).Rows(0).ItemArray(dsGetAssignedVendor.Tables(0).Columns("PQPRC").Ordinal).ToString()
-                        '        '?
-                        '        objData.Header.Detail.Details.MinQty = dsGetAssignedVendor.Tables(0).Rows(0).ItemArray(dsGetAssignedVendor.Tables(0).Columns("PQMIN").Ordinal).ToString()
-                        '        'txtminqty.Text = dsGetAssignedVendor.Tables(0).Rows(0).ItemArray(dsGetAssignedVendor.Tables(0).Columns("PQMIN").Ordinal).ToString()
-                        '    Else
-                        '        objData.Header.Detail.Details.UnitCost = 0
-                        '        objData.Header.Detail.Details.MinQty = 0
-                        '    End If
-                        '    objData.Header.Detail.Details.VendorNumber = vendor
-                        'End If
-
-                        '----- Quizas no poner aqui ------
-
-                    End If
-                Else
-                    'sino esta en dvinva busco en imnsta
-                    Dim dsGetDataFromDualInventory1 = gnr.GetDataByPartNoVendor(partNo)
-                    If Not dsGetDataFromDualInventory1 Is Nothing Then
-                        If dsGetDataFromDualInventory1.Tables(0).Rows.Count > 0 Then
-                            objData.Header.Detail.Details.MinorCode = Trim(dsGetDataFromDualInventory1.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInventory1.Tables(0).Columns("IMPC2").Ordinal).ToString())
-
-                            Dim dsGetCTPPartRef = gnr.GetCTPPartRef(partNo)
-                            If Not String.IsNullOrEmpty(dsGetCTPPartRef) Then
-                                objData.Header.Detail.Details.CTPNo = dsGetCTPPartRef
-                                objData.Header.Detail.Details.ManufactNo = dsGetCTPPartRef
-                            Else
-                                objData.Header.Detail.Details.CTPNo = ""
-                                objData.Header.Detail.Details.ManufactNo = ""
-                            End If
-                        Else
-
-                        End If
-                    Else
-
-                    End If
-                End If
-
                 'test purpose
                 'Dim testPartNo = "5257106"
                 'Dim dsGetDataFromProdHeaderAndDetail = gnr.GetDataFromProdHeaderAndDetail(partNo)
@@ -2384,48 +2459,112 @@ Public Class frmLoadExcel
                 Dim strQueryAdd1 As String = "WHERE PQVND = " & Trim(vendor) & " AND PQPTN = '" & Trim(UCase(partNo)) & "'"
 
                 'busco en poqota si hay referencia para la parte y el vendor
-                Dim dsPoQota = gnr.GetPOQotaData(vendor, partNo)
+                'Dim dsPoQota = gnr.GetPOQotaData(vendor, partNo)
+                Dim dsPoQota = gnr.GetAllPOQOTA(vendor, partNo)
                 If dsPoQota IsNot Nothing Then
+                    If dsPoQota.Tables(0).Rows.Count > 0 Then
+                        If Not String.IsNullOrEmpty(Trim(dsPoQota.Tables(0).Rows(0).Item("PQCOMM"))) Then ' la referencia tiene un comentario previo en desarrollo
+                            'If dsPoQota.Tables(0).Rows(0).Item("PQCOMM").Equals("D-") Then ' validacion de estado incorrecto previo D-
+                            '    Dim rowMax = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor).Max(Function(row) row.ItemArray(3))
+                            '    Dim rowOk1 = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor And row.ItemArray(2).ToString() = rowMax)
+                            '    Dim dtRow As New DataTable
 
-                    'ya existe en poqota esta parte con este vendor. Permite actualizar los valores?
+                            '    If rowOk1.Count = 1 Then
+                            '        dtRow = rowOk1.CopyToDataTable()
+                            '        objData.Header.Detail.Details.Qty = dtRow.Rows(0).ItemArray(11).ToString()
+                            '        'objData.Header.Detail.Details.UnitCost = dtRow.Rows(0).ItemArray(3).ToString()
+                            '        'objData.Header.Detail.Details.UnitCostNew = 0
+                            '        objData.Header.Detail.Details.Status = cmbStatusMore.SelectedValue
+                            '        objData.Header.Detail.Details.MinQty = 0
 
-                    Dim rowMax = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor).Max(Function(row) row.ItemArray(3))
-                    Dim rowOk1 = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor And row.ItemArray(2).ToString() = rowMax)
-                    Dim dtRow As New DataTable
+                            '        statusquote = "D-" & cmbStatusMore.SelectedText
+                            '        Dim seqMax = rowOk1(0).ItemArray(3).ToString()
+                            '        'actualizando estado erroneo para esta referencia
+                            '        ResultQuery = gnr.UpdatePoQotaExact(statusquote, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString(), vendor, partNo, seqMax)
+                            '        If ResultQuery < 0 Then
+                            '            'error ajustar en log
+                            '        End If
+                            '    End If
+                            'Else
+                            MessageBox.Show("Call to administrator. An error ocurred.", "CTP System", MessageBoxButtons.YesNo)
+                            'End If
+#Region "Update de poqota no contemplado aun"
 
-                    If rowOk1.Count = 1 Then
-                        dtRow = rowOk1.CopyToDataTable()
-                        objData.Header.Detail.Details.Qty = dtRow.Rows(0).ItemArray(11).ToString()
-                        'objData.Header.Detail.Details.UnitCost = dtRow.Rows(0).ItemArray(3).ToString()
-                        'objData.Header.Detail.Details.UnitCostNew = 0
-                        objData.Header.Detail.Details.Status = cmbStatusMore.SelectedValue
-                        objData.Header.Detail.Details.MinQty = 0
+                            'ya existe en poqota esta parte con este vendor. comentado hasta validar si procede?
 
-                        statusquote = "D-" & cmbStatusMore.SelectedText
+                            'Dim rowMax = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor).Max(Function(row) row.ItemArray(3))
+                            'Dim rowOk1 = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor And row.ItemArray(2).ToString() = rowMax)
+                            'Dim dtRow As New DataTable
 
-                        'objData.Header(0).Detail.Add(prdDetData)
+                            'If rowOk1.Count = 1 Then
+                            '    dtRow = rowOk1.CopyToDataTable()
+                            '    objData.Header.Detail.Details.Qty = dtRow.Rows(0).ItemArray(11).ToString()
+                            '    'objData.Header.Detail.Details.UnitCost = dtRow.Rows(0).ItemArray(3).ToString()
+                            '    'objData.Header.Detail.Details.UnitCostNew = 0
+                            '    objData.Header.Detail.Details.Status = cmbStatusMore.SelectedValue
+                            '    objData.Header.Detail.Details.MinQty = 0
 
-                        'recuperar datos de poqota y actualizar
-                        'ResultQuery = gnr.InsertNewPOQota1(prdDetData.PartNo, prdDetData.VendorNumber, 1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), prdDetData.ManufactNo,
-                        'DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+                            '    statusquote = "D-" & cmbStatusMore.SelectedText
 
+                            '    'objData.Header(0).Detail.Add(prdDetData)
+
+                            '    'recuperar datos de poqota y actualizar
+                            '    'ResultQuery = gnr.InsertNewPOQota1(prdDetData.PartNo, prdDetData.VendorNumber, 1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), prdDetData.ManufactNo,
+                            '    'DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+
+                            'Else
+                            '    objData.Header.Detail.Details.Qty = 0
+                            '    objData.Header.Detail.Details.UnitCost = 0
+                            '    objData.Header.Detail.Details.UnitCostNew = 0
+                            '    objData.Header.Detail.Details.Status = cmbStatusMore.SelectedValue
+                            '    objData.Header.Detail.Details.MinQty = 0
+
+                            '    statusquote = "D-" & cmbStatusMore.SelectedText
+
+                            '    'objData.Header(0).Detail.Add(prdDetData)
+
+                            '    'insertar en poqota valores iniciales en cero
+                            '    ResultQuery = gnr.InsertNewPOQota1(objData.Header.Detail.Details.PartNo, objData.Header.Detail.Details.VendorNumber, 1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(),
+                            '                                               objData.Header.Detail.Details.ManufactNo, DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+                            'End If
+
+#End Region
+                        Else
+                            'existe la referencia en poqota pero no tiene estado de desarrollo
+                            Dim maxValue = gnr.getmaxComplex("POQOTA", "PQSEQ", strQueryAdd1)
+                            If Not String.IsNullOrEmpty(maxValue) Then
+                                maxValue += 1
+                            Else
+                                maxValue = 1
+                            End If
+
+                            'objData.Header.Detail.Details.Status = If(cmbStatusMore.SelectedIndex = 0 Or cmbStatusMore.SelectedIndex = -1, "E", cmbStatusMore.SelectedValue.ToString())
+
+                            Dim commentStatues = Trim(cmbStatusMore.GetItemText(cmbStatusMore.SelectedItem).Split("--")(2))
+                            statusquote = If(Not String.IsNullOrEmpty(commentStatues), "D-" & commentStatues, "")
+
+                            If Not String.IsNullOrEmpty(statusquote) Then
+                                'ResultQuery = 0
+                                'insertar en poqota valores iniciales en cero
+
+                                ResultQuery = gnr.InsertNewPOQota(objData.Header.Detail.Details.PartNo, objData.Header.Detail.Details.VendorNumber, maxValue, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(),
+                                                                          objData.Header.Detail.Details.ManufactNo, DateTime.Now.Day.ToString(), statusquote, spacepoqota1,
+                                                                           objData.Header.Detail.Details.UnitCostNew, objData.Header.Detail.Details.MinQty)
+
+                                objData.Header.Detail.Details.PoqotaValidation = ResultQuery.ToString()
+
+                                If ResultQuery < 0 Then
+                                    'error message
+                                End If
+                            Else
+                                'agregar log de error de estado
+                            End If
+                        End If
                     Else
-                        objData.Header.Detail.Details.Qty = 0
-                        objData.Header.Detail.Details.UnitCost = 0
-                        objData.Header.Detail.Details.UnitCostNew = 0
-                        objData.Header.Detail.Details.Status = cmbStatusMore.SelectedValue
-                        objData.Header.Detail.Details.MinQty = 0
-
-                        statusquote = "D-" & cmbStatusMore.SelectedText
-
-                        'objData.Header(0).Detail.Add(prdDetData)
-
-                        'insertar en poqota valores iniciales en cero
-                        ResultQuery = gnr.InsertNewPOQota1(objData.Header.Detail.Details.PartNo, objData.Header.Detail.Details.VendorNumber, 1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(),
-                                                                   objData.Header.Detail.Details.ManufactNo, DateTime.Now.Day.ToString(), statusquote, spacepoqota1)
+                        'exception
                     End If
-
                 Else
+                    'no esiste en poqota
                     objData.Header.Detail.Details.Qty = 0
                     objData.Header.Detail.Details.UnitCost = 0
                     If cmbStatusMore.SelectedIndex = 0 Or cmbStatusMore.SelectedIndex = -1 Then
@@ -2436,17 +2575,22 @@ Public Class frmLoadExcel
                     End If
                     'objData.Header.Detail.Details.Status = If(cmbStatusMore.SelectedIndex = 0 Or cmbStatusMore.SelectedIndex = -1, "E", cmbStatusMore.SelectedValue.ToString())
 
-                    statusquote = "D-" & Trim(cmbStatusMore.GetItemText(cmbStatusMore.SelectedItem).Split("--")(2))
+                    Dim commentStatues = Trim(cmbStatusMore.GetItemText(cmbStatusMore.SelectedItem).Split("--")(2))
+                    statusquote = If(Not String.IsNullOrEmpty(commentStatues), "D-" & commentStatues, "")
+                    If Not String.IsNullOrEmpty(statusquote) Then
+                        'insertar en poqota valores iniciales en cero
+                        'ResultQuery = 0
+                        ResultQuery = gnr.InsertNewPOQota(objData.Header.Detail.Details.PartNo, objData.Header.Detail.Details.VendorNumber, 1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(),
+                                                                   objData.Header.Detail.Details.ManufactNo, DateTime.Now.Day.ToString(), statusquote, spacepoqota1,
+                                                                    objData.Header.Detail.Details.UnitCostNew, objData.Header.Detail.Details.MinQty)
 
-                    'insertar en poqota valores iniciales en cero
-                    ResultQuery = gnr.InsertNewPOQota(objData.Header.Detail.Details.PartNo, objData.Header.Detail.Details.VendorNumber, 1, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(),
-                                                               objData.Header.Detail.Details.ManufactNo, DateTime.Now.Day.ToString(), statusquote, spacepoqota1,
-                                                                objData.Header.Detail.Details.UnitCostNew, objData.Header.Detail.Details.MinQty)
+                        objData.Header.Detail.Details.PoqotaValidation = ResultQuery.ToString()
 
-                    objData.Header.Detail.Details.PoqotaValidation = ResultQuery.ToString()
-
-                    If ResultQuery < 0 Then
-                        'error message
+                        If ResultQuery < 0 Then
+                            'error message
+                        End If
+                    Else
+                        'agregar log de error de estado
                     End If
                 End If
                 'End If
@@ -2576,6 +2720,143 @@ Public Class frmLoadExcel
 #End Region
 
 #Region "Utils"
+
+    Public Function RemoveEmptyColumns(Datatable As DataTable, exColumns As String) As Boolean
+
+        Dim exMessage As String = Nothing
+        Dim strColumns As String() = If(Not String.IsNullOrEmpty(exColumns), exColumns.Split(","), "")
+        Dim goAhead As Boolean = False
+        Try
+            Dim mynetable As DataTable = Datatable.Copy
+            Dim counter As Integer = mynetable.Rows.Count
+            Dim col As DataColumn
+            For Each col In mynetable.Columns
+                If strColumns.Length > 0 Then
+                    For Each item As String In strColumns
+                        If Trim(item).Equals(col.ColumnName) Then
+                            goAhead = True
+                            Exit For
+                        End If
+
+                        If goAhead Then
+                            Continue For
+                        Else
+                            Dim dr() As DataRow = mynetable.Select(col.ColumnName + " is   Null ")
+                            If dr.Length = counter Then
+                                Datatable.Columns.Remove(col.ColumnName)
+                                Datatable.AcceptChanges()
+                            End If
+                            goAhead = False
+                        End If
+                    Next
+                End If
+            Next
+            Return True
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return False
+        End Try
+
+    End Function
+
+    Public Sub removeRowDs(partNo As String, vendorNo As String, Optional ds As DataSet = Nothing)
+        Dim exMessage As String = Nothing
+        Try
+            Dim dsResult = LikeSession.dsResultsSession
+            Dim dtResult = dsResult.Tables(0).Copy()
+
+            Dim rowDelete = dsResult.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(0).ToString() = partNo And row.ItemArray(6).ToString() = vendorNo).FirstOrDefault()
+            If rowDelete IsNot Nothing Then
+                dsResult.Tables(0).Rows.Remove(rowDelete)
+                LikeSession.dsResultsSession = dsResult
+            End If
+
+            'ds.Tables(0).Rows.RemoveAt(indexValue)
+            'LikeSession.dsResultsSession = ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Sub addDsErrorRow(partNo As String, vendorNo As String, strMessage As String, Optional dt As DataTable = Nothing)
+        Dim exMessage As String = Nothing
+        Try
+            Dim dsError = LikeSession.dsErrorSession
+            Dim dtError = dsError.Tables(0).Copy()
+
+            If Not dtError.Columns.Contains("VMVNUM") Then
+                dtError.Columns.Add("VMVNUM", GetType(String))
+            End If
+
+            For Each dw1 As DataRow In dtError.Rows
+                dw1.Item("VMVNUM") = vendorNo
+            Next
+
+            Dim row1 As DataRow = dtError.NewRow()
+            row1(0) = partNo
+            row1(6) = vendorNo
+            row1(5) = strMessage
+
+            dtError.Rows.Add(row1)
+            dtError.AcceptChanges()
+
+            dsError.Tables.RemoveAt(0)
+            dsError.Tables.Add(dtError)
+            dsError.AcceptChanges()
+            LikeSession.dsErrorSession = dsError
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+    End Sub
+
+    Public Function getPartFullData(partNo As String, objData As ProductClass) As Integer
+        Dim exMessage As String = Nothing
+        Dim result As Integer = -1
+        Try
+            Dim dsGetDataFromDualInventory1 = gnr.GetDataByPartNoVendor(partNo)
+            If Not dsGetDataFromDualInventory1 Is Nothing Then
+                If dsGetDataFromDualInventory1.Tables(0).Rows.Count > 0 Then
+                    objData.Header.Detail.Details.MinorCode = Trim(dsGetDataFromDualInventory1.Tables(0).Rows(0).ItemArray(dsGetDataFromDualInventory1.Tables(0).Columns("IMPC2").Ordinal).ToString())
+                    Return 1
+                Else
+                    Return 0
+                    'exception to show
+                End If
+            Else
+                Return 0
+                'exception to show
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return result
+        End Try
+    End Function
+
+    Public Sub getCtpReference(partNo As String, objData As ProductClass)
+        Dim exMessage As String = Nothing
+        Try
+            Dim dsGetCTPPartRef = gnr.GetCTPPartRef(partNo)
+
+            If objData.Header.Detail.Details.CTPNo = "0" Then
+                If Not String.IsNullOrEmpty(dsGetCTPPartRef) Then
+                    objData.Header.Detail.Details.CTPNo = dsGetCTPPartRef
+                Else
+                    objData.Header.Detail.Details.CTPNo = ""
+                End If
+            End If
+
+            If objData.Header.Detail.Details.ManufactNo = "0" Then
+                If Not String.IsNullOrEmpty(dsGetCTPPartRef) Then
+                    objData.Header.Detail.Details.ManufactNo = dsGetCTPPartRef
+                Else
+                    objData.Header.Detail.Details.ManufactNo = ""
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
+    End Sub
 
     Public Sub LaunchGridProcess()
 
@@ -3178,6 +3459,95 @@ Public Class frmLoadExcel
         End Try
     End Function
 
+    Private Function InsertProductDetailsObj(qotaObj As ProductClass) As Integer
+        Dim dtTime As DateTimePicker = New DateTimePicker()
+        Dim dtTime1 As DateTimePicker = New DateTimePicker()
+        Dim dtTime2 As DateTimePicker = New DateTimePicker()
+        Dim dtTime3 As DateTimePicker = New DateTimePicker()
+        Dim dtTime4 As DateTimePicker = New DateTimePicker()
+        Dim dtTime5 As DateTimePicker = New DateTimePicker()
+        Dim dtTime6 As DateTimePicker = New DateTimePicker()
+        Dim QueryDetailResult As Integer = -1
+        Dim partstoshow As String
+        Dim exMessage As String = " "
+        Try
+
+            'Dim strCheck = gnr.checkFields(projectNo, txtpartno.Text, DTPicker2, userid, dtTime, userid, dtTime1, txtctpno.Text, txtqty.Text,
+            '                                                    txtmfr.Text, txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, dtTime2, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+            '                                                    cmbuser.SelectedValue, chknew, dtTime3, txtsample.Text, txttcost.Text, txtvendorno.Text, partstoshow, cmbminorcode.SelectedValue, txttoocost.Text, dtTime4,
+            '                                                    dtTime5.Value.ToShortDateString(), txtsampleqty.Text)
+            'Dim strCheck = Nothing
+            'If String.IsNullOrEmpty(strCheck) Then
+
+#Region "Variable assign"
+
+            'Dim projectNoValue = code
+            'Dim PartNoValue = partNo
+            Dim chkControl = New CheckBox()
+#End Region
+
+#Region "Set Date values"
+            dtTime.Value = Now 'PRDDAT
+            dtTime.CustomFormat = "yyyy/MM/dd/"
+            dtTime1.Value = Now 'CRDATE
+            dtTime1.CustomFormat = "yyyy/MM/dd/"
+            dtTime2.Value = Now 'MODATE
+            dtTime2.CustomFormat = "yyyy/MM/dd/"
+            dtTime3.Value = Now 'PODATE
+            dtTime3.CustomFormat = "yyyy/MM/dd/"
+            dtTime4.Value = Now 'PODATE
+            dtTime4.CustomFormat = "yyyy/MM/dd/"
+            dtTime5.Value = Now 'PODATE
+            dtTime5.CustomFormat = "yyyy/MM/dd/"
+            dtTime6.Value = Now 'PODATE
+            dtTime6.CustomFormat = "yyyy/MM/dd/"
+#End Region
+
+#Region "Guidance"
+
+            'PRHCOD,PRDPTN,PRDDAT,CRUSER,CRDATE,MOUSER,MODATE,PRDCTP,PRDQTY,PRDMFR,PRDMFR#,PRDCOS,PRDCON,PRDPO#,PODATE,PRDSTS,PRDBEN,PRDINF,PRDUSR,PRDNEW,
+            'PRDEDD, PRDSCO, PRDTTC, VMVNUM, PRDPTS, PRDMPC, PRDTCO, PRDERD, PRDPDA, PRDSQTY
+
+            'QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
+            '                    userid, dtTime1, userid, dtTime2, CTPNoValue, qtyValue,
+            '                    MFRValue, MFRNoValue, unitcostValue, unitcostVValue,
+            '                    poNoValue, dtTime3, statusValue, benefitsValue,
+            '                    DetailsValue, personChValue, chkControl, dtTime4, samplecostValue,
+            '                    misccostValue, vendorNoValue, partstoshow, minorcodeValue, toolingcostValue, dtTime5,
+            '                    dtTime6, If(Not String.IsNullOrEmpty(sampleQtyValue), CInt(sampleQtyValue), 0))
+
+#End Region
+            'revisar los paraametros
+            Dim generalStatus = If(cmbStatusMore.SelectedIndex = 0 Or cmbStatusMore.SelectedIndex = -1, "E", cmbStatusMore.SelectedValue.ToString())
+            QueryDetailResult = gnr.InsertProductDetail(qotaObj.Header.Detail.Details.ProjectNo, qotaObj.Header.Detail.Details.PartNo, dtTime,
+                                    userid, dtTime1, userid, dtTime2, qotaObj.Header.Detail.Details.CTPNo, qotaObj.Header.Detail.Details.Qty,
+                                    "", qotaObj.Header.Detail.Details.ManufactNo, qotaObj.Header.Detail.Details.UnitCost, qotaObj.Header.Detail.Details.UnitCostNew,
+                                    "", dtTime3, generalStatus, "benefits",
+                                    "coments", "personincharge", chkControl, dtTime4, "0",
+                                    "0", qotaObj.Header.Detail.Details.VendorNumber, "", qotaObj.Header.Detail.Details.MinorCode, "0", dtTime5,
+                                    dtTime6, If(Not String.IsNullOrEmpty(""), CInt(""), "0"))
+
+            '"", , 0, Today(), "", ,
+            'qotaObj.Header.Detail.Details.NewOrSupplier, Today(), 0, 0,
+            'qotaObj.Header.personInCharge, Today(), userid, ,
+            '    0, , "", , ,
+            '    , "", Today(), qotaObj.Header.Detail.Details.Status,
+            '    "", "", qotaObj.Header.Detail.Details.ProjectNo, qotaObj.Header.Detail.Details.PartNo
+
+            If QueryDetailResult < 0 Then
+                'MessageBox.Show("An error ocurred in the process.", "CTP System", MessageBoxButtons.OK)
+                Return 1
+            Else
+                Return 0
+            End If
+            'End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Return 1
+        End Try
+    End Function
+
     Private Function InsertProductDetails(partNo As String, code As String, personInCharge As String, Optional ByVal vendorNoo As String = Nothing) As Integer
         Dim dtTime As DateTimePicker = New DateTimePicker()
         Dim dtTime1 As DateTimePicker = New DateTimePicker()
@@ -3203,36 +3573,9 @@ Public Class frmLoadExcel
             Dim projectNoValue = code
             Dim PartNoValue = partNo
             Dim chkControl = New CheckBox()
-
-#Region "Old Data"
-
-            'Dim vendorNoValue = If(Qry.Columns.Contains("VMVNUM"), Qry.Rows(0).ItemArray(Qry.Columns("VMVNUM").Ordinal).ToString(), Nothing)
-            'Dim CTPNoValue = If(Qry.Columns.Contains("PRDCTP"), Qry.Rows(0).ItemArray(Qry.Columns("PRDCTP").Ordinal).ToString(), Nothing)
-            'Dim qtyValue = If(Qry.Columns.Contains("PRDQTY"), Qry.Rows(0).ItemArray(Qry.Columns("PRDQTY").Ordinal).ToString(), 0)
-            'Dim MFRValue = ""
-            'Dim MFRNoValue = If(Qry.Columns.Contains("PRDMFR#"), Qry.Rows(0).ItemArray(Qry.Columns("PRDMFR#").Ordinal).ToString(), Nothing)
-            'Dim unitcostValue = If(Qry.Columns.Contains("PRDCOS"), Qry.Rows(0).ItemArray(Qry.Columns("PRDCOS").Ordinal).ToString(), 0)
-            'Dim unitcostVValue = If(Qry.Columns.Contains("PRDCON"), Qry.Rows(0).ItemArray(Qry.Columns("PRDCON").Ordinal).ToString(), 0)
-            'Dim chkControl = New CheckBox()
-            'Dim cnew = If(Qry.Columns.Contains("PRDNEW"), Qry.Rows(0).ItemArray(Qry.Columns("PRDNEW").Ordinal).ToString(), Nothing)
-            'Dim chkValue = If(String.IsNullOrEmpty(cnew),
-            '    "0", Qry.Rows(0).ItemArray(Qry.Columns("PRDNEW").Ordinal).ToString())
-            'Dim chkSelection = If(chkValue = "0", Not chkControl.Checked, chkControl.Checked)
-            'chkControl.Checked = chkSelection
-
-            ''Dim statusValue2 = If(String.IsNullOrEmpty(Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString()),
-            ''    "E", Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString())
-            'Dim sts = If(Qry.Columns.Contains("PRDSTS"), Qry.Rows(0).ItemArray(Qry.Columns("PRDSTS").Ordinal).ToString(), Nothing)
-            'Dim tempStatus = gnr.GetAllStatusesReturn(sts, "cntde1")
-            'Dim statusValue = If(String.IsNullOrEmpty(sts),
-            '    "E", If(String.IsNullOrEmpty(tempStatus), "E", tempStatus))
-
-#End Region
-
 #End Region
 
 #Region "Set Date values"
-
             dtTime.Value = Now 'PRDDAT
             dtTime.CustomFormat = "yyyy/MM/dd/"
             dtTime1.Value = Now 'CRDATE
@@ -3247,9 +3590,6 @@ Public Class frmLoadExcel
             dtTime5.CustomFormat = "yyyy/MM/dd/"
             dtTime6.Value = Now 'PODATE
             dtTime6.CustomFormat = "yyyy/MM/dd/"
-
-            'dtTime5.Value = New DateTime(1900, 1, 1)
-
 #End Region
 
 #Region "Guidance"
@@ -3368,7 +3708,7 @@ Public Class frmLoadExcel
                           .Where(Function(x) Trim(UCase(x.Field(Of String)("CNT03"))) = Trim(UCase(status)))
             Dim rowLenght = dwResult.LongCount
             If rowLenght > 0 Then
-                newValue = Trim(dwResult(0).ItemArray(3).ToString())
+                newValue = Trim(dwResult(0).ItemArray(1).ToString())
                 Return newValue
             Else
                 Exit Function

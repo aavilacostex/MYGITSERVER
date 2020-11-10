@@ -262,7 +262,7 @@
                             End If
 
                             Dim oldVendorNo = ds.Tables(0).Rows(0).ItemArray(ds.Tables(0).Columns("VMVNUM").Ordinal)
-                            PoQotaFunction(oldVendorNo, partNo)
+                            PoQotaFunction(oldVendorNo, partNo, Trim(cmbstatus.GetItemText(cmbstatus.SelectedItem(1))))
 
                             If (Trim(status2) = "Approved") Or (Trim(status2) = "Approved with advice") Then
                                 If intMassVendNoFlg = 1 Then
@@ -329,10 +329,10 @@
         End Try
     End Sub
 
-    Private Sub PoQotaFunction(oldVendorNo As String, partNo As String)
+    Private Sub PoQotaFunction(oldVendorNo As String, partNo As String, status As String)
         Dim exMessage As String = " "
         Dim statusquote As String
-        Dim Status2 As String = ""
+        Dim Status2 As String = status
         Dim strQueryAdd As String = "WHERE PQVND = " & Trim(oldVendorNo) & " AND PQPTN = '" & Trim(UCase(partNo)) & "'"
         Try
             statusquote = "D-" & Status2

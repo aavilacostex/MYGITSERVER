@@ -404,6 +404,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private excelColumnNames As String
+    Public Property GetColumnNames() As String
+        Get
+            Return excelColumnNames
+        End Get
+        Set(ByVal value As String)
+            excelColumnNames = value
+        End Set
+    End Property
+
 #End Region
 
     Public Sub New()
@@ -437,6 +447,7 @@ NotInheritable Class Gn1
         FlagCloseMDIForm = ConfigurationManager.AppSettings("hideMDIForm").ToString()
         FlagTestEmails = ConfigurationManager.AppSettings("sendToTestEmails").ToString()
         TestEmailAddresess = ConfigurationManager.AppSettings("testEmails").ToString()
+        GetColumnNames = ConfigurationManager.AppSettings("checkColumns").ToString()
     End Sub
 
     <DllImport("user32.dll")>
@@ -630,6 +641,21 @@ NotInheritable Class Gn1
         ds.Locale = CultureInfo.InvariantCulture
         Try
             Sql = "SELECT PRDPTN FROM PRDVLD WHERE TRIM(PRDPTN) = '" & Trim(UCase(partNo)) & "'"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetPartInImnsta(partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select * from inmsta where trim(ucase(imptn)) = '" & Trim(UCase(partNo)) & "'"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -1510,6 +1536,21 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function GetPartCtpRef(ctpNo As String) As String
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim TcpPartNo As String = " "
+        Dim columnToChange = "CRPTNO"
+        Try
+            Sql = "SELECT * FROM CTPREFS WHERE TRIM(UCASE(CRCTPR )) = '" & Trim(UCase(ctpNo)) & "'"
+            TcpPartNo = GetSingleDataFromDatabase(Sql, columnToChange)
+            Return Trim(TcpPartNo)
+        Catch ex As Exception
+            exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetCTPPartRef(partNo As String) As String
         Dim exMessage As String = " "
         Dim Sql As String
@@ -1578,6 +1619,21 @@ NotInheritable Class Gn1
         Try
             Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorAssigned) & " AND PQPTN = '" & Trim(UCase(partNo)) & "' and pqqdty < 50 
                     ORDER BY PQQDTY DESC, PQQDTM DESC, PQQDTD DESC"
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
+            Return Nothing
+        End Try
+    End Function
+
+    Public Function GetAllPOQOTA(vendorAssigned As String, partNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "SELECT * FROM POQOTA WHERE PQVND = " & Trim(vendorAssigned) & " AND PQPTN = '" & Trim(UCase(partNo)) & "'  ORDER BY PQSEQ DESC"
             ds = GetDataFromDatabase(Sql)
             Return ds
         Catch ex As Exception
@@ -1908,6 +1964,25 @@ NotInheritable Class Gn1
 #End Region
 
 #Region "Updates"
+
+    Public Function UpdatePoQotaExact(statusquote As String, insertYear As String, insertMonth As String, insertDay As String, vendorNo As String, partNo As String, secuencial As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
+        Try
+            Dim statusquoteNew = If(String.IsNullOrEmpty(statusquote), statusquote, If(statusquote.Length < maxLength, statusquote, statusquote.Substring(0, Math.Min(statusquote.Length, maxLength))))
+
+            Sql = "UPDATE POQOTA SET PQCOMM = '" & statusquoteNew & "', PQQDTY =  " & insertYear.Substring(insertYear.Length - 2) & " ,PQQDTM = " & insertMonth & " ,
+                    PQQDTD = " & insertDay & " WHERE PQSEQ = " & secuencial & " AND PQVND  = " & Trim(vendorNo) & " AND PQPTN  = '" & Trim(UCase(partNo)) & "' AND SUBSTR(UCASE(SPACE),32,3) = 'DEV' " &
+                    " AND PQCOMM LIKE 'D%'"
+            QueryResult = UpdateDataInDatabase(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return QueryResult
+        End Try
+    End Function
 
     Public Function UpdatePoQoraRow(mpnopo As String, minQty As String, unitCostNew As String, statusquote As String, insertYear As String, insertMonth As String, insertDay As String,
                                     vendorNo As String, partNo As String) As Integer
@@ -2254,19 +2329,60 @@ NotInheritable Class Gn1
 
 #Region "Utils"
 
+    Public Shared Function CheckForInternetConnection() As Boolean
+        Dim exMessage As String = Nothing
+        Try
+            Using client = New WebClient()
+                Using stream = client.OpenRead("http://www.google.com")
+                    Return True
+                End Using
+            End Using
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return False
+        End Try
+    End Function
+
+    Public Function adjustDatetimeFormat(documentName As String, documentExt As String) As String
+
+        Dim exMessage As String = Nothing
+        Try
+            Dim name As String = Nothing
+            Dim culture As CultureInfo = CultureInfo.CreateSpecificCulture("en-US")
+            Dim dtfi As DateTimeFormatInfo = culture.DateTimeFormat
+            dtfi.DateSeparator = "."
+
+            Dim now As DateTime = DateTime.Now
+            Dim halfName = now.ToString("G", dtfi)
+            halfName = halfName.Replace(" ", ".")
+            halfName = halfName.Replace(":", "")
+            Dim fileName = documentName & "." & halfName & "." & documentExt
+            Return fileName
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+
+    End Function
+
     Public Function GetInactiveAlertByUser(userid As String) As DataSet
         Dim exMessage As String = " "
         Dim sql As String = ""
         Dim ds As DataSet = New DataSet()
         Try
-            sql = " select A1.prhcod,A1.prdptn, A1.vmvnum, A1.crdate, date(now()), A1.modate, (Days(date(now())) - Days(A1.modate)) as diffays, A2.pqcomm, A1.prdusr from prdvld A1 inner join poqota A2 on A1.prdptn = A2.pqptn and A1.vmvnum = A2.pqvnd
-                    where SUBSTR(UCASE(A2.SPACE),32,3) = 'DEV' AND A2.PQCOMM LIKE 'D%' and (Days(date(now())) - Days(A1.modate)) < 30 and (Days(date(now())) - Days(A1.modate)) > 0
-                    and PQCOMM NOT LIKE 'D-Closed%' and PQCOMM NOT LIKE 'D-Approved%' and PQCOMM NOT LIKE 'D-Reject%' and A1.prdusr = '" & Trim(UCase(userid)) & "'
+            sql = " select A1.prhcod As ProjectNo,A1.prdptn As PartNo, A1.vmvnum As VendorNo, A1.crdate As CreationDate, date(now()) As CurrentDate, A1.modate As ModificationDate, (Days(date(now())) - Days(A1.modate)) as DifferenceDays, A2.pqcomm As StatusComment, A1.prdusr As User 
+                    from prdvld A1 inner join poqota A2 on A1.prdptn = A2.pqptn and A1.vmvnum = A2.pqvnd where SUBSTR(UCASE(A2.SPACE),32,3) = 'DEV' AND A2.PQCOMM LIKE 'D%' 
+                    and (Days(date(now())) - Days(A1.modate)) > 30 and (Days(date(now())) - Days(A1.modate)) > 0 and PQCOMM LIKE 'D-Pending%' OR PQCOMM LIKE 'D-Analysis%' 
+                    and A1.prdusr = '" & Trim(UCase(userid)) & "' and A1.cruser = '" & Trim(UCase(userid)) & "'
                     union
-                    select A0.prhcod, A0.prdptn, A0.vmvnum, A0.crdate,date(now()), A0.modate, (Days(date(now())) - Days(A0.modate)) as diffays, '' as pqcomm , A0.prdusr
-                    from prdvld A0 inner join vnmas A1 on A0.vmvnum = A1.vmvnum inner join csuser A2 on A1.vmabb# = A2.uspurc 
-                    where A2.ususer = '" & Trim(UCase(userid)) & "'
-                    and prdsts not in ('AA','A','R','CS','CN','CD','CL') and (Days(date(now())) - Days(A0.modate)) < 30 and (Days(date(now())) - Days(A0.modate)) > 0"
+                    select A0.prhcod  As ProjectNo, A0.prdptn As PartNo, A0.vmvnum As VendorNo, A0.crdate As CreationDate,date(now()) As CurrentDate, A0.modate As ModificationDate, (Days(date(now())) - Days(A0.modate)) as DifferenceDays, 
+                    CASE A0.prdsts
+                       WHEN 'AS' THEN 'D-Analysis of Sample'
+                       WHEN 'PS' THEN 'D-Pending from Suppl'   
+                     END  As StatusComment
+                    , A0.prdusr As User
+                    from prdvld A0 inner join vnmas A1 on A0.vmvnum = A1.vmvnum inner join csuser A2 on A1.vmabb# = A2.uspurc where A2.ususer = '" & Trim(UCase(userid)) & "'
+                    and prdsts in ('PS','AS') and (Days(date(now())) - Days(A0.modate)) > 30 and (Days(date(now())) - Days(A0.modate)) > 0"
             'Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(userName)) & "'"
             ds = GetDataFromDatabase(sql)
             Return ds
@@ -2281,7 +2397,7 @@ NotInheritable Class Gn1
         Dim sql As String = ""
         Dim ds As DataSet = New DataSet()
         Try
-            sql = " Select a2.prhcod, A1.prname, A2.crdate, a2.prdctp, a2.prdmfr#, a2.prdcon from prdvlh A1 inner join prdvld A2 On a1.prhcod = a2.prhcod where a2.vmvnum = " & vendorNo & " And a2.prdsts = '" & Trim(UCase(status)) & "'
+            sql = " Select a2.prhcod  As ProjectNo, A1.prname As ProjectName, A2.crdate  As CreationDate,a2.prdptn  As PartNo, a2.prdctp As CTPNo, a2.prdmfr# As ManufacturerNo, a2.prdcon as UnitCost from prdvlh A1 inner join prdvld A2 On a1.prhcod = a2.prhcod where a2.vmvnum = " & vendorNo & " And a2.prdsts = '" & Trim(UCase(status)) & "'
                         order by 1 desc"
             'Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(userName)) & "'"
             ds = GetDataFromDatabase(sql)
