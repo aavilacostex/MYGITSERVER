@@ -50,4 +50,5 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbproj.CopyComp
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.exe
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.pdb
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\log4net.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\log4net.xml

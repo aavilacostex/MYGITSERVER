@@ -43,11 +43,14 @@ Public Class frmLoadExcel
     Dim exColumnNames = gnr.GetColumnNames()
     'Dim ac1 As Autocomplete_Textbox = New Autocomplete_Textbox()
 
+    Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
+
 #Region "Page Load"
 
     Private Sub frmLoadExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         If Not gnr.CheckForInternetConnection Then
+            Log.Warn("There is an internet connection issue.Please try in a while!")
             MessageBox.Show("There is an internet connection issue.Please try in a while!", "CTP System", MessageBoxButtons.OK)
         Else
             'LoadCombos(sender, e)
@@ -79,6 +82,8 @@ Public Class frmLoadExcel
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             End If
+
+            Log.Info("Logged User: " & userid)
 
             'test
 
@@ -139,6 +144,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -271,7 +277,7 @@ Public Class frmLoadExcel
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -308,14 +314,20 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged, ComboBox1.TextChanged
-        If ComboBox1.SelectedValue IsNot Nothing Then
-            txtVendorNo.Text = ComboBox1.SelectedValue.ToString()
-        End If
+        Dim exMessage As String = Nothing
+        Try
+            If ComboBox1.SelectedValue IsNot Nothing Then
+                txtVendorNo.Text = ComboBox1.SelectedValue.ToString()
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
@@ -328,6 +340,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -336,72 +349,81 @@ Public Class frmLoadExcel
 #Region "TextBox"
 
     Private Sub txtProjectNo_TextChanged(sender As Object, e As EventArgs) Handles txtProjectNo.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-            Dim ds = gnr.GetDataByPRHCOD(txtProjectNo.Text)
-            Dim message = If(ds IsNot Nothing, "", "This project number is invalid.")
-            If (Not String.IsNullOrEmpty(message)) Then
-                MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
-                txtProjectNo.Text = Nothing
+        Dim exMessage As String = Nothing
+        Try
+            If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+                btnSelect.Enabled = True
+            ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+                btnSelect.Enabled = True
+                Dim ds = gnr.GetDataByPRHCOD(txtProjectNo.Text)
+                Dim message = If(ds IsNot Nothing, "", "This project number is invalid.")
+                If (Not String.IsNullOrEmpty(message)) Then
+                    MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
+                    txtProjectNo.Text = Nothing
+                End If
+            Else
+                btnSelect.Enabled = False
             End If
-        Else
-            btnSelect.Enabled = False
-        End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub txtProjectName_TextChanged(sender As Object, e As EventArgs) Handles txtProjectName.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        Else
-            btnSelect.Enabled = False
-        End If
-    End Sub
-
-    Private Sub txtVendorName_TextChanged(sender As Object, e As EventArgs)
-
-        'Dim result = gnr.getVendorNoAndNameByNameLike(txtVendorName.Text)
-        'Dim strValue = txtVendorName.Text
-        'Dim DataCollection As New AutoCompleteStringCollection()
-        'Dim collection = gnr.getVendorNoAndNameByName()
-        'txtVendorName.AutoCompleteCustomSource = collection
+        Dim exMessage As String = Nothing
+        Try
+            If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+                btnSelect.Enabled = True
+            ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+                btnSelect.Enabled = True
+            Else
+                btnSelect.Enabled = False
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
 
     End Sub
 
     Private Sub txtVendorNo_TextChanged_1(sender As Object, e As EventArgs) Handles txtVendorNo.TextChanged
-        If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-            btnSelect.Enabled = True
-        Else
-            btnSelect.Enabled = False
-        End If
-        btnValidVendor.Enabled = True
+        Dim exMessage As String = Nothing
+        Try
+            If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+                btnSelect.Enabled = True
+            ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
+                btnSelect.Enabled = True
+            Else
+                btnSelect.Enabled = False
+            End If
+            btnValidVendor.Enabled = True
 
-        Dim txtValue As String = txtVendorNo.Text
+            Dim txtValue As String = txtVendorNo.Text
 
-        If True Then
+            If True Then
 
-        End If
-        'txtVendorNo.Text = If(txtVendorNo.Text IsNot Nothing Or txtVendorNo.Text <> "", txtVendorNo.Text.Replace(Environment.NewLine, ""), " ")
-        txtVendorNo.Text = If(txtValue = "0" Or txtValue = Environment.NewLine, txtVendorNo.Text.Replace(txtValue, ""), txtValue)
-        ''txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
-        'If (Regex.IsMatch(txtVendorNo.Text, "^[0-9]{1,6}$") And gnr.isVendorAccepted(txtVendorNo.Text)) Then
-        'ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
-        'If ComboBox1.SelectedIndex > 0 Then
-        '    ac1.Text = lblVendorDesc.Text
-        'End If
-        'End If
+            End If
+            'txtVendorNo.Text = If(txtVendorNo.Text IsNot Nothing Or txtVendorNo.Text <> "", txtVendorNo.Text.Replace(Environment.NewLine, ""), " ")
+            txtVendorNo.Text = If(txtValue = "0" Or txtValue = Environment.NewLine, txtVendorNo.Text.Replace(txtValue, ""), txtValue)
+            ''txtVendorNo.Text = txtVendorNo.Text.Replace(Environment.NewLine, "")
+            'If (Regex.IsMatch(txtVendorNo.Text, "^[0-9]{1,6}$") And gnr.isVendorAccepted(txtVendorNo.Text)) Then
+            'ComboBox1.SelectedIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
+            'If ComboBox1.SelectedIndex > 0 Then
+            '    ac1.Text = lblVendorDesc.Text
+            'End If
+            'End If
 
-        If txtVendorNo.Text = "-1" Then
-            Dim selIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
-            Dim curSel As DataRowView = ComboBox1.Items(selIndex)
-            txtVendorNo.Text = curSel.Row.ItemArray(1).ToString()
-            lblVendorDesc.Text = curSel.Row.ItemArray(0).ToString()
-        End If
+            If txtVendorNo.Text = "-1" Then
+                Dim selIndex = ComboBox1.FindString(Trim(lblVendorDesc.Text))
+                Dim curSel As DataRowView = ComboBox1.Items(selIndex)
+                txtVendorNo.Text = curSel.Row.ItemArray(1).ToString()
+                lblVendorDesc.Text = curSel.Row.ItemArray(0).ToString()
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
 #End Region
@@ -430,6 +452,7 @@ Public Class frmLoadExcel
             Return dt
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -622,7 +645,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -661,6 +684,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -870,7 +894,7 @@ Public Class frmLoadExcel
             DataGridView2.DataSource = Nothing
             DataGridView2.Refresh()
             exMessage = ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1058,6 +1082,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1095,6 +1120,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1125,6 +1151,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1194,6 +1221,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1231,6 +1259,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1268,6 +1297,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1298,15 +1328,28 @@ Public Class frmLoadExcel
             Dim epep = Nothing
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
-        DataGridView1.DataSource = Tables(bs.Position)
+        Dim exMessage As String = Nothing
+        Try
+            DataGridView1.DataSource = Tables(bs.Position)
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub bs1_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
-        DataGridView2.DataSource = Tables1(bs1.Position)
+        Dim exMessage As String = Nothing
+        Try
+            DataGridView2.DataSource = Tables1(bs1.Position)
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Public Sub handleDataGridColumnsOnDemand(dgvHandle As DataGridView, listToChange As List(Of Integer), index As Integer, flag As Boolean)
@@ -1317,6 +1360,7 @@ Public Class frmLoadExcel
             Next
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1328,6 +1372,7 @@ Public Class frmLoadExcel
             Next
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1417,6 +1462,7 @@ Public Class frmLoadExcel
             End Using
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1433,11 +1479,16 @@ Public Class frmLoadExcel
     'End Sub
 
     Private Sub txtVendorNo_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtVendorNo.KeyDown
-
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            btnValidVendor_Click(sender, Nothing)
-        End If
+        Dim exMessage As String = Nothing
+        Try
+            If e.KeyCode = Keys.Enter Then
+                e.SuppressKeyPress = True
+                btnValidVendor_Click(sender, Nothing)
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub btnValidVendor_Click(sender As Object, e As EventArgs) Handles btnValidVendor.Click
@@ -1486,22 +1537,26 @@ Public Class frmLoadExcel
             btnValidVendor.Enabled = False
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub btnSelect_Click(sender As Object, e As EventArgs) Handles btnSelect.Click
-
-        'Call ShowDialog and launch second thread
-        Dim result As DialogResult = OpenFileDialog1.ShowDialog()
-        If result = DialogResult.OK Then
-            If LikeSession.excelErrorValidation = False Then
-                BackgroundWorker2.RunWorkerAsync()
-                LoadingExcel.ShowDialog()
-                LoadingExcel.BringToFront()
+        Dim exMessage As String = Nothing
+        Try
+            'Call ShowDialog and launch second thread
+            Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+            If result = DialogResult.OK Then
+                If LikeSession.excelErrorValidation = False Then
+                    BackgroundWorker2.RunWorkerAsync()
+                    LoadingExcel.ShowDialog()
+                    LoadingExcel.BringToFront()
+                End If
             End If
-        End If
-
-
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub btnInsert_Click(sender As Object, e As EventArgs) Handles btnInsert.Click
@@ -2044,6 +2099,7 @@ Public Class frmLoadExcel
 #End Region
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2339,6 +2395,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2352,6 +2409,7 @@ Public Class frmLoadExcel
             'btnCheck.Enabled = False
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2365,6 +2423,7 @@ Public Class frmLoadExcel
             'btnCheck.Enabled = True
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2410,6 +2469,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2603,7 +2663,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -2754,6 +2814,7 @@ Public Class frmLoadExcel
             Return True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return False
         End Try
 
@@ -2775,6 +2836,7 @@ Public Class frmLoadExcel
             'LikeSession.dsResultsSession = ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2806,6 +2868,7 @@ Public Class frmLoadExcel
             LikeSession.dsErrorSession = dsError
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2828,6 +2891,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return result
         End Try
     End Function
@@ -2854,6 +2918,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
 
     End Sub
@@ -2921,6 +2986,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
 
     End Sub
@@ -2956,15 +3022,21 @@ Public Class frmLoadExcel
     'End Sub
 
     Public Sub InitializeOpenFileDialog()
-        OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+        Dim exMessage As String = Nothing
+        Try
+            OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
 
-        'Set the file dialog to filter for graphics files.
-        OpenFileDialog1.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
-        '"CSV files (*.csv)|*.csv|Excel Files|*.xls;*.xlsx"
+            'Set the file dialog to filter for graphics files.
+            OpenFileDialog1.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
+            '"CSV files (*.csv)|*.csv|Excel Files|*.xls;*.xlsx"
 
-        'Allow the user to select multiple images.
-        OpenFileDialog1.Multiselect = True
-        OpenFileDialog1.Title = "Select an excel document"
+            'Allow the user to select multiple images.
+            OpenFileDialog1.Multiselect = True
+            OpenFileDialog1.Title = "Select an excel document"
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Function itemCategory(partNo As String, vendorNo As String) As Integer
@@ -2996,6 +3068,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return result
         End Try
 
@@ -3023,7 +3096,8 @@ Public Class frmLoadExcel
             Return dictionary
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
+
         End Try
     End Function
 
@@ -3223,7 +3297,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3246,52 +3320,57 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
 
     End Sub
 
     Private Sub setValues()
+        Dim exMessage As String = Nothing
+        Try
+            Application.CurrentCulture = New CultureInfo("EN-US")
 
-        Application.CurrentCulture = New CultureInfo("EN-US")
+            cmdExcel.BackgroundImageLayout = ImageLayout.Stretch
 
-        cmdExcel.BackgroundImageLayout = ImageLayout.Stretch
+            btnSuccess.Enabled = False
+            btnInsert.Enabled = False
+            btnCheck.Enabled = False
+            btnSelect.Enabled = False
+            'dtProjectDate.Value = Now
+            DataGridView1.ReadOnly = True
+            cmdExcel.Visible = False
+            SplitContainer1.Visible = False
 
-        btnSuccess.Enabled = False
-        btnInsert.Enabled = False
-        btnCheck.Enabled = False
-        btnSelect.Enabled = False
-        'dtProjectDate.Value = Now
-        DataGridView1.ReadOnly = True
-        cmdExcel.Visible = False
-        SplitContainer1.Visible = False
+            txtProjectNo.SetWatermark("Project Number")
+            txtProjectName.SetWatermark("Project Name")
+            txtVendorNo.SetWatermark("Vendor Number")
+            txtDesc.SetWatermark("Description")
 
-        txtProjectNo.SetWatermark("Project Number")
-        txtProjectName.SetWatermark("Project Name")
-        txtVendorNo.SetWatermark("Vendor Number")
-        txtDesc.SetWatermark("Description")
+            cmbStatus.SetWatermark("Project Status")
+            cmbPerCharge.SetWatermark("Person In Charge")
+            cmbStatusMore.SetWatermark("Project Status")
 
-        cmbStatus.SetWatermark("Project Status")
-        cmbPerCharge.SetWatermark("Person In Charge")
-        cmbStatusMore.SetWatermark("Project Status")
+            ac2.SetWatermark("Vendor Name")
 
-        ac2.SetWatermark("Vendor Name")
+            txtVendorNo.Text = ""
 
-        txtVendorNo.Text = ""
+            lblUsrLog.Text += userid
 
-        lblUsrLog.Text += userid
+            DataGridView2.Enabled = LikeSession.gridEnable
 
-        DataGridView2.Enabled = LikeSession.gridEnable
+            cmbStatus.Items.Add("-- Select Status --")
+            cmbStatus.Items.Add("I - In Process")
+            cmbStatus.Items.Add("F - Finished")
+            cmbStatus.SelectedIndex = 1
 
-        cmbStatus.Items.Add("-- Select Status --")
-        cmbStatus.Items.Add("I - In Process")
-        cmbStatus.Items.Add("F - Finished")
-        cmbStatus.SelectedIndex = 1
+            FillDDLStatus1()
+            FillDDlUser1()
 
-        FillDDLStatus1()
-        FillDDlUser1()
-
-        InitializeOpenFileDialog()
-
+            InitializeOpenFileDialog()
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Function utilDT(value As String, dtvalues As DataTable) As String
@@ -3309,6 +3388,7 @@ Public Class frmLoadExcel
             Return code
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -3344,6 +3424,7 @@ Public Class frmLoadExcel
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             strResult = exMessage
+            Log.Error(exMessage)
             'Return blResult
         End Try
         Return strResult
@@ -3365,6 +3446,7 @@ Public Class frmLoadExcel
             Return outMessage
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return "Not Validated. " & ex.Message
         End Try
     End Function
@@ -3381,6 +3463,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3415,6 +3498,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return False
         End Try
     End Function
@@ -3434,6 +3518,7 @@ Public Class frmLoadExcel
             'Return deletedFiles
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             'Return deletedFiles
         End Try
     End Sub
@@ -3455,6 +3540,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return rsReturn
         End Try
     End Function
@@ -3543,7 +3629,7 @@ Public Class frmLoadExcel
             'End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return 1
         End Try
     End Function
@@ -3625,7 +3711,7 @@ Public Class frmLoadExcel
             'End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return 1
         End Try
     End Function
@@ -3684,7 +3770,7 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
 
     End Sub
@@ -3715,6 +3801,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -3814,15 +3901,22 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub copyAlltoClipboard()
-        DataGridView1.SelectAll()
-        Dim dataObj As DataObject = DataGridView1.GetClipboardContent()
-        If (dataObj IsNot Nothing) Then
-            Clipboard.SetDataObject(dataObj)
-        End If
+        Dim exMessage As String = Nothing
+        Try
+            DataGridView1.SelectAll()
+            Dim dataObj As DataObject = DataGridView1.GetClipboardContent()
+            If (dataObj IsNot Nothing) Then
+                Clipboard.SetDataObject(dataObj)
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub releaseObject(ByVal obj As Object)
@@ -3831,6 +3925,7 @@ Public Class frmLoadExcel
             obj = Nothing
         Catch ex As Exception
             obj = Nothing
+            Log.Error(ex.Message)
             MessageBox.Show("Exception Occured while releasing object " + ex.ToString())
         Finally
             GC.Collect()
@@ -3893,6 +3988,7 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return strExt
         End Try
     End Function

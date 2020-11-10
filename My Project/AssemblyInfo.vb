@@ -14,6 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyProduct("CTP_IS_VBNET")>
 <Assembly: AssemblyCopyright("Copyright ©  2020")>
 <Assembly: AssemblyTrademark("")>
+<Assembly: log4net.Config.XmlConfigurator(Watch:=True)>
 
 <Assembly: ComVisible(False)>
 
