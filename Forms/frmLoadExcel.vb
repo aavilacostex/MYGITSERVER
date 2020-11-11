@@ -1584,6 +1584,7 @@ Public Class frmLoadExcel
         Dim projectNo As Integer = 0
         Dim acumulativeFailure As Integer = 0
         Dim dtReload As DataTable = New DataTable()
+        Dim dictProcessErrors As New Dictionary(Of String, String)
 
         Dim objData = New ProductClass()
         Dim objHeader = New ProductHeader()
@@ -1876,6 +1877,8 @@ Public Class frmLoadExcel
                             If rsInsert < 0 Then
                                 addDsErrorRow(partNo, txtVendorNo.Text, "Error inserting the project reference.")
                                 removeRowDs(partNo, txtVendorNo.Text)
+                                dictProcessErrors.Add(partNo.ToString(), txtVendorNo.Text)
+                                Log.Error("Error inserting data in prdvld: Project" & ProjectNoCurrent & ", PartNo: '" & partNo & "', VendorNo: " & vendorNo)
                             Else
                                 pos += 1
                                 'right insertion
@@ -1908,9 +1911,22 @@ Public Class frmLoadExcel
                                     dtReload.Rows.Add(R)
 
                                 Else
-                                    'error message
+                                    'pasando el row que no se logro insertar en poqota al ds de error y removiendolo del correcto
+                                    addDsErrorRow(partNo, txtVendorNo.Text, "Error saving data for this reference.")
+                                    removeRowDs(partNo, txtVendorNo.Text)
 
-                                    'cumulative reverse process
+                                    'error salvando informacion en poqota. Elimina registro correspondiente en tabla de PRDVLD
+                                    Dim dsCheckRegistry = gnr.GetDataByCodeAndVendorAndPart(ProjectNoCurrent, vendorNo, partNo)
+                                    If dsCheckRegistry IsNot Nothing Then
+                                        If dsCheckRegistry.Tables(0).Rows.Count = 1 Then
+                                            Dim rsDeletionPD = gnr.DeleteDataFromProdDet1(ProjectNoCurrent, partNo, vendorNo)
+                                            If rsDeletionPD = 1 Then
+                                                'dictProcessErrors.Add(partNo.ToString(), vendorNo)
+                                                Log.Error("The following data was deleted from PRDVLD: Project" & ProjectNoCurrent & ", PartNo: '" & partNo & "', VendorNo: " & vendorNo)
+                                                'crear objeto para notificar al usuario
+                                            End If
+                                        End If
+                                    End If
                                 End If
                                 'If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
                                 '    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
@@ -1949,7 +1965,7 @@ Public Class frmLoadExcel
                     LikeSession.dtReloadedData = dtReload
                 End If
 
-                '??????????
+                'terminando proceso reviso si el proyecto tiene referencias y si hay algun mensaje que enviar al usuario
                 Dim rsReferences = gnr.GetReferencesInProject(ProjectNoCurrent)
                 If rsReferences = 0 Then
                     Dim rsDeletion = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
@@ -2815,18 +2831,17 @@ Public Class frmLoadExcel
                             goAhead = True
                             Exit For
                         End If
-
-                        If goAhead Then
-                            Continue For
-                        Else
-                            Dim dr() As DataRow = mynetable.Select(col.ColumnName + " is   Null ")
-                            If dr.Length = counter Then
-                                Datatable.Columns.Remove(col.ColumnName)
-                                Datatable.AcceptChanges()
-                            End If
-                            goAhead = False
-                        End If
                     Next
+                End If
+                If goAhead Then
+                    goAhead = False
+                    Continue For
+                Else
+                    Dim dr() As DataRow = mynetable.Select(col.ColumnName + " is   Null ")
+                    If dr.Length = counter Then
+                        Datatable.Columns.Remove(col.ColumnName)
+                        Datatable.AcceptChanges()
+                    End If
                 End If
             Next
             Return True

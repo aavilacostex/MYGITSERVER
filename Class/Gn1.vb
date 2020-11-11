@@ -3402,6 +3402,21 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function DeleteDataFromProdDet1(code As String, partNo As String, vendorNo As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim rsConfirm As Integer = -1
+        Try
+            Sql = "delete from prdvld where prhcod = " & Trim(code) & " and prdptn = '" & Trim(partNo) & "' and vmvnum = " & Trim(vendorNo)
+            rsConfirm = DeleteRecordFromDatabase(Sql)
+            Return rsConfirm
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            Return rsConfirm
+        End Try
+    End Function
+
     Public Function DeleteDataFromPoQota(vendorNo As String, partNo As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
