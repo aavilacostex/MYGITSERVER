@@ -48,6 +48,8 @@ Public Class frmProductsDevelopment
 
     Public Event PositionChanged(sender As Object, e As EventArgs)
 
+    Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
+
     Public Sub New()
         ' This call is required by the designer.
         InitializeComponent()
@@ -60,6 +62,7 @@ Public Class frmProductsDevelopment
     Private Sub frmProductsDevelopment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         If Not gnr.CheckForInternetConnection Then
+            Log.Warn("There is an internet connection issue.Please try in a while!")
             MessageBox.Show("There is an internet connection issue.Please try in a while!", "CTP System", MessageBoxButtons.OK)
         Else
             LoadCombos(sender, e)
@@ -101,6 +104,8 @@ Public Class frmProductsDevelopment
                 'cmddelete.Visible = False
                 cmbuser2.Visible = False
             End If
+
+            Log.Info("Logged User: " & userid)
 
             'Dim btn As System.Windows.Forms.Button = New System.Windows.Forms.Button()
             'btn.Size = New Size(25, txtsearchcode.ClientSize.Height + 2)
@@ -221,7 +226,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -258,7 +263,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -299,7 +304,7 @@ Public Class frmProductsDevelopment
             cmbuser2.ValueMember = "USUSER"
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -343,7 +348,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -387,7 +392,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -420,7 +425,7 @@ Public Class frmProductsDevelopment
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -460,7 +465,7 @@ Public Class frmProductsDevelopment
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -487,7 +492,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -514,7 +519,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -525,45 +530,50 @@ Public Class frmProductsDevelopment
 
     Private Sub SSTab1_Selected(ByVal sender As Object, ByVal e As TabControlEventArgs) _
     Handles SSTab1.Selected
+        Dim exMessage As String = Nothing
+        Try
+            If SSTab1.SelectedIndex = 0 Then
+                Panel4.Enabled = True
+                cmdSave1.Enabled = False
+                cmdcvendor.Enabled = False
+                cmdchange.Enabled = False
+                cmdmpartno.Enabled = False
+                cmdunitcost.Enabled = False
+                cmdexit1.Enabled = True
+                cmdnew1.Enabled = True
+            ElseIf SSTab1.SelectedIndex = 1 Then
+                Panel4.Enabled = True
+                If flagdeve = 1 Then
+                    cmdnew2.Enabled = False
+                Else
+                    cmdnew2.Enabled = True
+                End If
 
-        If SSTab1.SelectedIndex = 0 Then
-            Panel4.Enabled = True
-            cmdSave1.Enabled = False
-            cmdcvendor.Enabled = False
-            cmdchange.Enabled = False
-            cmdmpartno.Enabled = False
-            cmdunitcost.Enabled = False
-            cmdexit1.Enabled = True
-            cmdnew1.Enabled = True
-        ElseIf SSTab1.SelectedIndex = 1 Then
-            Panel4.Enabled = True
-            If flagdeve = 1 Then
-                cmdnew2.Enabled = False
-            Else
-                cmdnew2.Enabled = True
-            End If
+                showTab2FilterPanel(dgvProjectDetails)
 
-            showTab2FilterPanel(dgvProjectDetails)
-
-        ElseIf SSTab1.SelectedIndex = 2 Then
-            Dim rsValue As Integer = -1
-            Panel4.Enabled = True
-            rsValue = mandatoryFields("new", SSTab1.SelectedIndex)
-            If rsValue = 0 Then
-                flagdeve = 0
-                flagnewpart = 1
-            Else
-                Dim rsMessage As DialogResult = MessageBox.Show("All the fields in the Project Tab must be filled before add parts!", "CTP System", MessageBoxButtons.OK)
-                If rsMessage = DialogResult.OK Then
-                    SSTab1.SelectedIndex = 1
+            ElseIf SSTab1.SelectedIndex = 2 Then
+                Dim rsValue As Integer = -1
+                Panel4.Enabled = True
+                rsValue = mandatoryFields("new", SSTab1.SelectedIndex)
+                If rsValue = 0 Then
+                    flagdeve = 0
+                    flagnewpart = 1
+                Else
+                    Dim rsMessage As DialogResult = MessageBox.Show("All the fields in the Project Tab must be filled before add parts!", "CTP System", MessageBoxButtons.OK)
+                    If rsMessage = DialogResult.OK Then
+                        SSTab1.SelectedIndex = 1
+                    End If
                 End If
             End If
-        End If
-        TableLayoutPanel15.Enabled = True
-        cmdchange.Enabled = True
-        cmdunitcost.Enabled = True
-        cmdmpartno.Enabled = True
-        cmdcvendor.Enabled = True
+            TableLayoutPanel15.Enabled = True
+            cmdchange.Enabled = True
+            cmdunitcost.Enabled = True
+            cmdmpartno.Enabled = True
+            cmdcvendor.Enabled = True
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     'Private Sub pScrollForm()
@@ -750,7 +760,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -818,7 +828,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -935,7 +945,7 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1009,7 +1019,7 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1163,7 +1173,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
         Exit Sub
     End Sub
@@ -1231,7 +1241,7 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
 
             ds = Nothing
             Return ds
@@ -1241,31 +1251,37 @@ Public Class frmProductsDevelopment
 
     Private Sub DataGridView1_CellFormatting(ByVal sender As Object, ByVal e As DataGridViewCellFormattingEventArgs) _
     Handles DataGridView1.CellFormatting
-        Dim CurrentState As String = ""
-        If e.ColumnIndex = 4 Then
-            If e.Value IsNot Nothing Then
-                CurrentState = e.Value.ToString
-                If CurrentState = "I" Then
-                    DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "In Process"
-                ElseIf CurrentState = "F" Then
-                    e.CellStyle.ForeColor = Color.Red
-                    e.Value = "Finished"
-                    'DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "Finished"
+        Dim exMessage As String = Nothing
+        Try
+            Dim CurrentState As String = ""
+            If e.ColumnIndex = 4 Then
+                If e.Value IsNot Nothing Then
+                    CurrentState = e.Value.ToString
+                    If CurrentState = "I" Then
+                        DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "In Process"
+                    ElseIf CurrentState = "F" Then
+                        e.CellStyle.ForeColor = Color.Red
+                        e.Value = "Finished"
+                        'DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "Finished"
+                    End If
+                End If
+            ElseIf e.ColumnIndex = 5 Then
+                If e.Value Is Nothing Then
+                    Dim projectNo = DataGridView1.Rows(e.RowIndex).Cells("ProjectNo").Value
+                    If checkIfDocsPresent(projectNo, 0) Then
+                        e.CellStyle.ForeColor = Color.Green
+                        DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = "Yes"
+                        'e.Value = checkIfDocsPresent(3221, 0).ToString()
+                    Else
+                        e.CellStyle.ForeColor = Color.Red
+                        DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = "No"
+                    End If
                 End If
             End If
-        ElseIf e.ColumnIndex = 5 Then
-            If e.Value Is Nothing Then
-                Dim projectNo = DataGridView1.Rows(e.RowIndex).Cells("ProjectNo").Value
-                If checkIfDocsPresent(projectNo, 0) Then
-                    e.CellStyle.ForeColor = Color.Green
-                    DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = "Yes"
-                    'e.Value = checkIfDocsPresent(3221, 0).ToString()
-                Else
-                    e.CellStyle.ForeColor = Color.Red
-                    DataGridView1.Rows(e.RowIndex).Cells("hasDoc").Value = "No"
-                End If
-            End If
-        End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub dgvProjectDetails_DataBindingComplete(ByVal sender As Object, ByVal e As DataGridViewBindingCompleteEventArgs) _
@@ -1294,6 +1310,7 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.AutoResizeColumns()
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
 
     End Sub
@@ -1447,7 +1464,8 @@ Public Class frmProductsDevelopment
                 End If
             End If
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1610,7 +1628,7 @@ Public Class frmProductsDevelopment
             txtMajor.Enabled = False
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1620,7 +1638,6 @@ Public Class frmProductsDevelopment
         Dim RowDs As DataRow
         ds.Locale = CultureInfo.InvariantCulture
         Dim exMessage As String = " "
-
         Try
             For Each row As DataGridViewRow In DataGridView1.SelectedRows
                 Index = DataGridView1.CurrentCell.RowIndex
@@ -1639,63 +1656,71 @@ Public Class frmProductsDevelopment
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
-
-
     End Sub
 
     Private Sub dgvProjectDetails_CellContentClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
     Handles dgvProjectDetails.CellContentClick
-        If e.ColumnIndex = 7 And e.RowIndex > 0 Then
-            Dim UrlAddress = gnr.JiraPathBaseValue + dgvProjectDetails(e.ColumnIndex, e.RowIndex).Value.ToString()
-            If System.Uri.IsWellFormedUriString(UrlAddress, UriKind.Absolute) Then
-                Process.Start(UrlAddress)
+        Dim exMessage As String = Nothing
+        Try
+            If e.ColumnIndex = 7 And e.RowIndex > 0 Then
+                Dim UrlAddress = gnr.JiraPathBaseValue + dgvProjectDetails(e.ColumnIndex, e.RowIndex).Value.ToString()
+                If System.Uri.IsWellFormedUriString(UrlAddress, UriKind.Absolute) Then
+                    Process.Start(UrlAddress)
+                Else
+                    MessageBox.Show("The url has error.", "CTP System", MessageBoxButtons.OK)
+                End If
             Else
-                MessageBox.Show("The url has error.", "CTP System", MessageBoxButtons.OK)
+                'Dim senderGrid = DirectCast(sender, DataGridView)
+                If e.RowIndex > 0 Then
+                    dgvProjectDetails_DoubleClick(sender, e)
+                End If
             End If
-        Else
-            'Dim senderGrid = DirectCast(sender, DataGridView)
-            If e.RowIndex > 0 Then
-                dgvProjectDetails_DoubleClick(sender, e)
-            End If
-
-        End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub dgvProjectDetails_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
     Handles dgvProjectDetails.CellFormatting
-        If e.ColumnIndex = 7 Then
-            If Not String.IsNullOrEmpty(Trim(e.Value)) Then
-                'DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "In Process"
-                'e.Value = "Go to Jiratask"
-                e.FormattingApplied = True
-            Else
-                e.Value = ""
-            End If
-        ElseIf e.ColumnIndex = 8 Then
-            If Not String.IsNullOrEmpty(txtCode.Text) Then
-                Dim projectNo = txtCode.Text
-                Dim partNo = If(dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value IsNot Nothing, dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value.ToString(), Nothing)
-                Dim DicRefDocs = getReferenceDocuments(projectNo, partNo)
-                If DicRefDocs IsNot Nothing Then
-                    For Each pair As KeyValuePair(Of String, String) In DicRefDocs
-                        If pair.Value.ToString() = "True" Then
-                            dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "Yes"
-                        Else
-                            dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "No"
-                        End If
-                        'dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = pair.Value.ToString()
-                    Next
+        Dim exMessage As String = Nothing
+        Try
+            If e.ColumnIndex = 7 Then
+                If Not String.IsNullOrEmpty(Trim(e.Value)) Then
+                    'DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "In Process"
+                    'e.Value = "Go to Jiratask"
+                    e.FormattingApplied = True
+                Else
+                    e.Value = ""
+                End If
+            ElseIf e.ColumnIndex = 8 Then
+                If Not String.IsNullOrEmpty(txtCode.Text) Then
+                    Dim projectNo = txtCode.Text
+                    Dim partNo = If(dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value IsNot Nothing, dgvProjectDetails.Rows(e.RowIndex).Cells("PartNo").Value.ToString(), Nothing)
+                    Dim DicRefDocs = getReferenceDocuments(projectNo, partNo)
+                    If DicRefDocs IsNot Nothing Then
+                        For Each pair As KeyValuePair(Of String, String) In DicRefDocs
+                            If pair.Value.ToString() = "True" Then
+                                dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "Yes"
+                            Else
+                                dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = "No"
+                            End If
+                            'dgvProjectDetails.Rows(e.RowIndex).Cells("hasDoc2").Value = pair.Value.ToString()
+                        Next
+                    End If
                 End If
             End If
-        End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Protected Sub toPaginateDs(dgv As DataGridView, ds As DataSet)
         Dim exMessage As String = " "
         Try
-
             Dim dtGrid As New DataTable
             dtGrid = ds.Tables(0)
 
@@ -1758,6 +1783,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1817,22 +1843,35 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub bs_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
         'If DataGridView1.DataSource IsNot Nothing Then
-        If bs.Position <> -1 Then
-            DataGridView1.DataSource = Tables(bs.Position)
-        End If
+        Dim exMessage As String = Nothing
+        Try
+            If bs.Position <> -1 Then
+                DataGridView1.DataSource = Tables(bs.Position)
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
         'End If
     End Sub
 
     Private Sub bs1_PositionChanged(ByVal sender As Object, ByVal e As EventArgs)
         'If dgvProjectDetails.DataSource IsNot Nothing Then
-        If bs1.Position <> -1 Then
-            dgvProjectDetails.DataSource = Tables1(bs1.Position)
-        End If
+        Dim exMessage As String = Nothing
+        Try
+            If bs1.Position <> -1 Then
+                dgvProjectDetails.DataSource = Tables1(bs1.Position)
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
         'End If
     End Sub
 
@@ -1900,58 +1939,63 @@ Public Class frmProductsDevelopment
         Handles txtsearch.GotFocus, txtsearch1.GotFocus, txtsearchcode.GotFocus, txtsearchctp.GotFocus, txtsearchpart.GotFocus,
         txtMfrNoSearch.GotFocus, txtJiratasksearch.GotFocus, cmbstatus1.GotFocus, cmbPrpech.GotFocus
 
-        Dim controlSender As Object
-        Dim currTextBox As System.Windows.Forms.TextBox
-        Dim currComboBox As System.Windows.Forms.ComboBox
-        Dim flag As Integer = 0
+        Dim exMessage As String = Nothing
+        Try
+            Dim controlSender As Object
+            Dim currTextBox As System.Windows.Forms.TextBox
+            Dim currComboBox As System.Windows.Forms.ComboBox
+            Dim flag As Integer = 0
 
-        Dim sender_type = sender.GetType().ToString()
-        If sender_type.Equals("System.Windows.Forms.TextBox") Then
-            controlSender = DirectCast(sender, System.Windows.Forms.TextBox)
-        ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
-            controlSender = DirectCast(sender, System.Windows.Forms.ComboBox)
-            flag = 1
-        Else
-            controlSender = Nothing
-        End If
-
-        If flag = 0 Then
-            currTextBox = sender
-            Dim castedTextBox As Control = Nothing
-            If currTextBox.Equals(txtsearch) Then
-                castedTextBox = DirectCast(txtsearch, Control)
-                LikeSession.focussedControl = castedTextBox
-            ElseIf currTextBox.Equals(txtsearch1) Then
-                castedTextBox = DirectCast(txtsearch1, Control)
-                LikeSession.focussedControl = txtsearch1
-            ElseIf currTextBox.Equals(txtsearchcode) Then
-                castedTextBox = DirectCast(txtsearchcode, Control)
-                LikeSession.focussedControl = txtsearchcode
-            ElseIf currTextBox.Equals(txtsearchctp) Then
-                castedTextBox = DirectCast(txtsearchctp, Control)
-                LikeSession.focussedControl = txtsearchctp
-            ElseIf currTextBox.Equals(txtsearchpart) Then
-                castedTextBox = DirectCast(txtsearchpart, Control)
-                LikeSession.focussedControl = txtsearchpart
-            ElseIf currTextBox.Equals(txtMfrNoSearch) Then
-                castedTextBox = DirectCast(txtMfrNoSearch, Control)
-                LikeSession.focussedControl = txtMfrNoSearch
-            ElseIf currTextBox.Equals(txtJiratasksearch) Then
-                castedTextBox = DirectCast(txtJiratasksearch, Control)
-                LikeSession.focussedControl = txtJiratasksearch
+            Dim sender_type = sender.GetType().ToString()
+            If sender_type.Equals("System.Windows.Forms.TextBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.TextBox)
+            ElseIf sender_type.Equals("System.Windows.Forms.ComboBox") Then
+                controlSender = DirectCast(sender, System.Windows.Forms.ComboBox)
+                flag = 1
+            Else
+                controlSender = Nothing
             End If
-        Else
-            currComboBox = sender
-            Dim castedComboBox As Control = Nothing
-            If currComboBox.Equals(cmbstatus1) Then
-                castedComboBox = DirectCast(cmbstatus1, Control)
-                LikeSession.focussedControl = cmbstatus1
-            ElseIf currComboBox.Equals(cmbPrpech) Then
-                castedComboBox = DirectCast(cmbPrpech, Control)
-                LikeSession.focussedControl = cmbPrpech
-            End If
-        End If
 
+            If flag = 0 Then
+                currTextBox = sender
+                Dim castedTextBox As Control = Nothing
+                If currTextBox.Equals(txtsearch) Then
+                    castedTextBox = DirectCast(txtsearch, Control)
+                    LikeSession.focussedControl = castedTextBox
+                ElseIf currTextBox.Equals(txtsearch1) Then
+                    castedTextBox = DirectCast(txtsearch1, Control)
+                    LikeSession.focussedControl = txtsearch1
+                ElseIf currTextBox.Equals(txtsearchcode) Then
+                    castedTextBox = DirectCast(txtsearchcode, Control)
+                    LikeSession.focussedControl = txtsearchcode
+                ElseIf currTextBox.Equals(txtsearchctp) Then
+                    castedTextBox = DirectCast(txtsearchctp, Control)
+                    LikeSession.focussedControl = txtsearchctp
+                ElseIf currTextBox.Equals(txtsearchpart) Then
+                    castedTextBox = DirectCast(txtsearchpart, Control)
+                    LikeSession.focussedControl = txtsearchpart
+                ElseIf currTextBox.Equals(txtMfrNoSearch) Then
+                    castedTextBox = DirectCast(txtMfrNoSearch, Control)
+                    LikeSession.focussedControl = txtMfrNoSearch
+                ElseIf currTextBox.Equals(txtJiratasksearch) Then
+                    castedTextBox = DirectCast(txtJiratasksearch, Control)
+                    LikeSession.focussedControl = txtJiratasksearch
+                End If
+            Else
+                currComboBox = sender
+                Dim castedComboBox As Control = Nothing
+                If currComboBox.Equals(cmbstatus1) Then
+                    castedComboBox = DirectCast(cmbstatus1, Control)
+                    LikeSession.focussedControl = cmbstatus1
+                ElseIf currComboBox.Equals(cmbPrpech) Then
+                    castedComboBox = DirectCast(cmbPrpech, Control)
+                    LikeSession.focussedControl = cmbPrpech
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
 #End Region
@@ -1985,6 +2029,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2029,10 +2074,12 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub AddNewProjectToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles AddNewProjectToolStripMenuItem1.Click
+        Dim exMessage As String = Nothing
         Try
             Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
             If result = DialogResult.Yes Then
@@ -2050,12 +2097,14 @@ Public Class frmProductsDevelopment
                 SSTab1.SelectedIndex = 1
             End If
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub AddNewPartToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles AddNewPartToolStripMenuItem1.Click
         'tab 3
+        Dim exMessage As String = Nothing
         Try
             Dim result As DialogResult = MessageBox.Show("Do you want to add a new part to the project?", "CTP System", MessageBoxButtons.YesNo)
             If result = DialogResult.Yes Then
@@ -2072,11 +2121,13 @@ Public Class frmProductsDevelopment
                 'frmProductsDevelopment_load()
             End If
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub cmdnew3_Click(sender As Object, e As EventArgs) Handles cmdnew3.Click
+        Dim exMessage As String = Nothing
         Try
             Dim screenPoint As Point = cmdnew3.PointToScreen(New Point(cmdnew3.Left, cmdnew3.Bottom))
             If screenPoint.Y & ContextMenuStrip2.Size.Height > Screen.PrimaryScreen.WorkingArea.Height Then
@@ -2088,7 +2139,8 @@ Public Class frmProductsDevelopment
             cmdSave2.Enabled = True
             'ContextMenuStrip1.Show(cmdSplit, New Point(0, cmdSplit.Height))
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
 
 
@@ -2115,6 +2167,7 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub AddNewProjectToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddNewProjectToolStripMenuItem.Click
+        Dim exMessage As String = Nothing
         Try
             Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex, 1)
             If validationResult.Equals(0) Then
@@ -2134,7 +2187,8 @@ Public Class frmProductsDevelopment
                 End If
             End If
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2155,57 +2209,32 @@ Public Class frmProductsDevelopment
             SSTab1.SelectedIndex = 2
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub cmdnew2_Click(sender As Object, e As EventArgs) Handles cmdnew2.Click
-
-        Dim screenPoint As Point = cmdnew2.PointToScreen(New Point(cmdnew2.Left, cmdnew2.Bottom))
-        If screenPoint.Y & ContextMenuStrip1.Size.Height > Screen.PrimaryScreen.WorkingArea.Height Then
-            If flagdeve = 0 Then
-                ContextMenuStrip1.Show(cmdnew2, New Point(0, -ContextMenuStrip1.Size.Height))
+        Dim exMessage As String = Nothing
+        Try
+            Dim screenPoint As Point = cmdnew2.PointToScreen(New Point(cmdnew2.Left, cmdnew2.Bottom))
+            If screenPoint.Y & ContextMenuStrip1.Size.Height > Screen.PrimaryScreen.WorkingArea.Height Then
+                If flagdeve = 0 Then
+                    ContextMenuStrip1.Show(cmdnew2, New Point(0, -ContextMenuStrip1.Size.Height))
+                End If
+            Else
+                If flagdeve = 0 Then
+                    ContextMenuStrip1.Show(cmdnew2, New Point(0, cmdnew2.Height))
+                End If
             End If
-        Else
-            If flagdeve = 0 Then
-                ContextMenuStrip1.Show(cmdnew2, New Point(0, cmdnew2.Height))
-            End If
-        End If
-        cmdSave2.Enabled = True
-
-        'Dim validationResult = mandatoryFields("new", SSTab1.SelectedIndex, 1)
-        'If validationResult.Equals(0) Then
-        '    Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.OK)
-        '    flagdeve = 1
-        '    flagnewpart = 1
-        '    cleanFormValues("TabPage2", 2)
-        '    cleanFormValues("TabPage3", 2)
-        '    TableLayoutPanel15.Enabled = False
-        '    cmdchange.Enabled = False
-        '    cmdunitcost.Enabled = False
-        '    cmdmpartno.Enabled = False
-        '    cmdcvendor.Enabled = False
-        '    gotonew()
-
-        'Else
-        '    Dim resultNew As DialogResult = MessageBox.Show("You have data in the form. You could missing if continue. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo)
-        '    If resultNew = DialogResult.Yes Then
-        '        flagdeve = 1
-        '        flagnewpart = 1
-        '        cleanFormValues("TabPage2", 2)
-        '        cleanFormValues("TabPage3", 2)
-        '        TableLayoutPanel15.Enabled = False
-        '        cmdchange.Enabled = False
-        '        cmdunitcost.Enabled = False
-        '        cmdmpartno.Enabled = False
-        '        cmdcvendor.Enabled = False
-        '        gotonew()
-        '    End If
-        'End If
-        'cmdSave2.Enabled = True
-
+            cmdSave2.Enabled = True
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub cmdnew1_Click(sender As Object, e As EventArgs) Handles cmdnew1.Click
+        Dim exMessage As String = Nothing
         Try
             If flagdeve = 1 Then
                 gotonew()
@@ -2223,7 +2252,8 @@ Public Class frmProductsDevelopment
                 gotonew()
             End If
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
         'Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
         'If result = DialogResult.No Then
@@ -2250,24 +2280,31 @@ Public Class frmProductsDevelopment
     End Sub
 
     Private Sub gotonew()
-        SSTab1.SelectedTab = TabPage2
-        requireValidation = 1
-        cmbprstatus.SelectedIndex = 1
-        'pathpictureparts = pathgeneral & "CTPPictures\pic_not_av.jpg"
-        Dim pathPictures = gnr.Path & "CTPPictures\"
-        If Not Directory.Exists(pathPictures) Then
-            System.IO.Directory.CreateDirectory(pathPictures)
-        End If
-        pathpictureparts = pathPictures & "avatar-ctp.PNG"
+        Dim exMessage As String = Nothing
+        Try
+            SSTab1.SelectedTab = TabPage2
+            requireValidation = 1
+            cmbprstatus.SelectedIndex = 1
+            'pathpictureparts = pathgeneral & "CTPPictures\pic_not_av.jpg"
+            Dim pathPictures = gnr.Path & "CTPPictures\"
+            If Not Directory.Exists(pathPictures) Then
+                System.IO.Directory.CreateDirectory(pathPictures)
+            End If
+            pathpictureparts = pathPictures & "avatar-ctp.PNG"
 
-        Dim existsFile As Boolean = File.Exists(pathpictureparts)
-        If existsFile Then
-            PictureBox1.Load(pathpictureparts)
-        End If
+            Dim existsFile As Boolean = File.Exists(pathpictureparts)
+            If existsFile Then
+                PictureBox1.Load(pathpictureparts)
+            End If
 
-        cmbuser1.SelectedIndex = If(cmbuser.FindString(Trim(UCase(userid))) <> -1,
+            cmbuser1.SelectedIndex = If(cmbuser.FindString(Trim(UCase(userid))) <> -1,
                                     cmbuser.FindString(Trim(UCase(userid))), 0)
-        'pathpictureparts = gnr.pathgeneral & "CTPPictures\pic_not_av.jpg"
+            'pathpictureparts = gnr.pathgeneral & "CTPPictures\pic_not_av.jpg"
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+
     End Sub
 
     Private Sub PoQotaFunction(Status2 As String)
@@ -2365,7 +2402,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2437,7 +2474,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2468,7 +2505,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -2496,7 +2533,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3003,59 +3040,67 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub cmdSave2_Click(sender As Object, e As EventArgs) Handles cmdSave2.Click
-
-        Dim validationResult = mandatoryFields("save", SSTab1.SelectedIndex, 1)
-        If validationResult.Equals(0) Then
-            'Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
-            'If result = DialogResult.No Then
-            'MessageBox.Show("No pressed")
-            'ElseIf result = DialogResult.Yes Then
-            'MessageBox.Show("Yes pressed")
-            save()
-            If SSTab1.SelectedIndex = 1 Then
-                If flagnewpart = 1 Then
-                    Dim result1 As DialogResult = MessageBox.Show("The project is ready to add parts. Please proceed to the project tab to add parts?", "CTP System", MessageBoxButtons.OK)
-                    If result1 = DialogResult.OK Then
-                        cmbuser.SelectedIndex = cmbuser1.SelectedIndex
-                        SSTab1.SelectedTab = TabPage3
+        Dim exMessage As String = Nothing
+        Try
+            Dim validationResult = mandatoryFields("save", SSTab1.SelectedIndex, 1)
+            If validationResult.Equals(0) Then
+                'Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
+                'If result = DialogResult.No Then
+                'MessageBox.Show("No pressed")
+                'ElseIf result = DialogResult.Yes Then
+                'MessageBox.Show("Yes pressed")
+                save()
+                If SSTab1.SelectedIndex = 1 Then
+                    If flagnewpart = 1 Then
+                        Dim result1 As DialogResult = MessageBox.Show("The project is ready to add parts. Please proceed to the project tab to add parts?", "CTP System", MessageBoxButtons.OK)
+                        If result1 = DialogResult.OK Then
+                            cmbuser.SelectedIndex = cmbuser1.SelectedIndex
+                            SSTab1.SelectedTab = TabPage3
+                        End If
                     End If
                 End If
+                'End If
+            Else
+                Dim resultSave As DialogResult = MessageBox.Show("Error in Data Validation. Mandatory fields must be filled!!", "CTP System", MessageBoxButtons.OK)
             End If
-            'End If
-        Else
-            Dim resultSave As DialogResult = MessageBox.Show("Error in Data Validation. Mandatory fields must be filled!!", "CTP System", MessageBoxButtons.OK)
-        End If
-
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub cmdSave3_Click(sender As Object, e As EventArgs) Handles cmdSave3.Click
+        Dim exMessage As String = Nothing
+        Try
+            Dim DtUseTime = New DateTimePicker()
+            DtUseTime.Value = DateTime.Now
+            Dim rsValidation = gnr.checkFields(txtCode.Text, txtpartno.Text, DTPicker2, userid, DtUseTime, userid, DtUseTime, txtctpno.Text, txtqty.Text,
+                                                                    "", txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, DtUseTime, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
+                                                                    cmbuser.SelectedValue, chknew, DtUseTime, txtsample.Text, txttcost.Text, txtvendorno.Text, 0, cmbminorcode.SelectedValue, txttoocost.Text, DtUseTime,
+                                                                    DateTime.Now.ToShortDateString(), txtsampleqty.Text)
 
-        Dim DtUseTime = New DateTimePicker()
-        DtUseTime.Value = DateTime.Now
-        Dim rsValidation = gnr.checkFields(txtCode.Text, txtpartno.Text, DTPicker2, userid, DtUseTime, userid, DtUseTime, txtctpno.Text, txtqty.Text,
-                                                                "", txtmfrno.Text, txtunitcost.Text, txtunitcostnew.Text, txtpo.Text, DtUseTime, cmbstatus.SelectedValue, txtBenefits.Text, txtcomm.Text,
-                                                                cmbuser.SelectedValue, chknew, DtUseTime, txtsample.Text, txttcost.Text, txtvendorno.Text, 0, cmbminorcode.SelectedValue, txttoocost.Text, DtUseTime,
-                                                                DateTime.Now.ToShortDateString(), txtsampleqty.Text)
-
-        Dim validationResult = mandatoryFields("save", SSTab1.SelectedIndex, 1, rsValidation)
-        If validationResult.Equals(0) Then
-            Dim result As DialogResult = If(flagnewpart = 1, MessageBox.Show("If click yes the part will be added to the project. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo),
-                                                MessageBox.Show("If click yes will updated this part data. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo))
-            If result = DialogResult.No Then
-                'MessageBox.Show("No pressed")
-            ElseIf result = DialogResult.Yes Then
-                'MessageBox.Show("Yes pressed")
-                save()
+            Dim validationResult = mandatoryFields("save", SSTab1.SelectedIndex, 1, rsValidation)
+            If validationResult.Equals(0) Then
+                Dim result As DialogResult = If(flagnewpart = 1, MessageBox.Show("If click yes the part will be added to the project. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo),
+                                                    MessageBox.Show("If click yes will updated this part data. Do you want to proceed?", "CTP System", MessageBoxButtons.YesNo))
+                If result = DialogResult.No Then
+                    'MessageBox.Show("No pressed")
+                ElseIf result = DialogResult.Yes Then
+                    'MessageBox.Show("Yes pressed")
+                    save()
+                End If
+            Else
+                Dim resultSave As DialogResult = MessageBox.Show("Error in Data Validation. Mandatory fields must be filled!!", "CTP System", MessageBoxButtons.OK)
             End If
-        Else
-            Dim resultSave As DialogResult = MessageBox.Show("Error in Data Validation. Mandatory fields must be filled!!", "CTP System", MessageBoxButtons.OK)
-        End If
-
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub cmdSave1_Click(sender As Object, e As EventArgs) Handles cmdSave1.Click
@@ -3072,7 +3117,7 @@ Public Class frmProductsDevelopment
             Return dtChange
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -3165,7 +3210,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3605,7 +3650,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3679,7 +3724,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3717,7 +3762,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
 
     End Sub
@@ -3770,6 +3815,7 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3788,6 +3834,7 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3807,6 +3854,7 @@ Public Class frmProductsDevelopment
             LikeSession.focussedControl = Nothing
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3818,6 +3866,7 @@ Public Class frmProductsDevelopment
             fillcell2(txtCode.Text)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3899,7 +3948,7 @@ Public Class frmProductsDevelopment
             'buildMixedQuery(lstQueries, genericObj.Name, 0, True)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -3954,7 +4003,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
         'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
     End Sub
@@ -3993,7 +4042,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
         'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
     End Sub
@@ -4039,7 +4088,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4143,7 +4192,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4184,7 +4233,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4275,7 +4324,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4315,7 +4364,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4382,7 +4431,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4425,7 +4474,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4464,7 +4513,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4531,7 +4580,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4596,7 +4645,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4659,7 +4708,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4726,7 +4775,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4758,6 +4807,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4768,7 +4818,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             buildMixedQueryTab2()
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4780,6 +4830,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             CallByName(Me, button_method, CallType.Method, Nothing)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4815,6 +4866,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             fillcell2(txtCode.Text, sql)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Function
 
@@ -4910,6 +4962,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -4934,6 +4987,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4956,6 +5010,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             cleanSearchTextBoxesComplex(hasVal, True)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -4978,6 +5033,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             cleanSearchTextBoxesComplexTab2(hasVal, True)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5016,6 +5072,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Function
 
@@ -5078,6 +5135,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return strwhere
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            Return Nothing
         End Try
     End Function
 
@@ -5157,7 +5216,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5188,7 +5247,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
         Exit Sub
     End Sub
@@ -5252,7 +5311,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
         'MsgBox "You didn't select any file.", vbOKOnly + vbInformation, "CTP System"
         'MsgBox "Select Part to add files.", vbOKOnly + vbInformation, "CTP System"
@@ -5284,7 +5343,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
         'MsgBox "No files for this Part #.", vbOKOnly + vbInformation, "CTP System"
         'MsgBox "Select Project and Part # to see files.", vbOKOnly + vbInformation, "CTP System"
@@ -5315,7 +5374,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5344,7 +5403,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5373,7 +5432,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5402,7 +5461,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
 
     End Sub
@@ -5429,7 +5488,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5451,7 +5510,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5485,8 +5544,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 MessageBox.Show("The project number and part number are mandatory fields.", "CTP System", MessageBoxButtons.OK)
             End If
         Catch ex As Exception
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5566,6 +5625,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5623,6 +5683,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5682,6 +5743,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return strExt
         End Try
     End Function
@@ -5714,6 +5776,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return ctr
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -5751,6 +5814,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -5783,6 +5847,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return result
         End Try
 
@@ -5825,146 +5890,152 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         Dim bgWorker = CType(sender, BackgroundWorker)
         For index = 0 To 2
             bgWorker.ReportProgress(index)
-            Threading.Thread.Sleep(1000)
+            Threading.Thread.Sleep(2000)
         Next
 
     End Sub
 
     Private Sub SetValues()
-        SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
-        SSTab1.Padding = New System.Drawing.Point(300, 10)
-        SSTab1.Appearance = TabAppearance.FlatButtons
-        SSTab1.SizeMode = TabSizeMode.Fixed
+        Dim exMessage As String = Nothing
+        Try
+            SSTab1.ItemSize = (New Size((SSTab1.Width - 50) / SSTab1.TabCount, 0))
+            SSTab1.Padding = New System.Drawing.Point(300, 10)
+            SSTab1.Appearance = TabAppearance.FlatButtons
+            SSTab1.SizeMode = TabSizeMode.Fixed
 
-        TabPage3.Text = "Reference: "
-        TabPage3.AutoScroll = True
-        TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
-        TabPage3.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
-        TabPage3.AutoScrollMinSize = New Drawing.Size(800, 0)
+            TabPage3.Text = "Reference: "
+            TabPage3.AutoScroll = True
+            TabPage3.AutoScrollPosition = New Point(0, TabPage3.VerticalScroll.Maximum)
+            TabPage3.Padding = New Padding(0, 0, SystemInformation.VerticalScrollBarWidth, 0)
+            TabPage3.AutoScrollMinSize = New Drawing.Size(800, 0)
 
-        TabPage2.Text = "Project: "
+            TabPage2.Text = "Project: "
 
-        'AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
-        ''vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
-        'TabPage2.Controls.Add(vScrollBar1)
-        'AddHandler frmProductsDevelopment.dgvProjectDetails_CellContentClick, AddressOf dgvProjectDetails_CellContentClick
+            'AddHandler vScrollBar1.Scroll, AddressOf vScrollBar1_Scroll
+            ''vScrollBar1.Scroll += (sender, e) >= {Panel1.VerticalScroll.Value = vScrollBar1.Value; };
+            'TabPage2.Controls.Add(vScrollBar1)
+            'AddHandler frmProductsDevelopment.dgvProjectDetails_CellContentClick, AddressOf dgvProjectDetails_CellContentClick
 
-        Me.WindowState = FormWindowState.Maximized
+            Me.WindowState = FormWindowState.Maximized
 
-        cmdSave1.Enabled = False
+            cmdSave1.Enabled = False
 
-        Button8.Enabled = False
-        Button9.Enabled = False
-        Button10.Enabled = False
-        Button11.Enabled = False
-        Button15.Enabled = False
-        Button16.Enabled = False
-        Button17.Enabled = False
-        Button18.Enabled = False
+            Button8.Enabled = False
+            Button9.Enabled = False
+            Button10.Enabled = False
+            Button11.Enabled = False
+            Button15.Enabled = False
+            Button16.Enabled = False
+            Button17.Enabled = False
+            Button18.Enabled = False
 
-        cmdsearch.FlatStyle = FlatStyle.Flat
-        cmdsearchcode.FlatStyle = FlatStyle.Flat
-        cmdsearch1.FlatStyle = FlatStyle.Flat
-        cmdsearchpart.FlatStyle = FlatStyle.Flat
-        cmdsearchctp.FlatStyle = FlatStyle.Flat
-        cmdstatus1.FlatStyle = FlatStyle.Flat
-        cmdall.FlatStyle = FlatStyle.Flat
-        cmdJiratasksearch.FlatStyle = FlatStyle.Flat
-        cmdPrpech.FlatStyle = FlatStyle.Flat
-        cmdMfrNoSearch.FlatStyle = FlatStyle.Flat
-        chknew.Enabled = False
-        chkSupplier.Enabled = False
+            cmdsearch.FlatStyle = FlatStyle.Flat
+            cmdsearchcode.FlatStyle = FlatStyle.Flat
+            cmdsearch1.FlatStyle = FlatStyle.Flat
+            cmdsearchpart.FlatStyle = FlatStyle.Flat
+            cmdsearchctp.FlatStyle = FlatStyle.Flat
+            cmdstatus1.FlatStyle = FlatStyle.Flat
+            cmdall.FlatStyle = FlatStyle.Flat
+            cmdJiratasksearch.FlatStyle = FlatStyle.Flat
+            cmdPrpech.FlatStyle = FlatStyle.Flat
+            cmdMfrNoSearch.FlatStyle = FlatStyle.Flat
+            chknew.Enabled = False
+            chkSupplier.Enabled = False
 
-        DataGridView1.RowHeadersVisible = False
-        dgvProjectDetails.RowHeadersVisible = False
+            DataGridView1.RowHeadersVisible = False
+            dgvProjectDetails.RowHeadersVisible = False
 
-        'Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
-        cmdnew1.ImageAlign = ContentAlignment.MiddleRight
-        cmdnew1.TextAlign = ContentAlignment.MiddleLeft
+            'Button12.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\doc.PNG")
+            cmdnew1.ImageAlign = ContentAlignment.MiddleRight
+            cmdnew1.TextAlign = ContentAlignment.MiddleLeft
 
-        ' Button13.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\save.PNG")
-        cmdSave1.ImageAlign = ContentAlignment.MiddleRight
-        cmdSave1.TextAlign = ContentAlignment.MiddleLeft
+            ' Button13.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\save.PNG")
+            cmdSave1.ImageAlign = ContentAlignment.MiddleRight
+            cmdSave1.TextAlign = ContentAlignment.MiddleLeft
 
-        'Button14.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\exit.PNG")
-        cmdexit1.ImageAlign = ContentAlignment.MiddleRight
-        cmdexit1.TextAlign = ContentAlignment.MiddleLeft
+            'Button14.Image = Image.FromFile("C:\\Users\\aavila\\Documents\\exit.PNG")
+            cmdexit1.ImageAlign = ContentAlignment.MiddleRight
+            cmdexit1.TextAlign = ContentAlignment.MiddleLeft
 
-        'Datepickers customization
-        DTPicker1.Format = DateTimePickerFormat.Custom
-        DTPicker1.CustomFormat = "MM/dd/yyyy"
+            'Datepickers customization
+            DTPicker1.Format = DateTimePickerFormat.Custom
+            DTPicker1.CustomFormat = "MM/dd/yyyy"
 
-        DTPicker2.Format = DateTimePickerFormat.Custom
-        DTPicker2.CustomFormat = "MM/dd/yyyy"
+            DTPicker2.Format = DateTimePickerFormat.Custom
+            DTPicker2.CustomFormat = "MM/dd/yyyy"
 
-        DTPicker3.Format = DateTimePickerFormat.Custom
-        DTPicker3.CustomFormat = "MM/dd/yyyy"
+            DTPicker3.Format = DateTimePickerFormat.Custom
+            DTPicker3.CustomFormat = "MM/dd/yyyy"
 
-        DTPicker4.Format = DateTimePickerFormat.Custom
-        DTPicker4.CustomFormat = "MM/dd/yyyy"
+            DTPicker4.Format = DateTimePickerFormat.Custom
+            DTPicker4.CustomFormat = "MM/dd/yyyy"
 
-        'extra method
-        Panel1.Enabled = True
-        cmdSave1.Enabled = False
-        cmdexit1.Enabled = True
-        cmdnew1.Enabled = True
+            'extra method
+            Panel1.Enabled = True
+            cmdSave1.Enabled = False
+            cmdexit1.Enabled = True
+            cmdnew1.Enabled = True
 
-        Panel4.Enabled = False
-        txtCode.Enabled = False
-        txtvendorno.ReadOnly = True
-        txtvendorname.ReadOnly = True
-        txtvendornamea.ReadOnly = True
-        txtvendornoa.ReadOnly = True
-        txtminor.ReadOnly = True
-        txtMajor.ReadOnly = True
-        txtpartno.ReadOnly = True
-        txtpartdescription.ReadOnly = True
-        cmbminorcode.Enabled = False
-        cmbmajorcode.Enabled = False
-        txtctpno.ReadOnly = True
+            Panel4.Enabled = False
+            txtCode.Enabled = False
+            txtvendorno.ReadOnly = True
+            txtvendorname.ReadOnly = True
+            txtvendornamea.ReadOnly = True
+            txtvendornoa.ReadOnly = True
+            txtminor.ReadOnly = True
+            txtMajor.ReadOnly = True
+            txtpartno.ReadOnly = True
+            txtpartdescription.ReadOnly = True
+            cmbminorcode.Enabled = False
+            cmbmajorcode.Enabled = False
+            txtctpno.ReadOnly = True
 
-        optCTP.Checked = True
-        optVENDOR.Checked = False
-        optboth.Checked = False
+            optCTP.Checked = True
+            optVENDOR.Checked = False
+            optboth.Checked = False
 
-        flagdeve = 1
-        flagnewpart = 1
+            flagdeve = 1
+            flagnewpart = 1
 
-        logUser.Text += userid
+            logUser.Text += userid
 
-        'add image to textbox
-        'txtsearchcode.SetBtnTexbox(ImageList1)
+            'add image to textbox
+            'txtsearchcode.SetBtnTexbox(ImageList1)
 
-        'tab 1
-        txtsearch1.SetWatermark("Vendor No.")
-        txtsearch.SetWatermark("Project Name")
-        txtJiratasksearch.SetWatermark("Jira Task No.")
-        txtsearchpart.SetWatermark("Part No.")
-        txtsearchctp.SetWatermark("CTP No.")
-        txtMfrNoSearch.SetWatermark("Manufacturer No.")
-        txtsearchcode.SetWatermark("Project No.")
-        cmbPrpech.SetWatermark("Person In Charge")
+            'tab 1
+            txtsearch1.SetWatermark("Vendor No.")
+            txtsearch.SetWatermark("Project Name")
+            txtJiratasksearch.SetWatermark("Jira Task No.")
+            txtsearchpart.SetWatermark("Part No.")
+            txtsearchctp.SetWatermark("CTP No.")
+            txtMfrNoSearch.SetWatermark("Manufacturer No.")
+            txtsearchcode.SetWatermark("Project No.")
+            cmbPrpech.SetWatermark("Person In Charge")
 
-        cmbstatus1.SetWatermark("Project Reference Status")
-        'MyComboBox1.SetWatermark("test water")
+            cmbstatus1.SetWatermark("Project Reference Status")
+            'MyComboBox1.SetWatermark("test water")
 
-        'tab 2
-        txtPartNoMore.SetWatermark("Part No.")
-        txtCtpNoMore.SetWatermark("CTP No.")
-        txtMfrNoMore.SetWatermark("Manufacturer No.")
-        txtCode.SetWatermark("Project No.")
-        txtname.SetWatermark("Project Name")
+            'tab 2
+            txtPartNoMore.SetWatermark("Part No.")
+            txtCtpNoMore.SetWatermark("CTP No.")
+            txtMfrNoMore.SetWatermark("Manufacturer No.")
+            txtCode.SetWatermark("Project No.")
+            txtname.SetWatermark("Project Name")
 
-        cmbuser1.SetWatermark("Person In Charge")
-        cmbprstatus.SetWatermark("Project Status")
-        cmbuser2.SetWatermark("Person In Charge")
-        ContextMenuStrip1.Visible = False
+            cmbuser1.SetWatermark("Person In Charge")
+            cmbprstatus.SetWatermark("Project Status")
+            cmbuser2.SetWatermark("Person In Charge")
+            ContextMenuStrip1.Visible = False
 
-        cmbuser1.SelectedIndex = If(cmbuser1.FindString(Trim(UCase(userid))) <> -1,
-                                    cmbuser1.FindString(Trim(UCase(userid))), 0)
+            cmbuser1.SelectedIndex = If(cmbuser1.FindString(Trim(UCase(userid))) <> -1,
+                                        cmbuser1.FindString(Trim(UCase(userid))), 0)
 
-        cmbuser.SelectedIndex = If(cmbuser.FindString(Trim(UCase(userid))) <> -1,
-                                    cmbuser.FindString(Trim(UCase(userid))), 0)
+            cmbuser.SelectedIndex = If(cmbuser.FindString(Trim(UCase(userid))) <> -1,
+                                        cmbuser.FindString(Trim(UCase(userid))), 0)
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Public Function checkIfDocsPresent(code As String, flag As Integer) As Boolean
@@ -6009,7 +6080,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return hasDocs
         End Try
     End Function
@@ -6032,7 +6103,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return 0
         End Try
     End Function
@@ -6085,11 +6156,12 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             cmdnew2.Enabled = True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
     Private Sub copyProjecFiles(strProjectNo As String)
+        Dim exMessage As String = Nothing
         Try
             'save files
             gnr.FolderPath = gnr.Path & "PDevelopment"
@@ -6106,7 +6178,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             gnr.pathfolderfrom = gnr.FolderPath & "\" & strProjectNo & "\" & Trim(UCase(txtpartno.Text)) & "\"
             My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
         Catch ex As Exception
-
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -6134,7 +6207,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
         Exit Sub
     End Sub
@@ -6167,7 +6240,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailsok
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -6182,7 +6255,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailsok
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -6203,7 +6276,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailss
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
@@ -6224,97 +6297,104 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailss
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return Nothing
         End Try
     End Function
 
     Private Function mandatoryFields(flag As String, index As Integer, Optional ByVal requireValidation As Integer = 0, Optional ByVal strArrayCheck As String = Nothing) As Integer
+        Dim exMessage As String = Nothing
+        Dim methodResult As Integer = -1
+        Try
 
-        Dim methodResult As Integer = 0
-        Dim myTableLayout As TableLayoutPanel
+            Dim myTableLayout As TableLayoutPanel
 
-        If requireValidation = 1 Then
-            If index = 0 Then
-                myTableLayout = Me.TableLayoutPanel1
-            ElseIf index = 1 Then
-                myTableLayout = Me.TableLayoutPanel3
-            Else
-                myTableLayout = Me.TableLayoutPanel4
-            End If
-
-            If flag = "new" Then
-                Dim TextboxQty As Integer
-                Dim TextboxQtyEmpty As Integer
-                For Each tt In myTableLayout.Controls
-                    If TypeOf tt Is Windows.Forms.TextBox Then
-                        TextboxQty += 1
-                        If tt.Text = "" Then
-                            If tt.Name <> "txtainfo" And tt.Name <> "txtCode" Then
-                                TextboxQtyEmpty += 1
-                            End If
-                        End If
-                    ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
-                        If tt.Name = "cmbuser1" Then
-                            TextboxQty += 1
-                            If tt.Text = "N/A" Then
-                                TextboxQtyEmpty += 1
-                            End If
-                        End If
-                    End If
-                Next
-
-                If TextboxQtyEmpty <> 0 And TextboxQty > 0 Then
-                    methodResult = 1
+            If requireValidation = 1 Then
+                If index = 0 Then
+                    myTableLayout = Me.TableLayoutPanel1
+                ElseIf index = 1 Then
+                    myTableLayout = Me.TableLayoutPanel3
                 Else
-                    methodResult = 0
+                    myTableLayout = Me.TableLayoutPanel4
                 End If
 
-            Else
-
-                'If index = 1 Or index = 2 Then 'here when define the mandatory fields
-                If index = 1 Then
-                    'txtCode.Text = " "
-
-                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And txt.Name <> "txtCode" And txt.Name <> "txtainfo")
-                    If empty.Any Then
-                        methodResult = 1
-                        'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
-                    End If
-                Else
-                    Dim arrayCheck As New List(Of String)
-                    Dim arrayCheckOk As New List(Of String)
-                    arrayCheck = strArrayCheck.Split(",").ToList()
-                    For Each item As String In arrayCheck
-                        If item = "Part Number" Then
-                            arrayCheckOk.Add("txtpartno")
-                        ElseIf item = "Part Name" Then
-                            arrayCheckOk.Add("txtpartdescription")
-                        ElseIf item = "Vendor Number" Then
-                            arrayCheckOk.Add("txtvendorno")
-                        ElseIf item = "Vendor Name" Then
-                            arrayCheckOk.Add("txtvendorname")
-                        ElseIf item = "CTP Number" Then
-                            arrayCheckOk.Add("txtctpno")
-                        ElseIf item = "Person in Charge" Then
-                            arrayCheckOk.Add("cmbuser")
-                        ElseIf item = "Unit Cost New" Then
-                            arrayCheckOk.Add("txtunitcostnew")
+                If flag = "new" Then
+                    Dim TextboxQty As Integer
+                    Dim TextboxQtyEmpty As Integer
+                    For Each tt In myTableLayout.Controls
+                        If TypeOf tt Is Windows.Forms.TextBox Then
+                            TextboxQty += 1
+                            If tt.Text = "" Then
+                                If tt.Name <> "txtainfo" And tt.Name <> "txtCode" Then
+                                    TextboxQtyEmpty += 1
+                                End If
+                            End If
+                        ElseIf TypeOf tt Is Windows.Forms.ComboBox Then
+                            If tt.Name = "cmbuser1" Then
+                                TextboxQty += 1
+                                If tt.Text = "N/A" Then
+                                    TextboxQtyEmpty += 1
+                                End If
+                            End If
                         End If
                     Next
 
-                    Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And arrayCheckOk.Contains(txt.Name))
-                    If empty.Any Then
+                    If TextboxQtyEmpty <> 0 And TextboxQty > 0 Then
                         methodResult = 1
-                        'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
+                    Else
+                        methodResult = 0
+                    End If
+
+                Else
+
+                    'If index = 1 Or index = 2 Then 'here when define the mandatory fields
+                    If index = 1 Then
+                        'txtCode.Text = " "
+
+                        Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And txt.Name <> "txtCode" And txt.Name <> "txtainfo")
+                        If empty.Any Then
+                            methodResult = 1
+                            'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
+                        End If
+                    Else
+                        Dim arrayCheck As New List(Of String)
+                        Dim arrayCheckOk As New List(Of String)
+                        arrayCheck = strArrayCheck.Split(",").ToList()
+                        For Each item As String In arrayCheck
+                            If item = "Part Number" Then
+                                arrayCheckOk.Add("txtpartno")
+                            ElseIf item = "Part Name" Then
+                                arrayCheckOk.Add("txtpartdescription")
+                            ElseIf item = "Vendor Number" Then
+                                arrayCheckOk.Add("txtvendorno")
+                            ElseIf item = "Vendor Name" Then
+                                arrayCheckOk.Add("txtvendorname")
+                            ElseIf item = "CTP Number" Then
+                                arrayCheckOk.Add("txtctpno")
+                            ElseIf item = "Person in Charge" Then
+                                arrayCheckOk.Add("cmbuser")
+                            ElseIf item = "Unit Cost New" Then
+                                arrayCheckOk.Add("txtunitcostnew")
+                            End If
+                        Next
+
+                        Dim empty = myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Where(Function(txt) txt.Text.Length = 0 And arrayCheckOk.Contains(txt.Name))
+                        If empty.Any Then
+                            methodResult = 1
+                            'MessageBox.Show(String.Format("Please fill following textboxes: {0}", String.Join(",", empty.Select(Function(txt) txt.Name))))
+                        End If
                     End If
                 End If
-            End If
 
+                Return methodResult
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             Return methodResult
-        Else
-            Return Nothing
-        End If
+        End Try
     End Function
 
     Private Sub cleanFormValues(tab As String, flag As Integer)
@@ -6387,9 +6467,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             'myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Select(Function(ctx) ctx.Text = "")
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
-
     End Sub
 
     Private Sub cleanValues()
@@ -6494,7 +6573,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -6520,7 +6599,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -6546,7 +6625,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
         End Try
     End Sub
 
@@ -6560,26 +6639,33 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                     End If
                 End If
             Next
+            Return False
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            Log.Error(exMessage)
             Return False
         End Try
     End Function
 
     Sub ResizeTabs()
-        Dim numTabs As Integer = SSTab1.TabCount
+        Dim exMessage As String = Nothing
+        Try
+            Dim numTabs As Integer = SSTab1.TabCount
 
-        Dim totLen As Decimal = 0
-        Using g As Graphics = CreateGraphics()
-            ' Get total length of the text of each Tab name
-            For i As Integer = 0 To numTabs - 1
-                totLen += g.MeasureString(SSTab1.TabPages(i).Text, SSTab1.Font).Width
-            Next
-        End Using
+            Dim totLen As Decimal = 0
+            Using g As Graphics = CreateGraphics()
+                ' Get total length of the text of each Tab name
+                For i As Integer = 0 To numTabs - 1
+                    totLen += g.MeasureString(SSTab1.TabPages(i).Text, SSTab1.Font).Width
+                Next
+            End Using
 
-        Dim newX As Integer = ((SSTab1.Width - totLen) / numTabs) / 2
-        SSTab1.Padding = New Point(newX, SSTab1.Padding.Y)
+            Dim newX As Integer = ((SSTab1.Width - totLen) / numTabs) / 2
+            SSTab1.Padding = New Point(newX, SSTab1.Padding.Y)
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
     End Sub
 
     Private Sub VScrollBar2_Scroll(sender As Object, e As ScrollEventArgs)

@@ -112,7 +112,6 @@ Partial Class frmLoadExcel
         Me.txtDesc = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
-        Me.ac2 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.cmbStatusMore = New System.Windows.Forms.ComboBox()
         Me.ProgressBar2 = New System.Windows.Forms.ProgressBar()
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
@@ -120,6 +119,7 @@ Partial Class frmLoadExcel
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker3 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker4 = New System.ComponentModel.BackgroundWorker()
+        Me.ac2 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -601,7 +601,7 @@ Partial Class frmLoadExcel
         Me.EditReference.Name = "EditReference"
         Me.EditReference.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.EditReference.Visible = False
-        Me.EditReference.Width = 50
+        Me.EditReference.Width = 31
         '
         'AddReference
         '
@@ -609,7 +609,7 @@ Partial Class frmLoadExcel
         Me.AddReference.Name = "AddReference"
         Me.AddReference.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.AddReference.Visible = False
-        Me.AddReference.Width = 50
+        Me.AddReference.Width = 32
         '
         'clPRDPTN2
         '
@@ -1069,16 +1069,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel8.Size = New System.Drawing.Size(279, 62)
         Me.TableLayoutPanel8.TabIndex = 35
         '
-        'ac2
-        '
-        Me.ac2.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ac2.Location = New System.Drawing.Point(3, 3)
-        Me.ac2.lstSelectedValues = CType(resources.GetObject("ac2.lstSelectedValues"), System.Collections.Generic.List(Of String))
-        Me.ac2.Name = "ac2"
-        Me.ac2.Size = New System.Drawing.Size(273, 25)
-        Me.ac2.TabIndex = 16
-        Me.ac2.Values = Nothing
-        '
         'cmbStatusMore
         '
         Me.cmbStatusMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1104,6 +1094,16 @@ Partial Class frmLoadExcel
         'BackgroundWorker4
         '
         Me.BackgroundWorker4.WorkerSupportsCancellation = True
+        '
+        'ac2
+        '
+        Me.ac2.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ac2.Location = New System.Drawing.Point(3, 3)
+        Me.ac2.lstSelectedValues = CType(resources.GetObject("ac2.lstSelectedValues"), System.Collections.Generic.List(Of String))
+        Me.ac2.Name = "ac2"
+        Me.ac2.Size = New System.Drawing.Size(273, 25)
+        Me.ac2.TabIndex = 16
+        Me.ac2.Values = Nothing
         '
         'frmLoadExcel
         '

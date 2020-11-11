@@ -467,7 +467,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 76.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 48.0!))
         Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50.0!))
-        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 88.0!))
+        Me.TableLayoutPanel2.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 89.0!))
         Me.TableLayoutPanel2.Controls.Add(Me.Button9, 1, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.cmdnew1, 4, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.cmdSave1, 5, 0)
@@ -485,7 +485,7 @@ Partial Class frmProductsDevelopment
         '
         'Button9
         '
-        Me.Button9.Location = New System.Drawing.Point(13, 3)
+        Me.Button9.Location = New System.Drawing.Point(12, 3)
         Me.Button9.Name = "Button9"
         Me.Button9.Size = New System.Drawing.Size(1, 28)
         Me.Button9.TabIndex = 20
@@ -496,7 +496,7 @@ Partial Class frmProductsDevelopment
         'cmdnew1
         '
         Me.cmdnew1.Image = CType(resources.GetObject("cmdnew1.Image"), System.Drawing.Image)
-        Me.cmdnew1.Location = New System.Drawing.Point(119, 3)
+        Me.cmdnew1.Location = New System.Drawing.Point(118, 3)
         Me.cmdnew1.Name = "cmdnew1"
         Me.cmdnew1.Size = New System.Drawing.Size(42, 28)
         Me.cmdnew1.TabIndex = 23
@@ -505,7 +505,7 @@ Partial Class frmProductsDevelopment
         'cmdSave1
         '
         Me.cmdSave1.Image = CType(resources.GetObject("cmdSave1.Image"), System.Drawing.Image)
-        Me.cmdSave1.Location = New System.Drawing.Point(167, 3)
+        Me.cmdSave1.Location = New System.Drawing.Point(166, 3)
         Me.cmdSave1.Name = "cmdSave1"
         Me.cmdSave1.Size = New System.Drawing.Size(43, 28)
         Me.cmdSave1.TabIndex = 24
@@ -516,7 +516,7 @@ Partial Class frmProductsDevelopment
         Me.Button8.Location = New System.Drawing.Point(3, 3)
         Me.Button8.Name = "Button8"
         Me.Button8.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Button8.Size = New System.Drawing.Size(4, 28)
+        Me.Button8.Size = New System.Drawing.Size(3, 28)
         Me.Button8.TabIndex = 19
         Me.Button8.Text = "Change Vendor"
         Me.Button8.UseVisualStyleBackColor = True
@@ -525,7 +525,7 @@ Partial Class frmProductsDevelopment
         'cmdexit1
         '
         Me.cmdexit1.Image = CType(resources.GetObject("cmdexit1.Image"), System.Drawing.Image)
-        Me.cmdexit1.Location = New System.Drawing.Point(217, 3)
+        Me.cmdexit1.Location = New System.Drawing.Point(216, 3)
         Me.cmdexit1.Name = "cmdexit1"
         Me.cmdexit1.Size = New System.Drawing.Size(57, 28)
         Me.cmdexit1.TabIndex = 25
@@ -533,7 +533,7 @@ Partial Class frmProductsDevelopment
         '
         'Button11
         '
-        Me.Button11.Location = New System.Drawing.Point(14, 3)
+        Me.Button11.Location = New System.Drawing.Point(13, 3)
         Me.Button11.Name = "Button11"
         Me.Button11.Size = New System.Drawing.Size(23, 28)
         Me.Button11.TabIndex = 22
@@ -543,7 +543,7 @@ Partial Class frmProductsDevelopment
         '
         'Button10
         '
-        Me.Button10.Location = New System.Drawing.Point(43, 3)
+        Me.Button10.Location = New System.Drawing.Point(42, 3)
         Me.Button10.Name = "Button10"
         Me.Button10.Size = New System.Drawing.Size(57, 28)
         Me.Button10.TabIndex = 21
@@ -902,7 +902,6 @@ Partial Class frmProductsDevelopment
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
-        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -1117,7 +1116,6 @@ Partial Class frmProductsDevelopment
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
-        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"
@@ -1445,7 +1443,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.17647!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.82353!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 89.0!))
-        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 410.0!))
+        Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 411.0!))
         Me.TableLayoutPanel3.Controls.Add(Me.Label41, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.Label7, 0, 1)
         Me.TableLayoutPanel3.Controls.Add(Me.txtCode, 1, 1)
@@ -1501,7 +1499,7 @@ Partial Class frmProductsDevelopment
         'txtCode
         '
         Me.txtCode.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCode.Location = New System.Drawing.Point(130, 48)
+        Me.txtCode.Location = New System.Drawing.Point(129, 48)
         Me.txtCode.Name = "txtCode"
         Me.txtCode.Size = New System.Drawing.Size(175, 25)
         Me.txtCode.TabIndex = 6
@@ -1521,7 +1519,7 @@ Partial Class frmProductsDevelopment
         '
         Me.cmbprstatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbprstatus.FormattingEnabled = True
-        Me.cmbprstatus.Location = New System.Drawing.Point(130, 82)
+        Me.cmbprstatus.Location = New System.Drawing.Point(129, 82)
         Me.cmbprstatus.Name = "cmbprstatus"
         Me.cmbprstatus.Size = New System.Drawing.Size(175, 25)
         Me.cmbprstatus.TabIndex = 9
@@ -1542,7 +1540,7 @@ Partial Class frmProductsDevelopment
         Me.TableLayoutPanel3.SetColumnSpan(Me.cmbuser1, 2)
         Me.cmbuser1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbuser1.FormattingEnabled = True
-        Me.cmbuser1.Location = New System.Drawing.Point(130, 115)
+        Me.cmbuser1.Location = New System.Drawing.Point(129, 115)
         Me.cmbuser1.Name = "cmbuser1"
         Me.cmbuser1.Size = New System.Drawing.Size(230, 25)
         Me.cmbuser1.TabIndex = 10
@@ -1561,7 +1559,7 @@ Partial Class frmProductsDevelopment
         'txtainfo
         '
         Me.TableLayoutPanel3.SetColumnSpan(Me.txtainfo, 3)
-        Me.txtainfo.Location = New System.Drawing.Point(130, 150)
+        Me.txtainfo.Location = New System.Drawing.Point(129, 150)
         Me.txtainfo.Multiline = True
         Me.txtainfo.Name = "txtainfo"
         Me.txtainfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -1571,7 +1569,7 @@ Partial Class frmProductsDevelopment
         'txtname
         '
         Me.txtname.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtname.Location = New System.Drawing.Point(400, 48)
+        Me.txtname.Location = New System.Drawing.Point(399, 48)
         Me.txtname.Name = "txtname"
         Me.txtname.Size = New System.Drawing.Size(230, 25)
         Me.txtname.TabIndex = 7
@@ -1580,7 +1578,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(311, 50)
+        Me.Label8.Location = New System.Drawing.Point(310, 50)
         Me.Label8.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(81, 26)
@@ -1591,7 +1589,7 @@ Partial Class frmProductsDevelopment
         '
         Me.DTPicker1.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.DTPicker1.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.DTPicker1.Location = New System.Drawing.Point(400, 82)
+        Me.DTPicker1.Location = New System.Drawing.Point(399, 82)
         Me.DTPicker1.Name = "DTPicker1"
         Me.DTPicker1.Size = New System.Drawing.Size(230, 25)
         Me.DTPicker1.TabIndex = 12
@@ -1600,7 +1598,7 @@ Partial Class frmProductsDevelopment
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(311, 84)
+        Me.Label9.Location = New System.Drawing.Point(310, 84)
         Me.Label9.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(82, 13)
@@ -1610,7 +1608,7 @@ Partial Class frmProductsDevelopment
         'cmdCtpNoMore
         '
         Me.cmdCtpNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdCtpNoMore.Location = New System.Drawing.Point(130, 191)
+        Me.cmdCtpNoMore.Location = New System.Drawing.Point(129, 191)
         Me.cmdCtpNoMore.Name = "cmdCtpNoMore"
         Me.cmdCtpNoMore.Size = New System.Drawing.Size(58, 8)
         Me.cmdCtpNoMore.TabIndex = 9
@@ -1621,7 +1619,7 @@ Partial Class frmProductsDevelopment
         'cmdPartNoMore
         '
         Me.cmdPartNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdPartNoMore.Location = New System.Drawing.Point(311, 191)
+        Me.cmdPartNoMore.Location = New System.Drawing.Point(310, 191)
         Me.cmdPartNoMore.Name = "cmdPartNoMore"
         Me.cmdPartNoMore.Size = New System.Drawing.Size(58, 7)
         Me.cmdPartNoMore.TabIndex = 8
@@ -1632,7 +1630,7 @@ Partial Class frmProductsDevelopment
         'cmdMfrNoMore
         '
         Me.cmdMfrNoMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 6.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cmdMfrNoMore.Location = New System.Drawing.Point(400, 191)
+        Me.cmdMfrNoMore.Location = New System.Drawing.Point(399, 191)
         Me.cmdMfrNoMore.Name = "cmdMfrNoMore"
         Me.cmdMfrNoMore.Size = New System.Drawing.Size(58, 7)
         Me.cmdMfrNoMore.TabIndex = 10
