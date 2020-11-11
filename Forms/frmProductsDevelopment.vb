@@ -1031,7 +1031,7 @@ Public Class frmProductsDevelopment
         ds1.Locale = CultureInfo.InvariantCulture
 
         Try
-            sql = "SELECT distinct(A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY 3 DESC"
+            sql = "SELECT distinct(A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD " & strwhere & " ORDER BY 1 DESC"
 
             ds = gnr.FillGrid(sql)
 
@@ -2704,7 +2704,8 @@ Public Class frmProductsDevelopment
                         If CInt(ProjectNoDB) + 1 = ProjectNoCurrent Then
                             Dim queryResult = gnr.InsertNewProject(ProjectNoCurrent, userid, DTPicker1, txtainfo.Text, txtname.Text, cmbprstatus, validUser)
                             If queryResult < 0 Then
-                                'error message insertion
+                                MessageBox.Show("An error ocurred in the creation of a new project. Please check the input info!", "CTP System", MessageBoxButtons.OK)
+                                Log.Error("An error ocurred in the creation of a new project")
                                 Exit Sub
                             End If
                         End If
@@ -3124,6 +3125,8 @@ Public Class frmProductsDevelopment
 
     Private Sub cmddelete_Click(sender As Object, e As EventArgs) Handles cmddelete.Click
         Dim exMessage As String = " "
+        Dim rsValidationDev As Boolean = False
+        Dim rsValidationPOq As Boolean = False
         Try
             If Trim(txtCode.Text) <> "" And Trim(txtpartno.Text) <> "" Then
                 Dim resultAlert As DialogResult = MessageBox.Show("Are you sure, you want to delete this item??.", "CTP System", MessageBoxButtons.YesNo)
@@ -3169,7 +3172,8 @@ Public Class frmProductsDevelopment
                                                                             benefits, info, prdUsr, chkNew, prdEdd, prdSco, miscCost, vendorNo, prdPts, prdMpc, toolCost, prdErd, prdPda,
                                                                             prdSqty, prwLda, prwLfl, partNo)
                             If rsInsertion < 0 Then
-                                MessageBox.Show("Ann error ocurred inserting data in Log Product Detail datatable.", "CTP System", MessageBoxButtons.OK)
+                                Log.Error(exMessage)
+                                MessageBox.Show("An error ocurred inserting data in Log Product Detail datatable.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     End If
@@ -3177,10 +3181,12 @@ Public Class frmProductsDevelopment
                     Dim prodDetDeletion = gnr.DeleteDataFromProdDet(txtCode.Text, txtpartno.Text)
                     If prodDetDeletion = 1 Then
                         Dim prodCommHeaderDeletion = gnr.DeleteDataFromProdCommHeader(txtCode.Text, txtpartno.Text)
-                        If prodCommHeaderDeletion > 1 Then
+                        If prodCommHeaderDeletion >= 0 Then
                             Dim prodCommDetDeletion = gnr.DeleteDataFromProdCommDet(txtCode.Text, txtpartno.Text)
-                            If prodCommDetDeletion > 1 Then
-                                MessageBox.Show("Deletion process succeed.", "CTP System", MessageBoxButtons.OK)
+                            If prodCommDetDeletion >= 0 Then
+                                Log.Info("Deletion process succeed.")
+                                rsValidationDev = True
+                                ' MessageBox.Show("Deletion process succeed.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     End If
@@ -3190,19 +3196,38 @@ Public Class frmProductsDevelopment
                         Dim rsPoqotaDeletion = gnr.DeleteDataFromPoQota(txtvendorno.Text, txtpartno.Text)
                         If rsPoqotaDeletion < 0 Then
                             MessageBox.Show("Ann error ocurred deleting data from POQOTA.", "CTP System", MessageBoxButtons.OK)
+                        Else
+                            rsValidationPOq = True
                         End If
                     Else
                         If dsData.Tables(0).Rows.Count = 0 Then
                             Dim rsPoqotaDeletion = gnr.DeleteDataFromPoQota(txtvendorno.Text, txtpartno.Text)
                             If rsPoqotaDeletion < 0 Then
                                 MessageBox.Show("Ann error ocurred deleting data from POQOTA.", "CTP System", MessageBoxButtons.OK)
+                            Else
+                                rsValidationPOq = True
                             End If
                         End If
                     End If
 
-                    fillcell2(txtCode.Text)
-                    Dim resultAlert1 As DialogResult = MessageBox.Show("Record Deleted.", "CTP System", MessageBoxButtons.OK)
-                    SSTab1.SelectedIndex = 1
+                    If rsValidationPOq = True And rsValidationDev = True Then
+                        Dim refAmount As Integer = GetAmountOfProjectReferences(txtCode.Text)
+                        If refAmount = 0 Then
+                            Dim rsDel = gnr.DeleteDataFromProdHead(txtCode.Text)
+                            If rsDel = 1 Then
+                                MessageBox.Show("The deletion process completed successfully.", "CTP System", MessageBoxButtons.OK)
+                                txtCode.Text = String.Empty
+                                cmdall_Click("cmdall2", Nothing)
+                                SSTab1.SelectedIndex = 0
+                            End If
+                        Else
+                            fillcell2(txtCode.Text)
+                            MessageBox.Show("Record Deleted.", "CTP System", MessageBoxButtons.OK)
+                            SSTab1.SelectedIndex = 1
+                        End If
+                    Else
+                        MessageBox.Show("The deletion process does not complete successfully.", "CTP System", MessageBoxButtons.OK)
+                    End If
                 Else
                     Dim resultAlert1 As DialogResult = MessageBox.Show("Select Project and Part # to see files.", "CTP System", MessageBoxButtons.OK)
                 End If

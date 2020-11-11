@@ -1,4 +1,6 @@
-﻿Public Class frmLogin
+﻿Imports System.Reflection
+
+Public Class frmLogin
 
 #Region "Variables"
 
@@ -21,6 +23,8 @@
     Dim colorbackcolor As Integer
     Dim BackColorValue As Color
     Dim initialwindow As String
+
+    Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
 
 #End Region
 
@@ -161,11 +165,13 @@
 #Region "Control Events"
 
     Private Sub cmdcancel_Click()
+        Dim exMessage As String = Nothing
         Try
             'sql = "CALL CTPINV.RECLAIM"
             'Conn.Execute (sql)
             Dim rsDeletionLoginTcp = gnr.DeleteRecorFromLoginTcp(codloginctp)
-            If rsDeletionLoginTcp <> 0 Then
+            If rsDeletionLoginTcp < 0 Then
+                Log.Error("Error deleting record from Login CTP Table")
                 'error eliminacion mensaje
             End If
 
@@ -180,6 +186,8 @@
             LoginSucceeded = False
             Me.Close()
         Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
             LoginSucceeded = False
             Me.Close()
         End Try
@@ -272,7 +280,8 @@
 
                             'sql = "delete from loginctp where codlogin = " & codloginctp
                             Dim rsDeletionLoginTcp = gnr.DeleteRecorFromLoginTcp(codloginctp)
-                            If rsDeletionLoginTcp <> 0 Then
+                            If rsDeletionLoginTcp < 0 Then
+                                Log.Error("Error deleting record from Login CTP Table")
                                 'error eliminacion mensaje
                             End If
 

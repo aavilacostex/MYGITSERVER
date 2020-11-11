@@ -1934,12 +1934,14 @@ Public Class frmLoadExcel
                     LikeSession.dtReloadedData = dtReload
                 End If
 
-
+                '??????????
                 Dim rsReferences = gnr.GetReferencesInProject(ProjectNoCurrent)
                 If rsReferences = 0 Then
                     Dim rsDeletion = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
                     If rsDeletion < 0 Then
                         'error deleting go to dsError
+                        Log.Error(exMessage)
+
                     End If
                 End If
 
