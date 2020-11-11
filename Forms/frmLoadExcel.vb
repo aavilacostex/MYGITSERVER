@@ -1470,6 +1470,20 @@ Public Class frmLoadExcel
 
 #Region "button methods"
 
+    Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
+        Dim exMessage As String = Nothing
+        Try
+            If Application.OpenForms.OfType(Of frmProductsDevelopment).Any() Then
+                'MessageBox.Show("The Form is already opened")
+                frmProductsDevelopment.BringToFront()
+            Else
+                frmProductsDevelopment.Show()
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+    End Sub
 
     'Private Sub txtVendorNo_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) _
     '    Handles txtVendorNo.KeyPress
@@ -1895,6 +1909,7 @@ Public Class frmLoadExcel
 
                                 Else
                                     'error message
+
                                     'cumulative reverse process
                                 End If
                                 'If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
@@ -2616,10 +2631,11 @@ Public Class frmLoadExcel
                                 objData.Header.Detail.Details.PoqotaValidation = ResultQuery.ToString()
 
                                 If ResultQuery < 0 Then
+
                                     'error message
                                 End If
                             Else
-                                'agregar log de error de estado
+                                MessageBox.Show("Please check the selected status for this reference.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     Else
@@ -2652,7 +2668,7 @@ Public Class frmLoadExcel
                             'error message
                         End If
                     Else
-                        'agregar log de error de estado
+                        MessageBox.Show("Please check the selected status for this reference.", "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
                 'End If
@@ -3994,6 +4010,7 @@ Public Class frmLoadExcel
             Return strExt
         End Try
     End Function
+
 
 #End Region
 

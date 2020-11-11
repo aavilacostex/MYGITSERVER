@@ -2002,6 +2002,21 @@ Public Class frmProductsDevelopment
 
 #Region "Button Events"
 
+    Private Sub LinkLabel5_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel5.LinkClicked
+        Dim exMessage As String = Nothing
+        Try
+            If Application.OpenForms.OfType(Of frmLoadExcel).Any() Then
+                'MessageBox.Show("The Form is already opened")
+                frmLoadExcel.BringToFront()
+            Else
+                frmLoadExcel.Show()
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+    End Sub
+
     Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
         cmdClearFilters1_Click(sender, Nothing)
     End Sub
@@ -6700,7 +6715,6 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
     Private Sub BindingNavigator1_RefreshItems(sender As Object, e As EventArgs)
 
     End Sub
-
 
     'Private Sub cmdSplit_Click(sender As Object, e As EventArgs) Handles cmdSplit.Click
     '    Dim screenPoint As Point = cmdSplit.PointToScreen(New Point(cmdSplit.Left, cmdSplit.Bottom))
