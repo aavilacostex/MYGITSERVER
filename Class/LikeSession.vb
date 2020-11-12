@@ -19,4 +19,5 @@
     Public Shared objToFill As String
     Public Shared excelErrorValidation As Boolean
     Public Shared dtReloadedData As DataTable = Nothing
+    Public Shared excelOpened As Boolean = False
 End Class

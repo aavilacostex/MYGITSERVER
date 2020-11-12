@@ -192,6 +192,8 @@
     <Compile Include="Class\ConvertXml.vb" />
     <Compile Include="Class\CrystalReport.vb" />
     <Compile Include="Class\DTO\Details.vb" />
+    <Compile Include="Class\DTO\lstObjResume.vb" />
+    <Compile Include="Class\DTO\objResume.vb" />
     <Compile Include="Class\DTO\ProductDetails.vb" />
     <Compile Include="Class\DTO\ProductHeader.vb" />
     <Compile Include="Class\LikeSession.vb" />

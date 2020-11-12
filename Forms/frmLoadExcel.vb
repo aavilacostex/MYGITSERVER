@@ -24,6 +24,7 @@ Public Class frmLoadExcel
     Dim prdMt As ProductMetadata = New ProductMetadata()
     Dim prdHd As ProductHeader = New ProductHeader()
     Dim xmlConvertClass As ConvertXml = New ConvertXml()
+    Dim objResume As objResume = New objResume()
     Public userid As String
     Public flagallow As Integer
     Dim errors As Boolean = False
@@ -1383,83 +1384,93 @@ Public Class frmLoadExcel
     Private Sub openFileDialog1_FileOk(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles OpenFileDialog1.FileOk
         Dim exMessage As String = " "
         Try
-            Dim filePath As String = OpenFileDialog1.FileName
-            Dim extension As String = Path.GetExtension(filePath)
-            'Dim header As String = If(rbHeaderYes.Checked, "YES", "NO")
-            Dim conStr As String, sheetName As String
-            conStr = String.Empty
-            Select Case extension
 
-                Case ".xls"
-                    'Excel 97-03
-                    conStr = String.Format(Excel03ConString, filePath, "YES", 1)
-                    Exit Select
-
-                Case ".xlsx"
-                    'Excel 07
-                    conStr = String.Format(Excel07ConString, filePath, "YES", 1)
-                    Exit Select
-            End Select
-
-            If String.IsNullOrEmpty(conStr) Then
-                MessageBox.Show("File not valid. You must upload only excel files.", "CTP System", MessageBoxButtons.OK)
+            Dim myFile As FileInfo = New FileInfo(OpenFileDialog1.FileName)
+            Dim isOpened = IsFileinUse(myFile)
+            If isOpened Then
+                Dim forceResult As DialogResult
+                forceResult = MessageBox.Show("The selected file is opened. Please close the file to proceed.", "CTP System", MessageBoxButtons.OK)
+                'Me.openFileDialog1_FileOk()
                 Exit Sub
-            End If
+            Else
+                Dim filePath As String = OpenFileDialog1.FileName
+                Dim extension As String = Path.GetExtension(filePath)
+                'Dim header As String = If(rbHeaderYes.Checked, "YES", "NO")
+                Dim conStr As String, sheetName As String
+                conStr = String.Empty
+                Select Case extension
 
-            'Get the name of the First Sheet.
-            Using con As New OleDbConnection(conStr)
-                Using cmd As New OleDbCommand()
-                    cmd.Connection = con
-                    con.Open()
-                    Dim dtExcelSchema As DataTable = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
-                    sheetName = dtExcelSchema.Rows(0)("TABLE_NAME").ToString()
-                    con.Close()
-                End Using
-            End Using
+                    Case ".xls"
+                        'Excel 97-03
+                        conStr = String.Format(Excel03ConString, filePath, "YES", 1)
+                        Exit Select
 
-            'Read Data from the First Sheet.
-            Using con As New OleDbConnection(conStr)
-                Using cmd As New OleDbCommand()
-                    Using oda As New OleDbDataAdapter()
-                        Dim dt As New DataTable()
-                        dt.Columns.Add("PartNo", GetType(String))
-                        dt.Columns.Add("UnitCost", GetType(String))
-                        dt.Columns.Add("MOQ", GetType(String))
-                        dt.Columns.Add("CTPNo", GetType(String))
-                        dt.Columns.Add("MFRNo", GetType(String))
-                        dt.AcceptChanges()
-                        cmd.CommandText = (Convert.ToString("SELECT * From [") & sheetName) + "]"
+                    Case ".xlsx"
+                        'Excel 07
+                        conStr = String.Format(Excel07ConString, filePath, "YES", 1)
+                        Exit Select
+                End Select
+
+                If String.IsNullOrEmpty(conStr) Then
+                    MessageBox.Show("File not valid. You must upload only excel files.", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+
+                'Get the name of the First Sheet.
+                Using con As New OleDbConnection(conStr)
+                    Using cmd As New OleDbCommand()
                         cmd.Connection = con
                         con.Open()
-                        oda.SelectCommand = cmd
-                        'oda.TableMappings.Add("Table", "Net-informations.com")
-                        oda.Fill(dt)
-
-                        Dim cleanColumns = RemoveEmptyColumns(dt, exColumnNames)
-
-                        If cleanColumns Then
-                            Dim result = xlsDataSchemaValidation(dt)
-                            If String.IsNullOrEmpty(result) Then
-                                LikeSession.dsData = dt
-                                fillData(dt)
-                                LikeSession.excelErrorValidation = False
-                            Else
-                                LikeSession.excelErrorValidation = True
-                                Dim message = If(result.Equals("No XML Data."), "Error in the xml document structure.", result)
-                                errors = False
-                                MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
-                            End If
-                        Else
-                            MessageBox.Show("Please refresh the excel document that you are uploading!", "CTP System", MessageBoxButtons.OK)
-                        End If
-
-
-                        'LoadThread()
-                        'ExecuteFillData(dt)
+                        Dim dtExcelSchema As DataTable = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
+                        sheetName = dtExcelSchema.Rows(0)("TABLE_NAME").ToString()
                         con.Close()
                     End Using
                 End Using
-            End Using
+
+                'Read Data from the First Sheet.
+                Using con As New OleDbConnection(conStr)
+                    Using cmd As New OleDbCommand()
+                        Using oda As New OleDbDataAdapter()
+                            Dim dt As New DataTable()
+                            dt.Columns.Add("PartNo", GetType(String))
+                            dt.Columns.Add("UnitCost", GetType(String))
+                            dt.Columns.Add("MOQ", GetType(String))
+                            dt.Columns.Add("CTPNo", GetType(String))
+                            dt.Columns.Add("MFRNo", GetType(String))
+                            dt.AcceptChanges()
+                            cmd.CommandText = (Convert.ToString("SELECT * From [") & sheetName) + "]"
+                            cmd.Connection = con
+                            con.Open()
+                            oda.SelectCommand = cmd
+                            'oda.TableMappings.Add("Table", "Net-informations.com")
+                            oda.Fill(dt)
+
+                            Dim cleanColumns = RemoveEmptyColumns(dt, exColumnNames)
+
+                            If cleanColumns Then
+                                Dim result = xlsDataSchemaValidation(dt)
+                                If String.IsNullOrEmpty(result) Then
+                                    LikeSession.dsData = dt
+                                    fillData(dt)
+                                    LikeSession.excelErrorValidation = False
+                                Else
+                                    LikeSession.excelErrorValidation = True
+                                    Dim message = If(result.Equals("No XML Data."), "Error in the xml document structure.", result)
+                                    errors = False
+                                    MessageBox.Show(message, "CTP System", MessageBoxButtons.OK)
+                                End If
+                            Else
+                                MessageBox.Show("Please refresh the excel document that you are uploading!", "CTP System", MessageBoxButtons.OK)
+                            End If
+
+
+                            'LoadThread()
+                            'ExecuteFillData(dt)
+                            con.Close()
+                        End Using
+                    End Using
+                End Using
+            End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
             Log.Error(exMessage)
@@ -1559,13 +1570,21 @@ Public Class frmLoadExcel
         Dim exMessage As String = Nothing
         Try
             'Call ShowDialog and launch second thread
-            Dim result As DialogResult = OpenFileDialog1.ShowDialog()
+            Dim result As DialogResult
+            result = OpenFileDialog1.ShowDialog()
             If result = DialogResult.OK Then
-                If LikeSession.excelErrorValidation = False Then
-                    BackgroundWorker2.RunWorkerAsync()
-                    LoadingExcel.ShowDialog()
-                    LoadingExcel.BringToFront()
+                If LikeSession.excelOpened = False Then
+                    If LikeSession.excelErrorValidation = False Then
+                        BackgroundWorker2.RunWorkerAsync()
+                        LoadingExcel.ShowDialog()
+                        LoadingExcel.BringToFront()
+                    End If
+                Else
+                    Exit Sub
                 End If
+            Else
+                MessageBox.Show("Please refresh the excel document that you are uploading!", "CTP System", MessageBoxButtons.OK)
+                Exit Sub
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -1596,6 +1615,11 @@ Public Class frmLoadExcel
         Dim lstPDet = New List(Of ProductDetails)()
         lstPDet.Add(objProdDetail)
         objData.Header.Detail.LstProdDetails = lstPDet
+
+        Dim objResumee = New objResume()
+        Dim lstObjResume = New List(Of objResume)()
+        'lstObjResume.Add(objResume)
+        'Dim lstObjResume = New lstObjResume() {}
 
         Try
             If String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) Then
@@ -1875,9 +1899,14 @@ Public Class frmLoadExcel
 
                             'add to error dataset if insertion fails
                             If rsInsert < 0 Then
-                                addDsErrorRow(partNo, txtVendorNo.Text, "Error inserting the project reference.")
-                                removeRowDs(partNo, txtVendorNo.Text)
-                                dictProcessErrors.Add(partNo.ToString(), txtVendorNo.Text)
+                                Dim objError = New objResume()
+                                objError.PartNumber = partNo
+                                objError.VendorNumber = txtVendorNo.Text
+                                objError.Description = "Error saving data for this reference."
+                                lstObjResume.Add(objError)
+                                'addDsErrorRow(partNo, txtVendorNo.Text, "Error inserting the project reference.")
+                                'removeRowDs(partNo, txtVendorNo.Text)
+                                'dictProcessErrors.Add(partNo.ToString(), txtVendorNo.Text)
                                 Log.Error("Error inserting data in prdvld: Project" & ProjectNoCurrent & ", PartNo: '" & partNo & "', VendorNo: " & vendorNo)
                             Else
                                 pos += 1
@@ -1910,23 +1939,18 @@ Public Class frmLoadExcel
                                     R("PRHCOD") = qotaObj.Header.projectNo
                                     dtReload.Rows.Add(R)
 
+                                    'qotaObj.Header.Detail.LstProdDetails.Add()
+
                                 Else
                                     'pasando el row que no se logro insertar en poqota al ds de error y removiendolo del correcto
-                                    addDsErrorRow(partNo, txtVendorNo.Text, "Error saving data for this reference.")
-                                    removeRowDs(partNo, txtVendorNo.Text)
-
-                                    'error salvando informacion en poqota. Elimina registro correspondiente en tabla de PRDVLD
-                                    Dim dsCheckRegistry = gnr.GetDataByCodeAndVendorAndPart(ProjectNoCurrent, vendorNo, partNo)
-                                    If dsCheckRegistry IsNot Nothing Then
-                                        If dsCheckRegistry.Tables(0).Rows.Count = 1 Then
-                                            Dim rsDeletionPD = gnr.DeleteDataFromProdDet1(ProjectNoCurrent, partNo, vendorNo)
-                                            If rsDeletionPD = 1 Then
-                                                'dictProcessErrors.Add(partNo.ToString(), vendorNo)
-                                                Log.Error("The following data was deleted from PRDVLD: Project" & ProjectNoCurrent & ", PartNo: '" & partNo & "', VendorNo: " & vendorNo)
-                                                'crear objeto para notificar al usuario
-                                            End If
-                                        End If
-                                    End If
+                                    Dim objError = New objResume()
+                                    objError.PartNumber = partNo
+                                    objError.VendorNumber = txtVendorNo.Text
+                                    objError.Description = "Error saving data for this reference."
+                                    lstObjResume.Add(objError)
+                                    'addDsErrorRow(partNo, txtVendorNo.Text, "Error saving data for this reference.")
+                                    'removeRowDs(partNo, txtVendorNo.Text)
+                                    countErrors += 1
                                 End If
                                 'If Not (dsResult.Tables(0).Columns.Contains("PRHCOD")) Then
                                 '    dsResult.Tables(0).Columns.Add("PRHCOD", GetType(Integer))
@@ -1950,8 +1974,15 @@ Public Class frmLoadExcel
                         Else
                             btnSuccess.Enabled = False
                             acumulativeFailure += 1
-                            addDsErrorRow(partNo, txtVendorNo.Text, "The vendor selected must be the vendor configured in the project. The right vendor is " & vendorNo)
-                            removeRowDs(partNo, txtVendorNo.Text)
+
+                            Dim objError = New objResume()
+                            objError.PartNumber = partNo
+                            objError.VendorNumber = txtVendorNo.Text
+                            objError.Description = "The vendor selected must be the vendor configured in the project. The right vendor is " & vendorNo
+                            lstObjResume.Add(objError)
+
+                            'addDsErrorRow(partNo, txtVendorNo.Text, "The vendor selected must be the vendor configured in the project. The right vendor is " & vendorNo)
+                            'removeRowDs(partNo, txtVendorNo.Text)
 
                             'DataGridView1.Rows.Remove(row)
                             'MessageBox.Show("The vendor selected must be the vendor configured in the project. The right vendor is " & vendorNo, "CTP System", MessageBoxButtons.OK)
@@ -1960,6 +1991,30 @@ Public Class frmLoadExcel
                     End If
                     iterator += 1
                 Next
+
+                For Each item As objResume In lstObjResume
+                    If Not String.IsNullOrEmpty(item.PartNumber) And Not String.IsNullOrEmpty(item.VendorNumber) Then
+
+                        'error salvando informacion en poqota. Elimina registro correspondiente en tabla de PRDVLD
+                        Dim dsCheckRegistry = gnr.GetDataByCodeAndVendorAndPart(ProjectNoCurrent, item.VendorNumber, item.PartNumber)
+                        If dsCheckRegistry IsNot Nothing Then
+                            If dsCheckRegistry.Tables(0).Rows.Count = 1 Then
+                                Dim rsDeletionPD = gnr.DeleteDataFromProdDet1(ProjectNoCurrent, item.PartNumber, item.VendorNumber)
+                                If rsDeletionPD = 1 Then
+                                    'dictProcessErrors.Add(partNo.ToString(), vendorNo)
+                                    Log.Error("The following data was deleted from PRDVLD: ProjectNo: " & ProjectNoCurrent & ", PartNo: '" & item.PartNumber & "', VendorNo: " & item.VendorNumber)
+                                    'crear objeto para notificar al usuario
+                                End If
+                            End If
+                        End If
+
+                        addDsErrorRow(item.PartNumber, item.VendorNumber, item.Description)
+                        removeRowDs(item.PartNumber, item.VendorNumber)
+
+                    End If
+
+                Next
+
                 dsResult.AcceptChanges()
                 If dtReload.Rows.Count > 0 And dtReload.Rows.Count = DataGridView1.Rows.Count Then
                     LikeSession.dtReloadedData = dtReload
@@ -2557,6 +2612,8 @@ Public Class frmLoadExcel
                 If dsPoQota IsNot Nothing Then
                     If dsPoQota.Tables(0).Rows.Count > 0 Then
                         If Not String.IsNullOrEmpty(Trim(dsPoQota.Tables(0).Rows(0).Item("PQCOMM"))) Then ' la referencia tiene un comentario previo en desarrollo
+#Region "Not now"
+
                             'If dsPoQota.Tables(0).Rows(0).Item("PQCOMM").Equals("D-") Then ' validacion de estado incorrecto previo D-
                             '    Dim rowMax = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor).Max(Function(row) row.ItemArray(3))
                             '    Dim rowOk1 = dsPoQota.Tables(0).AsEnumerable().Where(Function(row) row.ItemArray(1).ToString() = partNo And row.ItemArray(2).ToString() = vendor And row.ItemArray(2).ToString() = rowMax)
@@ -2579,6 +2636,8 @@ Public Class frmLoadExcel
                             '        End If
                             '    End If
                             'Else
+
+#End Region
                             MessageBox.Show("Call to administrator. An error ocurred.", "CTP System", MessageBoxButtons.YesNo)
                             'End If
 #Region "Update de poqota no contemplado aun"
@@ -2636,6 +2695,9 @@ Public Class frmLoadExcel
                             Dim commentStatues = Trim(cmbStatusMore.GetItemText(cmbStatusMore.SelectedItem).Split("--")(2))
                             statusquote = If(Not String.IsNullOrEmpty(commentStatues), "D-" & commentStatues, "")
 
+                            'test
+                            statusquote = ""
+
                             If Not String.IsNullOrEmpty(statusquote) Then
                                 'ResultQuery = 0
                                 'insertar en poqota valores iniciales en cero
@@ -2651,7 +2713,8 @@ Public Class frmLoadExcel
                                     'error message
                                 End If
                             Else
-                                MessageBox.Show("Please check the selected status for this reference.", "CTP System", MessageBoxButtons.OK)
+                                objData.Header.Detail.Details.PoqotaValidation = -1
+                                'MessageBox.Show("Please check the selected status for this reference.", "CTP System", MessageBoxButtons.OK)
                             End If
                         End If
                     Else
@@ -2671,6 +2734,10 @@ Public Class frmLoadExcel
 
                     Dim commentStatues = Trim(cmbStatusMore.GetItemText(cmbStatusMore.SelectedItem).Split("--")(2))
                     statusquote = If(Not String.IsNullOrEmpty(commentStatues), "D-" & commentStatues, "")
+
+                    'test
+                    statusquote = ""
+
                     If Not String.IsNullOrEmpty(statusquote) Then
                         'insertar en poqota valores iniciales en cero
                         'ResultQuery = 0
@@ -2684,7 +2751,8 @@ Public Class frmLoadExcel
                             'error message
                         End If
                     Else
-                        MessageBox.Show("Please check the selected status for this reference.", "CTP System", MessageBoxButtons.OK)
+                        objData.Header.Detail.Details.PoqotaValidation = -1
+                        'MessageBox.Show("Please check the selected status for this reference.", "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
                 'End If
@@ -3562,7 +3630,8 @@ Public Class frmLoadExcel
         ds.Locale = CultureInfo.InvariantCulture
         Dim rsReturn As Boolean = False
         Try
-            ds = gnr.GetDataByVendorAndPartNoProdDesc(partNo, vendorNo)
+            'ds = gnr.GetDataByVendorAndPartNoProdDesc(partNo, vendorNo)
+            ds = gnr.GetDataByVendorAndPartNoDevPoq(partNo, vendorNo)
             If ds IsNot Nothing Then
                 If ds.Tables(0).Rows.Count > 0 Then
                     LikeSession.referencedExistence = ds.Tables(0).Rows(0).ItemArray(0).ToString()
@@ -3747,6 +3816,26 @@ Public Class frmLoadExcel
             Log.Error(exMessage)
             Return 1
         End Try
+    End Function
+
+    Public Function IsFileinUse(file As FileInfo) As Boolean
+        Dim exMessage As String = Nothing
+        Dim opened As Boolean = False
+        Dim myStream As FileStream = Nothing
+        Try
+            myStream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None)
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            opened = True
+            LikeSession.excelOpened = opened
+        Finally
+            If myStream IsNot Nothing Then
+                LikeSession.excelOpened = False
+                myStream.Close()
+            End If
+        End Try
+        Return opened
     End Function
 
     Private Shared Function IsWorkbookAlreadyOpen(app1 As Excel.Application, workbookName As String) As Boolean

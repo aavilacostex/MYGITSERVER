@@ -855,6 +855,25 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function GetDataByVendorAndPartNoDevPoq(partNo As String, vendorNo As String) As Data.DataSet
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select A1.prhcod from prdvld A1 inner join poqota A2 on A1.prdptn = A2.pqptn and A1.vmvnum = A2.pqvnd
+                    where SUBSTR(UCASE(A2.SPACE),32,3) = 'DEV' and  A2.PQCOMM LIKE 'D%' and A2.pqcomm <> 'D-'
+                    and TRIM(A1.PRDPTN) = '" & Trim(UCase(partNo)) & "' and A1.vmvnum = " & Trim(vendorNo) & "
+                    order by 1 desc "
+            ds = GetDataFromDatabase(Sql)
+            Return ds
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            Return Nothing
+        End Try
+    End Function
+
     Public Function GetCodeAndNameByPartNo(partNo As String) As Data.DataSet
         Dim exMessage As String = " "
         Dim Sql As String
