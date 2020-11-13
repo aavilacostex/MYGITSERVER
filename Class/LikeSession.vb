@@ -20,4 +20,5 @@
     Public Shared excelErrorValidation As Boolean
     Public Shared dtReloadedData As DataTable = Nothing
     Public Shared excelOpened As Boolean = False
+    Public Shared wrongName As Boolean = False
 End Class

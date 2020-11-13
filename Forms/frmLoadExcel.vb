@@ -776,11 +776,22 @@ Public Class frmLoadExcel
 
                     If DataGridView1.Rows.Count > 0 And Not stopPag Then
                         If LikeSession.dtReloadedData IsNot Nothing Then
-                            toPaginateDs(DataGridView1, LikeSession.dtReloadedData)
+                            If LikeSession.wrongName = False Then
+                                toPaginateDs(DataGridView1, LikeSession.dtReloadedData)
+                            Else
+                                DataGridView1.DataSource = Nothing
+                                DataGridView1.Refresh()
+                                LikeSession.wrongName = False
+                            End If
                         Else
-                            toPaginateDs(DataGridView1, dt)
+                            If LikeSession.wrongName = False Then
+                                toPaginateDs(DataGridView1, dt)
+                            Else
+                                DataGridView1.DataSource = Nothing
+                                DataGridView1.Refresh()
+                                LikeSession.wrongName = False
+                            End If
                         End If
-
                     End If
                 Else
                     Dim dsError = LikeSession.dsErrorSession
@@ -1486,7 +1497,13 @@ Public Class frmLoadExcel
         Try
             If Application.OpenForms.OfType(Of frmProductsDevelopment).Any() Then
                 'MessageBox.Show("The Form is already opened")
-                frmProductsDevelopment.BringToFront()
+                Dim rsDialog As DialogResult = MessageBox.Show("The requeted form is already open. Do you want to reload it?", "CTP System", MessageBoxButtons.YesNo)
+                If rsDialog = DialogResult.Yes Then
+                    frmProductsDevelopment.Close()
+                    frmProductsDevelopment.Show()
+                Else
+                    frmProductsDevelopment.BringToFront()
+                End If
             Else
                 frmProductsDevelopment.Show()
             End If
@@ -1635,6 +1652,7 @@ Public Class frmLoadExcel
                 If dsResult.Tables(0).Rows.Count <= 0 Then
                     SplitContainer1.Panel2Collapsed = False
                     SplitContainer1.Panel1Collapsed = True
+                    LikeSession.wrongName = True
                     MessageBox.Show("There is an error in the data.", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
                 Else
@@ -1658,6 +1676,7 @@ Public Class frmLoadExcel
             Else
                 SplitContainer1.Panel2Collapsed = False
                 SplitContainer1.Panel1Collapsed = True
+                LikeSession.wrongName = True
                 MessageBox.Show("There is an error in the data.", "CTP System", MessageBoxButtons.OK)
                 Exit Sub
             End If
@@ -1683,6 +1702,7 @@ Public Class frmLoadExcel
 
                 Dim dsExistsProject = gnr.GetExistByPRNAME(txtProjectName.Text)
                 If dsExistsProject IsNot Nothing Then
+                    LikeSession.wrongName = True
                     Dim msgResult As DialogResult =
                         MessageBox.Show("The name " & txtProjectName.Text & " is in use in project number: " & dsExistsProject.Tables(0).Rows(0).ItemArray(0).ToString() & ". Please change the project name entered.", "CTP System", MessageBoxButtons.OK)
                     Exit Sub
@@ -1733,6 +1753,10 @@ Public Class frmLoadExcel
             End If
 
             If queryResult < 0 Then
+                Log.Error("An error ocurred inserting data en Product Development Header.")
+                LikeSession.wrongName = True
+                MessageBox.Show("An error ocurred inserting data en Product Development Header.", "CTP System", MessageBoxButtons.OK)
+                Exit Sub
                 'error message insertion
             Else
                 txtProjectNo.Text = ProjectNoCurrent
@@ -2026,11 +2050,10 @@ Public Class frmLoadExcel
                     Dim rsDeletion = gnr.DeleteDataFromProdHead(ProjectNoCurrent)
                     If rsDeletion < 0 Then
                         'error deleting go to dsError
-                        Log.Error(exMessage)
-
+                        Log.Error("An error ocurred deleting info from PRDVLH. Project No: " & ProjectNoCurrent)
+                        MessageBox.Show("An error ocurred deleting info from PRDVLH. Project No: " & ProjectNoCurrent, "CTP System", MessageBoxButtons.OK)
                     End If
                 End If
-
             End If
 
             If countErrors > 0 Then
@@ -2710,7 +2733,6 @@ Public Class frmLoadExcel
 
                                 If ResultQuery < 0 Then
 
-                                    'error message
                                 End If
                             Else
                                 objData.Header.Detail.Details.PoqotaValidation = -1
@@ -2766,6 +2788,7 @@ Public Class frmLoadExcel
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Log.Error(exMessage)
+            objData.Header.Detail.Details.PoqotaValidation = -1
             Return Nothing
         End Try
     End Function

@@ -2007,7 +2007,13 @@ Public Class frmProductsDevelopment
         Try
             If Application.OpenForms.OfType(Of frmLoadExcel).Any() Then
                 'MessageBox.Show("The Form is already opened")
-                frmLoadExcel.BringToFront()
+                Dim rsDialog As DialogResult = MessageBox.Show("The requeted form is already open. Do you want to reload it?", "CTP System", MessageBoxButtons.YesNo)
+                If rsDialog = DialogResult.Yes Then
+                    frmLoadExcel.Close()
+                    frmLoadExcel.Show()
+                Else
+                    frmLoadExcel.BringToFront()
+                End If
             Else
                 frmLoadExcel.Show()
             End If
