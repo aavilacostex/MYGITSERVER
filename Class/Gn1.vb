@@ -1170,28 +1170,66 @@ NotInheritable Class Gn1
         End Try
     End Function
 
+    Public Function customIsVendorAccepted(vendorNo As String) As Boolean
+        Dim exMessage As String = " "
+        Try
+            'Dim vendorType = getVendorTypeByVendorNum(vendorNo)
+            Dim ds As DataSet = getVendorTypeByVendorNum(vendorNo, 0)
+            If ds IsNot Nothing Then
+                Dim vendorType = ds.Tables(0).Rows(0).ItemArray(0).ToString()
+                Dim vendorName = ds.Tables(0).Rows(0).ItemArray(1).ToString()
+                Dim listDeniedCodes = VendorCodesDenied.Split(",")
+                Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x As String) x = "'" & vendorType & "'")
+                If Not containsDenied Then
+                    Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
+                    Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
+                    If Not containsOEM Then
+                        'frmLoadExcel.lblVendorDesc.Text = vendorName
+                        'MessageBox.Show("The vendor " & RTrim(vendorName) & " is an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
+                        Return True
+                    Else
+                        'MessageBox.Show("The vendor " & RTrim(vendorName) & " is not an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
+                        Return False
+                    End If
+                Else
+                    'MessageBox.Show("The vendor " & RTrim(vendorName) & " is not an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
+                    Return False
+                End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            Return False
+        End Try
+    End Function
+
     Public Function isPartInExistence(partNo As String) As Boolean
         'check for part number inm imnsta, cater y komat
         Dim ds1 = New DataSet()
         Dim ds2 = New DataSet()
         Dim ds3 = New DataSet()
         Dim ds4 = New DataSet()
+        Dim ds5 = New DataSet()
         Dim exMessage As String = " "
 
         Try
-            ds1 = GetPartInProdDesc(partNo)
-            If ds1 Is Nothing Then
-                ds2 = GetPartInDvinva(partNo)
-                If ds2 Is Nothing Then
-                    ds3 = GetPartInCater(partNo)
-                    If ds3 Is Nothing Then
-                        ds4 = GetPartInKomat(partNo)
-                        If ds4 Is Nothing Then
-                            Return False
+            ds5 = GetPartInImnsta(partNo)
+            If ds5 Is Nothing Then
+                ds1 = GetPartInProdDesc(partNo)
+                If ds1 Is Nothing Then
+                    ds2 = GetPartInDvinva(partNo)
+                    If ds2 Is Nothing Then
+                        ds3 = GetPartInCater(partNo)
+                        If ds3 Is Nothing Then
+                            ds4 = GetPartInKomat(partNo)
+                            If ds4 Is Nothing Then
+                                Return False
+                            End If
                         End If
                     End If
                 End If
             End If
+
             Return True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -2491,24 +2529,37 @@ NotInheritable Class Gn1
 
     End Function
 
-    Public Function GetInactiveAlertByUser(userid As String) As DataSet
+    Public Function GetInactiveAlertByUser(userid As String, Optional vendorNo As String = Nothing) As DataSet
         Dim exMessage As String = " "
         Dim sql As String = ""
         Dim ds As DataSet = New DataSet()
         Try
+            'sql = " select A1.prhcod As ProjectNo,A1.prdptn As PartNo, A1.vmvnum As VendorNo, A1.crdate As CreationDate, date(now()) As CurrentDate, A1.modate As ModificationDate, (Days(date(now())) - Days(A1.modate)) as DifferenceDays, A2.pqcomm As StatusComment, A1.prdusr As User 
+            '        from prdvld A1 inner join poqota A2 on A1.prdptn = A2.pqptn and A1.vmvnum = A2.pqvnd where SUBSTR(UCASE(A2.SPACE),32,3) = 'DEV' AND A2.PQCOMM LIKE 'D%' 
+            '        and (Days(date(now())) - Days(A1.modate)) > 30 and (Days(date(now())) - Days(A1.modate)) > 0 and PQCOMM LIKE 'D-Pending%' OR PQCOMM LIKE 'D-Analysis%' 
+            '        and A1.prdusr = '" & Trim(UCase(userid)) & "' and A1.cruser = '" & Trim(UCase(userid)) & "'
+            '        union
+            '        select A0.prhcod  As ProjectNo, A0.prdptn As PartNo, A0.vmvnum As VendorNo, A0.crdate As CreationDate,date(now()) As CurrentDate, A0.modate As ModificationDate, (Days(date(now())) - Days(A0.modate)) as DifferenceDays, 
+            '        CASE A0.prdsts
+            '           WHEN 'AS' THEN 'D-Analysis of Sample'
+            '           WHEN 'PS' THEN 'D-Pending from Suppl'   
+            '         END  As StatusComment
+            '        , A0.prdusr As User
+            '        from prdvld A0 inner join vnmas A1 on A0.vmvnum = A1.vmvnum inner join csuser A2 on A1.vmabb# = A2.uspurc where A2.ususer = '" & Trim(UCase(userid)) & "'
+            '        and prdsts in ('PS','AS') and (Days(date(now())) - Days(A0.modate)) > 30 and (Days(date(now())) - Days(A0.modate)) > 0"
+
             sql = " select A1.prhcod As ProjectNo,A1.prdptn As PartNo, A1.vmvnum As VendorNo, A1.crdate As CreationDate, date(now()) As CurrentDate, A1.modate As ModificationDate, (Days(date(now())) - Days(A1.modate)) as DifferenceDays, A2.pqcomm As StatusComment, A1.prdusr As User 
                     from prdvld A1 inner join poqota A2 on A1.prdptn = A2.pqptn and A1.vmvnum = A2.pqvnd where SUBSTR(UCASE(A2.SPACE),32,3) = 'DEV' AND A2.PQCOMM LIKE 'D%' 
-                    and (Days(date(now())) - Days(A1.modate)) > 30 and (Days(date(now())) - Days(A1.modate)) > 0 and PQCOMM LIKE 'D-Pending%' OR PQCOMM LIKE 'D-Analysis%' 
-                    and A1.prdusr = '" & Trim(UCase(userid)) & "' and A1.cruser = '" & Trim(UCase(userid)) & "'
-                    union
-                    select A0.prhcod  As ProjectNo, A0.prdptn As PartNo, A0.vmvnum As VendorNo, A0.crdate As CreationDate,date(now()) As CurrentDate, A0.modate As ModificationDate, (Days(date(now())) - Days(A0.modate)) as DifferenceDays, 
-                    CASE A0.prdsts
-                       WHEN 'AS' THEN 'D-Analysis of Sample'
-                       WHEN 'PS' THEN 'D-Pending from Suppl'   
-                     END  As StatusComment
-                    , A0.prdusr As User
-                    from prdvld A0 inner join vnmas A1 on A0.vmvnum = A1.vmvnum inner join csuser A2 on A1.vmabb# = A2.uspurc where A2.ususer = '" & Trim(UCase(userid)) & "'
-                    and prdsts in ('PS','AS') and (Days(date(now())) - Days(A0.modate)) > 30 and (Days(date(now())) - Days(A0.modate)) > 0"
+                    and (Days(date(now())) - Days(A1.modate)) > 30 and (Days(date(now())) - Days(A1.modate)) > 0 and (PQCOMM LIKE 'D-Pending%' OR PQCOMM LIKE 'D-Analysis%') 
+                    and A1.prdusr = '" & Trim(UCase(userid)) & "' and A1.cruser = '" & Trim(UCase(userid)) & "'"
+
+            If vendorNo IsNot Nothing Then
+                Dim addToQuery As String = If(customIsVendorAccepted(vendorNo), " and A1.vmvnum = " & vendorNo, "")
+                'Dim addToQuery As String = " and A1.vmvnum = " & vendorNo
+                sql += addToQuery
+            End If
+
+
             'Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(userName)) & "'"
             ds = GetDataFromDatabase(sql)
             Return ds

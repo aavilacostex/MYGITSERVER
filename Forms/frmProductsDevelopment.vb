@@ -1550,7 +1550,7 @@ Public Class frmProductsDevelopment
                                 Dim posValue As Integer = 0
                                 For Each obj As DataRowView In cmbstatus.Items
                                     Dim VarQuery = Trim(RowDs.Item(ds.Tables(0).Columns("PRDSTS").Ordinal).ToString())
-                                    Dim VarCombo = Trim(obj.Item(2).ToString())
+                                    Dim VarCombo = Trim(obj.Item(0).ToString())
                                     If VarQuery = VarCombo Then
                                         cmbstatus.SelectedIndex = posValue
                                         Exit For
@@ -2059,7 +2059,11 @@ Public Class frmProductsDevelopment
         Dim created As String = False
         Try
             If userid IsNot Nothing Then
-                Dim dsAlertInactives = gnr.GetInactiveAlertByUser(userid)
+                If True Then
+
+                End If
+                Dim dsAlertInactives = If(String.IsNullOrEmpty(txtsearch1.Text), gnr.GetInactiveAlertByUser(userid), gnr.GetInactiveAlertByUser(userid, Trim(txtsearch1.Text)))
+                'Dim dsAlertInactives = gnr.GetInactiveAlertByUser(userid)
                 If dsAlertInactives IsNot Nothing Then
                     If dsAlertInactives.Tables(0).Rows.Count > 0 Then
                         Dim newDsAlertInactive = New DataSet()
@@ -2074,15 +2078,16 @@ Public Class frmProductsDevelopment
                         newDsAlertInactive.Tables.Add(newDtAlertInactive)
 
                         InactiveQotaAlertExcelGeneration(newDsAlertInactive, userid, created)
-                        If created Then
-                            Dim result As DialogResult = MessageBox.Show("Did you want to receive an email with the oldest quotation without activity?", "CTP System", MessageBoxButtons.YesNo)
-                            If result = DialogResult.Yes Then
-                                Dim customtoemails = prepareEmailsToSendReport(1)
-                                Dim rsResult = gnr.sendEmail(customtoemails, userid)
-                                If rsResult < 0 Then
-                                    MessageBox.Show("Ann error ocurred sending emails.", "CTP System", MessageBoxButtons.OK)
-                                End If
-                            End If
+                        If Not created Then
+                            MessageBox.Show("There is an error in the creation of the report.", "CTP System", MessageBoxButtons.OK)
+                            'Dim result As DialogResult = MessageBox.Show("Did you want to receive an email with the oldest quotation without activity?", "CTP System", MessageBoxButtons.YesNo)
+                            'If result = DialogResult.Yes Then
+                            '    Dim customtoemails = prepareEmailsToSendReport(1)
+                            '    Dim rsResult = gnr.sendEmail(customtoemails, userid)
+                            '    If rsResult < 0 Then
+                            '        MessageBox.Show("Ann error ocurred sending emails.", "CTP System", MessageBoxButtons.OK)
+                            '    End If
+                            'End If
                         End If
                     Else
                         MessageBox.Show("There is not results with this user.", "CTP System", MessageBoxButtons.OK)
@@ -3714,7 +3719,7 @@ Public Class frmProductsDevelopment
                 Dim dsGetVendorByVendorNo = gnr.GetVendorByVendorNo(vendorno)
                 If Not dsGetVendorByVendorNo Is Nothing Then
                     If (dsGetVendorByVendorNo.Tables(0).Rows.Count > 0) Then
-                        If gnr.isVendorAccepted(vendorno) Then
+                        If gnr.customIsVendorAccepted(vendorno) Then
                             txtvendorno.Text = vendorno
                             txtvendorname.Text = dsGetVendorByVendorNo.Tables(0).Rows(0).ItemArray(dsGetVendorByVendorNo.Tables(0).Columns("VMNAME").Ordinal).ToString()
                             partstoshow = ""

@@ -514,7 +514,7 @@ Public Class frmLoadExcel
                             '    item.Item(dt.Columns("PRPECH").Ordinal) = userid
                             'End If
                             If String.IsNullOrEmpty(item.ItemArray(0).ToString()) Then
-                                Dim partNo = gnr.GetPartCtpRef(item.ItemArray(3).ToString())
+                                Dim partNo = gnr.GetPartCtpRef(item.Item("CTPNo").ToString())
                                 If partNo IsNot Nothing Then
                                     item.Item("partNo") = partNo
                                     'dt.Rows(i)("columnName") = strVerse
@@ -1916,7 +1916,7 @@ Public Class frmLoadExcel
 
 #End Region
 
-                            Dim rsInsert = InsertProductDetails(partNo, ProjectNoCurrent, personInChargeValue)
+                            Dim rsInsert = InsertProductDetails(partNo, ProjectNoCurrent, personInChargeValue, objData)
                             'Dim rsInsert = 0
 
                             '------------------ Insertion in product details first data --------------------------------
@@ -2634,7 +2634,9 @@ Public Class frmLoadExcel
                 Dim dsPoQota = gnr.GetAllPOQOTA(vendor, partNo)
                 If dsPoQota IsNot Nothing Then
                     If dsPoQota.Tables(0).Rows.Count > 0 Then
-                        If Not String.IsNullOrEmpty(Trim(dsPoQota.Tables(0).Rows(0).Item("PQCOMM"))) Then ' la referencia tiene un comentario previo en desarrollo
+                        If Not String.IsNullOrEmpty(Trim(dsPoQota.Tables(0).Rows(0).Item("PQCOMM"))) And
+                            dsPoQota.Tables(0).Rows(0).Item("PQCOMM").ToString().Contains("D-") And
+                            dsPoQota.Tables(0).Rows(0).Item("SPACE").ToString().Contains("DEV") Then ' la referencia tiene un comentario previo en desarrollo
 #Region "Not now"
 
                             'If dsPoQota.Tables(0).Rows(0).Item("PQCOMM").Equals("D-") Then ' validacion de estado incorrecto previo D-
@@ -2661,7 +2663,9 @@ Public Class frmLoadExcel
                             'Else
 
 #End Region
-                            MessageBox.Show("Call to administrator. An error ocurred.", "CTP System", MessageBoxButtons.YesNo)
+                            objData.Header.Detail.Details.PoqotaValidation = -1
+                            Log.Error("The reference for the part " & Trim(UCase(partNo)) & " and vendor " & Trim(vendor) & " already has a development.")
+                            'MessageBox.Show("There is a reference in development for this vendor and part number. If you want to update this reference you will do that in the Product Development Form.", "CTP System", MessageBoxButtons.YesNo)
                             'End If
 #Region "Update de poqota no contemplado aun"
 
@@ -2719,7 +2723,7 @@ Public Class frmLoadExcel
                             statusquote = If(Not String.IsNullOrEmpty(commentStatues), "D-" & commentStatues, "")
 
                             'test
-                            statusquote = ""
+                            'statusquote = ""
 
                             If Not String.IsNullOrEmpty(statusquote) Then
                                 'ResultQuery = 0
@@ -2740,7 +2744,7 @@ Public Class frmLoadExcel
                             End If
                         End If
                     Else
-                        'exception
+                        Log.Error("There is an error getting data from poqota for part " & Trim(UCase(partNo)) & " and vendor " & Trim(vendor))
                     End If
                 Else
                     'no esiste en poqota
@@ -2758,7 +2762,7 @@ Public Class frmLoadExcel
                     statusquote = If(Not String.IsNullOrEmpty(commentStatues), "D-" & commentStatues, "")
 
                     'test
-                    statusquote = ""
+                    'statusquote = ""
 
                     If Not String.IsNullOrEmpty(statusquote) Then
                         'insertar en poqota valores iniciales en cero
@@ -2768,10 +2772,6 @@ Public Class frmLoadExcel
                                                                     objData.Header.Detail.Details.UnitCostNew, objData.Header.Detail.Details.MinQty)
 
                         objData.Header.Detail.Details.PoqotaValidation = ResultQuery.ToString()
-
-                        If ResultQuery < 0 Then
-                            'error message
-                        End If
                     Else
                         objData.Header.Detail.Details.PoqotaValidation = -1
                         'MessageBox.Show("Please check the selected status for this reference.", "CTP System", MessageBoxButtons.OK)
@@ -2780,7 +2780,8 @@ Public Class frmLoadExcel
                 'End If
                 'End If
             Else
-                Dim result1 As DialogResult = MessageBox.Show("Part No. cannot be changed when is already created.", "CTP System", MessageBoxButtons.OK)
+                Log.Error("Part No. " & Trim(UCase(partNo)) & " cannot be changed when is already created.")
+                'Dim result1 As DialogResult = MessageBox.Show("Part No. cannot be changed when is already created.", "CTP System", MessageBoxButtons.OK)
             End If
 
             Return objData
@@ -3759,7 +3760,7 @@ Public Class frmLoadExcel
         End Try
     End Function
 
-    Private Function InsertProductDetails(partNo As String, code As String, personInCharge As String, Optional ByVal vendorNoo As String = Nothing) As Integer
+    Private Function InsertProductDetails(partNo As String, code As String, personInCharge As String, Optional ByVal objData As ProductClass = Nothing) As Integer
         Dim dtTime As DateTimePicker = New DateTimePicker()
         Dim dtTime1 As DateTimePicker = New DateTimePicker()
         Dim dtTime2 As DateTimePicker = New DateTimePicker()
@@ -3820,11 +3821,11 @@ Public Class frmLoadExcel
 
             Dim generalStatus = If(cmbStatusMore.SelectedIndex = 0 Or cmbStatusMore.SelectedIndex = -1, "E", cmbStatusMore.SelectedValue.ToString())
             QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
-                                    userid, dtTime1, userid, dtTime2, "", 0,
-                                    "", "", 0, 0,
+                                    userid, dtTime1, userid, dtTime2, objData.Header.Detail.Details.CTPNo, 0,
+                                    "", objData.Header.Detail.Details.ManufactNo, objData.Header.Detail.Details.UnitCost, objData.Header.Detail.Details.UnitCostNew,
                                     "", dtTime3, generalStatus, "",
                                     "", personInCharge, chkControl, dtTime4, "0",
-                                    "0", Trim(txtVendorNo.Text), "", "", "0", dtTime5,
+                                    "0", Trim(txtVendorNo.Text), "", objData.Header.Detail.Details.MinorCode, "0", dtTime5,
                                     dtTime6, If(Not String.IsNullOrEmpty(""), CInt(""), "0"))
 
             If QueryDetailResult < 0 Then
