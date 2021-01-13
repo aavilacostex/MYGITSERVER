@@ -33,14 +33,15 @@ Partial Class frmLoadExcel
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
+        Me.lblVendorDesc = New System.Windows.Forms.Label()
         Me.txtVendorNo = New System.Windows.Forms.TextBox()
         Me.btnValidVendor = New System.Windows.Forms.Button()
-        Me.lblVendorDesc = New System.Windows.Forms.Label()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.cmdExcel = New System.Windows.Forms.Button()
         Me.lblExcel = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
+        Me.lblUsrLog = New System.Windows.Forms.Label()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.clPRHCOD = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clPRDPTN = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -60,7 +61,6 @@ Partial Class frmLoadExcel
         Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.lblUsrLog = New System.Windows.Forms.Label()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
         Me.dtProjectDate = New System.Windows.Forms.DateTimePicker()
@@ -109,17 +109,19 @@ Partial Class frmLoadExcel
         Me.lblProjectNo = New System.Windows.Forms.Label()
         Me.lblVendorNo = New System.Windows.Forms.Label()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel10 = New System.Windows.Forms.TableLayoutPanel()
+        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
         Me.txtDesc = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
-        Me.ac2 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.cmbStatusMore = New System.Windows.Forms.ComboBox()
-        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
         Me.BackgroundWorker2 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker3 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker4 = New System.ComponentModel.BackgroundWorker()
+        Me.ac2 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -140,6 +142,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel7.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
+        Me.TableLayoutPanel10.SuspendLayout()
         Me.TableLayoutPanel8.SuspendLayout()
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -159,15 +162,20 @@ Partial Class frmLoadExcel
         Me.ImageList1.Images.SetKeyName(4, "proddev1.png")
         Me.ImageList1.Images.SetKeyName(5, "proddev2.png")
         Me.ImageList1.Images.SetKeyName(6, "proddev3.png")
+        Me.ImageList1.Images.SetKeyName(7, "downloadex1.png")
+        Me.ImageList1.Images.SetKeyName(8, "downloadex2.png")
+        Me.ImageList1.Images.SetKeyName(9, "downloadex3.png")
+        Me.ImageList1.Images.SetKeyName(10, "downloadex4.png")
+        Me.ImageList1.Images.SetKeyName(11, "downloadex5.png")
         '
         'TableLayoutPanel4
         '
         Me.TableLayoutPanel4.ColumnCount = 2
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 82.00837!))
         Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.99163!))
+        Me.TableLayoutPanel4.Controls.Add(Me.lblVendorDesc, 0, 1)
         Me.TableLayoutPanel4.Controls.Add(Me.txtVendorNo, 0, 0)
         Me.TableLayoutPanel4.Controls.Add(Me.btnValidVendor, 1, 0)
-        Me.TableLayoutPanel4.Controls.Add(Me.lblVendorDesc, 0, 1)
         Me.TableLayoutPanel4.Location = New System.Drawing.Point(248, 127)
         Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
         Me.TableLayoutPanel4.RowCount = 2
@@ -176,6 +184,18 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(239, 62)
         Me.TableLayoutPanel4.TabIndex = 31
+        '
+        'lblVendorDesc
+        '
+        Me.TableLayoutPanel4.SetColumnSpan(Me.lblVendorDesc, 2)
+        Me.lblVendorDesc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.lblVendorDesc.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblVendorDesc.Location = New System.Drawing.Point(3, 33)
+        Me.lblVendorDesc.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.lblVendorDesc.Name = "lblVendorDesc"
+        Me.lblVendorDesc.Size = New System.Drawing.Size(233, 27)
+        Me.lblVendorDesc.TabIndex = 33
+        Me.lblVendorDesc.Text = "  "
         '
         'txtVendorNo
         '
@@ -196,18 +216,6 @@ Partial Class frmLoadExcel
         Me.btnValidVendor.TabIndex = 31
         Me.btnValidVendor.Text = " "
         Me.btnValidVendor.UseVisualStyleBackColor = True
-        '
-        'lblVendorDesc
-        '
-        Me.TableLayoutPanel4.SetColumnSpan(Me.lblVendorDesc, 2)
-        Me.lblVendorDesc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.lblVendorDesc.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblVendorDesc.Location = New System.Drawing.Point(3, 33)
-        Me.lblVendorDesc.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
-        Me.lblVendorDesc.Name = "lblVendorDesc"
-        Me.lblVendorDesc.Size = New System.Drawing.Size(233, 27)
-        Me.lblVendorDesc.TabIndex = 32
-        Me.lblVendorDesc.Text = "  "
         '
         'TableLayoutPanel3
         '
@@ -275,9 +283,9 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 274.0!))
         Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 251.0!))
+        Me.TableLayoutPanel6.Controls.Add(Me.lblUsrLog, 0, 1)
         Me.TableLayoutPanel6.Controls.Add(Me.DataGridView1, 0, 0)
         Me.TableLayoutPanel6.Controls.Add(Me.BindingNavigator1, 1, 1)
-        Me.TableLayoutPanel6.Controls.Add(Me.lblUsrLog, 0, 1)
         Me.TableLayoutPanel6.Controls.Add(Me.ProgressBar1, 0, 2)
         Me.TableLayoutPanel6.Controls.Add(Me.TableLayoutPanel9, 2, 1)
         Me.TableLayoutPanel6.Location = New System.Drawing.Point(3, 3)
@@ -288,6 +296,17 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel6.Size = New System.Drawing.Size(763, 278)
         Me.TableLayoutPanel6.TabIndex = 0
+        '
+        'lblUsrLog
+        '
+        Me.lblUsrLog.AutoSize = True
+        Me.lblUsrLog.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblUsrLog.Location = New System.Drawing.Point(3, 214)
+        Me.lblUsrLog.Margin = New System.Windows.Forms.Padding(3, 8, 3, 0)
+        Me.lblUsrLog.Name = "lblUsrLog"
+        Me.lblUsrLog.Size = New System.Drawing.Size(91, 13)
+        Me.lblUsrLog.TabIndex = 27
+        Me.lblUsrLog.Text = " User Logged: "
         '
         'DataGridView1
         '
@@ -487,17 +506,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorSeparator2.Name = "BindingNavigatorSeparator2"
         Me.BindingNavigatorSeparator2.Size = New System.Drawing.Size(6, 36)
-        '
-        'lblUsrLog
-        '
-        Me.lblUsrLog.AutoSize = True
-        Me.lblUsrLog.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblUsrLog.Location = New System.Drawing.Point(3, 214)
-        Me.lblUsrLog.Margin = New System.Windows.Forms.Padding(3, 8, 3, 0)
-        Me.lblUsrLog.Name = "lblUsrLog"
-        Me.lblUsrLog.Size = New System.Drawing.Size(91, 13)
-        Me.lblUsrLog.TabIndex = 12
-        Me.lblUsrLog.Text = " User Logged: "
         '
         'ProgressBar1
         '
@@ -1002,6 +1010,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.Controls.Add(Me.lblProjectNo, 0, 1)
         Me.TableLayoutPanel2.Controls.Add(Me.lblProjectName, 1, 1)
         Me.TableLayoutPanel2.Controls.Add(Me.lblPerCharge, 0, 3)
+        Me.TableLayoutPanel2.Controls.Add(Me.TableLayoutPanel10, 2, 10)
         Me.TableLayoutPanel2.Controls.Add(Me.lblDesc, 0, 5)
         Me.TableLayoutPanel2.Controls.Add(Me.txtProjectNo, 0, 2)
         Me.TableLayoutPanel2.Controls.Add(Me.txtProjectName, 1, 2)
@@ -1020,7 +1029,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.Controls.Add(Me.cmbStatus, 2, 5)
         Me.TableLayoutPanel2.Controls.Add(Me.cmbStatusMore, 2, 2)
         Me.TableLayoutPanel2.Controls.Add(Me.TableLayoutPanel1, 1, 10)
-        Me.TableLayoutPanel2.Controls.Add(Me.LinkLabel2, 2, 10)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(13, 21)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 11
@@ -1038,6 +1046,58 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(775, 647)
         Me.TableLayoutPanel2.TabIndex = 2
+        '
+        'TableLayoutPanel10
+        '
+        Me.TableLayoutPanel10.ColumnCount = 2
+        Me.TableLayoutPanel10.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel10.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129.0!))
+        Me.TableLayoutPanel10.Controls.Add(Me.LinkLabel2, 1, 0)
+        Me.TableLayoutPanel10.Controls.Add(Me.LinkLabel3, 0, 0)
+        Me.TableLayoutPanel10.Location = New System.Drawing.Point(493, 587)
+        Me.TableLayoutPanel10.Name = "TableLayoutPanel10"
+        Me.TableLayoutPanel10.RowCount = 2
+        Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel10.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8.0!))
+        Me.TableLayoutPanel10.Size = New System.Drawing.Size(273, 58)
+        Me.TableLayoutPanel10.TabIndex = 27
+        '
+        'LinkLabel2
+        '
+        Me.LinkLabel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.LinkLabel2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel2.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.LinkLabel2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LinkLabel2.ImageIndex = 4
+        Me.LinkLabel2.ImageList = Me.ImageList1
+        Me.LinkLabel2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel2.LinkColor = System.Drawing.Color.Black
+        Me.LinkLabel2.Location = New System.Drawing.Point(144, 7)
+        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(0, 7, 3, 0)
+        Me.LinkLabel2.Name = "LinkLabel2"
+        Me.LinkLabel2.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
+        Me.LinkLabel2.Size = New System.Drawing.Size(126, 43)
+        Me.LinkLabel2.TabIndex = 38
+        Me.LinkLabel2.TabStop = True
+        Me.LinkLabel2.Text = "Go to Product Development   "
+        '
+        'LinkLabel3
+        '
+        Me.LinkLabel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.LinkLabel3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LinkLabel3.ImageIndex = 7
+        Me.LinkLabel3.ImageList = Me.ImageList1
+        Me.LinkLabel3.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel3.LinkColor = System.Drawing.Color.Black
+        Me.LinkLabel3.Location = New System.Drawing.Point(0, 7)
+        Me.LinkLabel3.Margin = New System.Windows.Forms.Padding(0, 7, 3, 0)
+        Me.LinkLabel3.Name = "LinkLabel3"
+        Me.LinkLabel3.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
+        Me.LinkLabel3.Size = New System.Drawing.Size(138, 43)
+        Me.LinkLabel3.TabIndex = 39
+        Me.LinkLabel3.TabStop = True
+        Me.LinkLabel3.Text = "Download Excel Template"
         '
         'txtDesc
         '
@@ -1074,16 +1134,6 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel8.Size = New System.Drawing.Size(279, 62)
         Me.TableLayoutPanel8.TabIndex = 35
         '
-        'ac2
-        '
-        Me.ac2.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ac2.Location = New System.Drawing.Point(3, 3)
-        Me.ac2.lstSelectedValues = CType(resources.GetObject("ac2.lstSelectedValues"), System.Collections.Generic.List(Of String))
-        Me.ac2.Name = "ac2"
-        Me.ac2.Size = New System.Drawing.Size(273, 25)
-        Me.ac2.TabIndex = 16
-        Me.ac2.Values = Nothing
-        '
         'cmbStatusMore
         '
         Me.cmbStatusMore.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1093,26 +1143,6 @@ Partial Class frmLoadExcel
         Me.cmbStatusMore.Size = New System.Drawing.Size(279, 25)
         Me.cmbStatusMore.TabIndex = 37
         '
-        'LinkLabel2
-        '
-        Me.LinkLabel2.AutoSize = True
-        Me.LinkLabel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.LinkLabel2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.LinkLabel2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.LinkLabel2.ImageIndex = 4
-        Me.LinkLabel2.ImageList = Me.ImageList1
-        Me.LinkLabel2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel2.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel2.Location = New System.Drawing.Point(590, 591)
-        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(100, 7, 3, 0)
-        Me.LinkLabel2.Name = "LinkLabel2"
-        Me.LinkLabel2.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
-        Me.LinkLabel2.Size = New System.Drawing.Size(120, 38)
-        Me.LinkLabel2.TabIndex = 38
-        Me.LinkLabel2.TabStop = True
-        Me.LinkLabel2.Text = "Go to Product Development   "
-        '
         'BackgroundWorker2
         '
         Me.BackgroundWorker2.WorkerReportsProgress = True
@@ -1121,6 +1151,16 @@ Partial Class frmLoadExcel
         'BackgroundWorker4
         '
         Me.BackgroundWorker4.WorkerSupportsCancellation = True
+        '
+        'ac2
+        '
+        Me.ac2.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ac2.Location = New System.Drawing.Point(3, 3)
+        Me.ac2.lstSelectedValues = CType(resources.GetObject("ac2.lstSelectedValues"), System.Collections.Generic.List(Of String))
+        Me.ac2.Name = "ac2"
+        Me.ac2.Size = New System.Drawing.Size(273, 25)
+        Me.ac2.TabIndex = 16
+        Me.ac2.Values = Nothing
         '
         'frmLoadExcel
         '
@@ -1158,6 +1198,7 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout()
+        Me.TableLayoutPanel10.ResumeLayout(False)
         Me.TableLayoutPanel8.ResumeLayout(False)
         Me.TableLayoutPanel8.PerformLayout()
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1170,7 +1211,6 @@ Partial Class frmLoadExcel
     Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
     Friend WithEvents txtVendorNo As TextBox
     Friend WithEvents btnValidVendor As Button
-    Friend WithEvents lblVendorDesc As Label
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
     Friend WithEvents cmdExcel As Button
     Friend WithEvents SplitContainer1 As SplitContainer
@@ -1230,7 +1270,6 @@ Partial Class frmLoadExcel
     Friend WithEvents BindingNavigatorMoveNextItem As ToolStripButton
     Friend WithEvents BindingNavigatorMoveLastItem As ToolStripButton
     Friend WithEvents BindingNavigatorSeparator2 As ToolStripSeparator
-    Friend WithEvents lblUsrLog As Label
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents TableLayoutPanel9 As TableLayoutPanel
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
@@ -1254,5 +1293,9 @@ Partial Class frmLoadExcel
     Friend WithEvents clPQPRC As DataGridViewTextBoxColumn
     Friend WithEvents clPQMIN As DataGridViewTextBoxColumn
     Friend WithEvents clPRDSTS As DataGridViewTextBoxColumn
+    Friend WithEvents lblVendorDesc As Label
     Friend WithEvents LinkLabel2 As LinkLabel
+    Friend WithEvents TableLayoutPanel10 As TableLayoutPanel
+    Friend WithEvents lblUsrLog As Label
+    Friend WithEvents LinkLabel3 As LinkLabel
 End Class

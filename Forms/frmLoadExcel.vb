@@ -2538,6 +2538,30 @@ Public Class frmLoadExcel
         End Try
     End Sub
 
+    Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
+        Dim exMessage As String = " "
+        Try
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            Dim folderPath As String = userPath & "\Excel-Template\"
+            Dim sourcePath As String = "\\DELLSVR\Inetpub_D\CTP_NEW_PROD_DEVELOPMENT_IMG\EXCEL TEMPLATE\Template-Original.xlsx"
+
+            If Not Directory.Exists(folderPath) Then
+                Directory.CreateDirectory(folderPath)
+            End If
+
+            Dim myFile As FileInfo = New FileInfo(sourcePath)
+            Dim fileName As String = myFile.Name
+
+            Using wb As New XLWorkbook()
+                wb.SaveAs(fileName)
+            End Using
+
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+    End Sub
+
     Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
         Dim exMessage As String = " "
         Try
@@ -4138,7 +4162,6 @@ Public Class frmLoadExcel
             Return strExt
         End Try
     End Function
-
 
 #End Region
 

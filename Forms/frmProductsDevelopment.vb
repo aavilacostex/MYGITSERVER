@@ -3055,6 +3055,10 @@ Public Class frmProductsDevelopment
                     Dim dspNewPart As DialogResult = MessageBox.Show("Do you want to add other part to the project?", "CTP System", MessageBoxButtons.YesNo)
                     If dspNewPart = DialogResult.No Then
                         SSTab1.SelectedTab = TabPage2
+
+                        'check if all references are closed to update the general status
+                        checkPendingReferences(txtCode.Text)
+
                     Else
                         SSTab1.SelectedTab = TabPage3
                         flagnewpart = 1
@@ -3065,6 +3069,8 @@ Public Class frmProductsDevelopment
             Else
                 fillcell1LastOne("")
             End If
+
+
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Log.Error(exMessage)
@@ -4267,7 +4273,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                         strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDCTP)) = '" & Trim(UCase(tt.Text)) & "' "
                     End If
@@ -4309,7 +4315,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                         strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDJIRA)) = '" & Trim(UCase(tt.Text)) & "' "
                     End If
@@ -4400,7 +4406,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND  TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                         strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRDMFR#)) = '" & Trim(UCase(tt.Text)) & "' "
                     End If
@@ -4458,7 +4464,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND A1.PRHCOD = " & Trim(UCase(tt.Text)) & ""
                         strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND A1.PRHCOD = " & Trim(UCase(tt.Text)) & ""
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A1.PRHCOD IN (SELECT PRHCOD FROM PRDVLD WHERE PRDUSR = '" & userid & "')) AND A1.PRHCOD = " & Trim(UCase(tt.Text))
                     End If
@@ -4549,7 +4555,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR A2.PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
                         strToUnion = " UNION SELECT DISTINCT (A1.prhcod),prname,prdate,prpech,prstat FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & " AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                         strToUnionTab2 = " UNION SELECT DISTINCT PRDDAT,Trim(PRDPTN) as PRDPTN,Trim(PRDCTP) as PRDCTP,Trim(PRDMFR#) as PRDMFR#,Trim(A2.VMVNUM) as VMVNUM,
-Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND A2.VMVNUM = " & Trim(UCase(tt.Text)) & ""
+Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDUSR) as PRDUSR FROM PRDVLH A1 INNER JOIN PRDVLD A2 ON A1.PRHCOD = A2.PRHCOD INNER JOIN VNMAS A3 ON A2.VMVNUM = A3.VMVNUM WHERE A3.VMABB# = " & purcValue & "  AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "'"
                     Else
                         strwhere = " WHERE (PRPECH = '" & userid & "' OR PRDUSR = '" & userid & "') AND TRIM(UCASE(PRPECH)) = '" & Trim(UCase(tt.SelectedValue)) & "' "
                     End If
@@ -5622,6 +5628,53 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
 #Region "Utils"
 
+    Public Sub checkPendingReferences(code As String)
+        Dim exMessage As String = Nothing
+        Try
+            Dim dsStatuses = gnr.getReferencesStatusesByCode(Trim(txtCode.Text))
+            If dsStatuses IsNot Nothing Then
+                Dim optStatuses = gnr.GetCloseStatus.Split(",")
+                For Each dw As DataRow In dsStatuses.Tables(0).Rows
+                    Dim statusSel = LCase(dw.ItemArray(0).ToString())
+                    'Dim notContainsStatus = optStatuses.AsEnumerable().Any(Function(x) x = statusSel)
+                    Dim notContainsStatus As Boolean
+
+                    For Each item As String In optStatuses
+                        If item = statusSel Then
+                            notContainsStatus = True
+                            Exit For
+                        End If
+                    Next
+
+                    If Not notContainsStatus Then
+                        If cmbprstatus.SelectedIndex <> 1 Then
+                            cmbprstatus.SelectedIndex = 1
+                            Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
+                            If rs < 1 Then
+                            Else
+                                DataGridView1.Refresh()
+                            End If
+                            Exit For
+                        End If
+                    Else
+                        If cmbprstatus.SelectedIndex <> 2 Then
+                            cmbprstatus.SelectedIndex = 2
+                            Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
+                            If rs < 1 Then
+                            Else
+                                DataGridView1.Refresh()
+                            End If
+                            Exit For
+                        End If
+                    End If
+                Next
+            End If
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+    End Sub
+
     Private Sub InactiveQotaAlertExcelGeneration(ds As DataSet, userid As String, ByRef created As Boolean)
         Dim exMessage As String = " "
         Try
@@ -5924,7 +5977,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         cmbprstatus.Items.Add("-- Select Status --")
         cmbprstatus.Items.Add("I - In Process")
         cmbprstatus.Items.Add("F - Finished")
-        cmbprstatus.SelectedIndex = 1
+        cmbprstatus.SelectedIndex = 0
 
         Dim posValue As Integer = 0
         For Each obj As DataRowView In cmbstatus.Items

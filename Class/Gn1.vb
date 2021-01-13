@@ -415,6 +415,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private closeStatus As String
+    Public Property GetCloseStatus() As String
+        Get
+            Return closeStatus
+        End Get
+        Set(ByVal value As String)
+            closeStatus = value
+        End Set
+    End Property
+
 #End Region
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
@@ -451,6 +461,7 @@ NotInheritable Class Gn1
         FlagTestEmails = ConfigurationManager.AppSettings("sendToTestEmails").ToString()
         TestEmailAddresess = ConfigurationManager.AppSettings("testEmails").ToString()
         GetColumnNames = ConfigurationManager.AppSettings("checkColumns").ToString()
+        GetCloseStatus = ConfigurationManager.AppSettings("closeStatus").ToString()
     End Sub
 
     <DllImport("user32.dll")>
@@ -507,8 +518,28 @@ NotInheritable Class Gn1
 
 #Region "Selects"
 
-
 #Region "Optimized"
+
+    Public Function getReferencesStatusesByCode(code As String) As DataSet
+        Dim exMessage As String = Nothing
+        Dim Sql As String
+        Dim ds As New DataSet()
+        ds.Locale = CultureInfo.InvariantCulture
+        Try
+            Sql = "select prdsts from qs36f.prdvld where prhcod =  " & code & " "
+            ds = GetDataFromDatabase(Sql)
+            If ds IsNot Nothing Then
+                If ds.Tables(0).Rows.Count > 0 Then
+                    Return ds
+                End If
+            End If
+            Return Nothing
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            Return Nothing
+        End Try
+    End Function
 
     Public Function getVendorNoAndNameByNameDS() As Data.DataSet
         Dim exMessage As String = " "
@@ -2106,6 +2137,22 @@ NotInheritable Class Gn1
 
 #Region "Updates"
 
+    Public Function UpdateGeneralStatus(code As String, status As String) As Integer
+        Dim exMessage As String = " "
+        Dim Sql As String
+        Dim QueryResult As Integer = -1
+        Dim maxLength As Integer = 20
+        Try
+            Sql = "update qs36f.prdvlh set prstat = '" & status(0) & "' where prhcod = " & Trim(code) & ""
+            QueryResult = UpdateDataInDatabase1(Sql)
+            Return QueryResult
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            Return QueryResult
+        End Try
+    End Function
+
     Public Function UpdatePoQotaExact(statusquote As String, insertYear As String, insertMonth As String, insertDay As String, vendorNo As String, partNo As String, secuencial As String) As Integer
         Dim exMessage As String = " "
         Dim Sql As String
@@ -3388,6 +3435,32 @@ NotInheritable Class Gn1
                 dataAdapter.Fill(ds)
 
                 ObjConn.Close()
+            End Using
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            Return Nothing
+        End Try
+    End Function
+
+    Private Function UpdateDataInDatabase1(query As String) As String
+        Dim exMessage As String = " "
+        'Dim result As Integer = " "
+        Try
+            Using ObjConn As Odbc.OdbcConnection = New Odbc.OdbcConnection(strconnection)
+                Dim dataAdapter As New Odbc.OdbcDataAdapter()
+                Dim ds As New DataSet()
+                ds.Locale = CultureInfo.InvariantCulture
+                Dim rows As Integer
+
+                ObjConn.Open()
+
+                Dim cmd As New Odbc.OdbcCommand(query, ObjConn)
+                rows = cmd.ExecuteNonQuery()
+
+                ObjConn.Close()
+
+                Return rows
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
