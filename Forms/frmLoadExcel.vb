@@ -2543,18 +2543,43 @@ Public Class frmLoadExcel
         Try
             Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             Dim folderPath As String = userPath & "\Excel-Template\"
-            Dim sourcePath As String = "\\DELLSVR\Inetpub_D\CTP_NEW_PROD_DEVELOPMENT_IMG\EXCEL TEMPLATE\Template-Original.xlsx"
+            'Dim fixedFolderPath = folderPath.Replace("\", "\\")
+            Dim sourcePath As String = gnr.getPdExcelTemplate
 
             If Not Directory.Exists(folderPath) Then
                 Directory.CreateDirectory(folderPath)
+            Else
+                Dim files = Directory.GetFiles(folderPath)
+                Dim fi = Nothing
+                If files.Length = 1 Then
+                    For Each item In files
+                        fi = item
+                        Dim isOpened = IsFileinUse(New FileInfo(fi))
+                        If Not isOpened Then
+                            File.Delete(item)
+                        Else
+                            Dim rsError As DialogResult = MessageBox.Show("Please close the file " & fi & " in order to proceed!", "CTP System", MessageBoxButtons.OK)
+                            Exit Sub
+                        End If
+                    Next
+                Else
+                    Dim rsError As DialogResult = MessageBox.Show("Please close the file located in " & folderPath & " in order to proceed!", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
             End If
 
             Dim myFile As FileInfo = New FileInfo(sourcePath)
             Dim fileName As String = myFile.Name
+            Dim endFolderpath = folderPath & fileName
+            File.Copy(sourcePath, endFolderpath)
 
-            Using wb As New XLWorkbook()
-                wb.SaveAs(fileName)
-            End Using
+            Dim updatedFolderPath = folderPath & fileName
+
+            Dim newFile As FileInfo = New FileInfo(updatedFolderPath)
+
+            If newFile.Exists Then
+                System.Diagnostics.Process.Start(updatedFolderPath)
+            End If
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString

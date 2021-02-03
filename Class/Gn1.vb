@@ -425,6 +425,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private _pathPdTemplate As String
+    Public Property getPdExcelTemplate() As String
+        Get
+            Return _pathPdTemplate
+        End Get
+        Set(ByVal value As String)
+            _pathPdTemplate = value
+        End Set
+    End Property
+
 #End Region
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
@@ -462,6 +472,7 @@ NotInheritable Class Gn1
         TestEmailAddresess = ConfigurationManager.AppSettings("testEmails").ToString()
         GetColumnNames = ConfigurationManager.AppSettings("checkColumns").ToString()
         GetCloseStatus = ConfigurationManager.AppSettings("closeStatus").ToString()
+        getPdExcelTemplate = ConfigurationManager.AppSettings("urlPathPDTemplate").ToString()
     End Sub
 
     <DllImport("user32.dll")>
