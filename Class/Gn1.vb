@@ -2595,9 +2595,11 @@ NotInheritable Class Gn1
             '        from prdvld A0 inner join vnmas A1 on A0.vmvnum = A1.vmvnum inner join csuser A2 on A1.vmabb# = A2.uspurc where A2.ususer = '" & Trim(UCase(userid)) & "'
             '        and prdsts in ('PS','AS') and (Days(date(now())) - Days(A0.modate)) > 30 and (Days(date(now())) - Days(A0.modate)) > 0"
 
+            'and (PQCOMM LIKE 'D-Pending%' OR PQCOMM LIKE 'D-Analysis%'  PREVIOUS SENETENCE IN QUERY
+
             sql = " select A1.prhcod As ProjectNo,A1.prdptn As PartNo, A1.vmvnum As VendorNo, A1.crdate As CreationDate, date(now()) As CurrentDate, A1.modate As ModificationDate, (Days(date(now())) - Days(A1.modate)) as DifferenceDays, A2.pqcomm As StatusComment, A1.prdusr As User 
                     from prdvld A1 inner join poqota A2 on A1.prdptn = A2.pqptn and A1.vmvnum = A2.pqvnd where SUBSTR(UCASE(A2.SPACE),32,3) = 'DEV' AND A2.PQCOMM LIKE 'D%' 
-                    and (Days(date(now())) - Days(A1.modate)) > 30 and (Days(date(now())) - Days(A1.modate)) > 0 and (PQCOMM LIKE 'D-Pending%' OR PQCOMM LIKE 'D-Analysis%') 
+                    and (Days(date(now())) - Days(A1.modate)) > 30 and (Days(date(now())) - Days(A1.modate)) > 0 and ucase(A2.pqcomm)  not like 'D-CLOSED%' 
                     and A1.prdusr = '" & Trim(UCase(userid)) & "' and A1.cruser = '" & Trim(UCase(userid)) & "'"
 
             If vendorNo IsNot Nothing Then
