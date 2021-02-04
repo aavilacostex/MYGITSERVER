@@ -2033,9 +2033,23 @@ Public Class frmProductsDevelopment
 
     Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
         Dim exMessage As String = " "
+        Dim flagReference As Boolean = False
         Try
-            If Not String.IsNullOrEmpty(txtsearch1.Text) And cmbstatus1.SelectedIndex > 0 Then
-                Dim dsMassiveData = gnr.GetMassiveReferences(txtsearch1.Text, cmbstatus1.SelectedValue)
+            If Not String.IsNullOrEmpty(txtsearch1.Text) Or cmbstatus1.SelectedIndex > 0 Then
+
+                Dim lstReferenceUsers As String() = gnr.ReferenceUsersReport.Split(",")
+                For Each item As String In lstReferenceUsers
+                    If item = userid Then
+                        flagReference = True
+                        Exit For
+                    End If
+                Next
+
+                'test purpose
+                'flagReference = True
+
+                Dim dsMassiveData = If(String.IsNullOrEmpty(txtsearch1.Text), gnr.GetMassiveReferences(cmbstatus1.SelectedValue, userid, flagReference), gnr.GetMassiveReferences(cmbstatus1.SelectedValue, userid, flagReference, Trim(txtsearch1.Text)))
+                'gnr.GetMassiveReferences(cmbstatus1.SelectedValue, txtsearch1.Text)
                 If dsMassiveData IsNot Nothing Then
                     If dsMassiveData.Tables(0).Rows.Count() > 0 Then
                         prodDevExcelGeneration(dsMassiveData, txtsearch1.Text, Trim(cmbstatus1.GetItemText(cmbstatus1.SelectedItem(1))))

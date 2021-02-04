@@ -435,6 +435,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private _referenceUsersReports As String
+    Public Property ReferenceUsersReport() As String
+        Get
+            Return _referenceUsersReports
+        End Get
+        Set(ByVal value As String)
+            _referenceUsersReports = value
+        End Set
+    End Property
+
 #End Region
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
@@ -473,6 +483,7 @@ NotInheritable Class Gn1
         GetColumnNames = ConfigurationManager.AppSettings("checkColumns").ToString()
         GetCloseStatus = ConfigurationManager.AppSettings("closeStatus").ToString()
         getPdExcelTemplate = ConfigurationManager.AppSettings("urlPathPDTemplate").ToString()
+        ReferenceUsersReport = ConfigurationManager.AppSettings("referenceUsersReports").ToString()
     End Sub
 
     <DllImport("user32.dll")>
@@ -2630,13 +2641,26 @@ NotInheritable Class Gn1
         End Try
     End Function
 
-    Public Function GetMassiveReferences(vendorNo As String, status As String) As DataSet
+    Public Function GetMassiveReferences(status As String, userid As String, flag As Boolean, Optional vendorNo As String = Nothing) As DataSet
         Dim exMessage As String = " "
         Dim sql As String = ""
         Dim ds As DataSet = New DataSet()
         Try
-            sql = " Select a2.prhcod  As ProjectNo, A1.prname As ProjectName, A2.crdate  As CreationDate,a2.prdptn  As PartNo, a2.prdctp As CTPNo, a2.prdmfr# As ManufacturerNo, a2.prdcon as UnitCost from prdvlh A1 inner join prdvld A2 On a1.prhcod = a2.prhcod where a2.vmvnum = " & vendorNo & " And a2.prdsts = '" & Trim(UCase(status)) & "'
-                        order by 1 desc"
+
+            If Not flag Then
+                sql = " Select a2.prhcod  As ProjectNo, A1.prname As ProjectName, A2.crdate  As CreationDate,a2.prdptn  As PartNo, a2.prdctp As CTPNo, a2.prdmfr# As ManufacturerNo, a2.prdcon as UnitCost 
+                    from prdvlh A1 inner join prdvld A2 On a1.prhcod = a2.prhcod where A2.prdusr = '" & Trim(UCase(userid)) & "' and A2.cruser = '" & Trim(UCase(userid)) & "' 
+                    and a2.prdsts = '" & Trim(UCase(status)) & "'"
+            Else
+                sql = " Select a2.prhcod  As ProjectNo, A1.prname As ProjectName, A2.crdate  As CreationDate,a2.prdptn  As PartNo, a2.prdctp As CTPNo, a2.prdmfr# As ManufacturerNo, a2.prdcon as UnitCost 
+                    from prdvlh A1 inner join prdvld A2 On a1.prhcod = a2.prhcod where a2.prdsts = '" & Trim(UCase(status)) & "'"
+            End If
+
+            If vendorNo IsNot Nothing Then
+                Dim addToQuery As String = If(customIsVendorAccepted(vendorNo), " and A2.vmvnum = " & vendorNo & " order by 1 ", " order by 1 ")
+                'Dim addToQuery As String = " and A1.vmvnum = " & vendorNo
+                sql += addToQuery
+            End If
             'Sql = "SELECT * FROM CSUSER WHERE USUSER = '" & Trim(UCase(userName)) & "'"
             ds = GetDataFromDatabase(sql)
             Return ds
