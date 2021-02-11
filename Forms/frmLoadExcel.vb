@@ -3201,6 +3201,11 @@ Public Class frmLoadExcel
             OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
 
             'Set the file dialog to filter for graphics files.
+            Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            'Dim folderPath As String = userPath & "\Excel-Template\"
+            Dim folderPath As String = userPath & "\Excel-Template\"
+
+            OpenFileDialog1.InitialDirectory = folderPath
             OpenFileDialog1.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm"
             '"CSV files (*.csv)|*.csv|Excel Files|*.xls;*.xlsx"
 

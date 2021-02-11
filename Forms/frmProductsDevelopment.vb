@@ -2925,11 +2925,14 @@ Public Class frmProductsDevelopment
                                     frmChangeVendor.ShowDialog()
                                 End If
                                 If Trim(Status2) = "Closed Successfully" Then
-                                    toemails = prepareEmailsToSend(1)
-                                    Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
-                                    If rsResult < 0 Then
-                                        MessageBox.Show("Ann error ocurred sending emails.", "CTP System", MessageBoxButtons.OK)
-                                    End If
+
+                                    gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+
+                                    'toemails = prepareEmailsToSend(1)
+                                    'Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
+                                    'If rsResult < 0 Then
+                                    '    MessageBox.Show("Ann error ocurred sending emails.", "CTP System", MessageBoxButtons.OK)
+                                    'End If
 
                                     Dim rsAssignVendor As DialogResult = MessageBox.Show("Do you want to change the assigned vendor?", "CTP System", MessageBoxButtons.YesNo)
                                     If rsAssignVendor = DialogResult.Yes Then
@@ -5617,6 +5620,15 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Log.Error(exMessage)
+        End Try
+    End Sub
+
+    Private Sub cmdRefresh_Click(sender As Object, e As EventArgs) Handles cmdRefresh.Click
+        Dim exMessage As String = Nothing
+        Try
+            ' code here
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try
     End Sub
 
