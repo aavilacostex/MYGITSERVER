@@ -1395,8 +1395,15 @@ Public Class frmLoadExcel
     Private Sub openFileDialog1_FileOk(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles OpenFileDialog1.FileOk
         Dim exMessage As String = " "
         Try
+            Dim myFile As FileInfo = Nothing
+            If LikeSession.excelFileSelType = False Then
+                myFile = New FileInfo(OpenFileDialog1.FileName)
+            Else
+                If Not String.IsNullOrEmpty(LikeSession.userExcelPath) Then
+                    myFile = New FileInfo(LikeSession.userExcelPath)
+                End If
+            End If
 
-            Dim myFile As FileInfo = New FileInfo(OpenFileDialog1.FileName)
             Dim isOpened = IsFileinUse(myFile)
             If isOpened Then
                 Dim forceResult As DialogResult
@@ -1404,7 +1411,8 @@ Public Class frmLoadExcel
                 'Me.openFileDialog1_FileOk()
                 Exit Sub
             Else
-                Dim filePath As String = OpenFileDialog1.FileName
+                Dim filePath As String = If(LikeSession.excelFileSelType = False, OpenFileDialog1.FileName, myFile.FullName)
+                'Dim filePath1 As String = OpenFileDialog1.FileName
                 Dim extension As String = Path.GetExtension(filePath)
                 'Dim header As String = If(rbHeaderYes.Checked, "YES", "NO")
                 Dim conStr As String, sheetName As String
@@ -1586,10 +1594,27 @@ Public Class frmLoadExcel
     Private Sub btnSelect_Click(sender As Object, e As EventArgs) Handles btnSelect.Click
         Dim exMessage As String = Nothing
         Try
-            'Call ShowDialog and launch second thread
-            Dim result As DialogResult
-            result = OpenFileDialog1.ShowDialog()
-            If result = DialogResult.OK Then
+            If LikeSession.excelFileSelType = False Then
+                'selection by openfiledialog
+                Dim result As DialogResult
+                result = OpenFileDialog1.ShowDialog()
+                If result = DialogResult.OK Then
+                    If LikeSession.excelOpened = False Then
+                        If LikeSession.excelErrorValidation = False Then
+                            BackgroundWorker2.RunWorkerAsync()
+                            LoadingExcel.ShowDialog()
+                            LoadingExcel.BringToFront()
+                        End If
+                    Else
+                        Exit Sub
+                    End If
+                Else
+                    MessageBox.Show("Please refresh the excel document that you are uploading!", "CTP System", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+            Else
+                'automatic selection of the document
+                openFileDialog1_FileOk(Nothing, Nothing)
                 If LikeSession.excelOpened = False Then
                     If LikeSession.excelErrorValidation = False Then
                         BackgroundWorker2.RunWorkerAsync()
@@ -1599,10 +1624,10 @@ Public Class frmLoadExcel
                 Else
                     Exit Sub
                 End If
-            Else
-                MessageBox.Show("Please refresh the excel document that you are uploading!", "CTP System", MessageBoxButtons.OK)
-                Exit Sub
             End If
+
+            'Call ShowDialog and launch second thread
+
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             Log.Error(exMessage)
@@ -2541,6 +2566,14 @@ Public Class frmLoadExcel
     Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
         Dim exMessage As String = " "
         Try
+
+            Dim rsFlag As DialogResult = MessageBox.Show("IF you want to set automatically the downloaded template as the document to process, please press Yes. IF not, please press No and search the document that you want to process?", "CTP System", MessageBoxButtons.YesNo)
+            If rsFlag = DialogResult.Yes Then
+                LikeSession.excelFileSelType = True
+            Else
+                LikeSession.excelFileSelType = False
+            End If
+
             Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             Dim folderPath As String = userPath & "\Excel-Template\"
             'Dim fixedFolderPath = folderPath.Replace("\", "\\")
@@ -2578,6 +2611,7 @@ Public Class frmLoadExcel
             Dim newFile As FileInfo = New FileInfo(updatedFolderPath)
 
             If newFile.Exists Then
+                LikeSession.userExcelPath = updatedFolderPath
                 System.Diagnostics.Process.Start(updatedFolderPath)
             End If
 

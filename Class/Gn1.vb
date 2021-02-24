@@ -445,6 +445,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private _vendorOEMExclude As String
+    Public Property VendorOEMExclude() As String
+        Get
+            Return _vendorOEMExclude
+        End Get
+        Set(ByVal value As String)
+            _vendorOEMExclude = value
+        End Set
+    End Property
+
 #End Region
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
@@ -484,6 +494,7 @@ NotInheritable Class Gn1
         GetCloseStatus = ConfigurationManager.AppSettings("closeStatus").ToString()
         getPdExcelTemplate = ConfigurationManager.AppSettings("urlPathPDTemplate").ToString()
         ReferenceUsersReport = ConfigurationManager.AppSettings("referenceUsersReports").ToString()
+        VendorOEMExclude = ConfigurationManager.AppSettings("vendorOEMExclude").ToString()
     End Sub
 
     <DllImport("user32.dll")>
@@ -1199,10 +1210,11 @@ NotInheritable Class Gn1
                 Dim vendorType = ds.Tables(0).Rows(0).ItemArray(0).ToString()
                 Dim vendorName = ds.Tables(0).Rows(0).ItemArray(1).ToString()
                 Dim listDeniedCodes = VendorCodesDenied.Split(",")
+                Dim ExcludedVendors = VendorOEMExclude.ToString()
                 Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x As String) x = "'" & vendorType & "'")
                 If Not containsDenied Then
                     Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
-                    Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
+                    Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) (Trim(x.ItemArray(0).ToString()) = Trim(vendorNo)) And x.ItemArray(0).ToString() <> ExcludedVendors)
                     If Not containsOEM Then
                         frmLoadExcel.lblVendorDesc.Text = vendorName
                         'MessageBox.Show("The vendor " & RTrim(vendorName) & " is an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
@@ -1232,10 +1244,13 @@ NotInheritable Class Gn1
                 Dim vendorType = ds.Tables(0).Rows(0).ItemArray(0).ToString()
                 Dim vendorName = ds.Tables(0).Rows(0).ItemArray(1).ToString()
                 Dim listDeniedCodes = VendorCodesDenied.Split(",")
+                Dim ExcludedVendors = VendorOEMExclude.Split(",")
                 Dim containsDenied = listDeniedCodes.AsEnumerable().Any(Function(x As String) x = "'" & vendorType & "'")
                 If Not containsDenied Then
                     Dim OEMContain = getOEMVendorCodes(VendorOEMCodeDenied)
-                    Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Trim(x.ItemArray(0).ToString()) = Trim(vendorNo))
+                    'Dim firstFilter = OEMContain.Tables(0).AsEnumerable().Any(Function(x) Not ExcludedVendors.Contains(x.ItemArray(0).ToString()))
+                    'If Not firstFilter Then
+                    Dim containsOEM = OEMContain.Tables(0).AsEnumerable().Any(Function(x) (Trim(x.ItemArray(0).ToString()) = Trim(vendorNo)) And (Not ExcludedVendors.Contains(vendorNo)))
                     If Not containsOEM Then
                         'frmLoadExcel.lblVendorDesc.Text = vendorName
                         'MessageBox.Show("The vendor " & RTrim(vendorName) & " is an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
@@ -1244,6 +1259,7 @@ NotInheritable Class Gn1
                         'MessageBox.Show("The vendor " & RTrim(vendorName) & " is not an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
                         Return False
                     End If
+                    'End If
                 Else
                     'MessageBox.Show("The vendor " & RTrim(vendorName) & " is not an accepted vendor for the operation.", "CTP System", MessageBoxButtons.OK)
                     Return False

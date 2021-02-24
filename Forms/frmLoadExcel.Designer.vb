@@ -827,7 +827,7 @@ Partial Class frmLoadExcel
         '
         Me.TableLayoutPanel7.ColumnCount = 2
         Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 138.0!))
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 109.0!))
         Me.TableLayoutPanel7.Controls.Add(Me.ComboBox1, 1, 0)
         Me.TableLayoutPanel7.Controls.Add(Me.LinkLabel1, 0, 0)
         Me.TableLayoutPanel7.Location = New System.Drawing.Point(0, 7)
@@ -841,7 +841,7 @@ Partial Class frmLoadExcel
         '
         Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(138, 6)
+        Me.ComboBox1.Location = New System.Drawing.Point(167, 6)
         Me.ComboBox1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 3)
         Me.ComboBox1.Name = "ComboBox1"
         Me.ComboBox1.Size = New System.Drawing.Size(48, 25)
@@ -852,6 +852,7 @@ Partial Class frmLoadExcel
         '
         Me.LinkLabel1.AutoSize = True
         Me.LinkLabel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.LinkLabel1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LinkLabel1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.LinkLabel1.ImageIndex = 1
         Me.LinkLabel1.ImageList = Me.ImageList1
@@ -859,8 +860,8 @@ Partial Class frmLoadExcel
         Me.LinkLabel1.Location = New System.Drawing.Point(30, 5)
         Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(30, 5, 3, 0)
         Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
-        Me.LinkLabel1.Size = New System.Drawing.Size(88, 25)
+        Me.LinkLabel1.Padding = New System.Windows.Forms.Padding(5, 5, 30, 5)
+        Me.LinkLabel1.Size = New System.Drawing.Size(98, 25)
         Me.LinkLabel1.TabIndex = 37
         Me.LinkLabel1.TabStop = True
         Me.LinkLabel1.Text = "Clear Filters"

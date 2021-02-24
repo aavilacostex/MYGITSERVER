@@ -5627,6 +5627,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         Dim exMessage As String = Nothing
         Try
             ' code here
+            flagdeve = 0
+            flagnewpart = 0
+            save()
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
         End Try

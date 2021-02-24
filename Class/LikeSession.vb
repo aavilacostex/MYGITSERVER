@@ -21,4 +21,6 @@
     Public Shared dtReloadedData As DataTable = Nothing
     Public Shared excelOpened As Boolean = False
     Public Shared wrongName As Boolean = False
+    Public Shared excelFileSelType As Boolean = False
+    Public Shared userExcelPath As String = Nothing
 End Class
