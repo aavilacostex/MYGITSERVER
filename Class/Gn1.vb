@@ -2774,6 +2774,8 @@ NotInheritable Class Gn1
                 Recipents.ResolveAll()
             Next
 
+            listEmail.Add("aavila@costex.com")
+
             'test purpose
             'Dim lenghtRec = Recipents.Count
             'For index As Integer = 1 To lenghtRec

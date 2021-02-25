@@ -1,10 +1,8 @@
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.exe
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.pdb
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\CTP_IS_VBNET.exe.config
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\Castle.Core.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\IBM.Data.DB2.iSeries.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\System.Data.SqlClient.dll
-C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\Castle.Core.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\IBM.Data.DB2.iSeries.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\System.Data.SqlClient.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\Interop.ADODB.dll
@@ -49,5 +47,8 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.Loading.resou
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.test.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.vbproj.CoreCompileInputs.cache
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.MyRecources.resources
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.vbprojAssemblyReference.cache
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Release\CTP_IS_VBNET.LoadingExcel.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\AutoClosingMessageBox.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\log4net.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\System.IO.FileSystem.Primitives.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Release\log4net.xml

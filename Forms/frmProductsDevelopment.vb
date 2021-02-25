@@ -2052,7 +2052,10 @@ Public Class frmProductsDevelopment
                 'gnr.GetMassiveReferences(cmbstatus1.SelectedValue, txtsearch1.Text)
                 If dsMassiveData IsNot Nothing Then
                     If dsMassiveData.Tables(0).Rows.Count() > 0 Then
-                        prodDevExcelGeneration(dsMassiveData, txtsearch1.Text, Trim(cmbstatus1.GetItemText(cmbstatus1.SelectedItem(1))))
+                        Dim vendorNo = txtsearch1.Text
+                        Dim Status = Trim(cmbstatus1.GetItemText(cmbstatus1.SelectedItem(1)))
+                        Dim title = "Status Report for vendor " & vendorNo & " And Status " & Status & " requested by " & userid & " running at "
+                        prodDevExcelGeneration(dsMassiveData, vendorNo, Status, title)
                     Else
                         MessageBox.Show("There is not results with this vendor number and project status selected.", "CTP System", MessageBoxButtons.OK)
                     End If
@@ -2091,7 +2094,9 @@ Public Class frmProductsDevelopment
                         Next
                         newDsAlertInactive.Tables.Add(newDtAlertInactive)
 
-                        InactiveQotaAlertExcelGeneration(newDsAlertInactive, userid, created)
+                        Dim title As String
+                        title = "Inactivity report for " & userid & " running at "
+                        InactiveQotaAlertExcelGeneration(newDsAlertInactive, userid, created, title)
                         If Not created Then
                             MessageBox.Show("There is an error in the creation of the report.", "CTP System", MessageBoxButtons.OK)
                             'Dim result As DialogResult = MessageBox.Show("Did you want to receive an email with the oldest quotation without activity?", "CTP System", MessageBoxButtons.YesNo)
@@ -2636,6 +2641,7 @@ Public Class frmProductsDevelopment
                                         If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                             'send email
                                             gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+                                            'Dim result1 As Integer = gnr.sendEmail("")
                                         End If
 
                                         PoQotaFunction(Status2)
@@ -2656,6 +2662,7 @@ Public Class frmProductsDevelopment
                                 If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                     'send email
                                     gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+                                    'Dim result As Integer = gnr.sendEmail("")
                                 End If
 
                                 PoQotaFunction(Status2)
@@ -2786,6 +2793,7 @@ Public Class frmProductsDevelopment
                                         If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                             'send email
                                             gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+                                            'Dim result1 As Integer = gnr.sendEmail("")
                                         End If
 
                                         InsertProdWishList(userid, txtpartno.Text)
@@ -2827,6 +2835,7 @@ Public Class frmProductsDevelopment
                                         If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                             'send email
                                             gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+                                            'Dim result As Integer = gnr.sendEmail("")
                                         End If
 
                                         InsertProdWishList(userid, txtpartno.Text)
@@ -2853,6 +2862,7 @@ Public Class frmProductsDevelopment
                             If Trim(Status2) = "Technical Documentation" Or Trim(Status2) = "Analysis of Samples" Or Trim(Status2) = "Pending from Supplier" Then
                                 'send email
                                 gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+                                'Dim result As Integer = gnr.sendEmail("")
                             End If
 
                             PoQotaFunction(Status2)
@@ -2927,6 +2937,7 @@ Public Class frmProductsDevelopment
                                 If Trim(Status2) = "Closed Successfully" Then
 
                                     gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+                                    Dim result As Integer = gnr.sendEmail("")
 
                                     'toemails = prepareEmailsToSend(1)
                                     'Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
@@ -2955,6 +2966,7 @@ Public Class frmProductsDevelopment
                                 If (Trim(Status2) = "Technical Documentation") Or (Trim(Status2) = "Analysis of Samples") Or (Trim(Status2) = "Pending from Supplier") Then
                                     'send email
                                     gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
+                                    'Dim result As Integer = gnr.sendEmail("")
                                 End If
                                 'remove condition to prevent the update the statues when analysis of sample yto others
                                 'If (Trim(dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) = "AS") And (Trim(cmbstatus.SelectedValue) <> "AS")) Then
@@ -5704,7 +5716,103 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         End Try
     End Sub
 
-    Private Sub InactiveQotaAlertExcelGeneration(ds As DataSet, userid As String, ByRef created As Boolean)
+    Public Function IsFileinUse(file As FileInfo) As Boolean
+        Dim exMessage As String = Nothing
+        Dim opened As Boolean = False
+        Dim myStream As FileStream = Nothing
+        Try
+            myStream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None)
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+            opened = True
+            LikeSession.excelOpened = opened
+        Finally
+            If myStream IsNot Nothing Then
+                LikeSession.excelOpened = False
+                myStream.Close()
+            End If
+        End Try
+        Return opened
+    End Function
+
+    Public Sub saveExcelReport(dt As DataTable, folderPath As String, fileName As String)
+        Dim exMessage As String = " "
+        Try
+            Dim fullPath = folderPath & Convert.ToString(fileName)
+            Using wb As New XLWorkbook()
+
+                wb.Worksheets.Add(dt, "Project")
+                wb.SaveAs(fullPath)
+
+            End Using
+
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+    End Sub
+
+    Public Sub launchExcelReport(fullPath As String, folderPath As String)
+        Dim exMessage As String = " "
+        Try
+            Dim rsConfirm As DialogResult = MessageBox.Show("The file was created successfully .Do you want to see it (Yes) or to open the created document location (No)?", "CTP System", MessageBoxButtons.YesNo)
+            If rsConfirm = DialogResult.Yes Then
+                Dim newFile As FileInfo = New FileInfo(fullPath)
+                If newFile.Exists Then
+                    System.Diagnostics.Process.Start(fullPath)
+                End If
+            Else
+                Try
+                    Process.Start("explorer.exe", folderPath)
+                Catch Win32Exception As Win32Exception
+                    Shell("explorer " & folderPath, AppWinStyle.NormalFocus)
+                End Try
+            End If
+
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+    End Sub
+
+    'dim p2Path as String = "\Excel-Template\"
+    Public Sub prepareFilePath(folderPath As String)
+        Dim exMessage As String = " "
+        Try
+            'Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            'Dim folderPath As String = userPath & p2Path
+            'Dim fixedFolderPath = folderPath.Replace("\", "\\")
+            'Dim sourcePath As String = gnr.getPdExcelTemplate
+
+            If Not Directory.Exists(folderPath) Then
+                Directory.CreateDirectory(folderPath)
+            Else
+                Dim files = Directory.GetFiles(folderPath)
+                Dim fi = Nothing
+                'If files.Length = 1 Then
+                For Each item In files
+                    fi = item
+                    Dim isOpened = IsFileinUse(New FileInfo(fi))
+                    If Not isOpened Then
+                        File.Delete(item)
+                    Else
+                        Dim rsError As DialogResult = MessageBox.Show("Please close the file " & fi & " in order to proceed!", "CTP System", MessageBoxButtons.OK)
+                        Exit Sub
+                    End If
+                Next
+                'Else
+                '    Dim rsError As DialogResult = MessageBox.Show("Please close the file located in " & folderPath & " in order to proceed!", "CTP System", MessageBoxButtons.OK)
+                '    Exit Sub
+                'End If
+            End If
+        Catch ex As Exception
+            exMessage = ex.Message + ". " + ex.ToString
+            Log.Error(exMessage)
+        End Try
+    End Sub
+
+    Private Sub InactiveQotaAlertExcelGeneration(ds As DataSet, userid As String, ByRef created As Boolean, title As String)
         Dim exMessage As String = " "
         Try
             Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
@@ -5712,6 +5820,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             If Not Directory.Exists(folderPath) Then
                 Directory.CreateDirectory(folderPath)
             End If
+
+            'delete if previous documents
+            prepareFilePath(folderPath)
 
             Dim dt As New DataTable
             dt = ds.Tables(0)
@@ -5723,8 +5834,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Exit Sub
                     End If
 
-                    Dim title As String
-                    title = "Inactivity report for " & userid & " running at "
+                    'Dim title As String
+                    'title = "Inactivity report for " & userid & " running at "
                     Dim fileName = gnr.adjustDatetimeFormat(title, fileExtension)
 
                     'If Not String.IsNullOrEmpty(txtProjectNo.Text) Then
@@ -5734,21 +5845,11 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                     'End If
 
                     Dim fullPath = folderPath & Convert.ToString(fileName)
-                    Using wb As New XLWorkbook()
-                        wb.Worksheets.Add(dt, "Project")
-                        wb.SaveAs(fullPath)
-                    End Using
+                    saveExcelReport(dt, folderPath, fileName)
 
                     If File.Exists(fullPath) Then
+                        launchExcelReport(fullPath, folderPath)
                         created = True
-                        Dim rsConfirm As DialogResult = MessageBox.Show("The file was created successfully in this path " & folderPath & " .Do you want to open the created document location?", "CTP System", MessageBoxButtons.YesNo)
-                        If rsConfirm = DialogResult.Yes Then
-                            Try
-                                Process.Start("explorer.exe", folderPath)
-                            Catch Win32Exception As Win32Exception
-                                Shell("explorer " & folderPath, AppWinStyle.NormalFocus)
-                            End Try
-                        End If
                     End If
                 Else
                     MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)
@@ -5762,14 +5863,18 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         End Try
     End Sub
 
-    Private Sub prodDevExcelGeneration(ds As DataSet, vendorNo As String, status As String)
+    Private Sub prodDevExcelGeneration(ds As DataSet, vendorNo As String, status As String, title As String)
         Dim exMessage As String = " "
         Try
+            Dim strFolder = "\CTP-PD-Reports\"
             Dim userPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-            Dim folderPath As String = userPath & "\CTP-NEW-DOCS\"
+            Dim folderPath As String = userPath & strFolder
             If Not Directory.Exists(folderPath) Then
                 Directory.CreateDirectory(folderPath)
             End If
+
+            'delete if previous documents
+            prepareFilePath(folderPath)
 
             Dim dt As New DataTable
             dt = ds.Tables(0)
@@ -5781,8 +5886,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                         Exit Sub
                     End If
 
-                    Dim title As String
-                    title = "Status Report for vendor " & vendorNo & " And Status " & status & " requested by " & userid & " running at "
+                    'Dim title As String
+                    'title = "Status Report for vendor " & vendorNo & " And Status " & status & " requested by " & userid & " running at "
                     Dim fileName = gnr.adjustDatetimeFormat(title, fileExtension)
 
 
@@ -5793,20 +5898,11 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                     'End If
 
                     Dim fullPath = folderPath & Convert.ToString(fileName)
-                    Using wb As New XLWorkbook()
-                        wb.Worksheets.Add(dt, "Project")
-                        wb.SaveAs(fullPath)
-                    End Using
+                    saveExcelReport(dt, folderPath, fileName)
 
                     If File.Exists(fullPath) Then
-                        Dim rsConfirm As DialogResult = MessageBox.Show("The file was created successfully in this path " & folderPath & " .Do you want to open the created document location?", "CTP System", MessageBoxButtons.YesNo)
-                        If rsConfirm = DialogResult.Yes Then
-                            Try
-                                Process.Start("explorer.exe", folderPath)
-                            Catch Win32Exception As Win32Exception
-                                Shell("explorer " & folderPath, AppWinStyle.NormalFocus)
-                            End Try
-                        End If
+                        launchExcelReport(fullPath, folderPath)
+                        'Dim rsConfirm As DialogResult = MessageBox.Show("The file was created successfully in this path " & folderPath & " .Do you want to open the created document location?", "CTP System", MessageBoxButtons.YesNo)
                     End If
                 Else
                     MessageBox.Show("There is not results to print to an excel document.", "CTP System", MessageBoxButtons.OK)

@@ -52,4 +52,3 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\x86\Release\CTP_IS_VBNET.pdb
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\x86\Release\AutoClosingMessageBox.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\x86\Release\log4net.dll
 C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\x86\Release\log4net.xml
-C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\x86\Release\CTP_IS_VBNET.vbprojAssemblyReference.cache

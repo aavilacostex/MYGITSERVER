@@ -2567,8 +2567,9 @@ Public Class frmLoadExcel
         Dim exMessage As String = " "
         Try
 
-            Dim rsFlag As DialogResult = MessageBox.Show("IF you want to set automatically the downloaded template as the document to process, please press Yes. IF not, please press No and search the document that you want to process?", "CTP System", MessageBoxButtons.YesNo)
-            If rsFlag = DialogResult.Yes Then
+            'Dim rsFlag As DialogResult = MessageBox.Show("If you want to set automatically the downloaded template as the document to process, please press Yes. IF not, please press No and search the document that you want to process?", "CTP System", MessageBoxButtons.YesNo)
+            Dim rsFlag As DialogResult = MessageBox.Show("The downloaded template will be automatically used to process the references", "CTP System", MessageBoxButtons.OK)
+            If rsFlag = DialogResult.OK Then
                 LikeSession.excelFileSelType = True
             Else
                 LikeSession.excelFileSelType = False
