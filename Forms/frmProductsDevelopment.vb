@@ -28,9 +28,13 @@ Public Class frmProductsDevelopment
     Dim partstoshow As String
     Dim toemails As String = ""
     Dim gnr As Gn1 = New Gn1()
+    Dim vblog As VBLog = New VBLog()
     Dim wm As WatermarkTextBox = New WatermarkTextBox()
     Dim bt As ButtonTextBox = New ButtonTextBox()
     Dim dspCall As Dispatcher
+
+    private strLogCadenaCabecera As string = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString()
+    Dim strLogCadena As String = Nothing
 
     Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
@@ -105,7 +109,12 @@ Public Class frmProductsDevelopment
                 cmbuser2.Visible = False
             End If
 
-            Log.Info("Logged User: " & userid)
+
+            'vblog.WriteLog()
+
+            'strLogCadena = strLogCadenaCabecera + " " + System.Reflection.MethodBase.GetCurrentMethod().ToString()
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info", "")
+            'Log.Info("Logged User: " & userid)
 
             'Dim btn As System.Windows.Forms.Button = New System.Windows.Forms.Button()
             'btn.Size = New Size(25, txtsearchcode.ClientSize.Height + 2)
@@ -137,6 +146,7 @@ Public Class frmProductsDevelopment
             'Dim rsResult = gnr.sendEmail(toemailsww, txtpartno.Text)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -226,7 +236,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            'Log.Error(exMessage)
         End Try
     End Sub
 
@@ -263,7 +274,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            'Log.Error(exMessage)
         End Try
     End Sub
 
@@ -304,7 +316,8 @@ Public Class frmProductsDevelopment
             cmbuser2.ValueMember = "USUSER"
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            'Log.Error(exMessage)
         End Try
     End Sub
 
@@ -348,7 +361,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            'Log.Error(exMessage)
         End Try
     End Sub
 
@@ -392,7 +406,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -425,7 +440,8 @@ Public Class frmProductsDevelopment
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -465,7 +481,8 @@ Public Class frmProductsDevelopment
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -492,7 +509,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -519,7 +537,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -572,7 +591,8 @@ Public Class frmProductsDevelopment
             cmdcvendor.Enabled = True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -760,7 +780,8 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -828,7 +849,8 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -945,7 +967,8 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1019,7 +1042,8 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.DataSource = Nothing
             dgvProjectDetails.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1173,7 +1197,8 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         Exit Sub
     End Sub
@@ -1241,7 +1266,8 @@ Public Class frmProductsDevelopment
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
 
             ds = Nothing
             Return ds
@@ -1280,7 +1306,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1310,7 +1337,8 @@ Public Class frmProductsDevelopment
             dgvProjectDetails.AutoResizeColumns()
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -1465,7 +1493,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1628,7 +1657,8 @@ Public Class frmProductsDevelopment
             txtMajor.Enabled = False
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1656,7 +1686,8 @@ Public Class frmProductsDevelopment
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1679,7 +1710,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1714,7 +1746,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1783,7 +1816,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            'Log.Error(exMessage)
         End Try
     End Sub
 
@@ -1843,7 +1877,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1856,7 +1891,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'End If
     End Sub
@@ -1870,7 +1906,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'End If
     End Sub
@@ -1994,7 +2031,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2019,7 +2057,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2067,7 +2106,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2119,7 +2159,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2143,7 +2184,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2167,7 +2209,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2185,7 +2228,8 @@ Public Class frmProductsDevelopment
             'ContextMenuStrip1.Show(cmdSplit, New Point(0, cmdSplit.Height))
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
 
@@ -2233,7 +2277,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2254,7 +2299,8 @@ Public Class frmProductsDevelopment
             SSTab1.SelectedIndex = 2
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2274,7 +2320,8 @@ Public Class frmProductsDevelopment
             cmdSave2.Enabled = True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2298,7 +2345,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'Dim result As DialogResult = MessageBox.Show("Do you want to create a new project?", "CTP System", MessageBoxButtons.YesNo)
         'If result = DialogResult.No Then
@@ -2347,7 +2395,8 @@ Public Class frmProductsDevelopment
             'pathpictureparts = gnr.pathgeneral & "CTPPictures\pic_not_av.jpg"
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -2447,7 +2496,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2519,7 +2569,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2550,7 +2601,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2578,7 +2630,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3102,7 +3155,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3132,7 +3186,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3161,7 +3216,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3179,7 +3235,8 @@ Public Class frmProductsDevelopment
             Return dtChange
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3296,7 +3353,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3736,7 +3794,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3810,7 +3869,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3848,7 +3908,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -3901,7 +3962,8 @@ Public Class frmProductsDevelopment
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3920,7 +3982,8 @@ Public Class frmProductsDevelopment
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3940,7 +4003,8 @@ Public Class frmProductsDevelopment
             LikeSession.focussedControl = Nothing
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3952,7 +4016,8 @@ Public Class frmProductsDevelopment
             fillcell2(txtCode.Text)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4034,7 +4099,8 @@ Public Class frmProductsDevelopment
             'buildMixedQuery(lstQueries, genericObj.Name, 0, True)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4089,7 +4155,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
     End Sub
@@ -4128,7 +4195,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'Call gotoerror("frmproductsdevelopment", "cmdsearch_click", Err.Number, Err.Description, Err.Source)
     End Sub
@@ -4174,7 +4242,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4278,7 +4347,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4319,7 +4389,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4410,7 +4481,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4450,7 +4522,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4517,7 +4590,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4560,7 +4634,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4599,7 +4674,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4666,7 +4742,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4731,7 +4808,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4794,7 +4872,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4861,7 +4940,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4893,7 +4973,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4904,7 +4985,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             buildMixedQueryTab2()
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4916,7 +4998,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             CallByName(Me, button_method, CallType.Method, Nothing)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4952,7 +5035,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             fillcell2(txtCode.Text, sql)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Function
 
@@ -5048,7 +5132,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -5073,7 +5158,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5096,7 +5182,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             cleanSearchTextBoxesComplex(hasVal, True)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5119,7 +5206,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             cleanSearchTextBoxesComplexTab2(hasVal, True)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5158,7 +5246,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Function
 
@@ -5221,7 +5310,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return strwhere
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -5302,7 +5392,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5333,7 +5424,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         Exit Sub
     End Sub
@@ -5397,7 +5489,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'MsgBox "You didn't select any file.", vbOKOnly + vbInformation, "CTP System"
         'MsgBox "Select Part to add files.", vbOKOnly + vbInformation, "CTP System"
@@ -5429,7 +5522,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'MsgBox "No files for this Part #.", vbOKOnly + vbInformation, "CTP System"
         'MsgBox "Select Project and Part # to see files.", vbOKOnly + vbInformation, "CTP System"
@@ -5460,7 +5554,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5489,7 +5584,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5518,7 +5614,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5547,7 +5644,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -5574,7 +5672,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5596,7 +5695,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5631,7 +5731,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5669,50 +5770,87 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
 #Region "Utils"
 
+    Public Sub writeLog(strLogCadenaCabecera As String, strLevel As VBLog.ErrorTypeEnum, strMessage As String, strDetails As String)
+        strLogCadena = strLogCadenaCabecera + " " + System.Reflection.MethodBase.GetCurrentMethod().ToString()
+
+        vblog.WriteLog(strLevel, "CTPSystem" & strLevel, strLogCadena, userid, strMessage, strDetails)
+    End Sub
+
     Public Sub checkPendingReferences(code As String)
         Dim exMessage As String = Nothing
+        Dim notContainsStatus As Boolean
         Try
             Dim dsStatuses = gnr.getReferencesStatusesByCode(Trim(txtCode.Text))
+            Dim optStatuses = gnr.GetCloseStatus.Split(",")
             If dsStatuses IsNot Nothing Then
-                Dim optStatuses = gnr.GetCloseStatus.Split(",")
-                For Each dw As DataRow In dsStatuses.Tables(0).Rows
-                    Dim statusSel = LCase(dw.ItemArray(0).ToString())
-                    'Dim notContainsStatus = optStatuses.AsEnumerable().Any(Function(x) x = statusSel)
-                    Dim notContainsStatus As Boolean
 
+                If dsStatuses.Tables(0).Rows.Count > 1 Then
+
+                    notContainsStatus = dsStatuses.Tables(0).AsEnumerable().Any(Function(x) optStatuses.Contains(x.ToString()))
+
+                    'Dim statusSel = LCase(dw.Item("prdsts").ToString())
+                    'notContainsStatus = optStatuses.AsEnumerable().Any(Function(x) x <> statusSel)
+
+                    'For Each dw As DataRow In dsStatuses.Tables(0).Rows
+                    '    Dim statusSel = LCase(dw.Item("prdsts").ToString())
+                    '    notContainsStatus = optStatuses.AsEnumerable().Any(Function(x) x <> statusSel)
+
+                    '    'For Each item As String In optStatuses
+                    '    '    If item = dw.Item("prdsts").ToString() Then
+                    '    '        notContainsStatus = True
+                    '    '        Exit For
+                    '    '    End If
+                    '    'Next
+
+                    'Next
+
+                Else
                     For Each item As String In optStatuses
-                        If item = statusSel Then
+                        If item = dsStatuses.Tables(0).Rows(0).ItemArray(0).ToString() Then
                             notContainsStatus = True
                             Exit For
                         End If
                     Next
 
-                    If Not notContainsStatus Then
-                        If cmbprstatus.SelectedIndex <> 1 Then
-                            cmbprstatus.SelectedIndex = 1
-                            Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
-                            If rs < 1 Then
-                            Else
-                                DataGridView1.Refresh()
-                            End If
-                            Exit For
-                        End If
-                    Else
-                        If cmbprstatus.SelectedIndex <> 2 Then
-                            cmbprstatus.SelectedIndex = 2
-                            Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
-                            If rs < 1 Then
-                            Else
-                                DataGridView1.Refresh()
-                            End If
-                            Exit For
+                End If
+
+                'For Each dw As DataRow In dsStatuses.Tables(0).Rows
+                '    Dim statusSel = LCase(dw.ItemArray(0).ToString())
+                '    'Dim notContainsStatus = optStatuses.AsEnumerable().Any(Function(x) x = statusSel)
+
+
+                '    For Each item As String In optStatuses
+                '        If item = statusSel Then
+                '            notContainsStatus = True
+                '            Exit For
+                '        End If
+                '    Next
+
+                If Not notContainsStatus Then
+                    If cmbprstatus.SelectedIndex <> 1 Then
+                        cmbprstatus.SelectedIndex = 1
+                        Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
+                        If rs < 1 Then
+                        Else
+                            DataGridView1.Refresh()
                         End If
                     End If
-                Next
+                Else
+                    If cmbprstatus.SelectedIndex <> 2 Then
+                        cmbprstatus.SelectedIndex = 2
+                        Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
+                        If rs < 1 Then
+                        Else
+                            DataGridView1.Refresh()
+                        End If
+                    End If
+                End If
+                'Next
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5724,7 +5862,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             myStream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             opened = True
             LikeSession.excelOpened = opened
         Finally
@@ -5749,7 +5888,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5772,7 +5912,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5808,7 +5949,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5859,7 +6001,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5912,7 +6055,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -5972,7 +6116,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return strExt
         End Try
     End Function
@@ -6005,7 +6150,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return ctr
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -6043,7 +6189,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6076,7 +6223,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return result
         End Try
 
@@ -6263,7 +6411,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                                         cmbuser.FindString(Trim(UCase(userid))), 0)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6309,7 +6458,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return hasDocs
         End Try
     End Function
@@ -6332,7 +6482,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return 0
         End Try
     End Function
@@ -6385,7 +6536,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             cmdnew2.Enabled = True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6408,7 +6560,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             My.Computer.FileSystem.CopyDirectory(gnr.pathfolderfrom, gnr.folderpathproject)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6436,7 +6589,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         Exit Sub
     End Sub
@@ -6469,7 +6623,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailsok
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -6484,7 +6639,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailsok
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -6505,7 +6661,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailss
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -6526,7 +6683,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return toemailss
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -6625,7 +6783,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return methodResult
         End Try
     End Function
@@ -6700,7 +6859,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             'myTableLayout.Controls.OfType(Of Windows.Forms.TextBox)().Select(Function(ctx) ctx.Text = "")
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6806,7 +6966,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6832,7 +6993,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6858,7 +7020,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -6875,7 +7038,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             Return False
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return False
         End Try
     End Function
@@ -6897,7 +7061,8 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             SSTab1.Padding = New Point(newX, SSTab1.Padding.Y)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 

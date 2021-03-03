@@ -102,6 +102,11 @@ NotInheritable Class Gn1
     Public folderpathpart As String
     Public pathfolderfrom As String
 
+    Dim vblog As VBLog = New VBLog()
+
+    Private strLogCadenaCabecera As String = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString()
+    Dim strLogCadena As String = Nothing
+
 
 #Region "Defaul Variables"
 
@@ -569,7 +574,8 @@ NotInheritable Class Gn1
             Return Nothing
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -592,7 +598,8 @@ NotInheritable Class Gn1
             Return Nothing
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -620,7 +627,8 @@ NotInheritable Class Gn1
             Return Nothing
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -648,7 +656,8 @@ NotInheritable Class Gn1
             Return Nothing
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -672,7 +681,8 @@ NotInheritable Class Gn1
             Return amount
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return amount
         End Try
     End Function
@@ -701,7 +711,8 @@ NotInheritable Class Gn1
             Return lstVendors
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return lstVendors
         End Try
     End Function
@@ -717,7 +728,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -733,7 +745,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -749,7 +762,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -765,7 +779,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -781,7 +796,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -801,7 +817,8 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Function
 
@@ -824,7 +841,8 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -844,7 +862,8 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -864,7 +883,8 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -882,7 +902,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -898,7 +919,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -914,7 +936,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -933,7 +956,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -949,7 +973,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -965,7 +990,8 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -981,7 +1007,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1007,7 +1033,7 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1025,7 +1051,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1042,7 +1068,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1063,7 +1089,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1079,7 +1105,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1095,7 +1121,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1111,7 +1137,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1127,7 +1153,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1149,7 +1175,7 @@ NotInheritable Class Gn1
             Return rsValue
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsValue
         End Try
     End Function
@@ -1196,7 +1222,7 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1230,7 +1256,7 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return False
         End Try
     End Function
@@ -1267,7 +1293,7 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return False
         End Try
     End Function
@@ -1302,7 +1328,7 @@ NotInheritable Class Gn1
             Return True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return False
         End Try
 
@@ -1328,7 +1354,7 @@ NotInheritable Class Gn1
             Return rsValue
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsValue
         End Try
     End Function
@@ -1344,7 +1370,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1360,7 +1386,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1376,7 +1402,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1392,7 +1418,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1408,7 +1434,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1424,7 +1450,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1440,7 +1466,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1456,7 +1482,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1472,7 +1498,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1488,7 +1514,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1504,7 +1530,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1520,7 +1546,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1536,7 +1562,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1552,7 +1578,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1568,7 +1594,7 @@ NotInheritable Class Gn1
             Return strDescrption
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1584,7 +1610,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1600,7 +1626,7 @@ NotInheritable Class Gn1
             Return strDescrption
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1620,7 +1646,7 @@ NotInheritable Class Gn1
             Return JiraPath
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1636,7 +1662,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1653,7 +1679,7 @@ NotInheritable Class Gn1
             Return Trim(ProjectDescStatus)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1669,7 +1695,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1685,7 +1711,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1701,7 +1727,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1717,7 +1743,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1733,7 +1759,7 @@ NotInheritable Class Gn1
             Return Trim(TcpPartNo)
         Catch ex As Exception
             exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1749,7 +1775,7 @@ NotInheritable Class Gn1
             Return Trim(TcpPartNo)
         Catch ex As Exception
             exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1765,7 +1791,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1781,7 +1807,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1797,7 +1823,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1814,7 +1840,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1830,7 +1856,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString() + ". " + ex.Message + ". " + ex.ToString()
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1846,7 +1872,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1862,7 +1888,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1880,7 +1906,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1896,7 +1922,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -1918,7 +1944,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -1935,7 +1961,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -1952,7 +1978,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -1968,7 +1994,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -1984,7 +2010,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2005,7 +2031,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2026,7 +2052,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2047,7 +2073,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2079,7 +2105,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2105,7 +2131,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2123,7 +2149,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2139,7 +2165,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2165,7 +2191,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2186,7 +2212,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2206,7 +2232,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2228,7 +2254,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2248,7 +2274,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2264,7 +2290,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2280,7 +2306,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2296,7 +2322,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2318,7 +2344,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2334,7 +2360,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2349,7 +2375,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2380,7 +2406,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2404,7 +2430,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2420,7 +2446,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2436,7 +2462,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2451,7 +2477,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2466,7 +2492,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2481,7 +2507,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2497,7 +2523,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2513,7 +2539,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2529,7 +2555,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2544,7 +2570,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2559,7 +2585,7 @@ NotInheritable Class Gn1
             Return QueryResult
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return QueryResult
         End Try
     End Function
@@ -2576,6 +2602,12 @@ NotInheritable Class Gn1
 
 #Region "Utils"
 
+    Public Sub writeLog(strLogCadenaCabecera As String, strLevel As VBLog.ErrorTypeEnum, strMessage As String, strDetails As String)
+        strLogCadena = strLogCadenaCabecera + " " + System.Reflection.MethodBase.GetCurrentMethod().ToString()
+
+        vblog.WriteLog(strLevel, "CTPSystem" & strLevel, strLogCadena, userid, strMessage, strDetails)
+    End Sub
+
     Public Shared Function CheckForInternetConnection() As Boolean
         Dim exMessage As String = Nothing
         Try
@@ -2586,7 +2618,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return False
         End Try
     End Function
@@ -2608,7 +2640,7 @@ NotInheritable Class Gn1
             Return fileName
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
 
@@ -2652,7 +2684,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -2682,7 +2714,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -2710,7 +2742,7 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return -1
         End Try
     End Function
@@ -2721,7 +2753,7 @@ NotInheritable Class Gn1
             SendMessage(dgv.Handle, WM_SETREDRAW, flag, 0)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -2742,7 +2774,7 @@ NotInheritable Class Gn1
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -2796,7 +2828,7 @@ NotInheritable Class Gn1
             Return rsResult = 1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             MessageBox.Show("Mail could Not be sent") 'if you dont want this message, simply delete this line 
             Return rsResult = -1
         Finally
@@ -2862,7 +2894,7 @@ NotInheritable Class Gn1
             Return rsResult = 1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             MessageBox.Show("Mail could Not be sent") 'if you dont want this message, simply delete this line 
             Return rsResult = -1
         Finally
@@ -2962,7 +2994,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -2982,7 +3014,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3012,7 +3044,7 @@ NotInheritable Class Gn1
             GetIpAddrTable = IpAddrs
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Function
@@ -3065,7 +3097,7 @@ NotInheritable Class Gn1
             Next i
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Function
@@ -3142,7 +3174,7 @@ NotInheritable Class Gn1
             Next
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Function
@@ -3167,7 +3199,7 @@ NotInheritable Class Gn1
             Exit Function
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
         'Call gotoerror("general", "checkstring", Err.Number, Err.Description, Err.Source)
     End Function
@@ -3231,7 +3263,7 @@ NotInheritable Class Gn1
             Exit Function
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Function
@@ -3309,7 +3341,7 @@ NotInheritable Class Gn1
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3336,7 +3368,7 @@ NotInheritable Class Gn1
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3350,7 +3382,7 @@ NotInheritable Class Gn1
             Dim myProcess As Process = Process.Start(ProcessProperties)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3373,11 +3405,10 @@ NotInheritable Class Gn1
             Return fileNameOk
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return fileNameOk
         End Try
     End Function
-
 
 #End Region
 #End Region
@@ -3411,7 +3442,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3447,7 +3478,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3469,7 +3500,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return result
         End Try
     End Function
@@ -3493,7 +3524,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3519,7 +3550,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3544,7 +3575,7 @@ NotInheritable Class Gn1
             End Using
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3565,7 +3596,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3580,7 +3611,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3595,7 +3626,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3610,7 +3641,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3626,7 +3657,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3641,7 +3672,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3656,7 +3687,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3672,7 +3703,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3690,7 +3721,7 @@ NotInheritable Class Gn1
             Return rsConfirm
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsConfirm
         End Try
     End Function
@@ -3790,7 +3821,7 @@ NotInheritable Class Gn1
     End Function
 
     'query sin devolver resultados
-    Private Function ExecuteNotQueryCommand(queryString As String, connectionString As String) As Integer
+    Public Function ExecuteNotQueryCommand(queryString As String, connectionString As String) As Integer
 
         Dim exMessage As String = " "
         Dim rsResult As Integer = -1
@@ -3879,7 +3910,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             Return Nothing
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Function
 
@@ -3894,7 +3925,7 @@ NotInheritable Class Gn1
             Return ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function

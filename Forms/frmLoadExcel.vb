@@ -19,7 +19,10 @@ Public Class frmLoadExcel
 
     Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
     Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
+
     Dim gnr As Gn1 = New Gn1()
+    Dim vblog As VBLog = New VBLog()
+
     Dim prd As Product = New Product()
     Dim prdMt As ProductMetadata = New ProductMetadata()
     Dim prdHd As ProductHeader = New ProductHeader()
@@ -43,6 +46,9 @@ Public Class frmLoadExcel
     Dim form As frmProductsDevelopment = New frmProductsDevelopment()
     Dim exColumnNames = gnr.GetColumnNames()
     'Dim ac1 As Autocomplete_Textbox = New Autocomplete_Textbox()
+
+    Private strLogCadenaCabecera As String = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString()
+    Dim strLogCadena As String = Nothing
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
 
@@ -145,7 +151,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -278,7 +285,8 @@ Public Class frmLoadExcel
             'cmbstatus1.SelectedIndex = -1
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -315,7 +323,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -327,7 +336,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -341,7 +351,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -367,7 +378,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -383,7 +395,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -423,7 +436,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -453,7 +467,8 @@ Public Class frmLoadExcel
             Return dt
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -646,7 +661,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -685,7 +701,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -906,7 +923,8 @@ Public Class frmLoadExcel
             DataGridView2.DataSource = Nothing
             DataGridView2.Refresh()
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1094,7 +1112,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1132,7 +1151,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1163,7 +1183,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1233,7 +1254,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1271,7 +1293,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1309,7 +1332,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1340,7 +1364,8 @@ Public Class frmLoadExcel
             Dim epep = Nothing
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1350,7 +1375,8 @@ Public Class frmLoadExcel
             DataGridView1.DataSource = Tables(bs.Position)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1360,7 +1386,8 @@ Public Class frmLoadExcel
             DataGridView2.DataSource = Tables1(bs1.Position)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1372,7 +1399,8 @@ Public Class frmLoadExcel
             Next
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1384,7 +1412,8 @@ Public Class frmLoadExcel
             Next
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1492,7 +1521,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1517,7 +1547,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1537,7 +1568,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1587,7 +1619,8 @@ Public Class frmLoadExcel
             btnValidVendor.Enabled = False
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -1630,7 +1663,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2235,7 +2269,8 @@ Public Class frmLoadExcel
 #End Region
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2531,7 +2566,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2545,7 +2581,8 @@ Public Class frmLoadExcel
             'btnCheck.Enabled = False
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2559,7 +2596,8 @@ Public Class frmLoadExcel
             'btnCheck.Enabled = True
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2618,7 +2656,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2664,7 +2703,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -2872,7 +2912,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             objData.Header.Detail.Details.PoqotaValidation = -1
             Return Nothing
         End Try
@@ -2991,6 +3032,12 @@ Public Class frmLoadExcel
 
 #Region "Utils"
 
+    Public Sub writeLog(strLogCadenaCabecera As String, strLevel As VBLog.ErrorTypeEnum, strMessage As String, strDetails As String)
+        strLogCadena = strLogCadenaCabecera + " " + System.Reflection.MethodBase.GetCurrentMethod().ToString()
+
+        vblog.WriteLog(strLevel, "CTPSystem" & strLevel, strLogCadena, userid, strMessage, strDetails)
+    End Sub
+
     Public Function RemoveEmptyColumns(Datatable As DataTable, exColumns As String) As Boolean
 
         Dim exMessage As String = Nothing
@@ -3023,7 +3070,8 @@ Public Class frmLoadExcel
             Return True
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return False
         End Try
 
@@ -3045,7 +3093,8 @@ Public Class frmLoadExcel
             'LikeSession.dsResultsSession = ds
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3077,7 +3126,8 @@ Public Class frmLoadExcel
             LikeSession.dsErrorSession = dsError
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3100,7 +3150,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return result
         End Try
     End Function
@@ -3127,7 +3178,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -3195,7 +3247,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -3249,7 +3302,8 @@ Public Class frmLoadExcel
             OpenFileDialog1.Title = "Select an excel document"
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3282,7 +3336,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return result
         End Try
 
@@ -3310,7 +3365,8 @@ Public Class frmLoadExcel
             Return dictionary
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
 
         End Try
     End Function
@@ -3337,7 +3393,8 @@ Public Class frmLoadExcel
             Return dictionary
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            'MessageBox.Show(exMessage, "CTP System", MessageBoxButtons.OK)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Function
 
@@ -3511,7 +3568,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3534,7 +3592,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -3583,7 +3642,8 @@ Public Class frmLoadExcel
             InitializeOpenFileDialog()
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3602,7 +3662,8 @@ Public Class frmLoadExcel
             Return code
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -3638,7 +3699,8 @@ Public Class frmLoadExcel
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             strResult = exMessage
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             'Return blResult
         End Try
         Return strResult
@@ -3660,7 +3722,8 @@ Public Class frmLoadExcel
             Return outMessage
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return "Not Validated. " & ex.Message
         End Try
     End Function
@@ -3677,7 +3740,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -3692,6 +3756,7 @@ Public Class frmLoadExcel
             stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None)
         Catch ex As IOException
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return True
         Finally
             If stream IsNot Nothing Then
@@ -3712,7 +3777,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return False
         End Try
     End Function
@@ -3732,7 +3798,8 @@ Public Class frmLoadExcel
             'Return deletedFiles
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             'Return deletedFiles
         End Try
     End Sub
@@ -3755,7 +3822,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsReturn
         End Try
     End Function
@@ -3844,7 +3912,8 @@ Public Class frmLoadExcel
             'End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return 1
         End Try
     End Function
@@ -3939,7 +4008,8 @@ Public Class frmLoadExcel
             myStream = file.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None)
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             opened = True
             LikeSession.excelOpened = opened
         Finally
@@ -4005,7 +4075,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -4037,7 +4108,8 @@ Public Class frmLoadExcel
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
             Log.Error(exMessage)
-            Return Nothing
+            'Return Nothing
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Function
 
@@ -4136,7 +4208,8 @@ Public Class frmLoadExcel
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4150,7 +4223,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -4160,7 +4234,8 @@ Public Class frmLoadExcel
             obj = Nothing
         Catch ex As Exception
             obj = Nothing
-            Log.Error(ex.Message)
+            'Log.Error(ex.Message)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             MessageBox.Show("Exception Occured while releasing object " + ex.ToString())
         Finally
             GC.Collect()
@@ -4223,7 +4298,8 @@ Public Class frmLoadExcel
             End If
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
-            Log.Error(exMessage)
+            'Log.Error(exMessage)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return strExt
         End Try
     End Function

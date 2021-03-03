@@ -209,6 +209,7 @@
     <Compile Include="Class\MyComboBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Class\VBLog.vb" />
     <Compile Include="Class\WatermarkTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
