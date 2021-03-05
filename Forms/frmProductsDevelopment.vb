@@ -114,6 +114,7 @@ Public Class frmProductsDevelopment
             Log.Info("Logged User: " & userid)
             writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info", "")
             writeComputerEventLog()
+            Log.Info("Logged User Done: " & userid)
 
             'Dim btn As System.Windows.Forms.Button = New System.Windows.Forms.Button()
             'btn.Size = New Size(25, txtsearchcode.ClientSize.Height + 2)

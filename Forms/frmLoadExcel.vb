@@ -93,6 +93,9 @@ Public Class frmLoadExcel
             End If
 
             Log.Info("Logged User: " & userid)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info", "")
+            writeComputerEventLog()
+            Log.Info("Logged User Done: " & userid)
 
             'test
 
