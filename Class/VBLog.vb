@@ -17,8 +17,30 @@ Public Class VBLog
         End Set
     End Property
 
+    Private _Source As String
+    Public Property Source() As String
+        Get
+            Return _Source
+        End Get
+        Set(ByVal value As String)
+            _Source = value
+        End Set
+    End Property
+
+    Private _LogName As String
+    Public Property LogName() As String
+        Get
+            Return _LogName
+        End Get
+        Set(ByVal value As String)
+            _LogName = value
+        End Set
+    End Property
+
     Public Sub New()
         SQLCon = ConfigurationManager.AppSettings("strconnSQL").ToString()
+        Source = ConfigurationManager.AppSettings("Source").ToString()
+        LogName = ConfigurationManager.AppSettings("LogName").ToString()
     End Sub
 
 

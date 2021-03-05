@@ -460,6 +460,26 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private _Source As String
+    Public Property Source() As String
+        Get
+            Return _Source
+        End Get
+        Set(ByVal value As String)
+            _Source = value
+        End Set
+    End Property
+
+    Private _LogName As String
+    Public Property LogName() As String
+        Get
+            Return _LogName
+        End Get
+        Set(ByVal value As String)
+            _LogName = value
+        End Set
+    End Property
+
 #End Region
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
@@ -500,6 +520,8 @@ NotInheritable Class Gn1
         getPdExcelTemplate = ConfigurationManager.AppSettings("urlPathPDTemplate").ToString()
         ReferenceUsersReport = ConfigurationManager.AppSettings("referenceUsersReports").ToString()
         VendorOEMExclude = ConfigurationManager.AppSettings("vendorOEMExclude").ToString()
+        Source = ConfigurationManager.AppSettings("Source").ToString()
+        LogName = ConfigurationManager.AppSettings("LogName").ToString()
     End Sub
 
     <DllImport("user32.dll")>

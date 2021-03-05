@@ -109,6 +109,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ctp-logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoClosingMessageBox, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AutoClosingMessageBox.1.0.0.2\lib\net40\AutoClosingMessageBox.dll</HintPath>
@@ -489,6 +492,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Class\text_1.txt" />
+    <Content Include="ctp-logo.ico" />
     <None Include="Resources\40th-ctp-logo.png" />
     <EmbeddedResource Include="Images\40th-ctp-logo.png" />
     <EmbeddedResource Include="Images\493-4936787_free-png-search-icon-magnifying-glass-icon-png.png" />

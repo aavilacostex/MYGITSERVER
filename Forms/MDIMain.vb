@@ -3,12 +3,15 @@ Imports System.Windows.Forms.DataFormats
 Imports System.Threading
 Imports System.ComponentModel
 Imports System.IO
+Imports System.Reflection
 
 Public Class MDIMain
 
     Dim gnr As Gn1 = New Gn1()
     Dim pathpictureparts As String
     Public userid As String
+
+    Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -22,6 +25,8 @@ Public Class MDIMain
         If CInt(gnr.FlagProductionMethod).Equals(1) Then
             Dim args As String() = Environment.GetCommandLineArgs()
             Dim argumentsJoined = String.Join(".", args)
+
+            Log.Info("Parameters: " & argumentsJoined)
 
             Dim arrayArgs As String() = argumentsJoined.Split(".")
             optionSelection = UCase(arrayArgs(3).ToString().Replace(",", ""))
