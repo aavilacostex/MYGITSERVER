@@ -13,12 +13,19 @@ Imports System.Threading.Tasks
 Imports System.Windows.Threading
 Imports System.Windows.Threading.Dispatcher
 Imports System.Threading
+
 'Dim ac As New Autocomplete__module()
 
 Public Class frmLoadExcel
 
-    Private Excel03ConString As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
-    Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1};IMEX={2}'"
+    Private Excel03ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 8.0;HDR={1}'"
+    Private Excel07ConString As String = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 12.0;HDR={1};IMEX={2}'"
+    Private Excel03Provider As String = "Microsoft.Jet.OLEDB.4.0"
+    Private Excel07Provider As String = "Microsoft.ACE.OLEDB.12.0"
+    Private Excel03Version As String = " 8.0"
+    Private Excel07Version As String = " 12.0"
+    Private ExcelExtendedPropertyV1 As String = "Excel{2};HDR={0};IMEX={1}"
+    Private ExcelExtendedPropertyV2 As String = "Excel{1};HDR={0}"
 
     Dim gnr As Gn1 = New Gn1()
     Dim vblog As VBLog = New VBLog()
@@ -80,6 +87,9 @@ Public Class frmLoadExcel
     Private Sub frmLoadExcel_Load()
         Dim exMessage As String = " "
         Try
+
+            'gnr.killBackgroundProcess()
+
             If CInt(gnr.FlagProductionMethod).Equals(1) Then
                 userid = LikeSession.retrieveUser
             Else
@@ -105,6 +115,8 @@ Public Class frmLoadExcel
             'test
 
             setValues()
+
+            ToolTip1.SetToolTip(LinkLabel4, "Info")
 
             'Then Set ComboBox AutoComplete properties
             Dim ds = gnr.getVendorNoAndNameByNameDS()
@@ -159,6 +171,33 @@ Public Class frmLoadExcel
             'Log.Error(exMessage)
             writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
+    End Sub
+
+    Private Sub frmLoadExcel_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+
+        Dim exMessage As String = Nothing
+        Try
+            ToolTip1.SetToolTip(LinkLabel4, "Info")
+            gnr.killBackgroundProcess()
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, "Exception: ", exMessage)
+            writeComputerEventLog()
+        End Try
+
+    End Sub
+
+    Private Sub frmLoadExcel_Closing(sender As Object, e As EventArgs) Handles MyBase.FormClosing
+
+        Dim exMessage As String = Nothing
+        Try
+            Application.Exit()
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, "Exception: ", exMessage)
+            writeComputerEventLog()
+        End Try
+
     End Sub
 
 #End Region
@@ -369,9 +408,11 @@ Public Class frmLoadExcel
         Dim exMessage As String = Nothing
         Try
             If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-                btnSelect.Enabled = True
+                'btnSelect.Enabled = True
+                LinkLabel3.Enabled = True
             ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-                btnSelect.Enabled = True
+                'btnSelect.Enabled = True
+                LinkLabel3.Enabled = True
                 Dim ds = gnr.GetDataByPRHCOD(txtProjectNo.Text)
                 Dim message = If(ds IsNot Nothing, "", "This project number is invalid.")
                 If (Not String.IsNullOrEmpty(message)) Then
@@ -379,7 +420,8 @@ Public Class frmLoadExcel
                     txtProjectNo.Text = Nothing
                 End If
             Else
-                btnSelect.Enabled = False
+                'btnSelect.Enabled = False
+                LinkLabel3.Enabled = False
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -392,11 +434,14 @@ Public Class frmLoadExcel
         Dim exMessage As String = Nothing
         Try
             If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-                btnSelect.Enabled = True
+                'btnSelect.Enabled = True
+                LinkLabel3.Enabled = True
             ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-                btnSelect.Enabled = True
+                'btnSelect.Enabled = True
+                LinkLabel3.Enabled = True
             Else
-                btnSelect.Enabled = False
+                'btnSelect.Enabled = False
+                LinkLabel3.Enabled = False
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
@@ -410,11 +455,14 @@ Public Class frmLoadExcel
         Dim exMessage As String = Nothing
         Try
             If Not String.IsNullOrEmpty(txtProjectName.Text) And String.IsNullOrEmpty(txtProjectNo.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-                btnSelect.Enabled = True
+                'btnSelect.Enabled = True
+                LinkLabel3.Enabled = True
             ElseIf Not String.IsNullOrEmpty(txtProjectNo.Text) And String.IsNullOrEmpty(txtProjectName.Text) And Not String.IsNullOrEmpty(txtVendorNo.Text) Then
-                btnSelect.Enabled = True
+                'btnSelect.Enabled = True
+                LinkLabel3.Enabled = True
             Else
-                btnSelect.Enabled = False
+                'btnSelect.Enabled = False
+                LinkLabel3.Enabled = False
             End If
             btnValidVendor.Enabled = True
 
@@ -1449,18 +1497,21 @@ Public Class frmLoadExcel
                 'Dim filePath1 As String = OpenFileDialog1.FileName
                 Dim extension As String = Path.GetExtension(filePath)
                 'Dim header As String = If(rbHeaderYes.Checked, "YES", "NO")
-                Dim conStr As String, sheetName As String
+                Dim conStr As String, conStr1 As String, sheetName As String
                 conStr = String.Empty
-                Select Case extension
+                conStr1 = String.Empty
+                Select Case LCase(extension)
 
                     Case ".xls"
                         'Excel 97-03
-                        conStr = String.Format(Excel03ConString, filePath, "YES", 1)
+                        conStr = String.Format(Excel07ConString, filePath, "YES")
+                        conStr1 = createExcelCS(filePath, Excel07Provider, ExcelExtendedPropertyV2, extension, Excel07Version)
                         Exit Select
 
                     Case ".xlsx"
                         'Excel 07
                         conStr = String.Format(Excel07ConString, filePath, "YES", 1)
+                        conStr1 = createExcelCS(filePath, Excel07Provider, ExcelExtendedPropertyV1, extension, Excel07Version)
                         Exit Select
                 End Select
 
@@ -1470,7 +1521,7 @@ Public Class frmLoadExcel
                 End If
 
                 'Get the name of the First Sheet.
-                Using con As New OleDbConnection(conStr)
+                Using con As New OleDbConnection(conStr1)
                     Using cmd As New OleDbCommand()
                         cmd.Connection = con
                         con.Open()
@@ -1632,7 +1683,10 @@ Public Class frmLoadExcel
     Private Sub btnSelect_Click(sender As Object, e As EventArgs) Handles btnSelect.Click
         Dim exMessage As String = Nothing
         Try
-            If LikeSession.excelFileSelType = False Then
+
+            Dim flag = Convert.ToBoolean(DirectCast(gnr.AutomaticExcel, String))
+
+            If flag = False Then
                 'selection by openfiledialog
                 Dim result As DialogResult
                 result = OpenFileDialog1.ShowDialog()
@@ -2636,11 +2690,13 @@ Public Class frmLoadExcel
                             File.Delete(item)
                         Else
                             Dim rsError As DialogResult = MessageBox.Show("Please close the file " & fi & " in order to proceed!", "CTP System", MessageBoxButtons.OK)
+                            btnSelect.Enabled = False
                             Exit Sub
                         End If
                     Next
                 Else
                     Dim rsError As DialogResult = MessageBox.Show("Please close the file located in " & folderPath & " in order to proceed!", "CTP System", MessageBoxButtons.OK)
+                    btnSelect.Enabled = False
                     Exit Sub
                 End If
             End If
@@ -2656,14 +2712,32 @@ Public Class frmLoadExcel
 
             If newFile.Exists Then
                 LikeSession.userExcelPath = updatedFolderPath
+                btnSelect.Enabled = True
+
                 System.Diagnostics.Process.Start(updatedFolderPath)
             End If
 
         Catch ex As Exception
             exMessage = ex.Message + ". " + ex.ToString
+            btnSelect.Enabled = False
             'Log.Error(exMessage)
             writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
+    End Sub
+
+    Private Sub LinkLabel4_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel4.LinkClicked
+
+        Dim exMessage As String = Nothing
+        Try
+            'MessageBox.Show("Please refresh the excel document that you are uploading!", "CTP System", MessageBoxButtons.OK)
+            'MessageBox.Show(Nothing, "<b>How it works</b>", "<p>Load Excel Info</p>", MessageBoxButtons.OK, MessageBoxIcon.Information, Nothing, 0)
+            customMessageBox.ShowDialog()
+
+            Dim pepe = "aa"
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+        End Try
+
     End Sub
 
     Private Sub cmdExcel_Click_1(sender As Object, e As EventArgs) Handles cmdExcel.Click
@@ -3036,6 +3110,32 @@ Public Class frmLoadExcel
 #End Region
 
 #Region "Utils"
+
+    Public Function createExcelCS(strName As String, strProvider As String, strProp As String, strVersion As String, strNoVersion As String) As String
+        Dim exMessage As String = Nothing
+        Try
+
+            Dim Builder As OleDb.OleDbConnectionStringBuilder = New OleDb.OleDbConnectionStringBuilder()
+            Builder.DataSource = strName
+            Builder.Provider = strProvider
+
+            If strVersion = ".xls" Then
+                Builder.Add("Extended Properties", String.Format(strProp, "YES", strNoVersion))
+            Else
+                Builder.Add("Extended Properties", String.Format(strProp, "YES", 1, strNoVersion))
+            End If
+            'Builder.Add("Extended Properties", String.Format(strProp, "YES", 1))
+
+            'Builder.Add("Extended Properties", "Excel 12.0;HDR=Yes;IMEX=1")
+            'Console.WriteLine(Builder.ConnectionString);
+            Dim str = Builder.ConnectionString
+            Return str
+
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            Return Nothing
+        End Try
+    End Function
 
     Public Shared Function GetComputerName() As String
         Dim exMessage As String = Nothing
@@ -4342,6 +4442,7 @@ Public Class frmLoadExcel
             Return strExt
         End Try
     End Function
+
 
 #End Region
 

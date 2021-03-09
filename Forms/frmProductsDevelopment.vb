@@ -60,7 +60,6 @@ Public Class frmProductsDevelopment
         ' This call is required by the designer.
         InitializeComponent()
 
-
         ' MsgBox("The application is terminating.")
         ' Add any initialization after the InitializeComponent() call.
     End Sub
@@ -90,6 +89,8 @@ Public Class frmProductsDevelopment
     Private Sub frmProductsDevelopment_load()
         Dim exMessage As String = " "
         Try
+
+            'gnr.killBackgroundProcess()
 
             If CInt(gnr.FlagProductionMethod).Equals(1) Then
                 userid = UCase(LikeSession.retrieveUser)
@@ -134,6 +135,8 @@ Public Class frmProductsDevelopment
             FillDDlPrPech()
             FillDDlPrPech1()
 
+            ToolTip2.SetToolTip(LinkLabel6, "Info")
+
             'testMethod()
             'test purpose
             'gnr.sendEmail()
@@ -152,6 +155,33 @@ Public Class frmProductsDevelopment
 
             'writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
+    End Sub
+
+    Private Sub frmProductsDevelopment_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+
+        Dim exMessage As String = Nothing
+        Try
+            ToolTip2.SetToolTip(LinkLabel6, "Info")
+            gnr.killBackgroundProcess()
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, "Exception: ", exMessage)
+            writeComputerEventLog()
+        End Try
+
+    End Sub
+
+    Private Sub frmProductsDevelopment_Closing(sender As Object, e As EventArgs) Handles MyBase.FormClosing
+
+        Dim exMessage As String = Nothing
+        Try
+            Application.Exit()
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, "Exception: ", exMessage)
+            writeComputerEventLog()
+        End Try
+
     End Sub
 
     <DllImport("user32.dll", SetLastError:=True, CharSet:=CharSet.Auto)>
@@ -2068,6 +2098,10 @@ Public Class frmProductsDevelopment
 
     Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
         cmdClearFilters1_Click(sender, Nothing)
+    End Sub
+
+    Private Sub LinkLabel6_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel6.LinkClicked
+        customMessageBox1.ShowDialog()
     End Sub
 
     Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
@@ -4643,7 +4677,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         End Try
     End Sub
 
-    Private Sub cmdPrpech_Click(sender As Object, e As EventArgs) Handles cmdPrpech.Click
+    Private Sub cmdPrpech_Click(sender As Object, e As EventArgs)
         cmdPrpech_Click()
     End Sub
 

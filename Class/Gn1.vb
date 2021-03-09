@@ -480,6 +480,26 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private _automaticExcel As String
+    Public Property AutomaticExcel() As String
+        Get
+            Return _automaticExcel
+        End Get
+        Set(ByVal value As String)
+            _automaticExcel = value
+        End Set
+    End Property
+
+    Private _processName As String
+    Public Property ProcessName() As String
+        Get
+            Return _processName
+        End Get
+        Set(ByVal value As String)
+            _processName = value
+        End Set
+    End Property
+
 #End Region
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
@@ -522,6 +542,8 @@ NotInheritable Class Gn1
         VendorOEMExclude = ConfigurationManager.AppSettings("vendorOEMExclude").ToString()
         Source = ConfigurationManager.AppSettings("Source").ToString()
         LogName = ConfigurationManager.AppSettings("LogName").ToString()
+        AutomaticExcel = ConfigurationManager.AppSettings("AutomaticExcel").ToString()
+        ProcessName = ConfigurationManager.AppSettings("ProcessName").ToString()
     End Sub
 
     <DllImport("user32.dll")>
@@ -2623,6 +2645,30 @@ NotInheritable Class Gn1
 #End Region
 
 #Region "Utils"
+
+    Public Sub killBackgroundProcess()
+        Dim exMessage As String = Nothing
+        Dim processes As Process() = Process.GetProcesses()
+        'Dim lstApp As List(Of String) = New List(Of String)()
+        'Dim lstBackground As List(Of String) = New List(Of String)()
+        Try
+
+            For Each proc In processes
+                If String.IsNullOrEmpty(proc.MainWindowTitle) Then
+                    If proc.ProcessName = ProcessName Then
+                        proc.Kill()
+                        writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Trace, "Process Killed Succesfully.", "")
+                        'writeComputerEventLog()
+                    End If
+                End If
+            Next
+
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, "Exception", exMessage)
+            'writeComputerEventLog()
+        End Try
+    End Sub
 
     Public Sub writeLog(strLogCadenaCabecera As String, strLevel As VBLog.ErrorTypeEnum, strMessage As String, strDetails As String)
         strLogCadena = strLogCadenaCabecera + " " + System.Reflection.MethodBase.GetCurrentMethod().ToString()

@@ -219,6 +219,18 @@
     <Compile Include="Class\WM_TExtbox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Forms\customMessageBox.Designer.vb">
+      <DependentUpon>customMessageBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\customMessageBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\customMessageBox1.Designer.vb">
+      <DependentUpon>customMessageBox1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\customMessageBox1.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmChangeVendor.Designer.vb">
       <DependentUpon>frmChangeVendor.vb</DependentUpon>
     </Compile>
@@ -341,6 +353,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\customMessageBox.resx">
+      <DependentUpon>customMessageBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\customMessageBox1.resx">
+      <DependentUpon>customMessageBox1.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmChangeVendor.resx">
       <DependentUpon>frmChangeVendor.vb</DependentUpon>
     </EmbeddedResource>
