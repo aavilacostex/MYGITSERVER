@@ -594,6 +594,16 @@ Public Class frmProductsDevelopment
                 cmdunitcost.Enabled = False
                 cmdexit1.Enabled = True
                 cmdnew1.Enabled = True
+
+                'If Not String.IsNullOrEmpty(txtCode.Text) Then
+                '    checkPendingReferences(txtCode.Text)
+                'Else
+                '    If Not String.IsNullOrEmpty(txtsearchcode.Text) Then
+                '        checkPendingReferences(txtsearchcode.Text)
+                '    End If
+                'End If
+
+
             ElseIf SSTab1.SelectedIndex = 1 Then
                 Panel4.Enabled = True
                 If flagdeve = 1 Then
@@ -1317,6 +1327,10 @@ Public Class frmProductsDevelopment
             If e.ColumnIndex = 4 Then
                 If e.Value IsNot Nothing Then
                     CurrentState = e.Value.ToString
+                    Dim strResult = checkPendingReferences(DataGridView1.Rows(e.RowIndex).Cells("ProjectNo").Value)
+                    If strResult <> CurrentState Then
+                        CurrentState = strResult
+                    End If
                     If CurrentState = "I" Then
                         DataGridView1.Rows(e.RowIndex).Cells("Status").Value = "In Process"
                     ElseIf CurrentState = "F" Then
@@ -3177,7 +3191,12 @@ Public Class frmProductsDevelopment
                         SSTab1.SelectedTab = TabPage2
 
                         'check if all references are closed to update the general status
-                        checkPendingReferences(txtCode.Text)
+                        Dim strResult = checkPendingReferences(txtCode.Text)
+                        If strResult = "I" Then
+                            cmbprstatus.SelectedIndex = 1
+                        Else
+                            cmbprstatus.SelectedIndex = 2
+                        End If
 
                     Else
                         SSTab1.SelectedTab = TabPage3
@@ -5848,17 +5867,22 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
         vblog.WriteLog(strLevel, "CTPSystem" & strLevel, strLogCadena, userid, strMessage, strDetails)
     End Sub
 
-    Public Sub checkPendingReferences(code As String)
+    Public Function checkPendingReferences(code As String) As String
         Dim exMessage As String = Nothing
         Dim notContainsStatus As Boolean
+        Dim strResult As String = Nothing
         Try
             Dim dsStatuses = gnr.getReferencesStatusesByCode(Trim(txtCode.Text))
-            Dim optStatuses = gnr.GetCloseStatus.Split(",")
+            Dim optStatuses As String() = gnr.GetCloseStatus.Split(",")
+            Dim lstStatuses As List(Of String) = New List(Of String)()
+            For Each item As String In optStatuses
+                lstStatuses.Add(item)
+            Next
             If dsStatuses IsNot Nothing Then
 
                 If dsStatuses.Tables(0).Rows.Count > 1 Then
 
-                    notContainsStatus = dsStatuses.Tables(0).AsEnumerable().Any(Function(x) optStatuses.Contains(x.ToString()))
+                    notContainsStatus = dsStatuses.Tables(0).AsEnumerable().Any(Function(x) Not lstStatuses.Contains(LCase(x.ItemArray(0).ToString())))
 
                     'Dim statusSel = LCase(dw.Item("prdsts").ToString())
                     'notContainsStatus = optStatuses.AsEnumerable().Any(Function(x) x <> statusSel)
@@ -5899,23 +5923,27 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
                 '    Next
 
                 If Not notContainsStatus Then
-                    If cmbprstatus.SelectedIndex <> 1 Then
-                        cmbprstatus.SelectedIndex = 1
-                        Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
+                    'If cmbprstatus.SelectedIndex <> 1 Then
+                    'cmbprstatus.SelectedIndex = 1
+                    Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
                         If rs < 1 Then
                         Else
-                            DataGridView1.Refresh()
-                        End If
+                        strResult = "F"
+                        'DataGridView1.Refresh()
                     End If
+                    'End If
+                    Return strResult
                 Else
-                    If cmbprstatus.SelectedIndex <> 2 Then
-                        cmbprstatus.SelectedIndex = 2
-                        Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
+                    'If cmbprstatus.SelectedIndex <> 2 Then
+                    'cmbprstatus.SelectedIndex = 2
+                    Dim rs = gnr.UpdateGeneralStatus(code, cmbprstatus.SelectedItem)
                         If rs < 1 Then
                         Else
-                            DataGridView1.Refresh()
-                        End If
+                        strResult = "I"
+                        'DataGridView1.Refresh()
                     End If
+                    'End If
+                    Return strResult
                 End If
                 'Next
             End If
@@ -5923,8 +5951,9 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
             'Log.Error(exMessage)
             writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            Return Nothing
         End Try
-    End Sub
+    End Function
 
     Public Function IsFileinUse(file As FileInfo) As Boolean
         Dim exMessage As String = Nothing

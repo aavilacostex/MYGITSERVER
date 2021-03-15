@@ -35,7 +35,9 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.lblVendorDesc = New System.Windows.Forms.Label()
         Me.txtVendorNo = New System.Windows.Forms.TextBox()
+        Me.btnValidVendor = New System.Windows.Forms.Button()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
+        Me.cmdExcel = New System.Windows.Forms.Button()
         Me.lblExcel = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
@@ -51,9 +53,13 @@ Partial Class frmLoadExcel
         Me.clPRDSTS = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BindingNavigator1 = New System.Windows.Forms.BindingNavigator(Me.components)
         Me.BindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel()
+        Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMovePreviousItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator = New System.Windows.Forms.ToolStripSeparator()
         Me.BindingNavigatorPositionItem = New System.Windows.Forms.ToolStripTextBox()
         Me.BindingNavigatorSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
@@ -72,9 +78,13 @@ Partial Class frmLoadExcel
         Me.clError = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BindingNavigator2 = New System.Windows.Forms.BindingNavigator(Me.components)
         Me.BindingNavigatorCountItem1 = New System.Windows.Forms.ToolStripLabel()
+        Me.BindingNavigatorMoveFirstItem1 = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMovePreviousItem1 = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.BindingNavigatorPositionItem1 = New System.Windows.Forms.ToolStripTextBox()
         Me.BindingNavigatorSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.BindingNavigatorMoveNextItem1 = New System.Windows.Forms.ToolStripButton()
+        Me.BindingNavigatorMoveLastItem1 = New System.Windows.Forms.ToolStripButton()
         Me.BindingNavigatorSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.cmbStatus = New System.Windows.Forms.ComboBox()
         Me.cmbPerCharge = New System.Windows.Forms.ComboBox()
@@ -85,6 +95,8 @@ Partial Class frmLoadExcel
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel4 = New System.Windows.Forms.LinkLabel()
         Me.ComboBox2 = New System.Windows.Forms.ComboBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.btnSuccess = New System.Windows.Forms.Button()
@@ -99,6 +111,8 @@ Partial Class frmLoadExcel
         Me.lblVendorNo = New System.Windows.Forms.Label()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel10 = New System.Windows.Forms.TableLayoutPanel()
+        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
+        Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
         Me.txtDesc = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
@@ -107,23 +121,9 @@ Partial Class frmLoadExcel
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker3 = New System.ComponentModel.BackgroundWorker()
         Me.BackgroundWorker4 = New System.ComponentModel.BackgroundWorker()
-        Me.BindingNavigatorMoveFirstItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMovePreviousItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveNextItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveLastItem = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveFirstItem1 = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMovePreviousItem1 = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveNextItem1 = New System.Windows.Forms.ToolStripButton()
-        Me.BindingNavigatorMoveLastItem1 = New System.Windows.Forms.ToolStripButton()
-        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
-        Me.LinkLabel4 = New System.Windows.Forms.LinkLabel()
-        Me.cmdExcel = New System.Windows.Forms.Button()
-        Me.btnValidVendor = New System.Windows.Forms.Button()
         Me.BindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
-        Me.ac2 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.ac2 = New CTP_IS_VBNET.Autocomplete_Textbox()
         Me.TableLayoutPanel4.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -213,6 +213,19 @@ Partial Class frmLoadExcel
         Me.txtVendorNo.Size = New System.Drawing.Size(190, 25)
         Me.txtVendorNo.TabIndex = 30
         '
+        'btnValidVendor
+        '
+        Me.btnValidVendor.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnValidVendor.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnValidVendor.ImageIndex = 1
+        Me.btnValidVendor.ImageList = Me.ImageList1
+        Me.btnValidVendor.Location = New System.Drawing.Point(199, 3)
+        Me.btnValidVendor.Name = "btnValidVendor"
+        Me.btnValidVendor.Size = New System.Drawing.Size(37, 24)
+        Me.btnValidVendor.TabIndex = 31
+        Me.btnValidVendor.Text = " "
+        Me.btnValidVendor.UseVisualStyleBackColor = True
+        '
         'TableLayoutPanel3
         '
         Me.TableLayoutPanel3.ColumnCount = 2
@@ -226,6 +239,17 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel3.Size = New System.Drawing.Size(239, 28)
         Me.TableLayoutPanel3.TabIndex = 28
+        '
+        'cmdExcel
+        '
+        Me.cmdExcel.ImageIndex = 0
+        Me.cmdExcel.ImageList = Me.ImageList1
+        Me.cmdExcel.Location = New System.Drawing.Point(3, 3)
+        Me.cmdExcel.Name = "cmdExcel"
+        Me.cmdExcel.Size = New System.Drawing.Size(38, 22)
+        Me.cmdExcel.TabIndex = 29
+        Me.cmdExcel.UseVisualStyleBackColor = True
+        Me.cmdExcel.Visible = False
         '
         'lblExcel
         '
@@ -431,6 +455,24 @@ Partial Class frmLoadExcel
         Me.BindingNavigatorCountItem.Text = "of {0}"
         Me.BindingNavigatorCountItem.ToolTipText = "Total number of items"
         '
+        'BindingNavigatorMoveFirstItem
+        '
+        Me.BindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveFirstItem.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveFirstItem.Name = "BindingNavigatorMoveFirstItem"
+        Me.BindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveFirstItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMoveFirstItem.Text = "Move first"
+        '
+        'BindingNavigatorMovePreviousItem
+        '
+        Me.BindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMovePreviousItem.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMovePreviousItem.Name = "BindingNavigatorMovePreviousItem"
+        Me.BindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMovePreviousItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMovePreviousItem.Text = "Move previous"
+        '
         'BindingNavigatorSeparator
         '
         Me.BindingNavigatorSeparator.Name = "BindingNavigatorSeparator"
@@ -440,7 +482,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem.AutoSize = False
-        Me.BindingNavigatorPositionItem.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem.Name = "BindingNavigatorPositionItem"
         Me.BindingNavigatorPositionItem.Size = New System.Drawing.Size(75, 35)
         Me.BindingNavigatorPositionItem.Text = "0"
@@ -450,6 +491,24 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorSeparator1.Name = "BindingNavigatorSeparator1"
         Me.BindingNavigatorSeparator1.Size = New System.Drawing.Size(6, 36)
+        '
+        'BindingNavigatorMoveNextItem
+        '
+        Me.BindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveNextItem.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveNextItem.Name = "BindingNavigatorMoveNextItem"
+        Me.BindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveNextItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMoveNextItem.Text = "Move next"
+        '
+        'BindingNavigatorMoveLastItem
+        '
+        Me.BindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveLastItem.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveLastItem.Name = "BindingNavigatorMoveLastItem"
+        Me.BindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveLastItem.Size = New System.Drawing.Size(28, 33)
+        Me.BindingNavigatorMoveLastItem.Text = "Move last"
         '
         'BindingNavigatorSeparator2
         '
@@ -641,6 +700,24 @@ Partial Class frmLoadExcel
         Me.BindingNavigatorCountItem1.Text = "of {0}"
         Me.BindingNavigatorCountItem1.ToolTipText = "Total number of items"
         '
+        'BindingNavigatorMoveFirstItem1
+        '
+        Me.BindingNavigatorMoveFirstItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveFirstItem1.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveFirstItem1.Name = "BindingNavigatorMoveFirstItem1"
+        Me.BindingNavigatorMoveFirstItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveFirstItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMoveFirstItem1.Text = "Move first"
+        '
+        'BindingNavigatorMovePreviousItem1
+        '
+        Me.BindingNavigatorMovePreviousItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMovePreviousItem1.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMovePreviousItem1.Name = "BindingNavigatorMovePreviousItem1"
+        Me.BindingNavigatorMovePreviousItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMovePreviousItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMovePreviousItem1.Text = "Move previous"
+        '
         'BindingNavigatorSeparator3
         '
         Me.BindingNavigatorSeparator3.Name = "BindingNavigatorSeparator3"
@@ -650,7 +727,6 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorPositionItem1.AccessibleName = "Position"
         Me.BindingNavigatorPositionItem1.AutoSize = False
-        Me.BindingNavigatorPositionItem1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.BindingNavigatorPositionItem1.Name = "BindingNavigatorPositionItem1"
         Me.BindingNavigatorPositionItem1.Size = New System.Drawing.Size(50, 23)
         Me.BindingNavigatorPositionItem1.Text = "0"
@@ -660,6 +736,24 @@ Partial Class frmLoadExcel
         '
         Me.BindingNavigatorSeparator4.Name = "BindingNavigatorSeparator4"
         Me.BindingNavigatorSeparator4.Size = New System.Drawing.Size(6, 31)
+        '
+        'BindingNavigatorMoveNextItem1
+        '
+        Me.BindingNavigatorMoveNextItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveNextItem1.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveNextItem1.Name = "BindingNavigatorMoveNextItem1"
+        Me.BindingNavigatorMoveNextItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveNextItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMoveNextItem1.Text = "Move next"
+        '
+        'BindingNavigatorMoveLastItem1
+        '
+        Me.BindingNavigatorMoveLastItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.BindingNavigatorMoveLastItem1.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem1.Image"), System.Drawing.Image)
+        Me.BindingNavigatorMoveLastItem1.Name = "BindingNavigatorMoveLastItem1"
+        Me.BindingNavigatorMoveLastItem1.RightToLeftAutoMirrorImage = True
+        Me.BindingNavigatorMoveLastItem1.Size = New System.Drawing.Size(28, 28)
+        Me.BindingNavigatorMoveLastItem1.Text = "Move last"
         '
         'BindingNavigatorSeparator5
         '
@@ -766,6 +860,41 @@ Partial Class frmLoadExcel
         Me.ComboBox1.TabIndex = 2
         Me.ComboBox1.Visible = False
         '
+        'LinkLabel1
+        '
+        Me.LinkLabel1.AutoSize = True
+        Me.LinkLabel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.LinkLabel1.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.LinkLabel1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LinkLabel1.ImageIndex = 1
+        Me.LinkLabel1.ImageList = Me.ImageList1
+        Me.LinkLabel1.LinkColor = System.Drawing.Color.Black
+        Me.LinkLabel1.Location = New System.Drawing.Point(30, 5)
+        Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(30, 5, 0, 0)
+        Me.LinkLabel1.Name = "LinkLabel1"
+        Me.LinkLabel1.Padding = New System.Windows.Forms.Padding(5, 5, 30, 5)
+        Me.LinkLabel1.Size = New System.Drawing.Size(98, 25)
+        Me.LinkLabel1.TabIndex = 37
+        Me.LinkLabel1.TabStop = True
+        Me.LinkLabel1.Text = "Clear Filters"
+        '
+        'LinkLabel4
+        '
+        Me.LinkLabel4.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.LinkLabel4.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel4.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LinkLabel4.ImageIndex = 12
+        Me.LinkLabel4.ImageList = Me.ImageList1
+        Me.LinkLabel4.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.LinkLabel4.Location = New System.Drawing.Point(233, 9)
+        Me.LinkLabel4.Margin = New System.Windows.Forms.Padding(18, 9, 0, 0)
+        Me.LinkLabel4.Name = "LinkLabel4"
+        Me.LinkLabel4.Size = New System.Drawing.Size(28, 20)
+        Me.LinkLabel4.TabIndex = 38
+        Me.LinkLabel4.TabStop = True
+        Me.LinkLabel4.Text = "        "
+        '
         'ComboBox2
         '
         Me.ComboBox2.BackColor = System.Drawing.SystemColors.ControlLight
@@ -861,9 +990,9 @@ Partial Class frmLoadExcel
         Me.lblPerCharge.Location = New System.Drawing.Point(3, 104)
         Me.lblPerCharge.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.lblPerCharge.Name = "lblPerCharge"
-        Me.lblPerCharge.Size = New System.Drawing.Size(138, 15)
+        Me.lblPerCharge.Size = New System.Drawing.Size(118, 15)
         Me.lblPerCharge.TabIndex = 6
-        Me.lblPerCharge.Text = "Person in Charge (*)"
+        Me.lblPerCharge.Text = "Person in Charge"
         '
         'lblProjectName
         '
@@ -961,6 +1090,46 @@ Partial Class frmLoadExcel
         Me.TableLayoutPanel10.Size = New System.Drawing.Size(273, 58)
         Me.TableLayoutPanel10.TabIndex = 27
         '
+        'LinkLabel2
+        '
+        Me.LinkLabel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.LinkLabel2.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.LinkLabel2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel2.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.LinkLabel2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LinkLabel2.ImageIndex = 4
+        Me.LinkLabel2.ImageList = Me.ImageList1
+        Me.LinkLabel2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel2.LinkColor = System.Drawing.Color.Black
+        Me.LinkLabel2.Location = New System.Drawing.Point(144, 7)
+        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(0, 7, 3, 0)
+        Me.LinkLabel2.Name = "LinkLabel2"
+        Me.LinkLabel2.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
+        Me.LinkLabel2.Size = New System.Drawing.Size(126, 43)
+        Me.LinkLabel2.TabIndex = 38
+        Me.LinkLabel2.TabStop = True
+        Me.LinkLabel2.Text = "Go to Product Development   "
+        '
+        'LinkLabel3
+        '
+        Me.LinkLabel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.LinkLabel3.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.LinkLabel3.Enabled = False
+        Me.LinkLabel3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.LinkLabel3.ImageIndex = 7
+        Me.LinkLabel3.ImageList = Me.ImageList1
+        Me.LinkLabel3.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.LinkLabel3.LinkColor = System.Drawing.Color.Black
+        Me.LinkLabel3.Location = New System.Drawing.Point(0, 7)
+        Me.LinkLabel3.Margin = New System.Windows.Forms.Padding(0, 7, 3, 0)
+        Me.LinkLabel3.Name = "LinkLabel3"
+        Me.LinkLabel3.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
+        Me.LinkLabel3.Size = New System.Drawing.Size(138, 43)
+        Me.LinkLabel3.TabIndex = 39
+        Me.LinkLabel3.TabStop = True
+        Me.LinkLabel3.Text = "Download Excel Template"
+        '
         'txtDesc
         '
         Me.TableLayoutPanel2.SetColumnSpan(Me.txtDesc, 3)
@@ -1014,176 +1183,10 @@ Partial Class frmLoadExcel
         '
         Me.BackgroundWorker4.WorkerSupportsCancellation = True
         '
-        'BindingNavigatorMoveFirstItem
+        'ToolTip1
         '
-        Me.BindingNavigatorMoveFirstItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveFirstItem.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveFirstItem.Name = "BindingNavigatorMoveFirstItem"
-        Me.BindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveFirstItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMoveFirstItem.Text = "Move first"
-        '
-        'BindingNavigatorMovePreviousItem
-        '
-        Me.BindingNavigatorMovePreviousItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMovePreviousItem.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMovePreviousItem.Name = "BindingNavigatorMovePreviousItem"
-        Me.BindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMovePreviousItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMovePreviousItem.Text = "Move previous"
-        '
-        'BindingNavigatorMoveNextItem
-        '
-        Me.BindingNavigatorMoveNextItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveNextItem.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveNextItem.Name = "BindingNavigatorMoveNextItem"
-        Me.BindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveNextItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMoveNextItem.Text = "Move next"
-        '
-        'BindingNavigatorMoveLastItem
-        '
-        Me.BindingNavigatorMoveLastItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveLastItem.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveLastItem.Name = "BindingNavigatorMoveLastItem"
-        Me.BindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveLastItem.Size = New System.Drawing.Size(28, 33)
-        Me.BindingNavigatorMoveLastItem.Text = "Move last"
-        '
-        'BindingNavigatorMoveFirstItem1
-        '
-        Me.BindingNavigatorMoveFirstItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveFirstItem1.Image = CType(resources.GetObject("BindingNavigatorMoveFirstItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveFirstItem1.Name = "BindingNavigatorMoveFirstItem1"
-        Me.BindingNavigatorMoveFirstItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveFirstItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMoveFirstItem1.Text = "Move first"
-        '
-        'BindingNavigatorMovePreviousItem1
-        '
-        Me.BindingNavigatorMovePreviousItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMovePreviousItem1.Image = CType(resources.GetObject("BindingNavigatorMovePreviousItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMovePreviousItem1.Name = "BindingNavigatorMovePreviousItem1"
-        Me.BindingNavigatorMovePreviousItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMovePreviousItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMovePreviousItem1.Text = "Move previous"
-        '
-        'BindingNavigatorMoveNextItem1
-        '
-        Me.BindingNavigatorMoveNextItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveNextItem1.Image = CType(resources.GetObject("BindingNavigatorMoveNextItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveNextItem1.Name = "BindingNavigatorMoveNextItem1"
-        Me.BindingNavigatorMoveNextItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveNextItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMoveNextItem1.Text = "Move next"
-        '
-        'BindingNavigatorMoveLastItem1
-        '
-        Me.BindingNavigatorMoveLastItem1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.BindingNavigatorMoveLastItem1.Image = CType(resources.GetObject("BindingNavigatorMoveLastItem1.Image"), System.Drawing.Image)
-        Me.BindingNavigatorMoveLastItem1.Name = "BindingNavigatorMoveLastItem1"
-        Me.BindingNavigatorMoveLastItem1.RightToLeftAutoMirrorImage = True
-        Me.BindingNavigatorMoveLastItem1.Size = New System.Drawing.Size(28, 28)
-        Me.BindingNavigatorMoveLastItem1.Text = "Move last"
-        '
-        'LinkLabel2
-        '
-        Me.LinkLabel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.LinkLabel2.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.LinkLabel2.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel2.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.LinkLabel2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.LinkLabel2.ImageIndex = 4
-        Me.LinkLabel2.ImageList = Me.ImageList1
-        Me.LinkLabel2.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel2.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel2.Location = New System.Drawing.Point(144, 7)
-        Me.LinkLabel2.Margin = New System.Windows.Forms.Padding(0, 7, 3, 0)
-        Me.LinkLabel2.Name = "LinkLabel2"
-        Me.LinkLabel2.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
-        Me.LinkLabel2.Size = New System.Drawing.Size(126, 43)
-        Me.LinkLabel2.TabIndex = 38
-        Me.LinkLabel2.TabStop = True
-        Me.LinkLabel2.Text = "Go to Product Development   "
-        '
-        'LinkLabel3
-        '
-        Me.LinkLabel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.LinkLabel3.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.LinkLabel3.Enabled = False
-        Me.LinkLabel3.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.LinkLabel3.ImageIndex = 7
-        Me.LinkLabel3.ImageList = Me.ImageList1
-        Me.LinkLabel3.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.LinkLabel3.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel3.Location = New System.Drawing.Point(0, 7)
-        Me.LinkLabel3.Margin = New System.Windows.Forms.Padding(0, 7, 3, 0)
-        Me.LinkLabel3.Name = "LinkLabel3"
-        Me.LinkLabel3.Padding = New System.Windows.Forms.Padding(5, 5, 20, 5)
-        Me.LinkLabel3.Size = New System.Drawing.Size(138, 43)
-        Me.LinkLabel3.TabIndex = 39
-        Me.LinkLabel3.TabStop = True
-        Me.LinkLabel3.Text = "Download Excel Template"
-        '
-        'LinkLabel1
-        '
-        Me.LinkLabel1.AutoSize = True
-        Me.LinkLabel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.LinkLabel1.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.LinkLabel1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel1.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.LinkLabel1.ImageIndex = 1
-        Me.LinkLabel1.ImageList = Me.ImageList1
-        Me.LinkLabel1.LinkColor = System.Drawing.Color.Black
-        Me.LinkLabel1.Location = New System.Drawing.Point(30, 5)
-        Me.LinkLabel1.Margin = New System.Windows.Forms.Padding(30, 5, 0, 0)
-        Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Padding = New System.Windows.Forms.Padding(5, 5, 30, 5)
-        Me.LinkLabel1.Size = New System.Drawing.Size(98, 25)
-        Me.LinkLabel1.TabIndex = 37
-        Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "Clear Filters"
-        '
-        'LinkLabel4
-        '
-        Me.LinkLabel4.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.LinkLabel4.Font = New System.Drawing.Font("Microsoft Sans Serif", 7.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel4.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.LinkLabel4.ImageIndex = 12
-        Me.LinkLabel4.ImageList = Me.ImageList1
-        Me.LinkLabel4.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
-        Me.LinkLabel4.Location = New System.Drawing.Point(233, 9)
-        Me.LinkLabel4.Margin = New System.Windows.Forms.Padding(18, 9, 0, 0)
-        Me.LinkLabel4.Name = "LinkLabel4"
-        Me.LinkLabel4.Size = New System.Drawing.Size(28, 20)
-        Me.LinkLabel4.TabIndex = 38
-        Me.LinkLabel4.TabStop = True
-        Me.LinkLabel4.Text = "        "
-        '
-        'cmdExcel
-        '
-        Me.cmdExcel.ImageIndex = 0
-        Me.cmdExcel.ImageList = Me.ImageList1
-        Me.cmdExcel.Location = New System.Drawing.Point(3, 3)
-        Me.cmdExcel.Name = "cmdExcel"
-        Me.cmdExcel.Size = New System.Drawing.Size(38, 22)
-        Me.cmdExcel.TabIndex = 29
-        Me.cmdExcel.UseVisualStyleBackColor = True
-        Me.cmdExcel.Visible = False
-        '
-        'btnValidVendor
-        '
-        Me.btnValidVendor.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnValidVendor.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnValidVendor.ImageIndex = 1
-        Me.btnValidVendor.ImageList = Me.ImageList1
-        Me.btnValidVendor.Location = New System.Drawing.Point(199, 3)
-        Me.btnValidVendor.Name = "btnValidVendor"
-        Me.btnValidVendor.Size = New System.Drawing.Size(37, 24)
-        Me.btnValidVendor.TabIndex = 31
-        Me.btnValidVendor.Text = " "
-        Me.btnValidVendor.UseVisualStyleBackColor = True
+        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
+        Me.ToolTip1.ToolTipTitle = "Click Here!!"
         '
         'ac2
         '
@@ -1194,11 +1197,6 @@ Partial Class frmLoadExcel
         Me.ac2.Size = New System.Drawing.Size(273, 25)
         Me.ac2.TabIndex = 16
         Me.ac2.Values = Nothing
-        '
-        'ToolTip1
-        '
-        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
-        Me.ToolTip1.ToolTipTitle = "Click Here!!"
         '
         'frmLoadExcel
         '
