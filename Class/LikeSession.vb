@@ -23,4 +23,5 @@
     Public Shared wrongName As Boolean = False
     Public Shared excelFileSelType As Boolean = False
     Public Shared userExcelPath As String = Nothing
+    Public Shared userid As String = Nothing
 End Class

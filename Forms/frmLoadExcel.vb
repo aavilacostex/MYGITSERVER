@@ -582,12 +582,25 @@ Public Class frmLoadExcel
                             '    item.Item(dt.Columns("PRPECH").Ordinal) = userid
                             'End If
                             If String.IsNullOrEmpty(item.ItemArray(0).ToString()) Then
-                                Dim partNo = gnr.GetPartCtpRef(item.Item("CTPNo").ToString())
-                                If partNo IsNot Nothing Then
-                                    item.Item("partNo") = partNo
-                                    'dt.Rows(i)("columnName") = strVerse
-                                Else
-                                    Continue For
+
+                                Dim ctpRef1 As String = Nothing
+                                Dim ctpRef = If(Not String.IsNullOrEmpty(item.Item("CTPNo").ToString()), item.Item("CTPNo").ToString(), "00000000000")
+                                If ctpRef <> "00000000000" Then
+
+                                    If Not LCase(ctpRef).Contains("ctp") Then
+                                        ctpRef1 = String.Concat("ctp", ctpRef).Trim()
+                                    Else
+                                        ctpRef1 = ctpRef
+                                    End If
+
+                                    Dim partNo = gnr.GetPartCtpRef(ctpRef1)
+                                    If partNo IsNot Nothing Then
+                                        item.Item("partNo") = partNo
+                                        'dt.Rows(i)("columnName") = strVerse
+                                    Else
+                                        Continue For
+                                    End If
+
                                 End If
                             End If
 
@@ -1844,10 +1857,13 @@ Public Class frmLoadExcel
 
                 End If
             Else
+
+                projectPerCharge = If(cmbPerCharge.SelectedIndex = 0, userid, cmbPerCharge.SelectedValue)
+
                 Dim ds = gnr.GetDataByPRHCOD(ProjectNoCurrent)
                 For Each item As DataRow In ds.Tables(0).Rows
                     txtProjectName.Text = Trim(item.ItemArray(ds.Tables(0).Columns("PRNAME").Ordinal).ToString())
-                    cmbPerCharge.SelectedIndex = cmbPerCharge.FindString(Trim(item.ItemArray(ds.Tables(0).Columns("PRPECH").Ordinal).ToString()))
+                    cmbPerCharge.SelectedIndex = If(cmbPerCharge.SelectedIndex = 0, cmbPerCharge.FindString(Trim(item.ItemArray(ds.Tables(0).Columns("PRPECH").Ordinal).ToString())), cmbPerCharge.SelectedIndex)
                     cmbStatus.SelectedIndex = cmbStatus.FindString(Trim(item.ItemArray(ds.Tables(0).Columns("PRSTAT").Ordinal).ToString()))
                     txtDesc.Text = Trim(item.ItemArray(ds.Tables(0).Columns("PRINFO").Ordinal).ToString())
                     dtProjectDate.Value = CDate(item.ItemArray(ds.Tables(0).Columns("PRDATE").Ordinal)).ToShortDateString()
@@ -1857,7 +1873,8 @@ Public Class frmLoadExcel
                     objData.Header.creationDate = Trim(item.ItemArray(ds.Tables(0).Columns("CRDATE").Ordinal).ToString())
                     objData.Header.modificationDate = Today().ToShortDateString()
                     objData.Header.projectDate = Today().ToShortDateString()
-                    objData.Header.personInCharge = Trim(item.ItemArray(ds.Tables(0).Columns("PRPECH").Ordinal).ToString())
+                    objData.Header.personInCharge = Trim(cmbPerCharge.GetItemText(cmbPerCharge.SelectedItem).Split("-")(0))
+                    'objData.Header.personInCharge = Trim(item.ItemArray(ds.Tables(0).Columns("PRPECH").Ordinal).ToString())
                     objData.Header.projectInfo = txtDesc.Text
                     objData.Header.projectName = txtProjectName.Text
                     objData.Header.projectStat = cmbStatus.SelectedText
@@ -1929,7 +1946,7 @@ Public Class frmLoadExcel
 
                         If goAhead Then
                             'Dim Qry = Qry1.CopyToDataTable
-                            Dim personInChargeValue = userid
+                            Dim personInChargeValue = objData.Header.personInCharge
                             Dim rsExistence = getPartFullData(partNo, objData)
                             If rsExistence = 0 Or rsExistence = -1 Then
                                 MessageBox.Show("The selected Part Number is not in our inventary? Plase add it before add as reference in a project.", "CTP System", MessageBoxButtons.OK)
@@ -4118,7 +4135,7 @@ Public Class frmLoadExcel
 
             Dim generalStatus = If(cmbStatusMore.SelectedIndex = 0 Or cmbStatusMore.SelectedIndex = -1, "E", cmbStatusMore.SelectedValue.ToString())
             QueryDetailResult = gnr.InsertProductDetail(projectNoValue, PartNoValue, dtTime,
-                                    userid, dtTime1, userid, dtTime2, objData.Header.Detail.Details.CTPNo, 0,
+                                    objData.Header.creationUser, dtTime1, userid, dtTime2, objData.Header.Detail.Details.CTPNo, 0,
                                     "", objData.Header.Detail.Details.ManufactNo, objData.Header.Detail.Details.UnitCost, objData.Header.Detail.Details.UnitCostNew,
                                     "", dtTime3, generalStatus, "",
                                     "", personInCharge, chkControl, dtTime4, "0",

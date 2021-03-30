@@ -1,8 +1,20 @@
-﻿Public Class frmproductsdevelopmentstatus
+﻿Imports System.Reflection
+
+Public Class frmproductsdevelopmentstatus
 
     Dim gnr As Gn1 = New Gn1()
     Public userid As String
     Dim toemails As String = ""
+
+    Dim vblog As VBLog = New VBLog()
+
+    Private strLogCadenaCabecera As String = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString()
+    Dim strLogCadena As String = Nothing
+
+    Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
+    Private Shared eventLog1 As EventLog = New EventLog("CTPSystem-Log", GetComputerName(), "CTPSystem-Net")
+
+#Region "Action Methods"
 
     Private Sub frmproductsdevelopmentstatus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Form_Load()
@@ -28,9 +40,16 @@
             Dim dsInvPrdoDet = gnr.GetInvProdDetailByProject(codeproject)
             fillcell2(dsInvPrdoDet)
 
-            userid = frmLogin.txtUserName.Text
+            'userid = frmLogin.txtUserName.Text
+            userid = LikeSession.userid
+
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info - Massive status start", "")
+
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            writeComputerEventLog()
         End Try
     End Sub
 
@@ -58,6 +77,7 @@
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -183,6 +203,8 @@
             DataGridView1.DataSource = Nothing
             DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -311,7 +333,7 @@
             End If
             If Trim(status2) = "Closed Successfully" Then
                 toemails = prepareEmailsToSend(1)
-                Dim rsResult = gnr.sendEmail(toemails, UCase(partNo))
+                Dim rsResult = gnr.sendEmail("", UCase(partNo))
                 If rsResult < 0 Then
                     'mensaje de error
                 End If
@@ -326,6 +348,7 @@
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -353,6 +376,7 @@
                 'error message
             End If
         Catch ex As Exception
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -378,6 +402,7 @@
                 Return -1
             End If
         Catch ex As Exception
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return -1
         End Try
     End Function
@@ -403,6 +428,7 @@
             Return toemailsok
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -423,6 +449,7 @@
             Return toemailss
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -443,6 +470,7 @@
             Return toemailss
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return Nothing
         End Try
     End Function
@@ -457,9 +485,58 @@
             Return days
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return days
         End Try
 
     End Function
+
+#End Region
+
+
+#Region "Utils"
+
+    Public Sub writeComputerEventLog(Optional strMessage As String = Nothing)
+        Dim exMessage As String = Nothing
+        Try
+
+            If Not EventLog.SourceExists("CTPSystem-Net") Then
+                EventLog.CreateEventSource("CTPSystem-Net", "CTPSystem-Log")
+            End If
+            'EventLog.CreateEventSource("CTPSystem-Net", "CTPSystem-Log")
+
+            Dim lgSource = If(Not String.IsNullOrEmpty(gnr.Source), gnr.Source, "CTPSystem-Net")
+            Dim lgName = If(Not String.IsNullOrEmpty(gnr.LogName), gnr.LogName, "CTPSystem-Log")
+            Dim msg = If(Not String.IsNullOrEmpty(strMessage), strMessage, "Info: Session started for: " & Environment.UserName)
+
+            eventLog1 = New EventLog(lgName, Environment.MachineName, lgSource)
+            eventLog1.WriteEntry(msg, EventLogEntryType.Information)
+
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+        End Try
+    End Sub
+
+    Public Shared Function GetComputerName() As String
+        Dim exMessage As String = Nothing
+        Try
+            Dim ComputerName As String
+            ComputerName = Environment.MachineName
+            Return ComputerName
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            'writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            Return Nothing
+        End Try
+    End Function
+
+    Public Sub writeLog(strLogCadenaCabecera As String, strLevel As VBLog.ErrorTypeEnum, strMessage As String, strDetails As String)
+        strLogCadena = strLogCadenaCabecera + " " + System.Reflection.MethodBase.GetCurrentMethod().ToString()
+
+        vblog.WriteLog(strLevel, "CTPSystem" & strLevel, strLogCadena, userid, strMessage, strDetails)
+    End Sub
+
+#End Region
 
 End Class

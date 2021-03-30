@@ -1,4 +1,5 @@
 ﻿Imports System.Globalization
+Imports System.Reflection
 
 Public Class frmproductsdevelopmentcomments
 
@@ -7,12 +8,20 @@ Public Class frmproductsdevelopmentcomments
     Public userid As String
     Public flagallow As Integer
     Public cod_detcomment As Integer
+    Dim vblog As VBLog = New VBLog()
+
+    Private strLogCadenaCabecera As String = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.ToString()
+    Dim strLogCadena As String = Nothing
+
+    Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
+    Private Shared eventLog1 As EventLog = New EventLog("CTPSystem-Log", GetComputerName(), "CTPSystem-Net")
 
     Private Sub frmproductsdevelopmentcomments_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim exMessage As String = " "
         Try
 
-            userid = frmLogin.txtUserName.Text
+            'userid = frmLogin.txtUserName.Text
+            userid = LikeSession.userid
 
             'AddHandler dgvAddComments.CellClick, AddressOf Me.dgvAddComments_CellClick
 
@@ -21,13 +30,13 @@ Public Class frmproductsdevelopmentcomments
                 flagallow = 1
             End If
 
-            Dim rsDeletionSql = gnr.DeleteDataSqlByUser("tbtempproductcomment", userid)
-            If rsDeletionSql >= 0 Then
-                Dim dsSelection = gnr.GetDataSqlByUser("tbtempproductcomment", userid)
-                fillDgvAddComments(dsSelection)
-            Else
-                'error message
-            End If
+            'Dim rsDeletionSql = gnr.DeleteDataSqlByUser("tbtempproductcomment", userid)
+            'If rsDeletionSql >= 0 Then
+            '    Dim dsSelection = gnr.GetDataSqlByUser("tbtempproductcomment", userid)
+            '    fillDgvAddComments(dsSelection)
+            'Else
+            '    'error message
+            'End If
 
 
             gnr.seeaddprocomments = lblNotVisible.Text
@@ -35,13 +44,18 @@ Public Class frmproductsdevelopmentcomments
                 txtCode.Text = frmProductsDevelopment.txtCode.Text
                 txtpartno.Text = Trim(UCase(frmProductsDevelopment.txtpartno.Text))
 
-                DTPicker1.Value = Format(Now, "mm/dd/yyyy")
-                DTPicker2.Value = Format(Now, "hh:mm:ss")
+                DTPicker1.Value = Format(Now, "MM/dd/yyyy")
+                DTPicker2.Value = Format(Now, "MM/dd/yyyy")
                 txtsubject.Text = ""
             End If
 
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info - Add Comments Start", "")
+
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            writeComputerEventLog()
         End Try
 
     End Sub
@@ -79,6 +93,7 @@ Public Class frmproductsdevelopmentcomments
 
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -144,6 +159,7 @@ Public Class frmproductsdevelopmentcomments
             'DataGridView1.DataSource = Nothing
             'DataGridView1.Refresh()
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -175,6 +191,7 @@ Public Class frmproductsdevelopmentcomments
             Exit Sub
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
 
     End Sub
@@ -222,6 +239,7 @@ Public Class frmproductsdevelopmentcomments
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
         End Try
     End Sub
 
@@ -229,6 +247,47 @@ Public Class frmproductsdevelopmentcomments
 #End Region
 
 #Region "Utis"
+
+    Public Sub writeComputerEventLog(Optional strMessage As String = Nothing)
+        Dim exMessage As String = Nothing
+        Try
+
+            If Not EventLog.SourceExists("CTPSystem-Net") Then
+                EventLog.CreateEventSource("CTPSystem-Net", "CTPSystem-Log")
+            End If
+            'EventLog.CreateEventSource("CTPSystem-Net", "CTPSystem-Log")
+
+            Dim lgSource = If(Not String.IsNullOrEmpty(gnr.Source), gnr.Source, "CTPSystem-Net")
+            Dim lgName = If(Not String.IsNullOrEmpty(gnr.LogName), gnr.LogName, "CTPSystem-Log")
+            Dim msg = If(Not String.IsNullOrEmpty(strMessage), strMessage, "Info: Session started for: " & Environment.UserName)
+
+            eventLog1 = New EventLog(lgName, Environment.MachineName, lgSource)
+            eventLog1.WriteEntry(msg, EventLogEntryType.Information)
+
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+        End Try
+    End Sub
+
+    Public Shared Function GetComputerName() As String
+        Dim exMessage As String = Nothing
+        Try
+            Dim ComputerName As String
+            ComputerName = Environment.MachineName
+            Return ComputerName
+        Catch ex As Exception
+            exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            'writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            Return Nothing
+        End Try
+    End Function
+
+    Public Sub writeLog(strLogCadenaCabecera As String, strLevel As VBLog.ErrorTypeEnum, strMessage As String, strDetails As String)
+        strLogCadena = strLogCadenaCabecera + " " + System.Reflection.MethodBase.GetCurrentMethod().ToString()
+
+        vblog.WriteLog(strLevel, "CTPSystem" & strLevel, strLogCadena, userid, strMessage, strDetails)
+    End Sub
 
     Private Function saveSqlComments(strComment As String) As Integer
         Dim rsInsertion As Integer = -1
@@ -260,6 +319,7 @@ Public Class frmproductsdevelopmentcomments
             End If
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             Return rsInsertion
         End Try
     End Function

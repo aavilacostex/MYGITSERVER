@@ -34,12 +34,12 @@ Partial Class frmproductsdevelopmentcomments
         Me.DTPicker2 = New System.Windows.Forms.DateTimePicker()
         Me.txtsubject = New System.Windows.Forms.TextBox()
         Me.dgvAddComments = New System.Windows.Forms.DataGridView()
+        Me.clComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lblNotVisible = New System.Windows.Forms.Label()
         Me.cmdExit = New System.Windows.Forms.Button()
         Me.cmdSave = New System.Windows.Forms.Button()
         Me.cmdnew = New System.Windows.Forms.Button()
-        Me.clComments = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblNotVisible = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         CType(Me.dgvAddComments, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -52,7 +52,7 @@ Partial Class frmproductsdevelopmentcomments
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 2.850877!))
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.17544!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 166.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 168.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Label2, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Label3, 0, 2)
@@ -106,7 +106,7 @@ Partial Class frmproductsdevelopmentcomments
         Me.txtCode.Location = New System.Drawing.Point(122, 7)
         Me.txtCode.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
         Me.txtCode.Name = "txtCode"
-        Me.txtCode.Size = New System.Drawing.Size(215, 20)
+        Me.txtCode.Size = New System.Drawing.Size(214, 20)
         Me.txtCode.TabIndex = 3
         '
         'DTPicker1
@@ -120,7 +120,7 @@ Partial Class frmproductsdevelopmentcomments
         '
         'txtpartno
         '
-        Me.txtpartno.Location = New System.Drawing.Point(444, 7)
+        Me.txtpartno.Location = New System.Drawing.Point(442, 7)
         Me.txtpartno.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
         Me.txtpartno.Name = "txtpartno"
         Me.txtpartno.Size = New System.Drawing.Size(144, 20)
@@ -129,7 +129,7 @@ Partial Class frmproductsdevelopmentcomments
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(372, 10)
+        Me.Label4.Location = New System.Drawing.Point(371, 10)
         Me.Label4.Margin = New System.Windows.Forms.Padding(20, 10, 3, 3)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(46, 13)
@@ -139,7 +139,7 @@ Partial Class frmproductsdevelopmentcomments
         'DTPicker2
         '
         Me.TableLayoutPanel1.SetColumnSpan(Me.DTPicker2, 2)
-        Me.DTPicker2.Location = New System.Drawing.Point(372, 40)
+        Me.DTPicker2.Location = New System.Drawing.Point(371, 40)
         Me.DTPicker2.Margin = New System.Windows.Forms.Padding(20, 7, 3, 3)
         Me.DTPicker2.Name = "DTPicker2"
         Me.DTPicker2.Size = New System.Drawing.Size(219, 20)
@@ -165,6 +165,13 @@ Partial Class frmproductsdevelopmentcomments
         Me.dgvAddComments.Size = New System.Drawing.Size(609, 233)
         Me.dgvAddComments.TabIndex = 1
         '
+        'clComments
+        '
+        Me.clComments.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.clComments.HeaderText = "Comments"
+        Me.clComments.MaxInputLength = 100
+        Me.clComments.Name = "clComments"
+        '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.SystemColors.GrayText
@@ -176,6 +183,17 @@ Partial Class frmproductsdevelopmentcomments
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(609, 34)
         Me.Panel1.TabIndex = 2
+        '
+        'lblNotVisible
+        '
+        Me.lblNotVisible.AutoSize = True
+        Me.lblNotVisible.ForeColor = System.Drawing.SystemColors.GrayText
+        Me.lblNotVisible.Location = New System.Drawing.Point(337, 17)
+        Me.lblNotVisible.Name = "lblNotVisible"
+        Me.lblNotVisible.Size = New System.Drawing.Size(13, 13)
+        Me.lblNotVisible.TabIndex = 3
+        Me.lblNotVisible.Text = "0"
+        Me.lblNotVisible.Visible = False
         '
         'cmdExit
         '
@@ -203,22 +221,6 @@ Partial Class frmproductsdevelopmentcomments
         Me.cmdnew.Size = New System.Drawing.Size(43, 28)
         Me.cmdnew.TabIndex = 0
         Me.cmdnew.UseVisualStyleBackColor = True
-        '
-        'clComments
-        '
-        Me.clComments.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.clComments.HeaderText = "Comments"
-        Me.clComments.MaxInputLength = 100
-        Me.clComments.Name = "clComments"
-        '
-        'lblNotVisible
-        '
-        Me.lblNotVisible.AutoSize = True
-        Me.lblNotVisible.Location = New System.Drawing.Point(337, 17)
-        Me.lblNotVisible.Name = "lblNotVisible"
-        Me.lblNotVisible.Size = New System.Drawing.Size(0, 13)
-        Me.lblNotVisible.TabIndex = 3
-        Me.lblNotVisible.Visible = False
         '
         'frmproductsdevelopmentcomments
         '

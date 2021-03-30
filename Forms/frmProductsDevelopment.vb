@@ -104,6 +104,8 @@ Public Class frmProductsDevelopment
                 End If
             End If
 
+            LikeSession.userid = userid
+
             If gnr.getFlagAllow(userid) = 1 Then
                 flagallow = 1
             Else
@@ -112,10 +114,7 @@ Public Class frmProductsDevelopment
                 cmbuser2.Visible = False
             End If
 
-            Log.Info("Logged User: " & userid)
-            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info", "")
-            writeComputerEventLog()
-            Log.Info("Logged User Done: " & userid)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info - PD Start", "")
 
             'Dim btn As System.Windows.Forms.Button = New System.Windows.Forms.Button()
             'btn.Size = New Size(25, txtsearchcode.ClientSize.Height + 2)
@@ -150,7 +149,7 @@ Public Class frmProductsDevelopment
         Catch ex As Exception
             exMessage = ex.ToString + ". " + ex.Message + ". " + ex.ToString
 
-            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info", "")
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
             writeComputerEventLog()
 
             'writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
@@ -3013,8 +3012,9 @@ Public Class frmProductsDevelopment
                             If Trim(cmbstatus.SelectedValue) <> dsGetProdDesc.Tables(0).Rows(0).ItemArray(dsGetProdDesc.Tables(0).Columns("PRDSTS").Ordinal) Then
                                 If (Trim(Status2) = "Closed w/o negotiation") Or (Trim(Status2) = "Closed (Demand/cost/material)") Then
                                     Dim rsEnterComm As DialogResult = MessageBox.Show("Enter Comment.", "CTP System", MessageBoxButtons.OK)
-                                    gnr.seeaddprocomments = 5
-                                    frmproductsdevelopmentcomments.ShowDialog()
+                                    'gnr.seeaddprocomments = 5
+                                    'frmproductsdevelopmentcomments.ShowDialog()
+                                    cmdcomments_Click(Nothing, Nothing)
                                 End If
                                 If (Trim(Status2) = "Approved") Or (Trim(Status2) = "Approved with advice") Then
                                     Dim rsAssignVendor As DialogResult = MessageBox.Show("Do you want to change the assigned vendor?", "CTP System", MessageBoxButtons.YesNo)
@@ -3042,7 +3042,7 @@ Public Class frmProductsDevelopment
                                 If Trim(Status2) = "Closed Successfully" Then
 
                                     gnr.OpenOutlookMessage(txtname.Text, txtpartno.Text, Status2)
-                                    Dim result As Integer = gnr.sendEmail("")
+                                    Dim result As Integer = gnr.sendEmail("", txtpartno.Text)
 
                                     'toemails = prepareEmailsToSend(1)
                                     'Dim rsResult = gnr.sendEmail(toemails, txtpartno.Text)
@@ -5376,7 +5376,7 @@ Trim(VMNAME) as VMNAME,Trim(PRDSTS) as PRDSTS,Trim(PRDJIRA) as PRDJIRA,Trim(PRDU
     Private Sub cmdcomments_Click(sender As Object, e As EventArgs) Handles cmdcomments.Click
         gnr.seeaddprocomments = 5
         frmproductsdevelopmentcomments.lblNotVisible.Text = gnr.seeaddprocomments
-        frmproductsdevelopmentcomments.Show()
+        frmproductsdevelopmentcomments.ShowDialog()
     End Sub
 
     Private Sub cmdseecomments_Click(sender As Object, e As EventArgs) Handles cmdseecomments.Click
