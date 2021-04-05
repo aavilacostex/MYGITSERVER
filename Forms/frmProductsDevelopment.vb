@@ -104,6 +104,9 @@ Public Class frmProductsDevelopment
                 End If
             End If
 
+            'test purpose
+            userid = "LREDONDO"
+
             LikeSession.userid = userid
 
             If gnr.getFlagAllow(userid) = 1 Then

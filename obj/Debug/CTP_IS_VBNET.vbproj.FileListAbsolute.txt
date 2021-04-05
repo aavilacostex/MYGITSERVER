@@ -54,3 +54,6 @@ C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.xml
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.pdb
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.customMessageBox.resources
 C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.customMessageBox1.resources
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Newtonsoft.Json.dll
+C:\Users\aavila\source\repos\CTP_IS_VBNET\bin\Debug\Newtonsoft.Json.xml
+C:\Users\aavila\source\repos\CTP_IS_VBNET\obj\Debug\CTP_IS_VBNET.vbprojAssemblyReference.cache

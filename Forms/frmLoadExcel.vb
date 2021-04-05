@@ -13,6 +13,7 @@ Imports System.Threading.Tasks
 Imports System.Windows.Threading
 Imports System.Windows.Threading.Dispatcher
 Imports System.Threading
+Imports Newtonsoft.Json
 
 'Dim ac As New Autocomplete__module()
 
@@ -95,6 +96,8 @@ Public Class frmLoadExcel
             Else
                 userid = Trim(UCase(frmLogin.txtUserName.Text))
                 lblUsrLog.Text += userid
+
+                'remove this burned value
                 userid = "LREDONDO"
             End If
 
@@ -102,10 +105,13 @@ Public Class frmLoadExcel
                 flagallow = 1
             End If
 
-            Log.Info("Logged User: " & userid)
-            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info", "")
-            writeComputerEventLog()
-            Log.Info("Logged User Done: " & userid)
+
+            'test purpose
+            userid = "LREDONDO"
+
+            'Log.Info("Logged User: " & userid)
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Information, "User Info - Massive Excel Load Start", "")
+            'Log.Info("Logged User Done: " & userid)
 
             'test
 
@@ -170,6 +176,7 @@ Public Class frmLoadExcel
             exMessage = ex.Message + ". " + ex.ToString
             'Log.Error(exMessage)
             writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            writeComputerEventLog()
         End Try
     End Sub
 
@@ -588,9 +595,11 @@ Public Class frmLoadExcel
                                 If ctpRef <> "00000000000" Then
 
                                     If Not LCase(ctpRef).Contains("ctp") Then
-                                        ctpRef1 = String.Concat("ctp", ctpRef).Trim()
+                                        ctpRef1 = String.Concat("CTP", ctpRef).Trim()
+                                        item.Item("CTPNo") = ctpRef1
                                     Else
-                                        ctpRef1 = ctpRef
+                                        ctpRef1 = ctpRef.Replace(" ", "")
+                                        item.Item("CTPNo") = ctpRef1
                                     End If
 
                                     Dim partNo = gnr.GetPartCtpRef(ctpRef1)
@@ -685,6 +694,18 @@ Public Class frmLoadExcel
 
                         LikeSession.dsErrorSession = dsError
                         LikeSession.dsResultsSession = dsResult
+
+
+                        'test added extra log
+                        If (UCase(userid) = UCase(gnr.ExcelUserTest)) Then
+                            Dim JsonError = If(Not String.IsNullOrEmpty(DataTableToJSON(dsError.Tables(0))), DataTableToJSON(dsError.Tables(0)), "No Data")
+                            Dim JsonResult = If(Not String.IsNullOrEmpty(DataTableToJSON(dsResult.Tables(0))), DataTableToJSON(dsResult.Tables(0)), "No Data")  '
+                            Dim strDsErrorLog = "DSError: " + JsonError
+                            Dim strDsResultLog = "DSResult: " + JsonResult
+                            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Trace, "Extra Log for Excel Data", strDsErrorLog)
+                            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Trace, "Extra Log for Excel Data", strDsResultLog)
+                        End If
+                        'test added extra log
 
                         If dsError.Tables(0).Rows.Count > 0 Then
                             MessageBox.Show("Some project references has errors. You can check them by clicking in the Check Errors button.", "CTP System", MessageBoxButtons.OK)
@@ -1513,8 +1534,8 @@ Public Class frmLoadExcel
                 Dim conStr As String, conStr1 As String, sheetName As String
                 conStr = String.Empty
                 conStr1 = String.Empty
-                Select Case LCase(extension)
 
+                Select Case LCase(extension)
                     Case ".xls"
                         'Excel 97-03
                         conStr = String.Format(Excel07ConString, filePath, "YES")
@@ -1527,6 +1548,13 @@ Public Class frmLoadExcel
                         conStr1 = createExcelCS(filePath, Excel07Provider, ExcelExtendedPropertyV1, extension, Excel07Version)
                         Exit Select
                 End Select
+
+                'test added extra log
+                If (UCase(userid) = UCase(gnr.ExcelUserTest)) Then
+                    Dim strDetailsLog = "Extension: " + extension + ", Connection: " + conStr1
+                    writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Trace, "Extra Log for Excel Data", strDetailsLog)
+                End If
+                'test added extra log
 
                 If String.IsNullOrEmpty(conStr) Then
                     MessageBox.Show("File not valid. You must upload only excel files.", "CTP System", MessageBoxButtons.OK)
@@ -3128,6 +3156,36 @@ Public Class frmLoadExcel
 
 #Region "Utils"
 
+    Public Function DataTableToJSON(table As DataTable) As String
+        Try
+            Dim JSONString As String = Nothing
+            If table IsNot Nothing Then
+                If table.Rows.Count > 0 Then
+                    JSONString = JsonConvert.SerializeObject(table)
+                End If
+            End If
+            Return JSONString
+        Catch ex As Exception
+            writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Exception, ex.Message, ex.ToString())
+            Return Nothing
+        End Try
+
+    End Function
+
+    'Private Function GetJson(ByVal dt As DataTable) As String
+    '    Dim Jserializer As New System.Web.Script.Serialization.JavaScriptSerializer()
+    '    Dim rowsList As New List(Of Dictionary(Of String, Object))()
+    '    Dim row As Dictionary(Of String, Object)
+    '    For Each dr As DataRow In dt.Rows
+    '        row = New Dictionary(Of String, Object)()
+    '        For Each col As DataColumn In dt.Columns
+    '            row.Add(col.ColumnName, dr(col))
+    '        Next
+    '        rowsList.Add(row)
+    '    Next
+    '    Return Jserializer.Serialize(rowsList)
+    'End Function
+
     Public Function createExcelCS(strName As String, strProvider As String, strProp As String, strVersion As String, strNoVersion As String) As String
         Dim exMessage As String = Nothing
         Try
@@ -3257,6 +3315,7 @@ Public Class frmLoadExcel
     Public Sub addDsErrorRow(partNo As String, vendorNo As String, strMessage As String, Optional dt As DataTable = Nothing)
         Dim exMessage As String = Nothing
         Try
+
             Dim dsError = LikeSession.dsErrorSession
             Dim dtError = dsError.Tables(0).Copy()
 
@@ -3348,6 +3407,19 @@ Public Class frmLoadExcel
         Try
             dsResult = LikeSession.dsResultsSession
             dsError = LikeSession.dsErrorSession
+
+            'test added extra log
+            If (UCase(userid) = UCase(gnr.ExcelUserTest)) Then
+                Dim JsonError = If(Not String.IsNullOrEmpty(DataTableToJSON(dsError.Tables(0))), DataTableToJSON(dsError.Tables(0)), "No Data")
+                Dim JsonResult = If(Not String.IsNullOrEmpty(DataTableToJSON(dsResult.Tables(0))), DataTableToJSON(dsResult.Tables(0)), "No Data")  '
+                Dim strDsErrorLog = "DSError: " + JsonError
+                Dim strDsResultLog = "DSResult: " + JsonResult
+                writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Trace, "Extra Log for Excel Data 2", strDsErrorLog)
+                writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Trace, "Extra Log for Excel Data 2", strDsResultLog)
+            End If
+            'test added extra log
+
+
             If dsResult.Tables(0).Rows.Count = 0 And dsError.Tables(0).Rows.Count = 0 Then
                 MessageBox.Show("There is not data to load. Please check the excel file that you uploaded.", "CTP System", MessageBoxButtons.OK)
             Else
@@ -3363,6 +3435,14 @@ Public Class frmLoadExcel
                     End If
 
                 End If
+
+                'test added extra log
+                If (UCase(userid) = UCase(gnr.ExcelUserTest)) Then
+                    Dim amount = dsError.Tables(0).Rows.Count
+                    Dim strDetailsLog = "InvokeRequired: " + If(InvokeRequired.Equals(Nothing), InvokeRequired.ToString(), "InvokeRequired is nothing")
+                    writeLog(strLogCadenaCabecera, VBLog.ErrorTypeEnum.Trace, "Extra Log for Excel Data 3", amount.ToString() + ", " + strDetailsLog)
+                End If
+                'test added extra log
 
                 If dsError.Tables(0).Rows.Count > 0 Then
                     If Not InvokeRequired Then

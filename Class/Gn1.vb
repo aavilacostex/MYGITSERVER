@@ -500,6 +500,16 @@ NotInheritable Class Gn1
         End Set
     End Property
 
+    Private _excelUserTest As String
+    Public Property ExcelUserTest() As String
+        Get
+            Return _excelUserTest
+        End Get
+        Set(ByVal value As String)
+            _excelUserTest = value
+        End Set
+    End Property
+
 #End Region
 
     Private Shared ReadOnly Log As log4net.ILog = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType)
@@ -544,6 +554,7 @@ NotInheritable Class Gn1
         LogName = ConfigurationManager.AppSettings("LogName").ToString()
         AutomaticExcel = ConfigurationManager.AppSettings("AutomaticExcel").ToString()
         ProcessName = ConfigurationManager.AppSettings("ProcessName").ToString()
+        ExcelUserTest = ConfigurationManager.AppSettings("UserExcelTest").ToString()
     End Sub
 
     <DllImport("user32.dll")>
